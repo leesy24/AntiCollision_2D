@@ -48,22 +48,23 @@ void lines_settings()
   }
 
   //println("LINES_table.getRowCount()=" + LINES_table.getRowCount());
-  LINES_points = new int[LINES_table.getRowCount()][2];
+  LINES_points = new int[LINES_table.getRowCount()][3];
   //println("LINES_points.length=" + LINES_points.length);
 
   int i = 0;
-  String X, Y;
+  String X, Y, Weight;
   for(TableRow variable : LINES_table.rows())
   {
     X = variable.getString("X");
     Y = variable.getString("Y");
+	Weight = variable.getString("Weight");
     //println("X="+X+",Y="+Y);
 
     if(X == null || Y == null)
     {
       continue;
     }
-    
+
     if( X.toUpperCase().equals("CUT")
         ||
         Y.toUpperCase().equals("CUT")
@@ -79,6 +80,14 @@ void lines_settings()
       LINES_points[i][0] = variable.getInt("X") * 100;
       LINES_points[i][1] = variable.getInt("Y") * 100;
       //println("LINES_points[" + i + "].x=" + LINES_points[i][0] + ",LINES_points[" + i + "].y=" + LINES_points[i][1]);
+      if(Weight == null)
+      {
+        LINES_points[i][2] = W_LINES_LINE;
+      }
+	  else
+      {
+        LINES_points[i][2] = variable.getInt("Weight");
+      }
     }
     i ++;
   }
@@ -96,6 +105,7 @@ void lines_draw()
   int point_0, point_1;
   int x_curr, y_curr;
   int x_prev = MIN_INT, y_prev = MIN_INT;
+  int weight;
   boolean drawed = false;
   final int offset_x =
     (ROTATE_FACTOR == 315)
@@ -124,18 +134,23 @@ void lines_draw()
 
   fill(C_LINES_LINE);
   stroke(C_LINES_LINE);
-  strokeWeight(W_LINES_LINE);
+  //strokeWeight(W_LINES_LINE);
+  weight = W_LINES_LINE;
   for(int i = 0; i < LINES_points.length; i ++)
   {
-    if( (point_0 = LINES_points[i][0]) == MIN_INT 
+    point_0 = LINES_points[i][0];
+    point_1 = LINES_points[i][1];
+    weight = LINES_points[i][2];
+    if( point_0 == MIN_INT 
         ||
-        (point_1 = LINES_points[i][1]) == MIN_INT
+        point_1 == MIN_INT
       )
     {
       if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
       {
         //fill(#FF0000);
         //stroke(#FF0000);
+        strokeWeight(weight);
         point(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y);
       }
       x_prev = MIN_INT;
@@ -189,6 +204,7 @@ void lines_draw()
     {
       //fill(C_LINES_LINE);
       //stroke(C_LINES_LINE);
+      strokeWeight(weight);
       line(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y, x_curr + GRID_OFFSET_X, y_curr + GRID_OFFSET_Y);
       drawed = true;
     }
@@ -205,8 +221,7 @@ void lines_draw()
   {
     //fill(#FF0000);
     //stroke(#FF0000);
+    strokeWeight(weight);
     point(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y);
   }
-
-  strokeWeight(1);
 }
