@@ -6,6 +6,8 @@ final static boolean PRINT_UDP_WRITE_DBG = false;
 final static boolean PRINT_UDP_WRITE_ERR = false; 
 //final static boolean PRINT_UDP_READ_DBG = true; 
 final static boolean PRINT_UDP_READ_DBG = false; 
+//final static boolean PRINT_UDP_READ_IN_DBG = true; 
+final static boolean PRINT_UDP_READ_IN_DBG = false; 
 //final static boolean PRINT_UDP_READ_ERR = true; 
 final static boolean PRINT_UDP_READ_ERR = false; 
 //final static boolean PRINT_UDP_LOAD_DBG = true; 
@@ -186,7 +188,7 @@ void UDP_prepare_read(int buf_size)
 void UDP_receive_event(byte[] data, String ip, int port)
 {
   try {
-    if(PRINT_UDP_READ_DBG) println("UDP_receive_event data.length=" + data.length);
+    if(PRINT_UDP_READ_DBG || PRINT_UDP_READ_IN_DBG) println("UDP_receive_event ip=" + ip + ",port=" + port + ",data.length=" + data.length);
     if(UDP_CMD_state == UDP_CMD_STATE_SENT) {
       int inLength = 0;  // Bytes length by readBytes()
   

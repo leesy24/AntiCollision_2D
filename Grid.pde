@@ -21,13 +21,13 @@ void grid_settings()
 void grid_draw()
 {
   if (ROTATE_FACTOR == 315) {
-    grid_draw_rotate_0();
+    grid_draw_rotate_315();
   } else if (ROTATE_FACTOR == 45) {
-    grid_draw_rotate_90();
+    grid_draw_rotate_45();
   } else if (ROTATE_FACTOR == 135) {
-    grid_draw_rotate_180();
+    grid_draw_rotate_135();
   } else /*if (ROTATE_FACTOR == 225)*/ {
-    grid_draw_rotate_270();
+    grid_draw_rotate_225();
   }
 }
 
