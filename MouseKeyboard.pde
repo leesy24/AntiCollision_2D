@@ -75,7 +75,8 @@ void mousePressed()
   button_zoom_pluse_pressed = false;
   button_rotate_ccw_pressed = false;
   button_rotate_cw_pressed = false;
-  button_mirror_en_pressed = false;
+  button_mirror_ud_pressed = false;
+  button_mirror_lr_pressed = false;
   button_reset_en_pressed = false;
 
   if (button_zoom_minus_over)
@@ -94,9 +95,13 @@ void mousePressed()
   {
     button_rotate_cw_pressed = true;
   }
-  if (button_mirror_en_over)
+  if (button_mirror_ud_over)
   {
-    button_mirror_en_pressed = true;
+    button_mirror_ud_pressed = true;
+  }
+  if (button_mirror_lr_over)
+  {
+    button_mirror_lr_pressed = true;
   }
   if (button_reset_en_over)
   {
@@ -130,9 +135,14 @@ void mouseReleased()
   }
   //println("new GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
 
-  if (button_mirror_en_over && button_mirror_en_pressed)
+  if (button_mirror_ud_over && button_mirror_ud_pressed)
   {
-    button_mirror_en();
+    button_mirror_ud();
+  }
+
+  if (button_mirror_lr_over && button_mirror_lr_pressed)
+  {
+    button_mirror_lr();
   }
 
   if (button_reset_en_over && button_reset_en_pressed)

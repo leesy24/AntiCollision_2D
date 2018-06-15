@@ -50,16 +50,22 @@ static boolean button_rotate_cw_pressed = false;
 static int button_rotate_caption_str_x, button_rotate_caption_str_y;  // Position of button string rotate clock-wise
 static String button_rotate_caption_str = "Rotate";                   // button string rotate clock-wise
 
-static int button_mirror_en_x, button_mirror_en_y;      // Position of square button mirror enable
-static int button_mirror_en_width, button_mirror_en_height;     // Diameter of rect
-static int button_mirror_en_str_x, button_mirror_en_str_y;      // Position of button string mirror enable
-static String button_mirror_en_str_up_down = "⇅"; // button string mirror enable
-static String button_mirror_en_str_left_right = "⇄"; // button string mirror enable
-static boolean button_mirror_en_over = false;
-static boolean button_mirror_en_pressed = false;
+static int button_mirror_ud_x, button_mirror_ud_y;      // Position of square button mirror enable
+static int button_mirror_ud_width, button_mirror_ud_height;     // Diameter of rect
+static int button_mirror_ud_str_x, button_mirror_ud_str_y;      // Position of button string mirror enable
+static String button_mirror_ud_str = "⇅"; // button string mirror enable
+static boolean button_mirror_ud_over = false;
+static boolean button_mirror_ud_pressed = false;
 
-static int button_mirror_en_caption_str_x, button_mirror_en_caption_str_y;  // Position of button string mirror enable
-static String button_mirror_en_caption_str = "Mirror";                      // button string mirror enable
+static int button_mirror_lr_x, button_mirror_lr_y;      // Position of square button mirror enable
+static int button_mirror_lr_width, button_mirror_lr_height;     // Diameter of rect
+static int button_mirror_lr_str_x, button_mirror_lr_str_y;      // Position of button string mirror enable
+static String button_mirror_lr_str = "⇄"; // button string mirror enable
+static boolean button_mirror_lr_over = false;
+static boolean button_mirror_lr_pressed = false;
+
+static int button_mirror_caption_str_x, button_mirror_caption_str_y;  // Position of button string mirror enable
+static String button_mirror_caption_str = "Mirror";                      // button string mirror enable
 
 static int button_reset_en_x, button_reset_en_y;           // Position of square button reset enable
 static int button_reset_en_width, button_reset_en_height;  // Diameter of rect
@@ -107,20 +113,27 @@ void button_setup()
   button_rotate_caption_str_x = button_rotate_cw_x + button_rotate_cw_width / 2 - int(textWidth(button_rotate_caption_str)) / 2;
   button_rotate_caption_str_y = button_rotate_cw_y - FONT_HEIGHT / 2;
 
-  button_mirror_en_width = FONT_HEIGHT * 2;
-  button_mirror_en_height = FONT_HEIGHT * 2;
-  button_mirror_en_x = TEXT_MARGIN + FONT_HEIGHT * 9;
-  button_mirror_en_y = SCREEN_height - button_mirror_en_height - TEXT_MARGIN - FONT_HEIGHT * 1;
-  button_mirror_en_str_x = button_mirror_en_x + button_mirror_en_width / 2 - int(max(textWidth(button_mirror_en_str_up_down), textWidth(button_mirror_en_str_left_right))) / 2;
-  button_mirror_en_str_y = button_mirror_en_y + button_mirror_en_height / 2 + FONT_HEIGHT / 2;
+  button_mirror_ud_width = FONT_HEIGHT * 2;
+  button_mirror_ud_height = FONT_HEIGHT * 2;
+  button_mirror_ud_x = TEXT_MARGIN + FONT_HEIGHT * 9;
+  button_mirror_ud_y = SCREEN_height - button_mirror_ud_height - TEXT_MARGIN - FONT_HEIGHT * 1;
+  button_mirror_ud_str_x = button_mirror_ud_x + button_mirror_ud_width / 2 - int(textWidth(button_mirror_ud_str)) / 2;
+  button_mirror_ud_str_y = button_mirror_ud_y + button_mirror_ud_height / 2 + FONT_HEIGHT / 2;
 
-  button_mirror_en_caption_str_x = button_mirror_en_x + button_mirror_en_width / 2 - int(textWidth(button_mirror_en_caption_str)) / 2;
-  button_mirror_en_caption_str_y = button_mirror_en_y - FONT_HEIGHT / 2;
+  button_mirror_lr_width = FONT_HEIGHT * 2;
+  button_mirror_lr_height = FONT_HEIGHT * 2;
+  button_mirror_lr_x = TEXT_MARGIN + FONT_HEIGHT * 9;
+  button_mirror_lr_y = SCREEN_height - button_mirror_lr_height - TEXT_MARGIN - FONT_HEIGHT * 3;
+  button_mirror_lr_str_x = button_mirror_lr_x + button_mirror_lr_width / 2 - int(textWidth(button_mirror_lr_str)) / 2;
+  button_mirror_lr_str_y = button_mirror_lr_y + button_mirror_lr_height / 2 + FONT_HEIGHT / 2;
+
+  button_mirror_caption_str_x = button_mirror_lr_x + button_mirror_lr_width / 2 - int(textWidth(button_mirror_caption_str)) / 2;
+  button_mirror_caption_str_y = button_mirror_lr_y - FONT_HEIGHT / 2;
 
   button_reset_en_width = FONT_HEIGHT * 2;
   button_reset_en_height = FONT_HEIGHT * 2;
   button_reset_en_x = TEXT_MARGIN + FONT_HEIGHT * 12;
-  button_reset_en_y = SCREEN_height - button_mirror_en_height - TEXT_MARGIN - FONT_HEIGHT * 1;
+  button_reset_en_y = SCREEN_height - button_mirror_ud_height - TEXT_MARGIN - FONT_HEIGHT * 1;
   button_reset_en_str_x = button_reset_en_x + button_reset_en_width / 2 - int(textWidth(button_reset_en_str)) / 2;
   button_reset_en_str_y = button_reset_en_y + button_reset_en_height / 2 + FONT_HEIGHT / 2;
   
@@ -178,19 +191,25 @@ void button_draw()
   text(button_rotate_caption_str, button_rotate_caption_str_x, button_rotate_caption_str_y);
 
 
-  if (button_mirror_en_over) {
+  if (button_mirror_ud_over) {
     fill( C_BTN_HIGHLIGHT);
   } else {
     fill( C_BTN_NORMAL);
   }
-  rect(button_mirror_en_x, button_mirror_en_y, button_mirror_en_width, button_mirror_en_height);
+  rect(button_mirror_ud_x, button_mirror_ud_y, button_mirror_ud_width, button_mirror_ud_height);
   fill(C_BTN_TEXT);
-  if (ROTATE_FACTOR == 315 || ROTATE_FACTOR == 135)
-    text(button_mirror_en_str_up_down, button_mirror_en_str_x, button_mirror_en_str_y);
-  else
-    text(button_mirror_en_str_left_right, button_mirror_en_str_x, button_mirror_en_str_y);
+  text(button_mirror_ud_str, button_mirror_ud_str_x, button_mirror_ud_str_y);
 
-  text(button_mirror_en_caption_str, button_mirror_en_caption_str_x, button_mirror_en_caption_str_y);
+  if (button_mirror_lr_over) {
+    fill( C_BTN_HIGHLIGHT);
+  } else {
+    fill( C_BTN_NORMAL);
+  }
+  rect(button_mirror_lr_x, button_mirror_lr_y, button_mirror_lr_width, button_mirror_lr_height);
+  fill(C_BTN_TEXT);
+  text(button_mirror_lr_str, button_mirror_lr_str_x, button_mirror_lr_str_y);
+
+  text(button_mirror_caption_str, button_mirror_caption_str_x, button_mirror_caption_str_y);
 
 
   if (button_reset_en_over) {
@@ -229,7 +248,8 @@ void button_check_update()
     button_zoom_pluse_over =
     button_rotate_ccw_over =
     button_rotate_cw_over =
-    button_mirror_en_over =
+    button_mirror_ud_over =
+    button_mirror_lr_over =
     button_reset_en_over = false;
   }
   else if( button_check_over(button_zoom_pluse_x, button_zoom_pluse_y, button_zoom_pluse_width, button_zoom_pluse_height) )
@@ -239,7 +259,8 @@ void button_check_update()
     button_zoom_minus_over =
     button_rotate_ccw_over =
     button_rotate_cw_over =
-    button_mirror_en_over =
+    button_mirror_ud_over =
+    button_mirror_lr_over =
     button_reset_en_over = false;
   }
   else if( button_check_over(button_rotate_ccw_x, button_rotate_ccw_y, button_rotate_ccw_width, button_rotate_ccw_height) )
@@ -248,7 +269,8 @@ void button_check_update()
     button_zoom_minus_over =
     button_zoom_pluse_over =
     button_rotate_cw_over =
-    button_mirror_en_over =
+    button_mirror_ud_over =
+    button_mirror_lr_over =
     button_reset_en_over = false;
   }
   else if( button_check_over(button_rotate_cw_x, button_rotate_cw_y, button_rotate_cw_width, button_rotate_cw_height) )
@@ -257,16 +279,28 @@ void button_check_update()
     button_zoom_minus_over =
     button_zoom_pluse_over =
     button_rotate_ccw_over =
-    button_mirror_en_over =
+    button_mirror_ud_over =
+    button_mirror_lr_over =
     button_reset_en_over = false;
   }
-  else if( button_check_over(button_mirror_en_x, button_mirror_en_y, button_mirror_en_width, button_mirror_en_height) )
+  else if( button_check_over(button_mirror_ud_x, button_mirror_ud_y, button_mirror_ud_width, button_mirror_ud_height) )
   {
-    button_mirror_en_over = true;
+    button_mirror_ud_over = true;
     button_zoom_minus_over =
     button_zoom_pluse_over =
     button_rotate_ccw_over =
     button_rotate_cw_over =
+    button_mirror_lr_over =
+    button_reset_en_over = false;
+  }
+  else if( button_check_over(button_mirror_lr_x, button_mirror_lr_y, button_mirror_lr_width, button_mirror_lr_height) )
+  {
+    button_mirror_lr_over = true;
+    button_zoom_minus_over =
+    button_zoom_pluse_over =
+    button_rotate_ccw_over =
+    button_rotate_cw_over =
+    button_mirror_ud_over =
     button_reset_en_over = false;
   }
   else if( button_check_over(button_reset_en_x, button_reset_en_y, button_reset_en_width, button_reset_en_height) )
@@ -276,7 +310,8 @@ void button_check_update()
     button_zoom_pluse_over =
     button_rotate_ccw_over =
     button_rotate_cw_over =
-    button_mirror_en_over = false;
+    button_mirror_ud_over =
+    button_mirror_lr_over = false;
   }
   else
   {
@@ -284,7 +319,8 @@ void button_check_update()
     button_zoom_pluse_over =
     button_rotate_ccw_over =
     button_rotate_cw_over =
-    button_mirror_en_over =
+    button_mirror_ud_over =
+    button_mirror_lr_over =
     button_reset_en_over = false;
   }
 }
@@ -367,12 +403,50 @@ void button_rotate_cw()
   if(PRINT_BUTTON_ROTATE_DBG) println("ROTATE_FACTOR=" + ROTATE_FACTOR);
 }
 
-void button_mirror_en()
+void button_mirror_ud()
 {
   MIRROR_ENABLE = !MIRROR_ENABLE;
+  if (ROTATE_FACTOR == 45 || ROTATE_FACTOR == 225)
+  {
+    if(PRINT_BUTTON_MIRROR_DBG) println("Old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    if (ROTATE_FACTOR == 45) { // OK
+      ROTATE_FACTOR = 225;
+      GRID_OFFSET_X = GRID_OFFSET_X;
+      GRID_OFFSET_Y += -(SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT));
+    }
+    else /*if (ROTATE_FACTOR == 225)*/ { // OK
+      ROTATE_FACTOR = 45;
+      GRID_OFFSET_X = GRID_OFFSET_X;
+      GRID_OFFSET_Y += SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT);
+    }
+    if(PRINT_BUTTON_MIRROR_DBG) println("New GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+  }
   grid_ready();
   config_save();
-  if(PRINT_BUTTON_MIRROR_DBG) println("MIRROR_ENABLE=" + MIRROR_ENABLE);
+  if(PRINT_BUTTON_MIRROR_DBG) println("MIRROR_ENABLE=" + MIRROR_ENABLE + ", ROTATE_FACTOR=" + ROTATE_FACTOR);
+}
+
+void button_mirror_lr()
+{
+  MIRROR_ENABLE = !MIRROR_ENABLE;
+  if (ROTATE_FACTOR == 315 || ROTATE_FACTOR == 135)
+  {
+    if(PRINT_BUTTON_MIRROR_DBG) println("Old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    if (ROTATE_FACTOR == 315) { // OK
+      ROTATE_FACTOR = 135;
+      GRID_OFFSET_X += -(SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT));
+      GRID_OFFSET_Y = GRID_OFFSET_Y;
+    }
+    else /*if (ROTATE_FACTOR == 135)*/ { // OK
+      ROTATE_FACTOR = 315;
+      GRID_OFFSET_X += SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT);
+      GRID_OFFSET_Y = GRID_OFFSET_Y;
+    }
+    if(PRINT_BUTTON_MIRROR_DBG) println("New GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+  }
+  grid_ready();
+  config_save();
+  if(PRINT_BUTTON_MIRROR_DBG) println("MIRROR_ENABLE=" + MIRROR_ENABLE + ", ROTATE_FACTOR=" + ROTATE_FACTOR);
 }
 
 void button_reset_en()
