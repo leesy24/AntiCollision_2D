@@ -12,13 +12,17 @@ C_BUBBLEINFO_TEXT,FF000000,Bubble infor box text color. Color data format is AAR
 C_BTN_NORMAL,FFFFFFFF,Button normal background color. Color data format is AARRGGBB
 C_BTN_HIGHLIGHT,FFC0C0C0,Button highlight background color. Color data format is AARRGGBB
 C_BTN_TEXT,FF000000,Button text color. Color data format is AARRGGBB
+C_BTN_BOX,FF000000,Button box color. Color data format is AARRGGBB
+W_BTN_BOX,1,Button box weight.
 C_COLORBAR_RECT_FILL,C0F8F8F8,Color bar info box fill color. Color data format is AARRGGBB
 C_COLORBAR_RECT_STROKE,FF000000,Color bar info box border color. Color data format is AARRGGBB
 C_COLORBAR_TEXT,FF000000,Color bar info box text color. Color data format is AARRGGBB
 C_DATA_LINE,FF0000FF,Scan points line default color. Color data format is AARRGGBB
 C_DATA_POINT,FFFF0000,Scan point default color. Color data format is AARRGGBB
+W_DATA_LINE_POINT,1,Scan line and point default weight.
 C_DATA_RECT_FILL,C0F8F8F8,Scan info box fill color. Color data format is AARRGGBB
 C_DATA_RECT_STROKE,FF000000,Scan info box border color. Color data format is AARRGGBB
+W_DATA_RECT_STROKE,1,Scan info box border line weight.
 C_DATA_RECT_TEXT,FF404040,Scan info box text color. Color data format is AARRGGBB
 C_GRID_LINE,FFC0C0C0,Grid line color. Color data format is AARRGGBB
 C_GRID_TEXT,FF404040,Grid text color. Color data format is AARRGGBB
@@ -29,4 +33,4 @@ C_INTERFACE_BORDER_ACTIVE,FFFF0000,Interface menu border active color. Color dat
 C_INTERFACE_BORDER_NORMAL,FF000000,Interface menu border normal color. Color data format is AARRGGBB
 C_INTERFACE_CURSOR,FF0000FF,Interface menu cursor color. Color data format is AARRGGBB
 C_LINES_LINE,FF000000,Line color of background lines. Color data format is AARRGGBB
-W_LINES_LINE,3,Line width of background lines.
+W_LINES_LINE,3,Line weight of background lines.

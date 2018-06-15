@@ -1,3 +1,8 @@
+//final static boolean PRINT_LINES_SETTINGS_DBG = true; 
+final static boolean PRINT_LINES_SETTINGS_DBG = false;
+//final static boolean PRINT_LINES_DRAW_DBG = true; 
+final static boolean PRINT_LINES_DRAW_DBG = false;
+
 // Define default binary buf filename and path 
 final static String LINES_FILE_NAME = "lines";
 final static String LINES_FILE_EXT = ".csv";
@@ -8,7 +13,20 @@ static int W_LINES_LINE = 3;
 
 // A Table object
 static Table LINES_table = null;
-int[][] LINES_points;
+class Lines {
+  public int length;
+  public int x[], y[], w[];
+  public color c[];
+  
+  Lines (int n) {
+    length = n;
+    x = new int[n];
+    y = new int[n];
+    w = new int[n];
+    c = new color[n];
+  }
+}
+Lines LINES_data = null;
 
 void lines_settings()
 {
@@ -48,17 +66,18 @@ void lines_settings()
   }
 
   //println("LINES_table.getRowCount()=" + LINES_table.getRowCount());
-  LINES_points = new int[LINES_table.getRowCount()][3];
-  //println("LINES_points.length=" + LINES_points.length);
+  LINES_data = new Lines(LINES_table.getRowCount());
+  //println("LINES_data.length=" + LINES_data.length);
 
   int i = 0;
-  String X, Y, Weight;
+  String X, Y, Weight, Color;
   for(TableRow variable : LINES_table.rows())
   {
     X = variable.getString("X");
     Y = variable.getString("Y");
-	Weight = variable.getString("Weight");
-    //println("X="+X+",Y="+Y);
+    Weight = variable.getString("Weight");
+    Color = variable.getString("Color");
+    //println("X="+X+",Y="+Y+",Weight="+Weight+",Color="+Color);
 
     if(X == null || Y == null)
     {
@@ -70,42 +89,53 @@ void lines_settings()
         Y.toUpperCase().equals("CUT")
       )
     {
-      LINES_points[i][0] = MIN_INT;
-      LINES_points[i][1] = MIN_INT;
-      //println("LINES_points[" + i + "].x=" + "CUT" + ",LINES_points[" + i + "].y=" + "CUT");
+      LINES_data.x[i] = MIN_INT;
+      LINES_data.y[i] = MIN_INT;
+      //println("LINES_data.x[" + i + "]=" + "CUT" + ",LINES_data.y[" + i + "]=" + "CUT");
     }
     else
     {
       // You can access the fields via their column name (or index)
-      LINES_points[i][0] = variable.getInt("X") * 100;
-      LINES_points[i][1] = variable.getInt("Y") * 100;
-      //println("LINES_points[" + i + "].x=" + LINES_points[i][0] + ",LINES_points[" + i + "].y=" + LINES_points[i][1]);
+      LINES_data.x[i] = variable.getInt("X") * 100;
+      LINES_data.y[i] = variable.getInt("Y") * 100;
       if(Weight == null)
       {
-        LINES_points[i][2] = W_LINES_LINE;
+        LINES_data.w[i] = W_LINES_LINE;
       }
-	  else
+      else
       {
-        LINES_points[i][2] = variable.getInt("Weight");
+        LINES_data.w[i] = variable.getInt("Weight");
       }
+      if(Color == null)
+      {
+        LINES_data.c[i] = C_LINES_LINE;
+      }
+      else
+      {
+        LINES_data.c[i] = (int)Long.parseLong(variable.getString("Color"), 16);
+      }
+      if (PRINT_LINES_SETTINGS_DBG) println("LINES_data.x[" + i + "]=" + LINES_data.x[i] + ",LINES_data.y[" + i + "]=" + LINES_data.y[i] + ",LINES_data.w[" + i + "]=" + LINES_data.w[i] + ",LINES_data.c[" + i + "]=" + LINES_data.c[i]);
     }
     i ++;
   }
-  for(; i < LINES_points.length; i ++)
+  for(; i < LINES_data.length; i ++)
   {
-    LINES_points[i][0] = MIN_INT;
-    LINES_points[i][1] = MIN_INT;
+    LINES_data.x[i] = MIN_INT;
+    LINES_data.y[i] = MIN_INT;
   }
 }
 
 void lines_draw()
 {
-  if(LINES_points == null) return;
+  if(LINES_data == null) return;
 
-  int point_0, point_1;
+  int coor_x, coor_y;
   int x_curr, y_curr;
+  int w_curr;
+  color c_curr;
   int x_prev = MIN_INT, y_prev = MIN_INT;
-  int weight;
+  int w_prev = W_LINES_LINE;
+  color c_prev = C_LINES_LINE;
   boolean drawed = false;
   final int offset_x =
     (ROTATE_FACTOR == 315)
@@ -132,25 +162,24 @@ void lines_draw()
       (SCREEN_height / 2)
     );
 
-  fill(C_LINES_LINE);
-  stroke(C_LINES_LINE);
-  //strokeWeight(W_LINES_LINE);
-  weight = W_LINES_LINE;
-  for(int i = 0; i < LINES_points.length; i ++)
+  for(int i = 0; i < LINES_data.length; i ++)
   {
-    point_0 = LINES_points[i][0];
-    point_1 = LINES_points[i][1];
-    weight = LINES_points[i][2];
-    if( point_0 == MIN_INT 
+    coor_x = LINES_data.x[i];
+    coor_y = LINES_data.y[i];
+    w_curr = LINES_data.w[i];
+    c_curr = LINES_data.c[i];
+    if (PRINT_LINES_DRAW_DBG) println("LINES_data[" + i + "],coor_x=" + coor_x + ",coor_y=" + coor_y + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
+    if( coor_x == MIN_INT 
         ||
-        point_1 == MIN_INT
+        coor_y == MIN_INT
       )
     {
       if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
       {
-        //fill(#FF0000);
-        //stroke(#FF0000);
-        strokeWeight(weight);
+        fill(c_prev);
+        // Sets the color and weight used to draw lines and borders around shapes.
+        stroke(c_prev);
+        strokeWeight(w_prev);
         point(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y);
       }
       x_prev = MIN_INT;
@@ -160,8 +189,8 @@ void lines_draw()
 
     if(ROTATE_FACTOR == 315)
     {
-      x_curr = int(point_1 / ZOOM_FACTOR);
-      y_curr = int(point_0 / ZOOM_FACTOR);
+      x_curr = int(coor_y / ZOOM_FACTOR);
+      y_curr = int(coor_x / ZOOM_FACTOR);
       x_curr += offset_x;
       if (MIRROR_ENABLE)
         y_curr += offset_y;
@@ -170,8 +199,8 @@ void lines_draw()
     }
     else if(ROTATE_FACTOR == 45)
     {
-      x_curr = int(point_0 / ZOOM_FACTOR);
-      y_curr = int(point_1 / ZOOM_FACTOR);
+      x_curr = int(coor_x / ZOOM_FACTOR);
+      y_curr = int(coor_y / ZOOM_FACTOR);
       if (MIRROR_ENABLE)
         x_curr = offset_x - x_curr;
       else
@@ -180,8 +209,8 @@ void lines_draw()
     }
     else if(ROTATE_FACTOR == 135)
     {
-      x_curr = int(point_1 / ZOOM_FACTOR);
-      y_curr = int(point_0 / ZOOM_FACTOR);
+      x_curr = int(coor_y / ZOOM_FACTOR);
+      y_curr = int(coor_x / ZOOM_FACTOR);
       x_curr = offset_x - x_curr; 
       if (MIRROR_ENABLE)
         y_curr = offset_y - y_curr;
@@ -190,21 +219,22 @@ void lines_draw()
     }
     else /*if(ROTATE_FACTOR == 225)*/
     {
-      x_curr = int(point_0 / ZOOM_FACTOR);
-      y_curr = int(point_1 / ZOOM_FACTOR);
+      x_curr = int(coor_x / ZOOM_FACTOR);
+      y_curr = int(coor_y / ZOOM_FACTOR);
       if (MIRROR_ENABLE)
         x_curr += offset_x;
       else
         x_curr = offset_x - x_curr;
       y_curr = offset_y - y_curr;
     }
-    //println("point_0=" + point_0 + ",point_1=" + point_1);
+    //println("coor_x=" + coor_x + ",coor_y=" + coor_y);
     //println("x_curr=" + x_curr + ",y_curr=" + y_curr + ",x_prev=" + x_prev + ",y_prev=" + y_prev);
     if(x_prev != MIN_INT && y_prev != MIN_INT)
     {
-      //fill(C_LINES_LINE);
-      //stroke(C_LINES_LINE);
-      strokeWeight(weight);
+      fill(c_prev);
+      // Sets the color and weight used to draw lines and borders around shapes.
+      stroke(c_prev);
+      strokeWeight(w_prev);
       line(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y, x_curr + GRID_OFFSET_X, y_curr + GRID_OFFSET_Y);
       drawed = true;
     }
@@ -215,13 +245,16 @@ void lines_draw()
     // Save data for drawing line between previous and current points. 
     x_prev = x_curr;
     y_prev = y_curr;
+    w_prev = w_curr;
+    c_prev = c_curr;
   }
 
   if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
   {
-    //fill(#FF0000);
-    //stroke(#FF0000);
-    strokeWeight(weight);
+    fill(c_prev);
+    // Sets the color and weight used to draw lines and borders around shapes.
+    stroke(c_prev);
+    strokeWeight(w_prev);
     point(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y);
   }
 }

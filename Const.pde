@@ -51,6 +51,10 @@ void const_settings()
       C_BTN_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_BTN_TEXT"))
       C_BTN_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_BTN_BOX"))
+      C_BTN_BOX = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_BTN_BOX"))
+      W_BTN_BOX = variable.getInt("Value");
     else if(name.equals("C_COLORBAR_RECT_FILL"))
       C_COLORBAR_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_COLORBAR_RECT_STROKE"))
@@ -61,10 +65,14 @@ void const_settings()
       C_DATA_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_DATA_POINT"))
       C_DATA_POINT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_DATA_LINE_POINT"))
+      W_DATA_LINE_POINT = variable.getInt("Value");
     else if(name.equals("C_DATA_RECT_FILL"))
       C_DATA_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_DATA_RECT_STROKE"))
       C_DATA_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_DATA_RECT_STROKE"))
+      W_DATA_RECT_STROKE = variable.getInt("Value");
     else if(name.equals("C_DATA_RECT_TEXT"))
       C_DATA_RECT_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_GRID_LINE"))
@@ -165,6 +173,16 @@ void const_create()
   variable.setString("Comment", "Button text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
+  variable.setString("Name", "C_BTN_BOX");
+  variable.setString("Value", String.format("%08X", C_BTN_BOX));
+  variable.setString("Comment", "Button box color. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_BTN_BOX");
+  variable.setInt("Value", W_BTN_BOX);
+  variable.setString("Comment", "Button box weight.");
+
+  variable = CONST_table.addRow();
   variable.setString("Name", "C_COLORBAR_RECT_FILL");
   variable.setString("Value", String.format("%08X", C_COLORBAR_RECT_FILL));
   variable.setString("Comment", "Color bar info box fill color. Color data format is AARRGGBB");
@@ -190,6 +208,11 @@ void const_create()
   variable.setString("Comment", "Scan point default color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
+  variable.setString("Name", "W_DATA_LINE_POINT");
+  variable.setInt("Value", W_DATA_LINE_POINT);
+  variable.setString("Comment", "Scan line and point default weight.");
+
+  variable = CONST_table.addRow();
   variable.setString("Name", "C_DATA_RECT_FILL");
   variable.setString("Value", String.format("%08X", C_DATA_RECT_FILL));
   variable.setString("Comment", "Scan info box fill color. Color data format is AARRGGBB");
@@ -198,6 +221,11 @@ void const_create()
   variable.setString("Name", "C_DATA_RECT_STROKE");
   variable.setString("Value", String.format("%08X", C_DATA_RECT_STROKE));
   variable.setString("Comment", "Scan info box border color. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_DATA_RECT_STROKE");
+  variable.setInt("Value", W_DATA_RECT_STROKE);
+  variable.setString("Comment", "Scan info box border line weight.");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_DATA_RECT_TEXT");
@@ -252,7 +280,7 @@ void const_create()
   variable = CONST_table.addRow();
   variable.setString("Name", "W_LINES_LINE");
   variable.setInt("Value", W_LINES_LINE);
-  variable.setString("Comment", "Line width of background lines.");
+  variable.setString("Comment", "Line weight of background lines.");
 
   saveTable(CONST_table, "data/" + CONST_file_full_name);
 }

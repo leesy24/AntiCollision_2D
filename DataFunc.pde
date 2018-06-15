@@ -16,8 +16,10 @@ static boolean DATA_draw_params_enable = true;
 static color C_DATA_ERR_TEXT = #000000; // Black
 static color C_DATA_LINE = #0000FF; // Blue
 static color C_DATA_POINT = #FF0000; // Red
+static int W_DATA_LINE_POINT = 1;
 static color C_DATA_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
 static color C_DATA_RECT_STROKE = #000000; // Black
+static int W_DATA_RECT_STROKE = 1;
 static color C_DATA_RECT_TEXT = #404040; // Black + 0x40
 
 final static int DATA_INTERFACE_FILE = 0;
@@ -442,7 +444,9 @@ class Data {
 
     // Draw rect
     fill(C_DATA_RECT_FILL);
+    // Sets the color and weight used to draw lines and borders around shapes.
     stroke(C_DATA_RECT_STROKE);
+    strokeWeight(W_DATA_RECT_STROKE);
     rect(FONT_HEIGHT * 3, TEXT_MARGIN*2 + FONT_HEIGHT * 1, witdh_max + TEXT_MARGIN*2, FONT_HEIGHT * cnt + TEXT_MARGIN*2, 5, 5, 5, 5);
 
     // Sets the color used to draw lines and borders around shapes.
@@ -531,6 +535,9 @@ class Data {
     final int mouse_over_x_max = mouseX + mouse_over_range;
     final int mouse_over_y_min = mouseY - mouse_over_range;
     final int mouse_over_y_max = mouseY + mouse_over_range;
+
+    // Sets the weight used to draw lines and borders around shapes.
+    strokeWeight(W_DATA_LINE_POINT);
 
     // Check pulse width exist than color mode set to HSB.
     if (content != 4)

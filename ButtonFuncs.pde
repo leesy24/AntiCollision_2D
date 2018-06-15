@@ -13,6 +13,8 @@ final static boolean PRINT_BUTTON_RESET_DBG = false;
 static color C_BTN_NORMAL = #FFFFFF; // White
 static color C_BTN_HIGHLIGHT = #C0C0C0; //
 static color C_BTN_TEXT = #000000; // Black
+static color C_BTN_BOX = #000000; // Black
+static int W_BTN_BOX = 1; // Black
 
 static int button_zoom_minus_x, button_zoom_minus_y;           // Position of square button zoom minus
 static int button_zoom_minus_width, button_zoom_minus_height;  // Diameter of rect
@@ -130,8 +132,9 @@ void button_draw()
 {
   //String string;
 
-  // Sets the color used to draw lines and borders around shapes.
-  stroke(C_BTN_TEXT);
+  // Sets the color and weight used to draw lines and borders around shapes.
+  stroke(C_BTN_BOX);
+  strokeWeight(W_BTN_BOX);
 
   if (button_zoom_minus_over) {
     fill( C_BTN_HIGHLIGHT);
