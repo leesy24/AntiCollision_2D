@@ -41,7 +41,6 @@ void settings() {
   screen_settings();
   grid_settings();
   lines_settings();
-  colorbar_settings();
 }
 
 // The setup() function is run once, when the program starts.
@@ -135,9 +134,7 @@ void draw() {
   PS_Data.draw_points();
   PS_Data.draw_params();
 
-  colorbar_draw();
   button_draw();
   bubbleinfo_draw();
-  colorbar_info_draw();
   interface_draw();
 } 

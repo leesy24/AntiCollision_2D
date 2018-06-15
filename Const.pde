@@ -55,12 +55,6 @@ void const_settings()
       C_BTN_BOX = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BTN_BOX"))
       W_BTN_BOX = variable.getInt("Value");
-    else if(name.equals("C_COLORBAR_RECT_FILL"))
-      C_COLORBAR_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_COLORBAR_RECT_STROKE"))
-      C_COLORBAR_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_COLORBAR_TEXT"))
-      C_COLORBAR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_DATA_LINE"))
       C_DATA_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_DATA_POINT"))
@@ -181,21 +175,6 @@ void const_create()
   variable.setString("Name", "W_BTN_BOX");
   variable.setInt("Value", W_BTN_BOX);
   variable.setString("Comment", "Button box weight.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_COLORBAR_RECT_FILL");
-  variable.setString("Value", String.format("%08X", C_COLORBAR_RECT_FILL));
-  variable.setString("Comment", "Color bar info box fill color. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_COLORBAR_RECT_STROKE");
-  variable.setString("Value", String.format("%08X", C_COLORBAR_RECT_STROKE));
-  variable.setString("Comment", "Color bar info box border color. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_COLORBAR_TEXT");
-  variable.setString("Value", String.format("%08X", C_COLORBAR_TEXT));
-  variable.setString("Comment", "Color bar info box text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_DATA_LINE");
