@@ -567,30 +567,30 @@ class PS_Data {
     color point_color_curr = C_PS_DATA_POINT, point_color_prev = C_PS_DATA_POINT;
     color line_color = C_PS_DATA_LINE;
     final int mouse_over_range =
-      (ZOOM_FACTOR < 50)
+      (ZOOM_FACTOR[instance] < 50)
       ?
-      (PS_DATA_POINT_SIZE + (50 - ZOOM_FACTOR) / 10)
+      (PS_DATA_POINT_SIZE + (50 - ZOOM_FACTOR[instance]) / 10)
       :
       PS_DATA_POINT_SIZE; // Range for mouse over point rect. Adjust mouse over range by ZOOM_FACTOR.
     final int offset_x =
-      (ROTATE_FACTOR == 315)
+      (ROTATE_FACTOR[instance] == 315)
       ?
       (TEXT_MARGIN + FONT_HEIGHT / 2)
       :
       (
-        (ROTATE_FACTOR == 135)
+        (ROTATE_FACTOR[instance] == 135)
         ?
         (SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT / 2))
         :
         (SCREEN_width / 2)
       );
     final int offset_y =
-      (ROTATE_FACTOR == 45)
+      (ROTATE_FACTOR[instance] == 45)
       ?
       (TEXT_MARGIN + FONT_HEIGHT / 2)
       :
       (
-        (ROTATE_FACTOR == 225)
+        (ROTATE_FACTOR[instance] == 225)
         ?
         (SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT / 2))
         :
@@ -665,61 +665,61 @@ class PS_Data {
         //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance);
         angle = scan_angle_start[instance] - 45.0 + float(j) * scan_angle_size[instance] / float(number_of_points[instance]);
         radians = radians(angle);
-        if (ROTATE_FACTOR == 315)
+        if (ROTATE_FACTOR[instance] == 315)
         {
           cx = float(distance) * sin(radians);
           cy = float(distance) * cos(radians);
-          x_curr = int(cx / ZOOM_FACTOR);
-          y_curr = int(cy / ZOOM_FACTOR);
+          x_curr = int(cx / ZOOM_FACTOR[instance]);
+          y_curr = int(cy / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
           x_curr += offset_x;
-          if (MIRROR_ENABLE)
+          if (MIRROR_ENABLE[instance])
             y_curr += offset_y;
           else
             y_curr = offset_y - y_curr;
         }
-        else if (ROTATE_FACTOR == 45)
+        else if (ROTATE_FACTOR[instance] == 45)
         {
           cx = float(distance) * cos(radians);
           cy = float(distance) * sin(radians);
-          x_curr = int(cx / ZOOM_FACTOR);
-          y_curr = int(cy / ZOOM_FACTOR);
+          x_curr = int(cx / ZOOM_FACTOR[instance]);
+          y_curr = int(cy / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
-          if (MIRROR_ENABLE)
+          if (MIRROR_ENABLE[instance])
             x_curr = offset_x - x_curr;
           else
             x_curr += offset_x;
           y_curr += offset_y;
         }
-        else if (ROTATE_FACTOR == 135)
+        else if (ROTATE_FACTOR[instance] == 135)
         {
           cx = float(distance) * sin(radians);
           cy = float(distance) * cos(radians);
-          x_curr = int(cx / ZOOM_FACTOR);
-          y_curr = int(cy / ZOOM_FACTOR);
+          x_curr = int(cx / ZOOM_FACTOR[instance]);
+          y_curr = int(cy / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
           x_curr = offset_x - x_curr;
-          if (MIRROR_ENABLE)
+          if (MIRROR_ENABLE[instance])
             y_curr = offset_y - y_curr;
           else
             y_curr += offset_y;
         }
-        else /*if (ROTATE_FACTOR == 225)*/
+        else /*if (ROTATE_FACTOR[instance] == 225)*/
         {
           cx = float(distance) * cos(radians);
           cy = float(distance) * sin(radians);
-          x_curr = int(cx / ZOOM_FACTOR);
-          y_curr = int(cy / ZOOM_FACTOR);
+          x_curr = int(cx / ZOOM_FACTOR[instance]);
+          y_curr = int(cy / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
-          if (MIRROR_ENABLE)
+          if (MIRROR_ENABLE[instance])
             x_curr += offset_x;
           else
             x_curr = offset_x - x_curr;
           y_curr = offset_y - y_curr;
         }
 
-        x_curr += GRID_OFFSET_X;
-        y_curr += GRID_OFFSET_Y;
+        x_curr += DRAW_OFFSET_X[instance];
+        y_curr += DRAW_OFFSET_Y[instance];
 
         // Check pulse width exist
         if (data_content[instance] != 4)
@@ -800,12 +800,12 @@ class PS_Data {
           line(x_prev, y_prev, x_curr, y_curr);
           fill(point_color_prev);
           stroke(point_color_prev);
-          //point(x_prev + GRID_OFFSET_X, y_prev + GRID_OFFSET_Y);
+          //point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
           rect(x_prev - point_size_prev / 2, y_prev - point_size_prev / 2, point_size_prev, point_size_prev );
         }
         fill(point_color_curr);
         stroke(point_color_curr);
-        //point(x_curr + GRID_OFFSET_X, y_curr + GRID_OFFSET_Y);
+        //point(x_curr + DRAW_OFFSET_X[instance], y_curr + DRAW_OFFSET_Y[instance]);
         rect(x_curr - point_size_curr / 2, y_curr - point_size_curr / 2, point_size_curr, point_size_curr );
 
         // Save data for drawing line between previous and current points. 

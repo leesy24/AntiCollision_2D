@@ -243,7 +243,7 @@ void UI_Buttons_check_update()
 {
   if( buttons_check_over(buttons_zoom_minus_x, buttons_zoom_minus_y, buttons_zoom_minus_width, buttons_zoom_minus_height) )
   {
-    //println("ZOOM_FACTOR=" + ZOOM_FACTOR);
+    //println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
     buttons_zoom_minus_over = true;
     buttons_zoom_pluse_over =
     buttons_rotate_ccw_over =
@@ -254,7 +254,7 @@ void UI_Buttons_check_update()
   }
   else if( buttons_check_over(buttons_zoom_pluse_x, buttons_zoom_pluse_y, buttons_zoom_pluse_width, buttons_zoom_pluse_height) )
   {
-    //println("ZOOM_FACTOR=" + ZOOM_FACTOR);
+    //println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
     buttons_zoom_pluse_over = true;
     buttons_zoom_minus_over =
     buttons_rotate_ccw_over =
@@ -327,139 +327,139 @@ void UI_Buttons_check_update()
 
 void UI_Buttons_zoom_minus()
 {
-  if (ZOOM_FACTOR <= 3000)
+  if (ZOOM_FACTOR[0] <= 3000)
   {
-    if (ZOOM_FACTOR < 100) ZOOM_FACTOR += 10;
-    else ZOOM_FACTOR = int(float(ZOOM_FACTOR) * 1.1 + 5.0) / 10 * 10;
+    if (ZOOM_FACTOR[0] < 100) ZOOM_FACTOR[0] += 10;
+    else ZOOM_FACTOR[0] = int(float(ZOOM_FACTOR[0]) * 1.1 + 5.0) / 10 * 10;
     config_save();
   }
-  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR=" + ZOOM_FACTOR);
+  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
 }
 
 void UI_Buttons_zoom_pluse()
 {
-  if (ZOOM_FACTOR > 10)
+  if (ZOOM_FACTOR[0] > 10)
   {
-    if (ZOOM_FACTOR < 100) ZOOM_FACTOR -= 10;
-    else ZOOM_FACTOR = int(float(ZOOM_FACTOR) / 1.1 + 5.0) / 10 * 10;
+    if (ZOOM_FACTOR[0] < 100) ZOOM_FACTOR[0] -= 10;
+    else ZOOM_FACTOR[0] = int(float(ZOOM_FACTOR[0]) / 1.1 + 5.0) / 10 * 10;
     config_save();
   }
-  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR=" + ZOOM_FACTOR);
+  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
 }
 
 void UI_Buttons_rotate_ccw()
 {
   float save_ox, save_oy;
-  ROTATE_FACTOR -= 90;
-  if (ROTATE_FACTOR < 0) ROTATE_FACTOR += 360;
-  save_ox = float(GRID_OFFSET_X);
-  save_oy = float(GRID_OFFSET_Y);
-  if (ROTATE_FACTOR == 315) { // OK
-    GRID_OFFSET_X =  int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
-    GRID_OFFSET_Y = -int(save_ox);
+  ROTATE_FACTOR[0] -= 90;
+  if (ROTATE_FACTOR[0] < 0) ROTATE_FACTOR[0] += 360;
+  save_ox = float(DRAW_OFFSET_X[0]);
+  save_oy = float(DRAW_OFFSET_Y[0]);
+  if (ROTATE_FACTOR[0] == 315) { // OK
+    DRAW_OFFSET_X[0] =  int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
+    DRAW_OFFSET_Y[0] = -int(save_ox);
   }
-  else if (ROTATE_FACTOR == 45) { // OK
-    GRID_OFFSET_Y = -int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
-    GRID_OFFSET_X =  int(save_oy);
+  else if (ROTATE_FACTOR[0] == 45) { // OK
+    DRAW_OFFSET_Y[0] = -int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
+    DRAW_OFFSET_X[0] =  int(save_oy);
   }
-  else if (ROTATE_FACTOR == 135) { // OK
-    GRID_OFFSET_X =  int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
-    GRID_OFFSET_Y = -int(save_ox);
+  else if (ROTATE_FACTOR[0] == 135) { // OK
+    DRAW_OFFSET_X[0] =  int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
+    DRAW_OFFSET_Y[0] = -int(save_ox);
   }
-  else /*if (ROTATE_FACTOR == 225)*/ { // OK
-    GRID_OFFSET_Y = -int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
-    GRID_OFFSET_X =  int(save_oy);
+  else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
+    DRAW_OFFSET_Y[0] = -int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
+    DRAW_OFFSET_X[0] =  int(save_oy);
   }
   grid_ready();
   config_save();
-  if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR=" + ROTATE_FACTOR);
+  if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
 void UI_Buttons_rotate_cw()
 {
   float save_ox, save_oy;
-  ROTATE_FACTOR += 90;
-  if (ROTATE_FACTOR > 360) ROTATE_FACTOR -= 360;
-  save_ox = float(GRID_OFFSET_X);
-  save_oy = float(GRID_OFFSET_Y);
-  if (ROTATE_FACTOR == 315) { // OK
-    GRID_OFFSET_X = -int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
-    GRID_OFFSET_Y =  int(save_ox);
+  ROTATE_FACTOR[0] += 90;
+  if (ROTATE_FACTOR[0] > 360) ROTATE_FACTOR[0] -= 360;
+  save_ox = float(DRAW_OFFSET_X[0]);
+  save_oy = float(DRAW_OFFSET_Y[0]);
+  if (ROTATE_FACTOR[0] == 315) { // OK
+    DRAW_OFFSET_X[0] = -int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
+    DRAW_OFFSET_Y[0] =  int(save_ox);
   }
-  else if (ROTATE_FACTOR == 45) { // OK
-    GRID_OFFSET_Y =  int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
-    GRID_OFFSET_X = -int(save_oy);
+  else if (ROTATE_FACTOR[0] == 45) { // OK
+    DRAW_OFFSET_Y[0] =  int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
+    DRAW_OFFSET_X[0] = -int(save_oy);
   }
-  else if (ROTATE_FACTOR == 135) { // OK
-    GRID_OFFSET_X = -int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
-    GRID_OFFSET_Y =  int(save_ox);
+  else if (ROTATE_FACTOR[0] == 135) { // OK
+    DRAW_OFFSET_X[0] = -int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
+    DRAW_OFFSET_Y[0] =  int(save_ox);
   }
-  else /*if (ROTATE_FACTOR == 225)*/ { // OK
-    GRID_OFFSET_Y =  int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
-    GRID_OFFSET_X = -int(save_oy);
+  else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
+    DRAW_OFFSET_Y[0] =  int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
+    DRAW_OFFSET_X[0] = -int(save_oy);
   }
   grid_ready();
   config_save();
-  if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR=" + ROTATE_FACTOR);
+  if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
 void UI_Buttons_mirror_ud()
 {
-  MIRROR_ENABLE = !MIRROR_ENABLE;
-  if (ROTATE_FACTOR == 45 || ROTATE_FACTOR == 225)
+  MIRROR_ENABLE[0] = !MIRROR_ENABLE[0];
+  if (ROTATE_FACTOR[0] == 45 || ROTATE_FACTOR[0] == 225)
   {
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
-    if (ROTATE_FACTOR == 45) { // OK
-      ROTATE_FACTOR = 225;
-      GRID_OFFSET_X = GRID_OFFSET_X;
-      GRID_OFFSET_Y += -(SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT));
+    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
+    if (ROTATE_FACTOR[0] == 45) { // OK
+      ROTATE_FACTOR[0] = 225;
+      DRAW_OFFSET_X[0] = DRAW_OFFSET_X[0];
+      DRAW_OFFSET_Y[0] += -(SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT));
     }
-    else /*if (ROTATE_FACTOR == 225)*/ { // OK
-      ROTATE_FACTOR = 45;
-      GRID_OFFSET_X = GRID_OFFSET_X;
-      GRID_OFFSET_Y += SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT);
+    else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
+      ROTATE_FACTOR[0] = 45;
+      DRAW_OFFSET_X[0] = DRAW_OFFSET_X[0];
+      DRAW_OFFSET_Y[0] += SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT);
     }
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
   grid_ready();
   config_save();
-  if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE=" + MIRROR_ENABLE + ", ROTATE_FACTOR=" + ROTATE_FACTOR);
+  if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
 void UI_Buttons_mirror_lr()
 {
-  MIRROR_ENABLE = !MIRROR_ENABLE;
-  if (ROTATE_FACTOR == 315 || ROTATE_FACTOR == 135)
+  MIRROR_ENABLE[0] = !MIRROR_ENABLE[0];
+  if (ROTATE_FACTOR[0] == 315 || ROTATE_FACTOR[0] == 135)
   {
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
-    if (ROTATE_FACTOR == 315) { // OK
-      ROTATE_FACTOR = 135;
-      GRID_OFFSET_X += -(SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT));
-      GRID_OFFSET_Y = GRID_OFFSET_Y;
+    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
+    if (ROTATE_FACTOR[0] == 315) { // OK
+      ROTATE_FACTOR[0] = 135;
+      DRAW_OFFSET_X[0] += -(SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT));
+      DRAW_OFFSET_Y[0] = DRAW_OFFSET_Y[0];
     }
-    else /*if (ROTATE_FACTOR == 135)*/ { // OK
-      ROTATE_FACTOR = 315;
-      GRID_OFFSET_X += SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT);
-      GRID_OFFSET_Y = GRID_OFFSET_Y;
+    else /*if (ROTATE_FACTOR[0] == 135)*/ { // OK
+      ROTATE_FACTOR[0] = 315;
+      DRAW_OFFSET_X[0] += SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT);
+      DRAW_OFFSET_Y[0] = DRAW_OFFSET_Y[0];
     }
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
   grid_ready();
   config_save();
-  if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE=" + MIRROR_ENABLE + ", ROTATE_FACTOR=" + ROTATE_FACTOR);
+  if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
 void UI_Buttons_reset_en()
 {
   if(PRINT_UI_BUTTONS_RESET_DBG)
   {
-    println("ZOOM_FACTOR=" + ZOOM_FACTOR);
-    println("MIRROR_ENABLE=" + MIRROR_ENABLE);
-    println("GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
+    println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0]);
+    println("DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
-  GRID_OFFSET_X = GRID_OFFSET_Y = 0;
-  MIRROR_ENABLE = false;
-  ZOOM_FACTOR = 100;
+  DRAW_OFFSET_X[0] = DRAW_OFFSET_Y[0] = 0;
+  MIRROR_ENABLE[0] = false;
+  ZOOM_FACTOR[0] = 100;
   grid_ready();
   config_save();
 }

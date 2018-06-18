@@ -12,31 +12,41 @@ final String TITLE = "DASAN-InfoTEK - 2D Anti-Collision System";
 String Title;
 
 // Define zoom factor variables.
-//float ZOOM_FACTOR = 100;
-int ZOOM_FACTOR = 100;
+int[] ZOOM_FACTOR;
 
 // Define rotate factor variables.
-float ROTATE_FACTOR = 315;/*45;*//*135;*//*225;*/
+float[] ROTATE_FACTOR;
 
 // Define mirror variables.
-boolean MIRROR_ENABLE = false;
+boolean[] MIRROR_ENABLE;
+
+// Define offset of misc. draw.
+int[] DRAW_OFFSET_X;
+int[] DRAW_OFFSET_Y;
 
 int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
-  // This is for argument passed number of config file.
-  /*
-  try {
-    if( args.length >= 1) {
-      CONFIG_instance_number = args[0];
-    }
+  ZOOM_FACTOR = new int[PS_INSTANCE_MAX];
+  ROTATE_FACTOR = new float[PS_INSTANCE_MAX];
+  MIRROR_ENABLE = new boolean[PS_INSTANCE_MAX];
+  DRAW_OFFSET_X = new int[PS_INSTANCE_MAX];
+  DRAW_OFFSET_Y = new int[PS_INSTANCE_MAX];
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    // Define zoom factor variables.
+    ZOOM_FACTOR[i] = 100;
+    // Define rotate factor variables.
+    ROTATE_FACTOR[i] = 315;/*45;*//*135;*//*225;*/
+    // Define mirror variables.
+    MIRROR_ENABLE[i] = false;
+    // Define offset of misc. draw.
+    DRAW_OFFSET_X[i] = 0;
+    DRAW_OFFSET_Y[i] = 0;
   }
-  catch (Exception e) {
-    // Nothing to do.
-  }
-  */
+
   PS_Data_settings();
   const_settings();
   config_settings();

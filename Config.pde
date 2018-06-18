@@ -34,16 +34,15 @@ void config_settings()
       if(name.equals("PS_DATA_interface"))
         PS_DATA_interface[i] = variable.getInt("Value");
       else if(name.equals("ROTATE_FACTOR"))
-        ROTATE_FACTOR = variable.getFloat("Value"); 
+        ROTATE_FACTOR[i] = variable.getFloat("Value"); 
       else if(name.equals("MIRROR_ENABLE"))
-        MIRROR_ENABLE = (variable.getString("Value").equals("true"))?true:false; 
+        MIRROR_ENABLE[i] = (variable.getString("Value").equals("true"))?true:false; 
       else if(name.equals("ZOOM_FACTOR"))
-        //ZOOM_FACTOR = variable.getFloat("Value"); 
-        ZOOM_FACTOR = variable.getInt("Value"); 
-      else if(name.equals("GRID_OFFSET_X"))
-        GRID_OFFSET_X = variable.getInt("Value");
-      else if(name.equals("GRID_OFFSET_Y"))
-        GRID_OFFSET_Y = variable.getInt("Value");
+        ZOOM_FACTOR[i] = variable.getInt("Value"); 
+      else if(name.equals("DRAW_OFFSET_X"))
+        DRAW_OFFSET_X[i] = variable.getInt("Value");
+      else if(name.equals("DRAW_OFFSET_Y"))
+        DRAW_OFFSET_Y[i] = variable.getInt("Value");
       else if(name.equals("FILE_name"))
         FILE_name = variable.getString("Value");
       else if(name.equals("UART_port_name"))
@@ -96,24 +95,24 @@ void config_create()
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "ROTATE_FACTOR");
-    variable.setFloat("Value", ROTATE_FACTOR);
+    variable.setFloat("Value", ROTATE_FACTOR[i]);
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "MIRROR_ENABLE");
-    variable.setString("Value", ((MIRROR_ENABLE)?"true":"false"));
+    variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
     
     variable = CONFIG_table.addRow();
     variable.setString("Name", "ZOOM_FACTOR");
     //variable.setFloat("Value", ZOOM_FACTOR);
-    variable.setInt("Value", ZOOM_FACTOR);
+    variable.setInt("Value", ZOOM_FACTOR[i]);
     
     variable = CONFIG_table.addRow();
-    variable.setString("Name", "GRID_OFFSET_X");
-    variable.setInt("Value", GRID_OFFSET_X);
+    variable.setString("Name", "DRAW_OFFSET_X");
+    variable.setInt("Value", DRAW_OFFSET_X[i]);
     
     variable = CONFIG_table.addRow();
-    variable.setString("Name", "GRID_OFFSET_Y");
-    variable.setInt("Value", GRID_OFFSET_Y);
+    variable.setString("Name", "DRAW_OFFSET_Y");
+    variable.setInt("Value", DRAW_OFFSET_Y[i]);
     
     variable = CONFIG_table.addRow();
     variable.setString("Name", "FILE_name");
@@ -182,37 +181,37 @@ void config_save()
       }
       else if(name.equals("ROTATE_FACTOR")) {
         value_float = variable.getFloat("Value");
-        if(value_float != ROTATE_FACTOR) {
-          variable.setFloat("Value", ROTATE_FACTOR);
+        if(value_float != ROTATE_FACTOR[i]) {
+          variable.setFloat("Value", ROTATE_FACTOR[i]);
           changed = true;
         }
       }
       else if(name.equals("MIRROR_ENABLE")) {
         value_boolean = variable.getString("Value").equals("true")?true:false;
-        if(value_boolean != MIRROR_ENABLE) {
-          variable.setString("Value", ((MIRROR_ENABLE)?"true":"false"));
+        if(value_boolean != MIRROR_ENABLE[i]) {
+          variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
           changed = true;
         }
       }
       else if(name.equals("ZOOM_FACTOR")) {
         value_float = variable.getFloat("Value");
-        if(value_float != ZOOM_FACTOR) {
+        if(value_float != ZOOM_FACTOR[i]) {
           //variable.setFloat("Value", ZOOM_FACTOR);
-          variable.setInt("Value", ZOOM_FACTOR);
+          variable.setInt("Value", ZOOM_FACTOR[i]);
           changed = true;
         }
       }
-      else if(name.equals("GRID_OFFSET_X")) {
+      else if(name.equals("DRAW_OFFSET_X")) {
         value_int = variable.getInt("Value");
-        if(value_int != GRID_OFFSET_X) {
-          variable.setInt("Value", GRID_OFFSET_X);
+        if(value_int != DRAW_OFFSET_X[i]) {
+          variable.setInt("Value", DRAW_OFFSET_X[i]);
           changed = true;
         }
       }
-      else if(name.equals("GRID_OFFSET_Y")) {
+      else if(name.equals("DRAW_OFFSET_Y")) {
         value_int = variable.getInt("Value");
-        if(value_int != GRID_OFFSET_Y) {
-          variable.setInt("Value", GRID_OFFSET_Y);
+        if(value_int != DRAW_OFFSET_Y[i]) {
+          variable.setInt("Value", DRAW_OFFSET_Y[i]);
           changed = true;
         }
       }

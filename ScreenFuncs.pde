@@ -164,24 +164,24 @@ boolean screen_check_update()
       surface.setSize(new_width, new_height);
     }
   
-    //println("old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
-    if (ROTATE_FACTOR == 315)
+    //println("old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
+    if (ROTATE_FACTOR[0] == 315)
     { // OK
-      GRID_OFFSET_X = int(GRID_OFFSET_X - (float(SCREEN_width)  / 2.0) + (float(new_width)  / 2.0));
+      DRAW_OFFSET_X[0] = int(DRAW_OFFSET_X[0] - (float(SCREEN_width)  / 2.0) + (float(new_width)  / 2.0));
     }
-    else if (ROTATE_FACTOR == 45)
+    else if (ROTATE_FACTOR[0] == 45)
     { // OK
-      GRID_OFFSET_Y = int(GRID_OFFSET_Y - (float(SCREEN_height) / 2.0) + (float(new_height) / 2.0));
+      DRAW_OFFSET_Y[0] = int(DRAW_OFFSET_Y[0] - (float(SCREEN_height) / 2.0) + (float(new_height) / 2.0));
     }
-    else if (ROTATE_FACTOR == 135)
+    else if (ROTATE_FACTOR[0] == 135)
     { // OK
-      GRID_OFFSET_X = int(GRID_OFFSET_X + (float(SCREEN_width)  / 2.0) - (float(new_width)  / 2.0));
+      DRAW_OFFSET_X[0] = int(DRAW_OFFSET_X[0] + (float(SCREEN_width)  / 2.0) - (float(new_width)  / 2.0));
     }
-    else //if (ROTATE_FACTOR == 225)
+    else //if (ROTATE_FACTOR[0] == 225)
     { // OK
-      GRID_OFFSET_Y = int(GRID_OFFSET_Y + (float(SCREEN_height) / 2.0) - (float(new_height) / 2.0));
+      DRAW_OFFSET_Y[0] = int(DRAW_OFFSET_Y[0] + (float(SCREEN_height) / 2.0) - (float(new_height) / 2.0));
     }
-    //println("new GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+    //println("new DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
     SCREEN_width = new_width;
     SCREEN_height = new_height;
 

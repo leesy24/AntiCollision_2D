@@ -68,8 +68,8 @@ void mousePressed()
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
-  mousePressedX = mouseX - GRID_OFFSET_X;
-  mousePressedY = mouseY - GRID_OFFSET_Y;
+  mousePressedX = mouseX - DRAW_OFFSET_X[0];
+  mousePressedY = mouseY - DRAW_OFFSET_Y[0];
 
   buttons_zoom_minus_pressed = false;
   buttons_zoom_pluse_pressed = false;
@@ -124,7 +124,7 @@ void mouseReleased()
     UI_Buttons_zoom_pluse();
   }
 
-  //println("old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+  //println("old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   if (buttons_rotate_ccw_over && buttons_rotate_ccw_pressed)
   {
     UI_Buttons_rotate_ccw();
@@ -133,7 +133,7 @@ void mouseReleased()
   {
     UI_Buttons_rotate_cw();
   }
-  //println("new GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
+  //println("new DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
 
   if (buttons_mirror_ud_over && buttons_mirror_ud_pressed)
   {
@@ -168,19 +168,18 @@ void mouseDragged()
 
   UI_Buttons_check_update();
 
-  GRID_OFFSET_X = mouseX - mousePressedX;
-  GRID_OFFSET_Y = mouseY - mousePressedY;
+  DRAW_OFFSET_X[0] = mouseX - mousePressedX;
+  DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
 
   config_save();
 
-  if (PRINT_MOUSEFUNC_Dragged) println("\t GRID_OFFSET_X:" + GRID_OFFSET_X + ", GRID_OFFSET_Y:" + GRID_OFFSET_Y);
+  if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X[0]:" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]:" + DRAW_OFFSET_Y[0]);
 }
 
 void mouseWheel(MouseEvent event)
 {
   int wheel_count = event.getCount();
-  //float zoom_factor_save = ZOOM_FACTOR;
-  int zoom_factor_save = ZOOM_FACTOR;
+  int zoom_factor_save = ZOOM_FACTOR[0];
 
   if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);
 
@@ -200,23 +199,23 @@ void mouseWheel(MouseEvent event)
   }
 
   // Check zoom factor changed.
-  if (zoom_factor_save != ZOOM_FACTOR)
+  if (zoom_factor_save != ZOOM_FACTOR[0])
   {
-    final int const_x_base = (ROTATE_FACTOR == 135)?(SCREEN_width + GRID_OFFSET_X - mouseX):(mouseX - GRID_OFFSET_X);
-    final int const_y_base = (ROTATE_FACTOR == 225)?(SCREEN_height + GRID_OFFSET_Y - mouseY):(mouseY - GRID_OFFSET_Y);
-    final int const_x_offset = (ROTATE_FACTOR == 315 || ROTATE_FACTOR == 135)?(TEXT_MARGIN + FONT_HEIGHT / 2):(SCREEN_width / 2);
-    final int const_y_offset = (ROTATE_FACTOR == 45 || ROTATE_FACTOR == 225)?(TEXT_MARGIN + FONT_HEIGHT / 2):(SCREEN_height / 2);
-    final float const_x_ratio = (ROTATE_FACTOR == 135)?(float(zoom_factor_save) / float(ZOOM_FACTOR) - 1.0):(1.0 - float(zoom_factor_save) / float(ZOOM_FACTOR));
-    final float const_y_ratio = (ROTATE_FACTOR == 225)?(float(zoom_factor_save) / float(ZOOM_FACTOR) - 1.0):(1.0 - float(zoom_factor_save) / float(ZOOM_FACTOR));
+    final int const_x_base = (ROTATE_FACTOR[0] == 135)?(SCREEN_width + DRAW_OFFSET_X[0] - mouseX):(mouseX - DRAW_OFFSET_X[0]);
+    final int const_y_base = (ROTATE_FACTOR[0] == 225)?(SCREEN_height + DRAW_OFFSET_Y[0] - mouseY):(mouseY - DRAW_OFFSET_Y[0]);
+    final int const_x_offset = (ROTATE_FACTOR[0] == 315 || ROTATE_FACTOR[0] == 135)?(TEXT_MARGIN + FONT_HEIGHT / 2):(SCREEN_width / 2);
+    final int const_y_offset = (ROTATE_FACTOR[0] == 45 || ROTATE_FACTOR[0] == 225)?(TEXT_MARGIN + FONT_HEIGHT / 2):(SCREEN_height / 2);
+    final float const_x_ratio = (ROTATE_FACTOR[0] == 135)?(float(zoom_factor_save) / float(ZOOM_FACTOR[0]) - 1.0):(1.0 - float(zoom_factor_save) / float(ZOOM_FACTOR[0]));
+    final float const_y_ratio = (ROTATE_FACTOR[0] == 225)?(float(zoom_factor_save) / float(ZOOM_FACTOR[0]) - 1.0):(1.0 - float(zoom_factor_save) / float(ZOOM_FACTOR[0]));
 
-    //println("old ZOOM_FACTOR=" + zoom_factor_save + ", new ZOOM_FACTOR=" + ZOOM_FACTOR);
+    //println("old ZOOM_FACTOR[0]=" + zoom_factor_save + ", new ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
     //println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
-    //println("GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
-    //println("(SCREEN_height - mouseY - GRID_OFFSET_Y) * const_ratio=" + ((SCREEN_height - mouseY - GRID_OFFSET_Y) * const_ratio));
-    //println("(SCREEN_height - mouseY - GRID_OFFSET_Y)=" + ((SCREEN_height - mouseY - GRID_OFFSET_Y)));
+    //println("DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
+    //println("(SCREEN_height - mouseY - DRAW_OFFSET_Y[0]) * const_ratio=" + ((SCREEN_height - mouseY - DRAW_OFFSET_Y[0]) * const_ratio));
+    //println("(SCREEN_height - mouseY - DRAW_OFFSET_Y[0])=" + ((SCREEN_height - mouseY - DRAW_OFFSET_Y[0])));
 
-    GRID_OFFSET_X += int((const_x_base - const_x_offset) * const_x_ratio);
-    GRID_OFFSET_Y += int((const_y_base - const_y_offset) * const_y_ratio);
+    DRAW_OFFSET_X[0] += int((const_x_base - const_x_offset) * const_x_ratio);
+    DRAW_OFFSET_Y[0] += int((const_y_base - const_y_offset) * const_y_ratio);
 
     config_save();
   }
