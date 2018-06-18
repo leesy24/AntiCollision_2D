@@ -1,4 +1,4 @@
-void grid_draw_rotate_135()
+void grid_draw_rotate_135(int instance)
 {
   final int const_screen_height_d_2 = SCREEN_height / 2;
   final int const_screen_x_start = TEXT_MARGIN;
@@ -6,24 +6,24 @@ void grid_draw_rotate_135()
   final int const_screen_y_start = TEXT_MARGIN + FONT_HEIGHT;
   final int const_screen_y_end = SCREEN_height - TEXT_MARGIN;
   final int const_font_height_d_2 = FONT_HEIGHT / 2;
-  //final float const_zoom_factor_d_100 = ZOOM_FACTOR[0] / 100.0;
-  final int const_grid_offset_x = const_screen_x_end - const_font_height_d_2 + (DRAW_OFFSET_X[0] % 100);
-  final int const_grid_offset_y = ((SCREEN_height % 100) / 2) + (DRAW_OFFSET_Y[0] % 100) + ((((SCREEN_height / 100) % 2) == 0)?0:50);
-  final int const_str_offset_ix = DRAW_OFFSET_X[0] / 100 * 100;
-  final int const_str_offset_iy = SCREEN_height / 100 / 2 * 100 + DRAW_OFFSET_Y[0] / 100 * 100;
-  //final int const_str_base_ix_y = (SCREEN_height / 2) + const_font_height_d_2 + DRAW_OFFSET_Y[0];
+  //final float const_zoom_factor_d_100 = ZOOM_FACTOR[instance] / 100.0;
+  final int const_grid_offset_x = const_screen_x_end - const_font_height_d_2 + (DRAW_OFFSET_X[instance] % 100);
+  final int const_grid_offset_y = ((SCREEN_height % 100) / 2) + (DRAW_OFFSET_Y[instance] % 100) + ((((SCREEN_height / 100) % 2) == 0)?0:50);
+  final int const_str_offset_ix = DRAW_OFFSET_X[instance] / 100 * 100;
+  final int const_str_offset_iy = SCREEN_height / 100 / 2 * 100 + DRAW_OFFSET_Y[instance] / 100 * 100;
+  //final int const_str_base_ix_y = (SCREEN_height / 2) + const_font_height_d_2 + DRAW_OFFSET_Y[instance];
   final int const_str_base_ix_y =
-    (DRAW_OFFSET_Y[0] < TEXT_MARGIN + const_font_height_d_2 - const_screen_height_d_2)
+    (DRAW_OFFSET_Y[instance] < TEXT_MARGIN + const_font_height_d_2 - const_screen_height_d_2)
     ?
     const_screen_y_start
     :
-    ((DRAW_OFFSET_Y[0] > const_screen_height_d_2 - TEXT_MARGIN - const_font_height_d_2)
+    ((DRAW_OFFSET_Y[instance] > const_screen_height_d_2 - TEXT_MARGIN - const_font_height_d_2)
       ?
       const_screen_y_end
       :
-      (const_screen_height_d_2 + const_font_height_d_2 + DRAW_OFFSET_Y[0])
+      (const_screen_height_d_2 + const_font_height_d_2 + DRAW_OFFSET_Y[instance])
     );
-  final int const_str_base_iy_x = const_screen_x_end - const_font_height_d_2 + DRAW_OFFSET_X[0];
+  final int const_str_base_iy_x = const_screen_x_end - const_font_height_d_2 + DRAW_OFFSET_X[instance];
   int x, y;
   int ix, iy;
   String string;
@@ -49,12 +49,12 @@ void grid_draw_rotate_135()
   fill(C_GRID_TEXT);
   stroke(C_GRID_TEXT);
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
-    if (MIRROR_ENABLE[0])
+    if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(const_str_offset_iy - iy) / 100.0;
-      distance = (ZOOM_FACTOR[0] * (const_str_offset_iy - iy)) / 100.0 / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (const_str_offset_iy - iy)) / 100.0 / 100.0;
     else
       //distance = const_zoom_factor_d_100 * float(iy - const_str_offset_iy) / 100.0;
-      distance = (ZOOM_FACTOR[0] * (iy - const_str_offset_iy)) / 100.0 / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (iy - const_str_offset_iy)) / 100.0 / 100.0;
     string = distance + "m";
     x = const_str_base_iy_x - int(textWidth(string) / 2.0);
     if (x < const_screen_x_start)
@@ -73,7 +73,7 @@ void grid_draw_rotate_135()
   //if (y > const_screen_y_end) y = const_screen_y_end;
   for (ix = 0; ix <= SCREEN_width + 100; ix += 100) {
     //distance = const_zoom_factor_d_100 * float(ix + const_str_offset_ix) / 100.0;
-    distance = (ZOOM_FACTOR[0] * (ix + const_str_offset_ix)) / 100.0 / 100.0;
+    distance = (ZOOM_FACTOR[instance] * (ix + const_str_offset_ix)) / 100.0 / 100.0;
     if (distance >= 0.0) {
       string = distance + "m";
       x = const_grid_offset_x - ix;
@@ -84,12 +84,12 @@ void grid_draw_rotate_135()
     }
   }
 
-  if( (image_x >= 0 - PS_image.width / 2 && image_x < SCREEN_width + PS_image.width / 2)
+  if( (image_x >= 0 - PS_image[instance].width / 2 && image_x < SCREEN_width + PS_image[instance].width / 2)
       &&
-      (image_y >= 0 - PS_image.height / 2 && image_y < SCREEN_height + PS_image.height / 2)
+      (image_y >= 0 - PS_image[instance].height / 2 && image_y < SCREEN_height + PS_image[instance].height / 2)
     )
   {
     //println("image xy=" + image_x + "," + image_y);
-    image(PS_image, image_x - PS_image.width / 2, image_y - PS_image.height / 2);
+    image(PS_image[instance], image_x - PS_image[instance].width / 2, image_y - PS_image[instance].height / 2);
   }
 }
