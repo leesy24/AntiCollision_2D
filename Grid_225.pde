@@ -25,22 +25,78 @@ void grid_draw_rotate_225(int instance)
   final int const_str_base_iy_x = (SCREEN_width / 2) + DRAW_OFFSET_X[instance];
   int x, y;
   int ix, iy;
+  int x_zero, y_zero;
   String string;
-  float distance;
+  float distance = 0.0;
   int image_x = MIN_INT, image_y = MIN_INT;
+
+  if (MIRROR_ENABLE[instance])
+    x_zero = 0;
+  else
+    x_zero = SCREEN_width;
+  for (ix = -100; ix <= SCREEN_width + 100; ix += 100) {
+    if (MIRROR_ENABLE[instance])
+      //distance = const_zoom_factor_d_100 * float(ix - const_str_offset_ix) / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (ix - const_str_offset_ix)) / 100.0 / 100.0;
+    else
+      //distance = const_zoom_factor_d_100 * float(const_str_offset_ix - ix) / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (const_str_offset_ix - ix)) / 100.0 / 100.0;
+    //println("ix="+ix+":d="+distance);
+    if (distance == 0.0) {
+      x_zero = ix + const_grid_offset_x;
+      break;
+    }
+  }
+  //println("ix="+ix+":d="+distance);
+  if (ix > SCREEN_width + 100 && distance < 0.0)
+    if (MIRROR_ENABLE[instance])
+      x_zero = SCREEN_width;
+    else
+      x_zero = 0;
+  //println("x_zero="+x_zero);
+
+  y_zero = SCREEN_height;
+  for (iy = 0; iy <= SCREEN_height + 100; iy += 100) {
+    //distance = const_zoom_factor_d_100 * float(iy + const_str_offset_iy) / 100.0;
+    distance = (ZOOM_FACTOR[instance] * (iy + const_str_offset_iy)) / 100.0 / 100.0;
+    if (distance >= 0.0) {
+      y_zero = const_grid_offset_y - iy;
+      break;
+    }
+  }
+  //println("iy="+iy+":d="+distance);
+  if (iy > SCREEN_height + 100 && distance < 0.0)
+    y_zero = 0;
+  //println("y_zero="+y_zero);
 
   // Sets the color used to draw lines and borders around shapes.
   fill(C_GRID_LINE);
   stroke(C_GRID_LINE);
   for (ix = -100; ix <= SCREEN_width + 100; ix += 100) {
-    line(ix + const_grid_offset_x, 0,
-         ix + const_grid_offset_x, SCREEN_height);
-    //println("ix="+ix+":offset_x="+const_grid_offset_x+",x="+(ix + const_grid_offset_x));
+    if (MIRROR_ENABLE[instance])
+      //distance = const_zoom_factor_d_100 * float(ix - const_str_offset_ix) / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (ix - const_str_offset_ix)) / 100.0 / 100.0;
+    else
+      //distance = const_zoom_factor_d_100 * float(const_str_offset_ix - ix) / 100.0;
+      distance = (ZOOM_FACTOR[instance] * (const_str_offset_ix - ix)) / 100.0 / 100.0;
+    if (distance >= 0.0) {
+      line(ix + const_grid_offset_x, 0,
+           ix + const_grid_offset_x, y_zero);
+      //println("ix="+ix+":offset_x="+const_grid_offset_x+",x="+(ix + const_grid_offset_x));
+    }
   }
   for (iy = 0; iy <= SCREEN_height + 100; iy += 100) {
-    line(0,            const_grid_offset_y - iy,
-         SCREEN_width, const_grid_offset_y - iy);
-    //println("iy="+iy+":offset_y="+const_grid_offset_y+",y="+(const_grid_offset_y - iy));
+    //distance = const_zoom_factor_d_100 * float(iy + const_str_offset_iy) / 100.0;
+    distance = (ZOOM_FACTOR[instance] * (iy + const_str_offset_iy)) / 100.0 / 100.0;
+    if (distance >= 0.0) {
+      if (MIRROR_ENABLE[instance])
+        line(x_zero,       const_grid_offset_y - iy,
+             SCREEN_width, const_grid_offset_y - iy);
+      else
+        line(0,      const_grid_offset_y - iy,
+             x_zero, const_grid_offset_y - iy);
+      //println("iy="+iy+":offset_y="+const_grid_offset_y+",y="+(const_grid_offset_y - iy));
+    }
   }
 
   // Sets the color used to draw text and borders around shapes.
@@ -56,12 +112,14 @@ void grid_draw_rotate_225(int instance)
     else
       //distance = const_zoom_factor_d_100 * float(const_str_offset_ix - ix) / 100.0;
       distance = (ZOOM_FACTOR[instance] * (const_str_offset_ix - ix)) / 100.0 / 100.0;
-    string = distance + "m";
-    x = ix + const_grid_offset_x;
-    if(distance == 0.0)
-      image_x = x;
-    text(string, x - int(textWidth(string) / 2.0), y);
-    //println("iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
+    if (distance >= 0.0) {
+      string = distance + "m";
+      x = ix + const_grid_offset_x;
+      if(distance == 0.0)
+        image_x = x;
+      text(string, x - int(textWidth(string) / 2.0), y);
+      //println("iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
+    }
   }
 
   for (iy = 0; iy <= SCREEN_height + 100; iy += 100) {
