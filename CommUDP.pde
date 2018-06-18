@@ -1,7 +1,7 @@
 import hypermedia.net.*;
 
-final static boolean PRINT_COMM_UDP_ALL_DBG = true; 
-//final static boolean PRINT_COMM_UDP_ALL_DBG = false; 
+//final static boolean PRINT_COMM_UDP_ALL_DBG = true; 
+final static boolean PRINT_COMM_UDP_ALL_DBG = false; 
 //final static boolean PRINT_COMM_UDP_SETUP_DBG = true; 
 final static boolean PRINT_COMM_UDP_SETUP_DBG = false; 
 //final static boolean PRINT_COMM_UDP_SETUP_ERR = true; 
