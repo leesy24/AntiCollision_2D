@@ -10,13 +10,13 @@ static String FILE_name = "";
 static long FILE_last_modified_time = 0;
 static String FILE_str_err_last = null;
 
-void interface_file_reset()
+void Interfaces_File_reset()
 {
   FILE_last_modified_time = 0;
   FILE_str_err_last = null;
 }
 
-void interface_file_setup()
+void Interfaces_File_setup()
 {
   // Check config FILE_name
   if( FILE_name.equals("") == true ||
@@ -37,12 +37,12 @@ void interface_file_setup()
   Title += "(" + FILE_name + ")";
 }
 
-String interface_file_get_error()
+String Interfaces_File_get_error()
 {
   return FILE_str_err_last;
 }
 
-boolean interface_file_load()
+boolean Interfaces_File_load()
 {
   String string;
 
@@ -63,12 +63,12 @@ boolean interface_file_load()
   }
   
   // Load binary buf.
-  data_buf = loadBytes(FILE_name);
-  if (PRINT_FILE_LOAD_ERR) println("buf.length = " + data_buf.length);
+  PS_Data_buf[0] = loadBytes(FILE_name);
+  if (PRINT_FILE_LOAD_ERR) println("buf.length = " + PS_Data_buf[0].length);
   // Check binary buf length is valid.
   // Must larger than Function code(4B) + Length(4B) + Number of parameters(4B) + Number of points(4B) + CRC(4B).
-  if (data_buf.length < 4 + 4 + 4 + 4 + 4) {
-    FILE_str_err_last = "Error: File size is invalid! " + data_buf.length;
+  if (PS_Data_buf[0].length < 4 + 4 + 4 + 4 + 4) {
+    FILE_str_err_last = "Error: File size is invalid! " + PS_Data_buf[0].length;
     if(PRINT_FILE_LOAD_ERR) println(FILE_str_err_last);
     return false;
   }

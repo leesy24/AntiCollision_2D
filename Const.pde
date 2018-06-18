@@ -37,54 +37,54 @@ void const_settings()
       SCREEN_Y_OFFSET = variable.getInt("Value");
     else if(name.equals("C_BG"))
       C_BG = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_DATA_ERR_TEXT"))
-      C_DATA_ERR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_PS_DATA_ERR_TEXT"))
+      C_PS_DATA_ERR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_BUBBLEINFO_RECT_FILL"))
       C_BUBBLEINFO_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_BUBBLEINFO_RECT_STROKE"))
       C_BUBBLEINFO_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_BUBBLEINFO_TEXT"))
       C_BUBBLEINFO_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BTN_NORMAL"))
-      C_BTN_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BTN_HIGHLIGHT"))
-      C_BTN_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BTN_TEXT"))
-      C_BTN_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BTN_BOX"))
-      C_BTN_BOX = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_BTN_BOX"))
-      W_BTN_BOX = variable.getInt("Value");
-    else if(name.equals("C_DATA_LINE"))
-      C_DATA_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_DATA_POINT"))
-      C_DATA_POINT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_DATA_LINE_POINT"))
-      W_DATA_LINE_POINT = variable.getInt("Value");
-    else if(name.equals("C_DATA_RECT_FILL"))
-      C_DATA_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_DATA_RECT_STROKE"))
-      C_DATA_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_DATA_RECT_STROKE"))
-      W_DATA_RECT_STROKE = variable.getInt("Value");
-    else if(name.equals("C_DATA_RECT_TEXT"))
-      C_DATA_RECT_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_BUTTONS_NORMAL"))
+      C_UI_BUTTONS_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_BUTTONS_HIGHLIGHT"))
+      C_UI_BUTTONS_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_BUTTONS_TEXT"))
+      C_UI_BUTTONS_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_BUTTONS_BOX"))
+      C_UI_BUTTONS_BOX = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_UI_BUTTONS_BOX"))
+      W_UI_BUTTONS_BOX = variable.getInt("Value");
+    else if(name.equals("C_PS_DATA_LINE"))
+      C_PS_DATA_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_PS_DATA_POINT"))
+      C_PS_DATA_POINT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_PS_DATA_LINE_POINT"))
+      W_PS_DATA_LINE_POINT = variable.getInt("Value");
+    else if(name.equals("C_PS_DATA_RECT_FILL"))
+      C_PS_DATA_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_PS_DATA_RECT_STROKE"))
+      C_PS_DATA_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_PS_DATA_RECT_STROKE"))
+      W_PS_DATA_RECT_STROKE = variable.getInt("Value");
+    else if(name.equals("C_PS_DATA_RECT_TEXT"))
+      C_PS_DATA_RECT_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_GRID_LINE"))
       C_GRID_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_GRID_TEXT"))
       C_GRID_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_TEXT"))
-      C_INTERFACE_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_FILL_NORMAL"))
-      C_INTERFACE_FILL_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_FILL_HIGHLIGHT"))
-      C_INTERFACE_FILL_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_BORDER_ACTIVE"))
-      C_INTERFACE_BORDER_ACTIVE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_BORDER_NORMAL"))
-      C_INTERFACE_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_INTERFACE_CURSOR"))
-      C_INTERFACE_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_TEXT"))
+      C_UI_INTERFACES_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_FILL_NORMAL"))
+      C_UI_INTERFACES_FILL_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_FILL_HIGHLIGHT"))
+      C_UI_INTERFACES_FILL_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_BORDER_ACTIVE"))
+      C_UI_INTERFACES_BORDER_ACTIVE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_BORDER_NORMAL"))
+      C_UI_INTERFACES_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_INTERFACES_CURSOR"))
+      C_UI_INTERFACES_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_LINES_LINE"))
       C_LINES_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_LINES_LINE"))
@@ -132,8 +132,8 @@ void const_create()
   variable.setString("Comment", "Background color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_ERR_TEXT");
-  variable.setString("Value", String.format("%08X", C_DATA_ERR_TEXT));
+  variable.setString("Name", "C_PS_DATA_ERR_TEXT");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_ERR_TEXT));
   variable.setString("Comment", "Error text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
@@ -152,63 +152,63 @@ void const_create()
   variable.setString("Comment", "Bubble infor box text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BTN_NORMAL");
-  variable.setString("Value", String.format("%08X", C_BTN_NORMAL));
+  variable.setString("Name", "C_UI_BUTTONS_NORMAL");
+  variable.setString("Value", String.format("%08X", C_UI_BUTTONS_NORMAL));
   variable.setString("Comment", "Button normal background color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BTN_HIGHLIGHT");
-  variable.setString("Value", String.format("%08X", C_BTN_HIGHLIGHT));
+  variable.setString("Name", "C_UI_BUTTONS_HIGHLIGHT");
+  variable.setString("Value", String.format("%08X", C_UI_BUTTONS_HIGHLIGHT));
   variable.setString("Comment", "Button highlight background color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BTN_TEXT");
-  variable.setString("Value", String.format("%08X", C_BTN_TEXT));
+  variable.setString("Name", "C_UI_BUTTONS_TEXT");
+  variable.setString("Value", String.format("%08X", C_UI_BUTTONS_TEXT));
   variable.setString("Comment", "Button text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BTN_BOX");
-  variable.setString("Value", String.format("%08X", C_BTN_BOX));
+  variable.setString("Name", "C_UI_BUTTONS_BOX");
+  variable.setString("Value", String.format("%08X", C_UI_BUTTONS_BOX));
   variable.setString("Comment", "Button box color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_BTN_BOX");
-  variable.setInt("Value", W_BTN_BOX);
+  variable.setString("Name", "W_UI_BUTTONS_BOX");
+  variable.setInt("Value", W_UI_BUTTONS_BOX);
   variable.setString("Comment", "Button box weight.");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_LINE");
-  variable.setString("Value", String.format("%08X", C_DATA_LINE));
+  variable.setString("Name", "C_PS_DATA_LINE");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_LINE));
   variable.setString("Comment", "Scan points line default color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_POINT");
-  variable.setString("Value", String.format("%08X", C_DATA_POINT));
+  variable.setString("Name", "C_PS_DATA_POINT");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_POINT));
   variable.setString("Comment", "Scan point default color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_DATA_LINE_POINT");
-  variable.setInt("Value", W_DATA_LINE_POINT);
+  variable.setString("Name", "W_PS_DATA_LINE_POINT");
+  variable.setInt("Value", W_PS_DATA_LINE_POINT);
   variable.setString("Comment", "Scan line and point default weight.");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_RECT_FILL");
-  variable.setString("Value", String.format("%08X", C_DATA_RECT_FILL));
+  variable.setString("Name", "C_PS_DATA_RECT_FILL");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_FILL));
   variable.setString("Comment", "Scan info box fill color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_RECT_STROKE");
-  variable.setString("Value", String.format("%08X", C_DATA_RECT_STROKE));
+  variable.setString("Name", "C_PS_DATA_RECT_STROKE");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_STROKE));
   variable.setString("Comment", "Scan info box border color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_DATA_RECT_STROKE");
-  variable.setInt("Value", W_DATA_RECT_STROKE);
+  variable.setString("Name", "W_PS_DATA_RECT_STROKE");
+  variable.setInt("Value", W_PS_DATA_RECT_STROKE);
   variable.setString("Comment", "Scan info box border line weight.");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_DATA_RECT_TEXT");
-  variable.setString("Value", String.format("%08X", C_DATA_RECT_TEXT));
+  variable.setString("Name", "C_PS_DATA_RECT_TEXT");
+  variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_TEXT));
   variable.setString("Comment", "Scan info box text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
@@ -222,33 +222,33 @@ void const_create()
   variable.setString("Comment", "Grid text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_TEXT");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_TEXT));
+  variable.setString("Name", "C_UI_INTERFACES_TEXT");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_TEXT));
   variable.setString("Comment", "Interface menu text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_FILL_NORMAL");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_FILL_NORMAL));
+  variable.setString("Name", "C_UI_INTERFACES_FILL_NORMAL");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_FILL_NORMAL));
   variable.setString("Comment", "Interface menu fill color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_FILL_HIGHLIGHT");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_FILL_HIGHLIGHT));
+  variable.setString("Name", "C_UI_INTERFACES_FILL_HIGHLIGHT");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_FILL_HIGHLIGHT));
   variable.setString("Comment", "Interface menu hightlight color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_BORDER_ACTIVE");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_BORDER_ACTIVE));
+  variable.setString("Name", "C_UI_INTERFACES_BORDER_ACTIVE");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_BORDER_ACTIVE));
   variable.setString("Comment", "Interface menu border active color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_BORDER_NORMAL");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_BORDER_NORMAL));
+  variable.setString("Name", "C_UI_INTERFACES_BORDER_NORMAL");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_BORDER_NORMAL));
   variable.setString("Comment", "Interface menu border normal color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_INTERFACE_CURSOR");
-  variable.setString("Value", String.format("%08X", C_INTERFACE_CURSOR));
+  variable.setString("Name", "C_UI_INTERFACES_CURSOR");
+  variable.setString("Value", String.format("%08X", C_UI_INTERFACES_CURSOR));
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();

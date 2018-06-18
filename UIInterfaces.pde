@@ -11,22 +11,22 @@
 import controlP5.*;
 import java.util.*;
 
-static color C_INTERFACE_TEXT = #000000; // Black
-static color C_INTERFACE_FILL_NORMAL = #FFFFFF; // White
-static color C_INTERFACE_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
-static color C_INTERFACE_BORDER_ACTIVE = #FF0000; // Red
-static color C_INTERFACE_BORDER_NORMAL = #000000; // Black
-static color C_INTERFACE_CURSOR = #0000FF; // Blue
+static color C_UI_INTERFACES_TEXT = #000000; // Black
+static color C_UI_INTERFACES_FILL_NORMAL = #FFFFFF; // White
+static color C_UI_INTERFACES_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
+static color C_UI_INTERFACES_BORDER_ACTIVE = #FF0000; // Red
+static color C_UI_INTERFACES_BORDER_NORMAL = #000000; // Black
+static color C_UI_INTERFACES_CURSOR = #0000FF; // Blue
 
-boolean INTERFACE_changed = false;
-String[] INTERFACE_str_array = {"File", "UART", "UDP", "SN"};
+boolean UI_INTERFACE_changed = false;
+String[] UI_INTERFACE_str_array = {"File", "UART", "UDP", "SN"};
 
 ControlFont cf1 = null;
 ControlP5 cp5 = null;
 
-void interface_setup()
+void UI_Interfaces_setup()
 {
-  INTERFACE_changed = false;
+  UI_INTERFACE_changed = false;
   int x, y;
   int w, h;
   String str;
@@ -36,26 +36,26 @@ void interface_setup()
   }
   if(cp5 == null) {
     cp5 = new ControlP5(this, cf1);
-    cp5.setBackground(C_INTERFACE_FILL_NORMAL);
+    cp5.setBackground(C_UI_INTERFACES_FILL_NORMAL);
   }
   else {
-    cp5.remove("interface_ddmenu");
-    cp5.remove("interface_ddborder");
-    cp5.remove("interface_ddlabel");
-    cp5.remove("interface_filename");
-    cp5.remove("interface_UARTport");
-    cp5.remove("interface_UARTbaud");
-    cp5.remove("interface_UARTdps");
-    cp5.remove("interface_UDPremoteip");
-    cp5.remove("interface_UDPremoteport");
-    cp5.remove("interface_UDPlocalport");
-    cp5.remove("interface_SNserialnumber");
+    cp5.remove("UI_Interfaces_ddmenu");
+    cp5.remove("UI_Interfaces_ddborder");
+    cp5.remove("UI_Interfaces_ddlabel");
+    cp5.remove("UI_Interfaces_filename");
+    cp5.remove("UI_Interfaces_UARTport");
+    cp5.remove("UI_Interfaces_UARTbaud");
+    cp5.remove("UI_Interfaces_UARTdps");
+    cp5.remove("UI_Interfaces_UDPremoteip");
+    cp5.remove("UI_Interfaces_UDPremoteport");
+    cp5.remove("UI_Interfaces_UDPlocalport");
+    cp5.remove("UI_Interfaces_SNserialnumber");
 
     cp5.setGraphics(this,0,0);
   }
 
   w = 0;
-  for(String s: INTERFACE_str_array) {
+  for(String s: UI_INTERFACE_str_array) {
     w = int(max(w, int(textWidth(s))));
   }
   w += 20;
@@ -64,11 +64,11 @@ void interface_setup()
   y = TEXT_MARGIN + FONT_HEIGHT * 1 + TEXT_MARGIN;
 
   Textfield tf_ddborder;
-  tf_ddborder = cp5.addTextfield("interface_ddborder");
+  tf_ddborder = cp5.addTextfield("UI_Interfaces_ddborder");
   tf_ddborder.setPosition(x+1, y)
     .setSize(w - 2, h)
-    .setColorBackground(C_INTERFACE_FILL_NORMAL)
-    .setColorForeground( C_INTERFACE_BORDER_NORMAL )
+    .setColorBackground(C_UI_INTERFACES_FILL_NORMAL)
+    .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
     .setText("")
     .setCaptionLabel("")
     .setLock(true)
@@ -76,23 +76,23 @@ void interface_setup()
 
   /* add a ScrollableList, by default it behaves like a DropdownList */
   ScrollableList sl_ddmenu;
-  sl_ddmenu = cp5.addScrollableList("interface_ddmenu"/*l.get(0).toString()*/);
-  sl_ddmenu.setBackgroundColor( C_INTERFACE_BORDER_ACTIVE /*color(255,0,255)*/ /*color( 255 , 128 )*/ )
-     .setColorBackground( C_INTERFACE_FILL_NORMAL /*color(255,255,0)*/ /*color(200)*/ )
-     .setColorForeground( C_INTERFACE_FILL_HIGHLIGHT /*color(0,255,255)*/ /*color(235)*/ )
-     .setColorActive( C_INTERFACE_BORDER_ACTIVE /*color(255,0,0)*/ /*(color(255)*/ )
-     .setColorValueLabel( C_INTERFACE_TEXT /*color(0,255,0)*/ /*color(100)*/ )
-     .setColorCaptionLabel( C_INTERFACE_TEXT /*color(0,0,255)*/ /*color(50)*/ )
+  sl_ddmenu = cp5.addScrollableList("UI_Interfaces_ddmenu"/*l.get(0).toString()*/);
+  sl_ddmenu.setBackgroundColor( C_UI_INTERFACES_BORDER_ACTIVE /*color(255,0,255)*/ /*color( 255 , 128 )*/ )
+     .setColorBackground( C_UI_INTERFACES_FILL_NORMAL /*color(255,255,0)*/ /*color(200)*/ )
+     .setColorForeground( C_UI_INTERFACES_FILL_HIGHLIGHT /*color(0,255,255)*/ /*color(235)*/ )
+     .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE /*color(255,0,0)*/ /*(color(255)*/ )
+     .setColorValueLabel( C_UI_INTERFACES_TEXT /*color(0,255,0)*/ /*color(100)*/ )
+     .setColorCaptionLabel( C_UI_INTERFACES_TEXT /*color(0,0,255)*/ /*color(50)*/ )
      .setPosition(x + 1, y + 1)
-     .setSize(w - 2, h + (h + 1) * (INTERFACE_str_array.length - 1) - 2)
+     .setSize(w - 2, h + (h + 1) * (UI_INTERFACE_str_array.length - 1) - 2)
      .setBarHeight(h - 2)
      .setItemHeight(h + 1 - 2)
      //.setBarHeight(100)
      //.setItemHeight(100)
      .setOpen(false)
-     .addItems(INTERFACE_str_array)
-     .setCaptionLabel(INTERFACE_str_array[DATA_interface])
-     .removeItem(INTERFACE_str_array[DATA_interface])
+     .addItems(UI_INTERFACE_str_array)
+     .setCaptionLabel(UI_INTERFACE_str_array[PS_DATA_interface[0]])
+     .removeItem(UI_INTERFACE_str_array[PS_DATA_interface[0]])
      //.setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
      ;
   //y += h;
@@ -122,9 +122,9 @@ void interface_setup()
   //sl_ddmenu.getValueLabel().getStyle().padding(4,4,3,3);
 /*
   CColor c = new CColor();
-  c.setBackground(C_INTERFACE_BORDER_ACTIVE);
-  //c.setForeground(C_INTERFACE_BORDER_ACTIVE);
-  sl_ddmenu.getItem(DATA_interface).put("color", c);
+  c.setBackground(C_UI_INTERFACES_BORDER_ACTIVE);
+  //c.setForeground(C_UI_INTERFACES_BORDER_ACTIVE);
+  sl_ddmenu.getItem(PS_DATA_interface[0]).put("color", c);
 */
 
   str = "Interface:";
@@ -132,10 +132,10 @@ void interface_setup()
   x -= w + TEXT_MARGIN;
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   Textlabel tl_ddlabel;
-  tl_ddlabel = cp5.addTextlabel("interface_ddlabel");
+  tl_ddlabel = cp5.addTextlabel("UI_Interfaces_ddlabel");
   tl_ddlabel.setText(str)
     .setPosition(x, y)
-    .setColorValue(C_INTERFACE_TEXT)
+    .setColorValue(C_UI_INTERFACES_TEXT)
     .setHeight(h)
     ;
   tl_ddlabel.get()
@@ -145,22 +145,22 @@ void interface_setup()
   y += h;
 
   Textfield tf_param1, tf_param2, tf_param3;
-  if(DATA_interface == DATA_INTERFACE_FILE) {
+  if(PS_DATA_interface[0] == PS_DATA_INTERFACE_FILE) {
     str = FILE_name;
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param1 = cp5.addTextfield("interface_filename");
+    tf_param1 = cp5.addTextfield("UI_Interfaces_filename");
     tf_param1.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -180,22 +180,22 @@ void interface_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else if(DATA_interface == DATA_INTERFACE_UART) {
+  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UART) {
     str = UART_port_name;
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param1 = cp5.addTextfield("interface_UARTport");
+    tf_param1 = cp5.addTextfield("UI_Interfaces_UARTport");
     tf_param1.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -218,16 +218,16 @@ void interface_setup()
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param2 = cp5.addTextfield("interface_UARTbaud");
+    tf_param2 = cp5.addTextfield("UI_Interfaces_UARTbaud");
     tf_param2.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -256,16 +256,16 @@ void interface_setup()
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param3 = cp5.addTextfield("interface_UARTdps");
+    tf_param3 = cp5.addTextfield("UI_Interfaces_UARTdps");
     tf_param3.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -285,22 +285,22 @@ void interface_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else if(DATA_interface == DATA_INTERFACE_UDP) {
-    str = UDP_remote_ip;
+  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UDP) {
+    str = UDP_remote_ip[0];
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param1 = cp5.addTextfield("interface_UDPremoteip");
+    tf_param1 = cp5.addTextfield("UI_Interfaces_UDPremoteip");
     tf_param1.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -322,21 +322,21 @@ void interface_setup()
           .marginLeft = TEXT_MARGIN;
 */
 
-    str = Integer.toString(UDP_remote_port);
+    str = Integer.toString(UDP_remote_port[0]);
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param2 = cp5.addTextfield("interface_UDPremoteport");
+    tf_param2 = cp5.addTextfield("UI_Interfaces_UDPremoteport");
     tf_param2.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -361,16 +361,16 @@ void interface_setup()
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param3 = cp5.addTextfield("interface_UDPlocalport");
+    tf_param3 = cp5.addTextfield("UI_Interfaces_UDPlocalport");
     tf_param3.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -390,22 +390,22 @@ void interface_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else /*if(DATA_interface == DATA_INTERFACE_SN)*/ {
+  else /*if(PS_DATA_interface[0] == PS_DATA_INTERFACE_SN)*/ {
     str = Integer.toString(SN_serial_number);
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     y += TEXT_MARGIN;
-    tf_param1 = cp5.addTextfield("interface_SNserialnumber");
+    tf_param1 = cp5.addTextfield("UI_Interfaces_SNserialnumber");
     tf_param1.setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
       .setAutoClear(false)
-      .setColorBackground( C_INTERFACE_FILL_NORMAL )
-      .setColorForeground( C_INTERFACE_BORDER_NORMAL )
-      .setColorActive( C_INTERFACE_BORDER_ACTIVE )
-      .setColorValueLabel( C_INTERFACE_TEXT )
-      .setColorCursor( C_INTERFACE_CURSOR )
+      .setColorBackground( C_UI_INTERFACES_FILL_NORMAL )
+      .setColorForeground( C_UI_INTERFACES_BORDER_NORMAL )
+      .setColorActive( C_UI_INTERFACES_BORDER_ACTIVE )
+      .setColorValueLabel( C_UI_INTERFACES_TEXT )
+      .setColorCursor( C_UI_INTERFACES_CURSOR )
       .setCaptionLabel("")
       .setText(str)
       ;
@@ -435,14 +435,14 @@ void interface_setup()
   //printArray(PFont.list());
 }
 
-void interface_draw()
+void UI_Interfaces_draw()
 {
 /*
   String string;
 
   // Sets the color used to draw lines and borders around shapes.
-  stroke(C_INTERFACE_TEXT);
-  fill(C_INTERFACE_TEXT);
+  stroke(C_UI_INTERFACES_TEXT);
+  fill(C_UI_INTERFACES_TEXT);
   //stroke(#FF0000);
   //fill(#ff0000);
   
@@ -451,40 +451,40 @@ void interface_draw()
 */
 }
 
-void interface_mouseReleased()
+void UI_Interfaces_mouseReleased()
 {
   try {
     Controller controller = (Controller)cp5.getWindow().getMouseOverList().get(0);
-    if(controller.getName().equals("interface_ddmenu") == true) {
+    if(controller.getName().equals("UI_Interfaces_ddmenu") == true) {
       ScrollableList sl_ddmenu = (ScrollableList)controller;
       Textfield tf_ddborder;
       int x, y, w, h;
       int c;
   
       w = 0;
-      for(String s: INTERFACE_str_array) {
+      for(String s: UI_INTERFACE_str_array) {
         w = int(max(w, int(textWidth(s))));
       }
       w += 20;
       x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w;
       y = TEXT_MARGIN + FONT_HEIGHT * 1 + TEXT_MARGIN;
       if(sl_ddmenu.isOpen()) {
-        h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (INTERFACE_str_array.length - 1);
-        c = C_INTERFACE_BORDER_ACTIVE;
+        h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (UI_INTERFACE_str_array.length - 1);
+        c = C_UI_INTERFACES_BORDER_ACTIVE;
       }
       else {
         h = FONT_HEIGHT + TEXT_MARGIN*2;
-        c = C_INTERFACE_BORDER_NORMAL;
+        c = C_UI_INTERFACES_BORDER_NORMAL;
       }
-      tf_ddborder = (Textfield)cp5.getController("interface_ddborder");
+      tf_ddborder = (Textfield)cp5.getController("UI_Interfaces_ddborder");
       tf_ddborder
         .setPosition(x+1, y)
         .setSize(w - 2, h)
         .setColorForeground( c )
         ;
       sl_ddmenu
-        .setItems(INTERFACE_str_array)
-        .removeItem(INTERFACE_str_array[DATA_interface])
+        .setItems(UI_INTERFACE_str_array)
+        .removeItem(UI_INTERFACE_str_array[PS_DATA_interface[0]])
         ;
       return;
     }
@@ -497,22 +497,22 @@ void interface_mouseReleased()
   Textfield tf_param;
   String str;
 
-  sl_ddmenu = (ScrollableList)cp5.get("interface_ddmenu");
+  sl_ddmenu = (ScrollableList)cp5.get("UI_Interfaces_ddmenu");
   if( sl_ddmenu != null && sl_ddmenu.isOpen()) {
     Textfield tf_ddborder;
     int x, y, w, h;
     int c;
 
     w = 0;
-    for(String s: INTERFACE_str_array) {
+    for(String s: UI_INTERFACE_str_array) {
       w = int(max(w, int(textWidth(s))));
     }
     w += 20;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w;
     y = TEXT_MARGIN + FONT_HEIGHT * 1 + TEXT_MARGIN;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    c = C_INTERFACE_BORDER_NORMAL;
-    tf_ddborder = (Textfield)cp5.getController("interface_ddborder");
+    c = C_UI_INTERFACES_BORDER_NORMAL;
+    tf_ddborder = (Textfield)cp5.getController("UI_Interfaces_ddborder");
     tf_ddborder
       .setPosition(x+1, y)
       .setSize(w - 2, h)
@@ -520,25 +520,25 @@ void interface_mouseReleased()
       ;
     sl_ddmenu.close();
   }
-  if(DATA_interface == DATA_INTERFACE_FILE) {
-    tf_param = (Textfield)cp5.get("interface_filename");
+  if(PS_DATA_interface[0] == PS_DATA_INTERFACE_FILE) {
+    tf_param = (Textfield)cp5.get("UI_Interfaces_filename");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = FILE_name;
       tf_param.setText(str);
     }
   }
-  else if(DATA_interface == DATA_INTERFACE_UART) {
-    tf_param = (Textfield)cp5.get("interface_UARTport");
+  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UART) {
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UARTport");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = UART_port_name;
       tf_param.setText(str);
     }
-    tf_param = (Textfield)cp5.get("interface_UARTbaud");
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UARTbaud");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = Integer.toString(UART_baud_rate);
       tf_param.setText(str);
     }
-    tf_param = (Textfield)cp5.get("interface_UARTdps");
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UARTdps");
      if( tf_param != null && tf_param.isFocus() == false) {
      str = Integer.toString(UART_data_bits) + UART_parity;
       if(int(UART_stop_bits*10.0)%10 == 0)
@@ -548,25 +548,25 @@ void interface_mouseReleased()
       tf_param.setText(str);
     }
   }
-  else if(DATA_interface == DATA_INTERFACE_UDP) {
-    tf_param = (Textfield)cp5.get("interface_UDPremoteip");
+  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UDP) {
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UDPremoteip");
     if( tf_param != null && tf_param.isFocus() == false) {
-      str = UDP_remote_ip;
+      str = UDP_remote_ip[0];
       tf_param.setText(str);
     }
-    tf_param = (Textfield)cp5.get("interface_UDPremoteport");
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UDPremoteport");
     if( tf_param != null && tf_param.isFocus() == false) {
-      str = Integer.toString(UDP_remote_port);
+      str = Integer.toString(UDP_remote_port[0]);
       tf_param.setText(str);
     }
-    tf_param = (Textfield)cp5.get("interface_UDPlocalport");
+    tf_param = (Textfield)cp5.get("UI_Interfaces_UDPlocalport");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = Integer.toString(UDP_local_port);
       tf_param.setText(str);
     }
   }
-  else /*if(DATA_interface == DATA_INTERFACE_SN)*/ {
-    tf_param = (Textfield)cp5.get("interface_SNserialnumber");
+  else /*if(PS_DATA_interface[0] == PS_DATA_INTERFACE_SN)*/ {
+    tf_param = (Textfield)cp5.get("UI_Interfaces_SNserialnumber");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = Integer.toString(SN_serial_number);
       tf_param.setText(str);
@@ -580,23 +580,23 @@ void controlEvent(ControlEvent theEvent)
   String ControllerName = theEvent.getController().getName();
   println("got a control event from controller with name "+","+ControllerName);
 
-  if (ControllerName.equals("interface_ddmenu") == true) {
-    println("this event was triggered by Controller interface_ddmenu");
+  if (ControllerName.equals("UI_Interfaces_ddmenu") == true) {
+    println("this event was triggered by Controller UI_Interfaces_ddmenu");
   }
   
 }
 */
 
-void interface_ddmenu(int n)
+void UI_Interfaces_ddmenu(int n)
 {
 /*
-  ScrollableList sl_ddmenu = (ScrollableList)(cp5.get("interface_ddmenu"));
+  ScrollableList sl_ddmenu = (ScrollableList)(cp5.get("UI_Interfaces_ddmenu"));
   //int interface = ((sl_ddmenu.getItem(n)).getValue();
-  Map m = cp5.get(ScrollableList.class, "interface_ddmenu").getItem(n);
+  Map m = cp5.get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n);
   int interface = m.get("value");
 */
   /* request the selected item based on index n */
-  //println("dropdown=", n, ",", cp5.get(ScrollableList.class, "interface_ddmenu").getItem(n));
+  //println("dropdown=", n, ",", cp5.get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n));
   
   /* here an item is stored as a Map  with the following key-value pairs:
    * name, the given name of the item
@@ -615,16 +615,16 @@ void interface_ddmenu(int n)
     cp5.get(ScrollableList.class, "dropdown").getItem(i).put("color", c);
   }
 */
-  if( n >= DATA_interface ) n ++;
+  if( n >= PS_DATA_interface[0] ) n ++;
 
-  if( DATA_interface != n ) {
-    DATA_interface = n;
+  if( PS_DATA_interface[0] != n ) {
+    PS_DATA_interface[0] = n;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_filename(String theText)
+void UI_Interfaces_filename(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -632,11 +632,11 @@ void interface_filename(String theText)
   if(theText.equals(FILE_name) != true) {
     FILE_name = theText;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UARTport(String theText)
+void UI_Interfaces_UARTport(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -644,11 +644,11 @@ void interface_UARTport(String theText)
   if(theText.equals(UART_port_name) != true) {
     UART_port_name = theText;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UARTbaud(String theText)
+void UI_Interfaces_UARTbaud(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -657,11 +657,11 @@ void interface_UARTbaud(String theText)
   if(baud_rate != UART_baud_rate) {
     UART_baud_rate = baud_rate;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UARTdps(String theText)
+void UI_Interfaces_UARTdps(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -676,36 +676,36 @@ void interface_UARTdps(String theText)
     UART_parity = parity;
     UART_stop_bits = stop_bits;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UDPremoteip(String theText)
+void UI_Interfaces_UDPremoteip(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
 
-  if(theText.equals(UDP_remote_ip) != true) {
-    UDP_remote_ip = theText;
+  if(theText.equals(UDP_remote_ip[0]) != true) {
+    UDP_remote_ip[0] = theText;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UDPremoteport(String theText)
+void UI_Interfaces_UDPremoteport(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
 
   int remote_port = Integer.parseInt(theText);
-  if(remote_port != UDP_remote_port) {
-    UDP_remote_port = remote_port;
+  if(remote_port != UDP_remote_port[0]) {
+    UDP_remote_port[0] = remote_port;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_UDPlocalport(String theText)
+void UI_Interfaces_UDPlocalport(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -714,11 +714,11 @@ void interface_UDPlocalport(String theText)
   if(local_port != UDP_local_port) {
     UDP_local_port = local_port;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 
-void interface_SNserialnumber(String theText)
+void UI_Interfaces_SNserialnumber(String theText)
 {
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
@@ -727,7 +727,7 @@ void interface_SNserialnumber(String theText)
   if(serial_number != SN_serial_number) {
     SN_serial_number = serial_number;
     config_save();
-    INTERFACE_changed = true;
+    UI_INTERFACE_changed = true;
   }
 }
 

@@ -44,7 +44,7 @@ static String UART_str_err_last = null;
 
 boolean UART_SCAN_DONE = false;
 
-void interface_UART_reset()
+void Interfaces_UART_reset()
 {
   if(PRINT_UART_LOAD_DBG) println("UART reset! " + UART_port_name);
   // Check UART port config changed
@@ -63,7 +63,7 @@ void interface_UART_reset()
   UART_str_err_last = null;
 }
 
-void interface_UART_setup()
+void Interfaces_UART_setup()
 {
   boolean found = false;
   int timeout;
@@ -104,22 +104,22 @@ void interface_UART_setup()
   }
 }
 
-String interface_UART_get_error()
+String Interfaces_UART_get_error()
 {
   return UART_str_err_last;
 }
 
-int interface_UART_get_take_time()
+int Interfaces_UART_get_take_time()
 {
   return UART_CMD_take_time;
 }
 
-boolean interface_UART_load()
+boolean Interfaces_UART_load()
 {
   int err;
 
   if(UART_handle == null) {
-    interface_UART_setup();
+    Interfaces_UART_setup();
     if(UART_handle == null) {
       UART_str_err_last = "Error: UART port busy or not exist! " + UART_port_name;
       if(PRINT_UART_LOAD_ERR) println(UART_str_err_last);
@@ -153,7 +153,7 @@ boolean interface_UART_load()
     }
     else {
       UART_str_err_last = null;
-      data_buf = UART_inBuffer;
+      PS_Data_buf[0] = UART_inBuffer;
       //println("PS_perform_GSCN() ok! ");
       return true;
     }
@@ -273,7 +273,7 @@ byte[] UART_PS_make_cmd(String cmd, int param)
 
   // Set function code
   set_str_bytes(buf, 0, cmd);
-  // Set data_buf length 4
+  // Set PS_Data_buf length 4
   set_int32_bytes(buf, 4, 4);
   // Set Scan on(1)
   set_int32_bytes(buf, 8, param);

@@ -43,7 +43,7 @@ void keyPressed()
     } 
     else if(keyCode == KeyEvent.VK_F8)
     {
-      DATA_draw_params_enable = !DATA_draw_params_enable;
+      PS_DATA_draw_params_enable = !PS_DATA_draw_params_enable;
     } 
   }
 }
@@ -71,41 +71,41 @@ void mousePressed()
   mousePressedX = mouseX - GRID_OFFSET_X;
   mousePressedY = mouseY - GRID_OFFSET_Y;
 
-  button_zoom_minus_pressed = false;
-  button_zoom_pluse_pressed = false;
-  button_rotate_ccw_pressed = false;
-  button_rotate_cw_pressed = false;
-  button_mirror_ud_pressed = false;
-  button_mirror_lr_pressed = false;
-  button_reset_en_pressed = false;
+  buttons_zoom_minus_pressed = false;
+  buttons_zoom_pluse_pressed = false;
+  buttons_rotate_ccw_pressed = false;
+  buttons_rotate_cw_pressed = false;
+  buttons_mirror_ud_pressed = false;
+  buttons_mirror_lr_pressed = false;
+  buttons_reset_en_pressed = false;
 
-  if (button_zoom_minus_over)
+  if (buttons_zoom_minus_over)
   {
-    button_zoom_minus_pressed = true;
+    buttons_zoom_minus_pressed = true;
   }
-  if (button_zoom_pluse_over)
+  if (buttons_zoom_pluse_over)
   {
-    button_zoom_pluse_pressed = true;
+    buttons_zoom_pluse_pressed = true;
   }
-  if (button_rotate_ccw_over)
+  if (buttons_rotate_ccw_over)
   {
-    button_rotate_ccw_pressed = true;
+    buttons_rotate_ccw_pressed = true;
   }
-  if (button_rotate_cw_over)
+  if (buttons_rotate_cw_over)
   {
-    button_rotate_cw_pressed = true;
+    buttons_rotate_cw_pressed = true;
   }
-  if (button_mirror_ud_over)
+  if (buttons_mirror_ud_over)
   {
-    button_mirror_ud_pressed = true;
+    buttons_mirror_ud_pressed = true;
   }
-  if (button_mirror_lr_over)
+  if (buttons_mirror_lr_over)
   {
-    button_mirror_lr_pressed = true;
+    buttons_mirror_lr_pressed = true;
   }
-  if (button_reset_en_over)
+  if (buttons_reset_en_over)
   {
-    button_reset_en_pressed = true;
+    buttons_reset_en_pressed = true;
   }
 }
 
@@ -113,41 +113,41 @@ void mouseReleased()
 {
   if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse released! ");
 
-  interface_mouseReleased();
+  UI_Interfaces_mouseReleased();
 
-  if (button_zoom_minus_over && button_zoom_minus_pressed)
+  if (buttons_zoom_minus_over && buttons_zoom_minus_pressed)
   {
-    button_zoom_minus();
+    UI_Buttons_zoom_minus();
   }
-  if (button_zoom_pluse_over && button_zoom_pluse_pressed)
+  if (buttons_zoom_pluse_over && buttons_zoom_pluse_pressed)
   {
-    button_zoom_pluse();
+    UI_Buttons_zoom_pluse();
   }
 
   //println("old GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
-  if (button_rotate_ccw_over && button_rotate_ccw_pressed)
+  if (buttons_rotate_ccw_over && buttons_rotate_ccw_pressed)
   {
-    button_rotate_ccw();
+    UI_Buttons_rotate_ccw();
   }
-  if (button_rotate_cw_over && button_rotate_cw_pressed)
+  if (buttons_rotate_cw_over && buttons_rotate_cw_pressed)
   {
-    button_rotate_cw();
+    UI_Buttons_rotate_cw();
   }
   //println("new GRID_OFFSET_X=" + GRID_OFFSET_X + ", GRID_OFFSET_Y=" + GRID_OFFSET_Y);
 
-  if (button_mirror_ud_over && button_mirror_ud_pressed)
+  if (buttons_mirror_ud_over && buttons_mirror_ud_pressed)
   {
-    button_mirror_ud();
+    UI_Buttons_mirror_ud();
   }
 
-  if (button_mirror_lr_over && button_mirror_lr_pressed)
+  if (buttons_mirror_lr_over && buttons_mirror_lr_pressed)
   {
-    button_mirror_lr();
+    UI_Buttons_mirror_lr();
   }
 
-  if (button_reset_en_over && button_reset_en_pressed)
+  if (buttons_reset_en_over && buttons_reset_en_pressed)
   {
-    button_reset_en();
+    UI_Buttons_reset_en();
   }
 
 }
@@ -157,7 +157,7 @@ void mouseMoved()
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse moved!");
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
-  button_check_update();
+  UI_Buttons_check_update();
 }
 
 void mouseDragged() 
@@ -166,7 +166,7 @@ void mouseDragged()
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
   if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
 
-  button_check_update();
+  UI_Buttons_check_update();
 
   GRID_OFFSET_X = mouseX - mousePressedX;
   GRID_OFFSET_Y = mouseY - mousePressedY;
@@ -188,14 +188,14 @@ void mouseWheel(MouseEvent event)
   {
     for (; wheel_count > 0; wheel_count -= 1)
     {  
-      button_zoom_minus();
+      UI_Buttons_zoom_minus();
     }
   }
   else if (wheel_count < 0)
   {
     for (; wheel_count < 0; wheel_count += 1)
     {  
-      button_zoom_pluse();
+      UI_Buttons_zoom_pluse();
     }
   }
 

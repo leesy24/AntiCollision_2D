@@ -5,6 +5,8 @@ final boolean PRINT = false;
 //static color C_BG = #FFFFFF; // White
 static color C_BG = #F8F8F8; // White - 0x8
 
+final static int PS_INSTANCE_MAX = 2;
+
 // Define window title string.
 final String TITLE = "DASAN-InfoTEK - 2D Anti-Collision System";
 String Title;
@@ -35,7 +37,7 @@ void settings() {
     // Nothing to do.
   }
   */
-
+  PS_Data_settings();
   const_settings();
   config_settings();
   screen_settings();
@@ -57,7 +59,7 @@ void setup() {
   surface.setResizable(true);
   surface.setLocation(SCREEN_x, SCREEN_y);
 
-  SCREEN_PFront = createFont("SansSerif",32);
+  SCREEN_PFront = createFont("SansSerif", 32);
   textFont(SCREEN_PFront);
   //config_settings();
 /*
@@ -82,10 +84,11 @@ void setup() {
   // Title set to default.
   Title = TITLE;
   config_setup();
-  data_setup();
+  PS_Data_setup();
   screen_setup();
-  button_setup();
-  interface_setup();
+  UI_Buttons_setup();
+  UI_Interfaces_setup();
+
   // Set window title
   surface.setTitle(Title);
 }
@@ -100,41 +103,44 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (INTERFACE_changed) {
+  if (UI_INTERFACE_changed) {
     // Title set to default.
     Title = TITLE;
     config_setup();
-    data_setup();
+    PS_Data_setup();
     screen_setup();
-    button_setup();
-    interface_setup();
+    UI_Buttons_setup();
+    UI_Interfaces_setup();
     // Set window title
     surface.setTitle(Title);
   }
   if (screen_check_update()) {
-    //data_setup();
+    //PS_Data_setup();
     screen_setup();
-    button_setup();
-    interface_setup();
+    UI_Buttons_setup();
+    UI_Interfaces_setup();
   }
 
   // Move to mouseMoved() and mouseDragged().
-  //button_check_update();
+  //UI_Buttons_check_update();
 
   grid_draw();
   lines_draw();
 
-  if (PS_Data.load() == true) {
-    if (PS_Data.parse() == false) {
-      if (PS_Data.parse_err_cnt > 10) {
-        data_setup();
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (PS_Data_handle.load(i) == true) {
+      if (PS_Data_handle.parse(i) == false) {
+        if (PS_Data_handle.parse_err_cnt[i] > 10) {
+          PS_Data_setup();
+        }
       }
     }
+    PS_Data_handle.draw_points(i);
+    PS_Data_handle.draw_params(i);
   }
-  PS_Data.draw_points();
-  PS_Data.draw_params();
 
-  button_draw();
+  UI_Buttons_draw();
   bubbleinfo_draw();
-  interface_draw();
+  UI_Interfaces_draw();
 } 

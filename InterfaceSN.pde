@@ -46,7 +46,7 @@ static String SN_str_err_last = null;
 
 boolean SN_SCAN_DONE = false;
 
-void interface_SN_reset()
+void Interfaces_SN_reset()
 {
   if(PRINT_SN_LOAD_DBG) println("SN reset! " + SN_serial_number + "," + SN_remote_ip + "," + SN_remote_port);
   // Check UDP config changed
@@ -65,7 +65,7 @@ void interface_SN_reset()
   SN_str_err_last = null;
 }
 
-void interface_SN_setup()
+void Interfaces_SN_setup()
 {
   int SN_local_port;
 
@@ -88,32 +88,32 @@ void interface_SN_setup()
   SN_handle.listen( true );
 }
 
-String interface_SN_get_error()
+String Interfaces_SN_get_error()
 {
   return SN_str_err_last;
 }
 
-int interface_SN_get_take_time()
+int Interfaces_SN_get_take_time()
 {
   return SN_CMD_take_time;
 }
 
-String interface_SN_get_src_ip()
+String Interfaces_SN_get_src_ip()
 {
   return SN_CMD_src_ip;
 }
 
-int interface_SN_get_src_port()
+int Interfaces_SN_get_src_port()
 {
   return SN_CMD_src_port;
 }
 
-boolean interface_SN_load()
+boolean Interfaces_SN_load()
 {
   int err;
 
   if(SN_handle == null) {
-    interface_SN_setup();
+    Interfaces_SN_setup();
     if(SN_handle == null) {
       SN_str_err_last = "Error: PS SN local port open error! " + SN_serial_number;
       if(PRINT_SN_LOAD_ERR) println(SN_str_err_last);
@@ -147,7 +147,7 @@ boolean interface_SN_load()
     }
     else {
       SN_str_err_last = null;
-      data_buf = SN_inBuffer;
+      PS_Data_buf[0] = SN_inBuffer;
       //println("PS_perform_GSCN() ok! ");
       return true;
     }
@@ -264,7 +264,7 @@ byte[] SN_PS_make_cmd(String cmd, int param)
   buf[1] = byte(SN_serial_number % 100);
   // Set function code
   set_str_bytes(buf, 2, cmd);
-  // Set data_buf length 4
+  // Set PS_Data_buf length 4
   set_int32_bytes(buf, 6, 4);
   // Set Scan on(1)
   set_int32_bytes(buf, 10, param);
