@@ -1,7 +1,7 @@
 import java.awt.Dimension;
 
-//final static boolean PRINT_SCREENFUNC_DBG_ALL = true;
-final static boolean PRINT_SCREENFUNC_DBG_ALL = false;
+//final static boolean PRINT_SCREENFUNC_ALL_DBG = true;
+final static boolean PRINT_SCREENFUNC_ALL_DBG = false;
 
 // Define minimum screen width and height.
 final static int MIN_SCREEN_WIDTH = 100;
@@ -19,8 +19,10 @@ static int SCREEN_x = 0;
 static int SCREEN_y = 0;
 //static int SCREEN_width = 1920;
 //static int SCREEN_height = 1080;
+//static int SCREEN_width = 1024;
+//static int SCREEN_height = 768;
 static int SCREEN_width = 1024;
-static int SCREEN_height = 768;
+static int SCREEN_height = 600;
 //static int SCREEN_width = 640;
 //static int SCREEN_height = 480;
 
@@ -49,8 +51,8 @@ void screen_settings() {
   SCREEN_width = int(displayWidth * SCREEN_width_ratio) - SCREEN_BORDER_WIDTH * 2;
   SCREEN_height = int(displayHeight * SCREEN_height_ratio) - (SCREEN_TITLE_HEIGHT + SCREEN_BORDER_WIDTH);
 */
-  if(PRINT_SCREENFUNC_DBG_ALL) println("displayWidth="+displayWidth+",displayHeight="+displayHeight);
-  if(PRINT_SCREENFUNC_DBG_ALL) println("SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("displayWidth="+displayWidth+",displayHeight="+displayHeight);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
   size(SCREEN_width, SCREEN_height);
 }
 
@@ -72,13 +74,13 @@ void screen_setup()
 */
   // Set text margin to follow min(Width, Height) of screen.
   TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 200) : (SCREEN_height / 200);
-  if (PRINT_SCREENFUNC_DBG_ALL) println("TEXT_MARGIN=" + TEXT_MARGIN);
+  if (PRINT_SCREENFUNC_ALL_DBG) println("TEXT_MARGIN=" + TEXT_MARGIN);
 
   // Set font height of text to follow min(Width, Height) of screen.
-  FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 60) : (SCREEN_height / 60);
+  FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 30) : (SCREEN_height / 30);
   if (FONT_HEIGHT > 15) FONT_HEIGHT = 15;
   if (FONT_HEIGHT < 10) FONT_HEIGHT = 10;
-  if (PRINT_SCREENFUNC_DBG_ALL) println("FONT_HEIGHT=" + FONT_HEIGHT);
+  if (PRINT_SCREENFUNC_ALL_DBG) println("FONT_HEIGHT=" + FONT_HEIGHT);
   textSize(FONT_HEIGHT);
 }
 
@@ -120,8 +122,8 @@ boolean screen_check_update()
   //new_y = frame.getY();
   //new_x = surface.getNative().getFrame().getX();
   //new_y = surface.getLocationOnScreen().y;
-  //if(PRINT_SCREENFUNC_DBG_ALL) println("screen pos xy saved(" + SCREEN_x + ",y=" + SCREEN_y + ") new(" + new_x + ",y=" + new_y + ")");
-  if(PRINT_SCREENFUNC_DBG_ALL) println("display wh(" + displayWidth + ",y=" + displayHeight + ")");
+  //if(PRINT_SCREENFUNC_ALL_DBG) println("screen pos xy saved(" + SCREEN_x + ",y=" + SCREEN_y + ") new(" + new_x + ",y=" + new_y + ")");
+  if(PRINT_SCREENFUNC_ALL_DBG) println("display wh(" + displayWidth + ",y=" + displayHeight + ")");
   // Check screen position x or y changed.
   if(new_x != SCREEN_x || new_y != SCREEN_y) {
     if(new_x < 0 || new_y < 0) {
@@ -137,16 +139,16 @@ boolean screen_check_update()
 */
 
   int new_width, new_height;
-  if(PRINT_SCREENFUNC_DBG_ALL) println("screen size width=" + width + ", height=" + height);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("screen size width=" + width + ", height=" + height);
   // Check screen size changed.
   if (SCREEN_width != width || SCREEN_height != height) {
     new_width = width;
     new_height = height;
-    if (PRINT_SCREENFUNC_DBG_ALL) println("screen size changed! width " + SCREEN_width + "->" + new_width + ", height " + SCREEN_height + "->" + new_height);
+    if (PRINT_SCREENFUNC_ALL_DBG) println("screen size changed! width " + SCREEN_width + "->" + new_width + ", height " + SCREEN_height + "->" + new_height);
 
     // Check screen size too small.
     if (new_width < MIN_SCREEN_WIDTH || new_height < MIN_SCREEN_HEIGHT) {
-      if (PRINT_SCREENFUNC_DBG_ALL) println("screen size changed too small! width " + new_width + ", height " + new_height);
+      if (PRINT_SCREENFUNC_ALL_DBG) println("screen size changed too small! width " + new_width + ", height " + new_height);
       
       if (new_width < MIN_SCREEN_WIDTH && new_height < MIN_SCREEN_HEIGHT) {
         new_width = MIN_SCREEN_WIDTH;
@@ -158,7 +160,7 @@ boolean screen_check_update()
       else if (new_height < MIN_SCREEN_HEIGHT) {
         new_height = MIN_SCREEN_HEIGHT;
       }
-      if(PRINT_SCREENFUNC_DBG_ALL) println("surface.setSize(new_width=" + new_width + ", new_height=" + new_height + ")");
+      if(PRINT_SCREENFUNC_ALL_DBG) println("surface.setSize(new_width=" + new_width + ", new_height=" + new_height + ")");
       surface.setSize(new_width, new_height);
     }
   
