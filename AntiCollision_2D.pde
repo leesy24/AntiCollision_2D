@@ -114,7 +114,7 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (UI_INTERFACE_changed) {
+  if (UI_Interfaces_changed) {
     // Title set to default.
     Title = TITLE;
     config_setup();

@@ -50,6 +50,11 @@ void keyPressed()
     {
       UI_Buttons_enabled = !UI_Buttons_enabled;
     } 
+    else if(keyCode == KeyEvent.VK_F6)
+    {
+      UI_Interfaces_enabled = !UI_Interfaces_enabled;
+      UI_Interfaces_setup();
+    } 
   }
 }
 /**/

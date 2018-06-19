@@ -18,15 +18,45 @@ static color C_UI_INTERFACES_BORDER_ACTIVE = #FF0000; // Red
 static color C_UI_INTERFACES_BORDER_NORMAL = #000000; // Black
 static color C_UI_INTERFACES_CURSOR = #0000FF; // Blue
 
-boolean UI_INTERFACE_changed = false;
-String[] UI_INTERFACE_str_array = {"File", "UART", "UDP", "SN"};
+static boolean UI_Interfaces_enabled = false;
+
+boolean UI_Interfaces_changed = false;
+String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN"};
 
 ControlFont cf1 = null;
 ControlP5 cp5 = null;
 
+void UI_Interfaces_reset()
+{
+  if(cp5 == null) {
+    return;
+  }
+
+  cp5.remove("UI_Interfaces_ddmenu");
+  cp5.remove("UI_Interfaces_ddborder");
+  cp5.remove("UI_Interfaces_ddlabel");
+  cp5.remove("UI_Interfaces_filename");
+  cp5.remove("UI_Interfaces_UARTport");
+  cp5.remove("UI_Interfaces_UARTbaud");
+  cp5.remove("UI_Interfaces_UARTdps");
+  cp5.remove("UI_Interfaces_UDPremoteip");
+  cp5.remove("UI_Interfaces_UDPremoteport");
+  cp5.remove("UI_Interfaces_UDPlocalport");
+  cp5.remove("UI_Interfaces_SNserialnumber");
+
+  cp5.setGraphics(this,0,0);
+}
+
 void UI_Interfaces_setup()
 {
-  UI_INTERFACE_changed = false;
+  if (!UI_Interfaces_enabled)
+  {
+    UI_Interfaces_reset();
+    return;
+  }
+
+  UI_Interfaces_changed = false;
+
   int x, y;
   int w, h;
   String str;
@@ -39,23 +69,11 @@ void UI_Interfaces_setup()
     cp5.setBackground(C_UI_INTERFACES_FILL_NORMAL);
   }
   else {
-    cp5.remove("UI_Interfaces_ddmenu");
-    cp5.remove("UI_Interfaces_ddborder");
-    cp5.remove("UI_Interfaces_ddlabel");
-    cp5.remove("UI_Interfaces_filename");
-    cp5.remove("UI_Interfaces_UARTport");
-    cp5.remove("UI_Interfaces_UARTbaud");
-    cp5.remove("UI_Interfaces_UARTdps");
-    cp5.remove("UI_Interfaces_UDPremoteip");
-    cp5.remove("UI_Interfaces_UDPremoteport");
-    cp5.remove("UI_Interfaces_UDPlocalport");
-    cp5.remove("UI_Interfaces_SNserialnumber");
-
-    cp5.setGraphics(this,0,0);
+    UI_Interfaces_reset();
   }
 
   w = 0;
-  for(String s: UI_INTERFACE_str_array) {
+  for(String s: UI_Interfaces_str_array) {
     w = int(max(w, int(textWidth(s))));
   }
   w += 20;
@@ -84,15 +102,15 @@ void UI_Interfaces_setup()
      .setColorValueLabel( C_UI_INTERFACES_TEXT /*color(0,255,0)*/ /*color(100)*/ )
      .setColorCaptionLabel( C_UI_INTERFACES_TEXT /*color(0,0,255)*/ /*color(50)*/ )
      .setPosition(x + 1, y + 1)
-     .setSize(w - 2, h + (h + 1) * (UI_INTERFACE_str_array.length - 1) - 2)
+     .setSize(w - 2, h + (h + 1) * (UI_Interfaces_str_array.length - 1) - 2)
      .setBarHeight(h - 2)
      .setItemHeight(h + 1 - 2)
      //.setBarHeight(100)
      //.setItemHeight(100)
      .setOpen(false)
-     .addItems(UI_INTERFACE_str_array)
-     .setCaptionLabel(UI_INTERFACE_str_array[PS_Data_interface[0]])
-     .removeItem(UI_INTERFACE_str_array[PS_Data_interface[0]])
+     .addItems(UI_Interfaces_str_array)
+     .setCaptionLabel(UI_Interfaces_str_array[PS_Data_interface[0]])
+     .removeItem(UI_Interfaces_str_array[PS_Data_interface[0]])
      //.setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
      ;
   //y += h;
@@ -462,14 +480,14 @@ void UI_Interfaces_mouseReleased()
       int c;
   
       w = 0;
-      for(String s: UI_INTERFACE_str_array) {
+      for(String s: UI_Interfaces_str_array) {
         w = int(max(w, int(textWidth(s))));
       }
       w += 20;
       x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w;
       y = TEXT_MARGIN + FONT_HEIGHT * 1 + TEXT_MARGIN;
       if(sl_ddmenu.isOpen()) {
-        h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (UI_INTERFACE_str_array.length - 1);
+        h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (UI_Interfaces_str_array.length - 1);
         c = C_UI_INTERFACES_BORDER_ACTIVE;
       }
       else {
@@ -483,8 +501,8 @@ void UI_Interfaces_mouseReleased()
         .setColorForeground( c )
         ;
       sl_ddmenu
-        .setItems(UI_INTERFACE_str_array)
-        .removeItem(UI_INTERFACE_str_array[PS_Data_interface[0]])
+        .setItems(UI_Interfaces_str_array)
+        .removeItem(UI_Interfaces_str_array[PS_Data_interface[0]])
         ;
       return;
     }
@@ -504,7 +522,7 @@ void UI_Interfaces_mouseReleased()
     int c;
 
     w = 0;
-    for(String s: UI_INTERFACE_str_array) {
+    for(String s: UI_Interfaces_str_array) {
       w = int(max(w, int(textWidth(s))));
     }
     w += 20;
@@ -620,7 +638,7 @@ void UI_Interfaces_ddmenu(int n)
   if( PS_Data_interface[0] != n ) {
     PS_Data_interface[0] = n;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -632,7 +650,7 @@ void UI_Interfaces_filename(String theText)
   if(theText.equals(FILE_name) != true) {
     FILE_name = theText;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -644,7 +662,7 @@ void UI_Interfaces_UARTport(String theText)
   if(theText.equals(UART_port_name) != true) {
     UART_port_name = theText;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -657,7 +675,7 @@ void UI_Interfaces_UARTbaud(String theText)
   if(baud_rate != UART_baud_rate) {
     UART_baud_rate = baud_rate;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -676,7 +694,7 @@ void UI_Interfaces_UARTdps(String theText)
     UART_parity = parity;
     UART_stop_bits = stop_bits;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -688,7 +706,7 @@ void UI_Interfaces_UDPremoteip(String theText)
   if(theText.equals(UDP_remote_ip[0]) != true) {
     UDP_remote_ip[0] = theText;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -701,7 +719,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   if(remote_port != UDP_remote_port[0]) {
     UDP_remote_port[0] = remote_port;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -714,7 +732,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   if(local_port != UDP_local_port) {
     UDP_local_port = local_port;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
@@ -727,7 +745,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   if(serial_number != SN_serial_number) {
     SN_serial_number = serial_number;
     config_save();
-    UI_INTERFACE_changed = true;
+    UI_Interfaces_changed = true;
   }
 }
 
