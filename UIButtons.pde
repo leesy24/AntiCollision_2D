@@ -316,24 +316,34 @@ void UI_Buttons_check_over()
 
 void UI_Buttons_zoom_minus()
 {
-  if (ZOOM_FACTOR[0] <= 3000)
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    if (ZOOM_FACTOR[0] < 100) ZOOM_FACTOR[0] += 10;
-    else ZOOM_FACTOR[0] = int(float(ZOOM_FACTOR[0]) * 1.1 + 5.0) / 10 * 10;
-    config_save();
+    if (ZOOM_FACTOR[i] < 5000)
+    {
+      if (ZOOM_FACTOR[i] < 200) ZOOM_FACTOR[i] += 10;
+      else if (ZOOM_FACTOR[i] < 1000) ZOOM_FACTOR[i] += 100;
+      else if (ZOOM_FACTOR[i] < 2000) ZOOM_FACTOR[i] += 200;
+      else ZOOM_FACTOR[i] += 500;
+      config_save();
+    }
+    if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
   }
-  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
 }
 
 void UI_Buttons_zoom_pluse()
 {
-  if (ZOOM_FACTOR[0] > 10)
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    if (ZOOM_FACTOR[0] < 100) ZOOM_FACTOR[0] -= 10;
-    else ZOOM_FACTOR[0] = int(float(ZOOM_FACTOR[0]) / 1.1 + 5.0) / 10 * 10;
-    config_save();
+    if (ZOOM_FACTOR[i] > 20)
+    {
+      if (ZOOM_FACTOR[i] <= 200) ZOOM_FACTOR[i] -= 10;
+      else if (ZOOM_FACTOR[i] <= 1000) ZOOM_FACTOR[i] -= 100;
+      else if (ZOOM_FACTOR[i] <= 2000) ZOOM_FACTOR[i] -= 200;
+      else ZOOM_FACTOR[i] -= 500;
+      config_save();
+    }
+    if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
   }
-  if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
 }
 
 void UI_Buttons_rotate_ccw()
