@@ -21,9 +21,11 @@ final static boolean PRINT_MOUSEFUNC_Dragged = false;
 //final static boolean PRINT_MOUSEFUNC_Wheel = true; 
 final static boolean PRINT_MOUSEFUNC_Wheel = false;
 
+// Disable Drag feature.
+/* 
 int mousePressedX;
 int mousePressedY;
-
+*/
 /**/
 void keyPressed()
 {
@@ -78,8 +80,11 @@ void mousePressed()
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
+// Disable Drag feature.
+/*
   mousePressedX = mouseX - DRAW_OFFSET_X[0];
   mousePressedY = mouseY - DRAW_OFFSET_Y[0];
+*/
 
   buttons_zoom_minus_pressed = false;
   buttons_zoom_pluse_pressed = false;
@@ -178,17 +183,23 @@ void mouseDragged()
 {
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse dragged!");
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
+// Disable Drag feature.
+/*
   if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
+*/
 
   UI_Buttons_check_over();
   PS_Image_mouse_dragged();
 
+// Disable Drag feature.
+/*
   DRAW_OFFSET_X[0] = mouseX - mousePressedX;
   DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
 
   config_save();
 
   if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X[0]:" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]:" + DRAW_OFFSET_Y[0]);
+*/
 }
 
 void mouseWheel(MouseEvent event)
@@ -213,6 +224,8 @@ void mouseWheel(MouseEvent event)
     }
   }
 
+// Disable mouse x y changing by wheel zoom feature.
+/*
   // Check zoom factor changed.
   if (zoom_factor_save != ZOOM_FACTOR[0])
   {
@@ -234,6 +247,7 @@ void mouseWheel(MouseEvent event)
 
     config_save();
   }
+*/
 }
 
 boolean mouse_is_over(int r_x, int r_y, int r_width, int r_height)
