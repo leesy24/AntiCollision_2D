@@ -29,7 +29,7 @@ C_UI_INTERFACES_FILL_HIGHLIGHT,FFC0C0C0,Interface menu hightlight color. Color d
 C_UI_INTERFACES_BORDER_ACTIVE,FFFF0000,Interface menu border active color. Color data format is AARRGGBB
 C_UI_INTERFACES_BORDER_NORMAL,FF000000,Interface menu border normal color. Color data format is AARRGGBB
 C_UI_INTERFACES_CURSOR,FF0000FF,Interface menu cursor color. Color data format is AARRGGBB
-C_LINES_LINE,FF000000,Line color of background lines. Color data format is AARRGGBB
-W_LINES_LINE,3,Line weight of background lines.
+C_FAULT_REGION_LINE,FF000000,Line color of background lines. Color data format is AARRGGBB
+W_FAULT_REGION_LINE,3,Line weight of background lines.
 C_BG_IMAGE_LINE,FF000000,Line color of background image lines. Color data format is AARRGGBB
 W_BG_IMAGE_LINE,3,Line weight of background image lines.

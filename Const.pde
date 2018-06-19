@@ -85,10 +85,10 @@ void const_settings()
       C_UI_INTERFACES_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_CURSOR"))
       C_UI_INTERFACES_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_LINES_LINE"))
-      C_LINES_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_LINES_LINE"))
-      W_LINES_LINE = variable.getInt("Value");
+    else if(name.equals("C_FAULT_REGION_LINE"))
+      C_FAULT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_FAULT_REGION_LINE"))
+      W_FAULT_REGION_LINE = variable.getInt("Value");
     else if(name.equals("C_BG_IMAGE_LINE"))
       C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BG_IMAGE_LINE"))
@@ -256,13 +256,13 @@ void const_create()
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_LINES_LINE");
-  variable.setString("Value", String.format("%08X", C_LINES_LINE));
+  variable.setString("Name", "C_FAULT_REGION_LINE");
+  variable.setString("Value", String.format("%08X", C_FAULT_REGION_LINE));
   variable.setString("Comment", "Line color of background lines. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_LINES_LINE");
-  variable.setInt("Value", W_LINES_LINE);
+  variable.setString("Name", "W_FAULT_REGION_LINE");
+  variable.setInt("Value", W_FAULT_REGION_LINE);
   variable.setString("Comment", "Line weight of background lines.");
 
   variable = CONST_table.addRow();

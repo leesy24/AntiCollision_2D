@@ -54,7 +54,7 @@ void settings() {
   BG_Image_settings();
   Grid_settings();
   PS_Image_settings();
-  lines_settings();
+  Fault_Region_settings();
 }
 
 // The setup() function is run once, when the program starts.
@@ -139,7 +139,7 @@ void draw() {
   Grid_draw();
   BG_Image_draw();
   PS_Image_draw();
-  lines_draw();
+  Fault_Region_draw();
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
