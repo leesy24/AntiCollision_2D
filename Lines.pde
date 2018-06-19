@@ -46,6 +46,10 @@ void lines_settings()
 
     //println("LINES_table.getRowCount()=" + LINES_table.getRowCount());
     LINES_data[instance] = new Lines(LINES_table.getRowCount());
+    if(LINES_data[instance] == null)
+    {
+      return;
+    }
     //println("LINES_data[instance].length=" + LINES_data[instance].length);
 
     int i = 0;

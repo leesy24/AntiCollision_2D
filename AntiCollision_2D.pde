@@ -51,6 +51,7 @@ void settings() {
   const_settings();
   config_settings();
   screen_settings();
+  BG_Image_settings();
   Grid_settings();
   PS_Image_settings();
   lines_settings();
@@ -136,6 +137,7 @@ void draw() {
   //UI_Buttons_check_over();
 
   Grid_draw();
+  BG_Image_draw();
   PS_Image_draw();
   lines_draw();
 

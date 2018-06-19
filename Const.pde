@@ -89,6 +89,10 @@ void const_settings()
       C_LINES_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_LINES_LINE"))
       W_LINES_LINE = variable.getInt("Value");
+    else if(name.equals("C_BG_IMAGE_LINE"))
+      C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_BG_IMAGE_LINE"))
+      W_BG_IMAGE_LINE = variable.getInt("Value");
   }
 }
 
@@ -260,6 +264,16 @@ void const_create()
   variable.setString("Name", "W_LINES_LINE");
   variable.setInt("Value", W_LINES_LINE);
   variable.setString("Comment", "Line weight of background lines.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_BG_IMAGE_LINE");
+  variable.setString("Value", String.format("%08X", C_BG_IMAGE_LINE));
+  variable.setString("Comment", "Line color of background image lines. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_BG_IMAGE_LINE");
+  variable.setInt("Value", W_BG_IMAGE_LINE);
+  variable.setString("Comment", "Line weight of background image lines.");
 
   saveTable(CONST_table, "data/" + CONST_file_full_name);
 }
