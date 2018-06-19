@@ -471,6 +471,11 @@ void UI_Interfaces_draw()
 
 void UI_Interfaces_mouseReleased()
 {
+  if (!UI_Interfaces_enabled)
+  {
+    UI_Interfaces_reset();
+    return;
+  }
   try {
     Controller controller = (Controller)cp5.getWindow().getMouseOverList().get(0);
     if(controller.getName().equals("UI_Interfaces_ddmenu") == true) {
