@@ -3,6 +3,11 @@ final static boolean PRINT_PS_DATA_ALL_DBG = false;
 //final static boolean PRINT_PS_DATA_ALL_ERR = true; 
 final static boolean PRINT_PS_DATA_ALL_ERR = false;
 
+//final static boolean PRINT_PS_DATA_SETTINGS_DBG = true; 
+final static boolean PRINT_PS_DATA_SETTINGS_DBG = false;
+//final static boolean PRINT_PS_DATA_SETTINGS_ERR = true; 
+final static boolean PRINT_PS_DATA_SETTINGS_ERR = false;
+
 //final static boolean PRINT_PS_DATA_SETUP_DBG = true; 
 final static boolean PRINT_PS_DATA_SETUP_DBG = false;
 //final static boolean PRINT_PS_DATA_SETUP_ERR = true; 
@@ -20,8 +25,6 @@ final static boolean PRINT_PS_DATA_PARSE_ERR = false;
 
 //final static boolean PRINT_PS_DATA_DRAW_DBG = true; 
 final static boolean PRINT_PS_DATA_DRAW_DBG = false;
-
-static boolean PS_DATA_draw_params_enable = true;
 
 final int PS_DATA_INSTANCE_MAX = 2;
 
@@ -45,7 +48,7 @@ final static int PS_DATA_INTERFACE_UART = 1;
 final static int PS_DATA_INTERFACE_UDP = 2;
 final static int PS_DATA_INTERFACE_SN = 3;
 
-int[] PS_DATA_interface;
+int[] PS_Data_interface;
 
 int UDP_local_port = 1025;
 String[] UDP_remote_ip;
@@ -56,21 +59,46 @@ PS_Data PS_Data_handle;
 // Define Data buffer array to load binary Data buffer from interfaces
 byte[][] PS_Data_buf; 
 
+static boolean[] PS_Data_draw_params_enabled;
+static int PS_Data_draw_params_timer;
+
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
 
 void PS_Data_settings() {
-  PS_DATA_interface = new int[PS_DATA_INSTANCE_MAX];
+  PS_Data_interface = new int[PS_DATA_INSTANCE_MAX];
+  if (PS_Data_interface == null)
+  {
+    if (PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_interface=null");
+    return;
+  }
   UDP_remote_ip = new String[PS_DATA_INSTANCE_MAX];
+  if (UDP_remote_ip == null)
+  {
+    if (PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_ip=null");
+    return;
+  }
   UDP_remote_port = new int[PS_DATA_INSTANCE_MAX];
+  if (UDP_remote_port == null)
+  {
+    if (PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_port=null");
+    return;
+  }
+  PS_Data_draw_params_enabled = new boolean[PS_DATA_INSTANCE_MAX];
+  if (PS_Data_draw_params_enabled == null)
+  {
+    if (PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_enabled=null");
+    return;
+  }
 
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
   {
-    PS_DATA_interface[i] = PS_DATA_INTERFACE_FILE;
+    PS_Data_interface[i] = PS_DATA_INTERFACE_FILE;
     UDP_remote_ip[i] = "10.0.8.86";
     UDP_remote_port[i] = 1024;
+    PS_Data_draw_params_enabled[i] = false;
   }
-  
+  PS_Data_draw_params_timer = millis();
 }
 
 void PS_Data_setup() {
@@ -98,37 +126,37 @@ void PS_Data_setup() {
 
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
   {
-    if(PS_DATA_interface[i] == PS_DATA_INTERFACE_FILE) 
+    if(PS_Data_interface[i] == PS_DATA_INTERFACE_FILE) 
       Title += "File";
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_UART)
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UART)
       Title += "UART";
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_UDP)
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UDP)
       Title += "UDP";
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_SN)
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_SN)
       Title += "SN";
     else {
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_DATA_interface["+i+"]="+PS_DATA_interface[i]+" error!");
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_interface["+i+"]="+PS_Data_interface[i]+" error!");
     }      
   }
   
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
   {
-    if(PS_DATA_interface[i] == PS_DATA_INTERFACE_FILE) {
+    if(PS_Data_interface[i] == PS_DATA_INTERFACE_FILE) {
       Interfaces_File_setup();
     }
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_UART) {
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UART) {
       Interfaces_UART_setup();
     }
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_UDP) {
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UDP) {
       Interfaces_UDP_setup(UDP_local_port);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
       Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
     }
-    else if(PS_DATA_interface[i] == PS_DATA_INTERFACE_SN) {
+    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_SN) {
       Interfaces_SN_setup();
     }
     else {
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_DATA_interface["+i+"]="+PS_DATA_interface[i]+" error!");
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_interface["+i+"]="+PS_Data_interface[i]+" error!");
     }
   }
 }
@@ -187,7 +215,7 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):");
     //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println(""PS_Data:load("+instance+"):PS_Data_buf["+instance+"]="+PS_Data_buf[instance]);
 
-    if(PS_DATA_interface[instance] == PS_DATA_INTERFACE_FILE) {
+    if(PS_Data_interface[instance] == PS_DATA_INTERFACE_FILE) {
       if(Interfaces_File_load() != true) {
         interfaces_err_str = Interfaces_File_get_error();
         if(interfaces_err_str != null) {
@@ -207,7 +235,7 @@ class PS_Data {
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():File:ok!");
       return true;
     }
-    else if(PS_DATA_interface[instance] == PS_DATA_INTERFACE_UART) {
+    else if(PS_Data_interface[instance] == PS_DATA_INTERFACE_UART) {
       if(Interfaces_UART_load() != true) {
         interfaces_err_str = Interfaces_UART_get_error();
         if(interfaces_err_str != null) {
@@ -226,7 +254,7 @@ class PS_Data {
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UART:ok!");
       return true;
     }
-    else if(PS_DATA_interface[instance] == PS_DATA_INTERFACE_UDP) {
+    else if(PS_Data_interface[instance] == PS_DATA_INTERFACE_UDP) {
       if(Interfaces_UDP_handle.load(instance) != true) {
         interfaces_err_str = Interfaces_UDP_handle.get_error(instance);
         if(interfaces_err_str != null) {
@@ -245,7 +273,7 @@ class PS_Data {
       if (PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UDP:ok!");
       return true;
     }
-    else /*if(PS_DATA_interface[instance] == PS_DATA_INTERFACE_SN)*/ {
+    else /*if(PS_Data_interface[instance] == PS_DATA_INTERFACE_SN)*/ {
       if(Interfaces_SN_load() != true) {
         interfaces_err_str = Interfaces_SN_get_error();
         if(interfaces_err_str != null) {
@@ -490,12 +518,19 @@ class PS_Data {
     return true;
   } // End of parse()
   
+  final static int DRAW_PARAMS_TIMEOUT = 10000; // 10 seconds
+
   // Draw params of parsed Data buffer
   void draw_params(int instance)
   {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_params("+instance+"):");
 
-    if(!PS_DATA_draw_params_enable) return;
+    if(!PS_Data_draw_params_enabled[instance]) return;
+
+    if((millis() - PS_Data_draw_params_timer) >= DRAW_PARAMS_TIMEOUT)
+    {
+      PS_Data_draw_params_enabled[instance] = false;
+    }
 
     String[] strings = new String[13];
     int cnt;
@@ -524,10 +559,78 @@ class PS_Data {
 
     // Get max string width
     int witdh_max = 0;
-    for( String string:strings)
+    for (String string:strings)
     {
       //if(string != null)
         witdh_max = max(witdh_max, int(textWidth(string)));    
+    }
+
+    int rect_w, rect_h;
+    int rect_x, rect_y;
+    int rect_tl = 5, rect_tr = 5, rect_br = 5, rect_bl = 5;
+    if (ROTATE_FACTOR[instance] == 315) {
+      if (MIRROR_ENABLE[instance]) { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_tl = 0;
+      }
+      else { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_bl = 0;
+      }
+    }
+    else if (ROTATE_FACTOR[instance] == 45) {
+      if (MIRROR_ENABLE[instance]) { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_tr = 0;
+      }
+      else { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_tl = 0;
+      }
+    }
+    else if (ROTATE_FACTOR[instance] == 135) {
+      if (MIRROR_ENABLE[instance]) { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_br = 0;
+      }
+      else { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_tr = 0;
+      }
+    }
+    else /*if (ROTATE_FACTOR[instance] == 225)*/ {
+      if (MIRROR_ENABLE[instance]) { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_bl = 0;
+      }
+      else { // OK
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
+        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_br = 0;
+      }
     }
 
     // Draw rect
@@ -535,21 +638,18 @@ class PS_Data {
     // Sets the color and weight used to draw lines and borders around shapes.
     stroke(C_PS_DATA_RECT_STROKE);
     strokeWeight(W_PS_DATA_RECT_STROKE);
-    rect(FONT_HEIGHT * 3, TEXT_MARGIN*2 + FONT_HEIGHT * 1, witdh_max + TEXT_MARGIN*2, FONT_HEIGHT * cnt + TEXT_MARGIN*2, 5, 5, 5, 5);
+    rect(rect_x, rect_y, rect_w, rect_h, rect_tl, rect_tr, rect_br, rect_bl);
 
     // Sets the color used to draw lines and borders around shapes.
     fill(C_PS_DATA_RECT_TEXT);
     stroke(C_PS_DATA_RECT_TEXT);
     cnt = 0;
-    final int str_x = FONT_HEIGHT * 3 + TEXT_MARGIN;
-    final int offset_y = TEXT_MARGIN*2 + FONT_HEIGHT * 1 + TEXT_MARGIN - 1;
+    final int str_x = rect_x + TEXT_MARGIN;
+    final int str_y = rect_y + TEXT_MARGIN - 1;
     for( String string:strings)
     {
-      //if(string != null)
-      {
-        text(string, str_x, offset_y + FONT_HEIGHT * (1 + cnt));
-        cnt ++;
-      }
+      text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt));
+      cnt ++;
     }
   } // End of draw_params()
   

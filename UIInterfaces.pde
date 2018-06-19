@@ -91,8 +91,8 @@ void UI_Interfaces_setup()
      //.setItemHeight(100)
      .setOpen(false)
      .addItems(UI_INTERFACE_str_array)
-     .setCaptionLabel(UI_INTERFACE_str_array[PS_DATA_interface[0]])
-     .removeItem(UI_INTERFACE_str_array[PS_DATA_interface[0]])
+     .setCaptionLabel(UI_INTERFACE_str_array[PS_Data_interface[0]])
+     .removeItem(UI_INTERFACE_str_array[PS_Data_interface[0]])
      //.setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
      ;
   //y += h;
@@ -124,7 +124,7 @@ void UI_Interfaces_setup()
   CColor c = new CColor();
   c.setBackground(C_UI_INTERFACES_BORDER_ACTIVE);
   //c.setForeground(C_UI_INTERFACES_BORDER_ACTIVE);
-  sl_ddmenu.getItem(PS_DATA_interface[0]).put("color", c);
+  sl_ddmenu.getItem(PS_Data_interface[0]).put("color", c);
 */
 
   str = "Interface:";
@@ -145,7 +145,7 @@ void UI_Interfaces_setup()
   y += h;
 
   Textfield tf_param1, tf_param2, tf_param3;
-  if(PS_DATA_interface[0] == PS_DATA_INTERFACE_FILE) {
+  if(PS_Data_interface[0] == PS_DATA_INTERFACE_FILE) {
     str = FILE_name;
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
@@ -180,7 +180,7 @@ void UI_Interfaces_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UART) {
+  else if(PS_Data_interface[0] == PS_DATA_INTERFACE_UART) {
     str = UART_port_name;
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
@@ -285,7 +285,7 @@ void UI_Interfaces_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UDP) {
+  else if(PS_Data_interface[0] == PS_DATA_INTERFACE_UDP) {
     str = UDP_remote_ip[0];
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
@@ -390,7 +390,7 @@ void UI_Interfaces_setup()
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else /*if(PS_DATA_interface[0] == PS_DATA_INTERFACE_SN)*/ {
+  else /*if(PS_Data_interface[0] == PS_DATA_INTERFACE_SN)*/ {
     str = Integer.toString(SN_serial_number);
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
@@ -484,7 +484,7 @@ void UI_Interfaces_mouseReleased()
         ;
       sl_ddmenu
         .setItems(UI_INTERFACE_str_array)
-        .removeItem(UI_INTERFACE_str_array[PS_DATA_interface[0]])
+        .removeItem(UI_INTERFACE_str_array[PS_Data_interface[0]])
         ;
       return;
     }
@@ -520,14 +520,14 @@ void UI_Interfaces_mouseReleased()
       ;
     sl_ddmenu.close();
   }
-  if(PS_DATA_interface[0] == PS_DATA_INTERFACE_FILE) {
+  if(PS_Data_interface[0] == PS_DATA_INTERFACE_FILE) {
     tf_param = (Textfield)cp5.get("UI_Interfaces_filename");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = FILE_name;
       tf_param.setText(str);
     }
   }
-  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UART) {
+  else if(PS_Data_interface[0] == PS_DATA_INTERFACE_UART) {
     tf_param = (Textfield)cp5.get("UI_Interfaces_UARTport");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = UART_port_name;
@@ -548,7 +548,7 @@ void UI_Interfaces_mouseReleased()
       tf_param.setText(str);
     }
   }
-  else if(PS_DATA_interface[0] == PS_DATA_INTERFACE_UDP) {
+  else if(PS_Data_interface[0] == PS_DATA_INTERFACE_UDP) {
     tf_param = (Textfield)cp5.get("UI_Interfaces_UDPremoteip");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = UDP_remote_ip[0];
@@ -565,7 +565,7 @@ void UI_Interfaces_mouseReleased()
       tf_param.setText(str);
     }
   }
-  else /*if(PS_DATA_interface[0] == PS_DATA_INTERFACE_SN)*/ {
+  else /*if(PS_Data_interface[0] == PS_DATA_INTERFACE_SN)*/ {
     tf_param = (Textfield)cp5.get("UI_Interfaces_SNserialnumber");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = Integer.toString(SN_serial_number);
@@ -615,10 +615,10 @@ void UI_Interfaces_ddmenu(int n)
     cp5.get(ScrollableList.class, "dropdown").getItem(i).put("color", c);
   }
 */
-  if( n >= PS_DATA_interface[0] ) n ++;
+  if( n >= PS_Data_interface[0] ) n ++;
 
-  if( PS_DATA_interface[0] != n ) {
-    PS_DATA_interface[0] = n;
+  if( PS_Data_interface[0] != n ) {
+    PS_Data_interface[0] = n;
     config_save();
     UI_INTERFACE_changed = true;
   }

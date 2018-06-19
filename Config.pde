@@ -31,8 +31,8 @@ void config_settings()
     {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
-      if(name.equals("PS_DATA_interface"))
-        PS_DATA_interface[i] = variable.getInt("Value");
+      if(name.equals("PS_Data_interface"))
+        PS_Data_interface[i] = variable.getInt("Value");
       else if(name.equals("ROTATE_FACTOR"))
         ROTATE_FACTOR[i] = variable.getFloat("Value"); 
       else if(name.equals("MIRROR_ENABLE"))
@@ -90,8 +90,8 @@ void config_create()
     CONFIG_table.addColumn("Value");
     
     variable = CONFIG_table.addRow();
-    variable.setString("Name", "PS_DATA_interface");
-    variable.setInt("Value", PS_DATA_interface[i]);
+    variable.setString("Name", "PS_Data_interface");
+    variable.setInt("Value", PS_Data_interface[i]);
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "ROTATE_FACTOR");
@@ -172,10 +172,10 @@ void config_save()
     for (TableRow variable : CONFIG_table.rows()) {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
-      if(name.equals("PS_DATA_interface")) {
+      if(name.equals("PS_Data_interface")) {
         value_int = variable.getInt("Value");
-        if(value_int != PS_DATA_interface[i]) {
-          variable.setInt("Value", PS_DATA_interface[i]);
+        if(value_int != PS_Data_interface[i]) {
+          variable.setInt("Value", PS_Data_interface[i]);
           changed = true;
         }
       }

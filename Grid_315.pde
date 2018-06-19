@@ -1,4 +1,4 @@
-void grid_draw_rotate_315(int instance)
+void Grid_draw_rotate_315(int instance)
 {
   final int const_screen_height_d_2 = SCREEN_height / 2;
   final int const_screen_x_start = TEXT_MARGIN;
@@ -29,7 +29,6 @@ void grid_draw_rotate_315(int instance)
   int x_zero, y_zero;
   String string;
   float distance = 0.0;
-  int image_x = MIN_INT, image_y = MIN_INT;
 
   if (MIRROR_ENABLE[instance])
     y_zero = 0;
@@ -120,7 +119,7 @@ void grid_draw_rotate_315(int instance)
         x = const_screen_x_end - int(textWidth(string));
       y = iy + const_grid_offset_y;
       if(distance == 0.0)
-        image_y = y;
+        Grid_zero_y[instance] = y;
       text(string, x, y + const_font_height_d_2);
       //println("iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
     }
@@ -136,18 +135,9 @@ void grid_draw_rotate_315(int instance)
       string = distance + "m";
       x = ix + const_grid_offset_x;
       if(distance == 0.0)
-        image_x = x;
+        Grid_zero_x[instance] = x;
       text(string, x - int(textWidth(string) / 2.0), y);
       //println("ix=" + ix + ":x=" + x + ",y=" + y + ",const_zoom_factor_d_100=" + const_zoom_factor_d_100 + ",const_str_offset_ix=" + const_str_offset_ix + "," + string);
     }
-  }
-
-  if( (image_x >= 0 - PS_image[instance].width / 2 && image_x < SCREEN_width + PS_image[instance].width / 2)
-      &&
-      (image_y >= 0 - PS_image[instance].height / 2 && image_y < SCREEN_height + PS_image[instance].height / 2)
-    )
-  {
-    //println("image xy=" + image_x + "," + image_y);
-    image(PS_image[instance], image_x - PS_image[instance].width / 2, image_y - PS_image[instance].height / 2);
   }
 }

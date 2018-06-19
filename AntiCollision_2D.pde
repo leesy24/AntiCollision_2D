@@ -51,7 +51,8 @@ void settings() {
   const_settings();
   config_settings();
   screen_settings();
-  grid_settings();
+  Grid_settings();
+  PS_Image_settings();
   lines_settings();
 }
 
@@ -132,9 +133,10 @@ void draw() {
   }
 
   // Move to mouseMoved() and mouseDragged().
-  //UI_Buttons_check_update();
+  //UI_Buttons_check_over();
 
-  grid_draw();
+  Grid_draw();
+  PS_Image_draw();
   lines_draw();
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)

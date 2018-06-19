@@ -189,7 +189,7 @@ boolean screen_check_update()
   }
 /*
   if(updated) {
-    grid_ready();
+    PS_Image_ready();
     //config_save();
   }
 */

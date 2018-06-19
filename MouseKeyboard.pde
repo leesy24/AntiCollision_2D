@@ -43,7 +43,8 @@ void keyPressed()
     } 
     else if(keyCode == KeyEvent.VK_F8)
     {
-      PS_DATA_draw_params_enable = !PS_DATA_draw_params_enable;
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+        PS_Data_draw_params_enabled[i] = !PS_Data_draw_params_enabled[i];
     } 
     else if(keyCode == KeyEvent.VK_F7)
     {
@@ -111,6 +112,8 @@ void mousePressed()
   {
     buttons_reset_en_pressed = true;
   }
+
+  PS_Image_mouse_pressed();
 }
 
 void mouseReleased()
@@ -154,6 +157,7 @@ void mouseReleased()
     UI_Buttons_reset_en();
   }
 
+  PS_Image_mouse_released();
 }
 
 void mouseMoved()
@@ -161,7 +165,8 @@ void mouseMoved()
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse moved!");
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
-  UI_Buttons_check_update();
+  UI_Buttons_check_over();
+  PS_Image_mouse_moved();
 }
 
 void mouseDragged() 
@@ -170,7 +175,8 @@ void mouseDragged()
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
   if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
 
-  UI_Buttons_check_update();
+  UI_Buttons_check_over();
+  PS_Image_mouse_dragged();
 
   DRAW_OFFSET_X[0] = mouseX - mousePressedX;
   DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
@@ -224,3 +230,19 @@ void mouseWheel(MouseEvent event)
     config_save();
   }
 }
+
+boolean mouse_is_over(int r_x, int r_y, int r_width, int r_height)
+{
+  if( mouseX >= r_x && mouseX <= r_x+r_width
+      && 
+      mouseY >= r_y && mouseY <= r_y+r_height
+    )
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+

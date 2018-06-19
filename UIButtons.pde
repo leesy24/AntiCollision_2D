@@ -226,26 +226,11 @@ void UI_Buttons_draw()
   text(buttons_reset_en_caption_str, buttons_reset_en_caption_str_x, buttons_reset_en_caption_str_y);
 }
 
-/*static*/ boolean buttons_check_over(int r_x, int r_y, int r_width, int r_height)
-{
-  if( mouseX >= r_x && mouseX <= r_x+r_width
-      && 
-      mouseY >= r_y && mouseY <= r_y+r_height
-    )
-  {
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-void UI_Buttons_check_update()
+void UI_Buttons_check_over()
 {
   if (!UI_Buttons_enabled) return;
 
-  if( buttons_check_over(buttons_zoom_minus_x, buttons_zoom_minus_y, buttons_zoom_minus_width, buttons_zoom_minus_height) )
+  if( mouse_is_over(buttons_zoom_minus_x, buttons_zoom_minus_y, buttons_zoom_minus_width, buttons_zoom_minus_height) )
   {
     //println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
     buttons_zoom_minus_over = true;
@@ -256,7 +241,7 @@ void UI_Buttons_check_update()
     buttons_mirror_lr_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_zoom_pluse_x, buttons_zoom_pluse_y, buttons_zoom_pluse_width, buttons_zoom_pluse_height) )
+  else if( mouse_is_over(buttons_zoom_pluse_x, buttons_zoom_pluse_y, buttons_zoom_pluse_width, buttons_zoom_pluse_height) )
   {
     //println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
     buttons_zoom_pluse_over = true;
@@ -267,7 +252,7 @@ void UI_Buttons_check_update()
     buttons_mirror_lr_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_rotate_ccw_x, buttons_rotate_ccw_y, buttons_rotate_ccw_width, buttons_rotate_ccw_height) )
+  else if( mouse_is_over(buttons_rotate_ccw_x, buttons_rotate_ccw_y, buttons_rotate_ccw_width, buttons_rotate_ccw_height) )
   {
     buttons_rotate_ccw_over = true;
     buttons_zoom_minus_over =
@@ -277,7 +262,7 @@ void UI_Buttons_check_update()
     buttons_mirror_lr_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_rotate_cw_x, buttons_rotate_cw_y, buttons_rotate_cw_width, buttons_rotate_cw_height) )
+  else if( mouse_is_over(buttons_rotate_cw_x, buttons_rotate_cw_y, buttons_rotate_cw_width, buttons_rotate_cw_height) )
   {
     buttons_rotate_cw_over = true;
     buttons_zoom_minus_over =
@@ -287,7 +272,7 @@ void UI_Buttons_check_update()
     buttons_mirror_lr_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_mirror_ud_x, buttons_mirror_ud_y, buttons_mirror_ud_width, buttons_mirror_ud_height) )
+  else if( mouse_is_over(buttons_mirror_ud_x, buttons_mirror_ud_y, buttons_mirror_ud_width, buttons_mirror_ud_height) )
   {
     buttons_mirror_ud_over = true;
     buttons_zoom_minus_over =
@@ -297,7 +282,7 @@ void UI_Buttons_check_update()
     buttons_mirror_lr_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_mirror_lr_x, buttons_mirror_lr_y, buttons_mirror_lr_width, buttons_mirror_lr_height) )
+  else if( mouse_is_over(buttons_mirror_lr_x, buttons_mirror_lr_y, buttons_mirror_lr_width, buttons_mirror_lr_height) )
   {
     buttons_mirror_lr_over = true;
     buttons_zoom_minus_over =
@@ -307,7 +292,7 @@ void UI_Buttons_check_update()
     buttons_mirror_ud_over =
     buttons_reset_en_over = false;
   }
-  else if( buttons_check_over(buttons_reset_en_x, buttons_reset_en_y, buttons_reset_en_width, buttons_reset_en_height) )
+  else if( mouse_is_over(buttons_reset_en_x, buttons_reset_en_y, buttons_reset_en_width, buttons_reset_en_height) )
   {
     buttons_reset_en_over = true;
     buttons_zoom_minus_over =
@@ -374,7 +359,7 @@ void UI_Buttons_rotate_ccw()
     DRAW_OFFSET_Y[0] = -int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
     DRAW_OFFSET_X[0] =  int(save_oy);
   }
-  grid_ready();
+  PS_Image_ready();
   config_save();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -402,7 +387,7 @@ void UI_Buttons_rotate_cw()
     DRAW_OFFSET_Y[0] =  int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
     DRAW_OFFSET_X[0] = -int(save_oy);
   }
-  grid_ready();
+  PS_Image_ready();
   config_save();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -425,7 +410,7 @@ void UI_Buttons_mirror_ud()
     }
     if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
-  grid_ready();
+  PS_Image_ready();
   config_save();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -448,7 +433,7 @@ void UI_Buttons_mirror_lr()
     }
     if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
-  grid_ready();
+  PS_Image_ready();
   config_save();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -464,7 +449,7 @@ void UI_Buttons_reset_en()
   DRAW_OFFSET_X[0] = DRAW_OFFSET_Y[0] = 0;
   MIRROR_ENABLE[0] = false;
   ZOOM_FACTOR[0] = 100;
-  grid_ready();
+  PS_Image_ready();
   config_save();
 }
 
