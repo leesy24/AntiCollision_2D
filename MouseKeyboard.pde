@@ -45,6 +45,10 @@ void keyPressed()
     {
       PS_DATA_draw_params_enable = !PS_DATA_draw_params_enable;
     } 
+    else if(keyCode == KeyEvent.VK_F7)
+    {
+      UI_Buttons_enabled = !UI_Buttons_enabled;
+    } 
   }
 }
 /**/

@@ -77,6 +77,8 @@ static boolean buttons_reset_en_pressed = false;
 static int buttons_reset_en_caption_str_x, buttons_reset_en_caption_str_y;  // Position of button string reset enable
 static String buttons_reset_en_caption_str = "Reset";                      // button string reset enable
 
+static boolean UI_Buttons_enabled = false;
+
 void UI_Buttons_setup()
 {
   buttons_zoom_minus_width = FONT_HEIGHT * 2;
@@ -143,7 +145,7 @@ void UI_Buttons_setup()
 
 void UI_Buttons_draw()
 {
-  //String string;
+  if (!UI_Buttons_enabled) return;
 
   // Sets the color and weight used to draw lines and borders around shapes.
   stroke(C_UI_BUTTONS_BOX);
@@ -241,6 +243,8 @@ void UI_Buttons_draw()
 
 void UI_Buttons_check_update()
 {
+  if (!UI_Buttons_enabled) return;
+
   if( buttons_check_over(buttons_zoom_minus_x, buttons_zoom_minus_y, buttons_zoom_minus_width, buttons_zoom_minus_height) )
   {
     //println("ZOOM_FACTOR[0]=" + ZOOM_FACTOR[0]);
