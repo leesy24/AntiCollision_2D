@@ -1,0 +1,6 @@
+X,Y,Weight,Color,:Unit is cm. 100cm = 1meter,Color format is AARRGGBB(ex. FF000000 = opaque Black
+0,250,1,00FFFF00
+700,250,1,80FFFF00
+700,500,1,80FFFF00
+0,500,1,80FFFF00
+0,250,1,80FFFF00

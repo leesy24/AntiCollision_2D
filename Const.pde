@@ -89,6 +89,10 @@ void const_settings()
       C_FAULT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_FAULT_REGION_LINE"))
       W_FAULT_REGION_LINE = variable.getInt("Value");
+    else if(name.equals("C_ALERT_REGION_LINE"))
+      C_ALERT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_ALERT_REGION_LINE"))
+      W_ALERT_REGION_LINE = variable.getInt("Value");
     else if(name.equals("C_BG_IMAGE_LINE"))
       C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BG_IMAGE_LINE"))
@@ -258,12 +262,22 @@ void const_create()
   variable = CONST_table.addRow();
   variable.setString("Name", "C_FAULT_REGION_LINE");
   variable.setString("Value", String.format("%08X", C_FAULT_REGION_LINE));
-  variable.setString("Comment", "Line color of background lines. Color data format is AARRGGBB");
+  variable.setString("Comment", "Line color of fault region lines. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "W_FAULT_REGION_LINE");
   variable.setInt("Value", W_FAULT_REGION_LINE);
-  variable.setString("Comment", "Line weight of background lines.");
+  variable.setString("Comment", "Line weight of fault region lines.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_ALERT_REGION_LINE");
+  variable.setString("Value", String.format("%08X", C_ALERT_REGION_LINE));
+  variable.setString("Comment", "Line color of alert region lines. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_ALERT_REGION_LINE");
+  variable.setInt("Value", W_ALERT_REGION_LINE);
+  variable.setString("Comment", "Line weight of alert region lines.");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_BG_IMAGE_LINE");
