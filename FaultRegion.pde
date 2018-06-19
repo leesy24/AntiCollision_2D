@@ -13,19 +13,7 @@ static int W_FAULT_REGION_LINE = 3;
 
 // A Table object
 Table Fault_Region_table = null;
-class Lines {
-  public int length;
-  public int x[], y[], w[];
-  public color c[];
-  
-  Lines (int n) {
-    length = n;
-    x = new int[n];
-    y = new int[n];
-    w = new int[n];
-    c = new color[n];
-  }
-}
+
 Lines[] Fault_Region_data;
 
 void Fault_Region_settings()
