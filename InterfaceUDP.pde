@@ -1,46 +1,48 @@
-//final static boolean PRINT_INTERFACES_UDP_ALL_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_ALL_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_RESET_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_RESET_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_RESET_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_RESET_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_SEND_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_SEND_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_SEND_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_SEND_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_RECV_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_RECV_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_RECV_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_RECV_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = false; 
-//final static boolean PRINT_INTERFACES_UDP_SET_DBG = true; 
-final static boolean PRINT_INTERFACES_UDP_SET_DBG = false; 
-//final static boolean PRINT_INTERFACES_UDP_SET_ERR = true; 
-final static boolean PRINT_INTERFACES_UDP_SET_ERR = false; 
+//final static boolean PRINT_INTERFACES_UDP_ALL_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_ALL_DBG = false;
+final static boolean PRINT_INTERFACES_UDP_ALL_ERR = true;
+//final static boolean PRINT_INTERFACES_UDP_ALL_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_RESET_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_RESET_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_RESET_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_RESET_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_SEND_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_SEND_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_SEND_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_SEND_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_RECV_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_RECV_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_RECV_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_RECV_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_SET_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_SET_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_SET_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_SET_ERR = false;
 
-static boolean UDP_get_take_time_enable = true; 
-static boolean UDP_get_src_ip_port_enable = false; 
+static boolean UDP_get_take_time_enable = true;
+static boolean UDP_get_src_ip_port_enable = false;
 
 final int INTERFACES_UDP_INSTANCE_MAX = 2;
 static Interfaces_UDP Interfaces_UDP_handle = null;
@@ -97,7 +99,7 @@ void Interfaces_UDP_recv(int instance, byte[] data)
 } 
 
 class Interfaces_UDP {
-  final static int PS_CMD_MAX_BUFFER = 8*1024;
+  final static int PS_CMD_BUFFER_MAX = 8*1024;
 
   final static int PS_CMD_STATE_NONE = 0;
   final static int PS_CMD_STATE_SENT = 1;
@@ -309,8 +311,13 @@ class Interfaces_UDP {
   {
     if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):buf_size="+buf_size);
 
-    recv_in_buf[instance] = new byte[buf_size * 2];
+    //recv_in_buf[instance] = new byte[buf_size * 2];
+    recv_in_buf[instance] = new byte[buf_size];
     //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf="+recv_in_buf[instance]);
+    if (recv_in_buf[instance] == null)
+    {
+      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_P_RECV_ERR) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf["+instance+"]=null");
+    }
 
     recv_live_total[instance] = 0; // Init. total received data.
     recv_length_received[instance] = false; // Init. state machine for getting length data of UDP data format.
@@ -320,6 +327,10 @@ class Interfaces_UDP {
   public void recv(int instance, byte[] data)
   {
     if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP:recv("+instance+"):data.length=" + data.length);
+    if (data.length > PS_CMD_BUFFER_MAX)
+    {
+      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_RECV_ERR) println("Interfaces_UDP:recv("+instance+"):data.length max error! " + data.length);
+    }
     try {
       if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
         int inLength = 0;  // Bytes length by readBytes()
@@ -479,7 +490,7 @@ class Interfaces_UDP {
       // Make command buffer
       outBuffer = PS_CMD_make_cmd("GSCN", scan_number);
       // Prepare read
-      prepare_recv(instance, PS_CMD_MAX_BUFFER);
+      prepare_recv(instance, PS_CMD_BUFFER_MAX);
       // Flush buffer
       // Prepare UDP CMD state
       PS_CMD_state[instance] = PS_CMD_STATE_SENT;
