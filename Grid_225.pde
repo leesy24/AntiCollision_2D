@@ -72,6 +72,9 @@ void Grid_draw_rotate_225(int instance)
   fill(C_GRID_LINE);
   stroke(C_GRID_LINE);
   strokeWeight(W_GRID_LINE);
+
+  Grid_scr_y_min[instance] = min(Grid_scr_y_min[instance], 0);
+  Grid_scr_y_max[instance] = max(Grid_scr_y_max[instance], y_zero);
   for (ix = -100; ix <= SCREEN_width + 100; ix += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(ix - const_str_offset_ix) / 100.0;
@@ -79,23 +82,39 @@ void Grid_draw_rotate_225(int instance)
     else
       //distance = const_zoom_factor_d_100 * float(const_str_offset_ix - ix) / 100.0;
       distance = (ZOOM_FACTOR[instance] * (const_str_offset_ix - ix)) / 100.0 / 100.0;
-    if (distance >= 0.0) {
-      line(ix + const_grid_offset_x, 0,
-           ix + const_grid_offset_x, y_zero);
+    x = ix + const_grid_offset_x;
+    if (distance >= 0.0 && x >= 0 && x <= SCREEN_width) {
+      line(x, 0, x, y_zero);
       //println("ix="+ix+":offset_x="+const_grid_offset_x+",x="+(ix + const_grid_offset_x));
+      //println("ix="+ix+":x="+x);
+      Grid_scr_x_min[instance] = min(Grid_scr_x_min[instance], x);
+      Grid_scr_x_max[instance] = max(Grid_scr_x_max[instance], x);
     }
+  }
+
+  if (MIRROR_ENABLE[instance])
+  {
+    Grid_scr_x_min[instance] = min(Grid_scr_x_min[instance], x_zero);
+    Grid_scr_x_max[instance] = max(Grid_scr_x_max[instance], SCREEN_width);
+  }
+  else
+  {
+    Grid_scr_x_min[instance] = min(Grid_scr_x_min[instance], 0);
+    Grid_scr_x_max[instance] = max(Grid_scr_x_max[instance], x_zero);
   }
   for (iy = 0; iy <= SCREEN_height + 100; iy += 100) {
     //distance = const_zoom_factor_d_100 * float(iy + const_str_offset_iy) / 100.0;
     distance = (ZOOM_FACTOR[instance] * (iy + const_str_offset_iy)) / 100.0 / 100.0;
-    if (distance >= 0.0) {
+    y = const_grid_offset_y - iy;
+    if (distance >= 0.0 && y >= 0 && y <= SCREEN_height) {
       if (MIRROR_ENABLE[instance])
-        line(x_zero,       const_grid_offset_y - iy,
-             SCREEN_width, const_grid_offset_y - iy);
+        line(x_zero, y, SCREEN_width, y);
       else
-        line(0,      const_grid_offset_y - iy,
-             x_zero, const_grid_offset_y - iy);
+        line(0, y, x_zero, y);
       //println("iy="+iy+":offset_y="+const_grid_offset_y+",y="+(const_grid_offset_y - iy));
+      //println("iy="+iy+":y="+y);
+      Grid_scr_y_min[instance] = min(Grid_scr_y_min[instance], y);
+      Grid_scr_y_max[instance] = max(Grid_scr_y_max[instance], y);
     }
   }
 

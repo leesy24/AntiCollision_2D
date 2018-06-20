@@ -232,11 +232,11 @@ class PS_Data {
       if(Interfaces_File_load() != true) {
         interfaces_err_str = Interfaces_File_get_error();
         if(interfaces_err_str != null) {
-          draw_error(interfaces_err_str);
+          draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():File:error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
-          draw_error(parse_err_str[instance]);
+          draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():File:parse() error!:" + parse_err_str[instance]);
         }
         return false;
@@ -250,11 +250,11 @@ class PS_Data {
       if(Interfaces_UART_load() != true) {
         interfaces_err_str = Interfaces_UART_get_error();
         if(interfaces_err_str != null) {
-          draw_error(interfaces_err_str);
+          draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():UART:error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
-          draw_error(parse_err_str[instance]);
+          draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():UART:parse() error!:" + parse_err_str[instance]);
         }
         return false;
@@ -267,11 +267,11 @@ class PS_Data {
       if(Interfaces_UDP_handle.load(instance) != true) {
         interfaces_err_str = Interfaces_UDP_handle.get_error(instance);
         if(interfaces_err_str != null) {
-          draw_error(interfaces_err_str);
+          draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():UDP:error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
-          draw_error(parse_err_str[instance]);
+          draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():UDP:parse() error!:" + parse_err_str[instance]);
         }
         return false;
@@ -284,11 +284,11 @@ class PS_Data {
       if(Interfaces_SN_load() != true) {
         interfaces_err_str = Interfaces_SN_get_error();
         if(interfaces_err_str != null) {
-          draw_error(interfaces_err_str);
+          draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():SN:error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
-          draw_error(parse_err_str[instance]);
+          draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load():SN:error!:" + parse_err_str[instance]);
         }
         return false;
@@ -318,7 +318,7 @@ class PS_Data {
     // Check function code is "GSCN".
     if (func.equals("GSCN") != true) {
       parse_err_str[instance] = "Error: Function code is invalid! " + func;
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -332,7 +332,7 @@ class PS_Data {
     // Check Data buffer record length with binary Data buffer length
     if (PS_Data_buf[instance].length < (len + 12)) {
       parse_err_str[instance] = "Error: PS_Data buf length is invalid!:" + PS_Data_buf[instance].length + "," + len;
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -346,7 +346,7 @@ class PS_Data {
     // Check CRC ok?
     if(crc != crc_c) {
       parse_err_str[instance] = "Error: PS_Data buf crc error!:" + crc + "," + crc_c;
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -358,7 +358,7 @@ class PS_Data {
     if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number of parameters=" + n_params);
     if (n_params == 0) {
       parse_err_str[instance] = "Error: No scan data is available! n_params = 0";
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -372,7 +372,7 @@ class PS_Data {
     // Check Number of points
     if (t_n_points > PS_DATA_POINTS_MAX || t_n_points <= 0) {
       parse_err_str[instance] = "Error: Number of points invalid! number_of_points[instance] is " + t_n_points;
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -397,7 +397,7 @@ class PS_Data {
       // Check time_stamp is changed
       if (PS_Data_old_time_stamp == time_stamp[instance]) {
         parse_err_str[instance] = "Scan Data buffer is not changed!:" + time_stamp[instance];
-        draw_error(parse_err_str[instance]);
+        draw_error(instance, parse_err_str[instance]);
         if (PRINT_PS_DATA_PARSE_DBG) println("Scan Data buffer is not changed!:" + time_stamp[instance]);
         //parse_err_cnt[instance] ++;
         //return false;
@@ -481,7 +481,7 @@ class PS_Data {
     if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number_of_points[instance]=" + number_of_points[instance]);
     if (number_of_points[instance] > PS_DATA_POINTS_MAX || number_of_points[instance] <= 0) {
       parse_err_str[instance] = "Error: Number of points invalid! number_of_points is " + number_of_points[instance];
-      draw_error(parse_err_str[instance]);
+      draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
       return false;
@@ -993,15 +993,17 @@ class PS_Data {
     }
   } // End of draw_points()
   
-  void draw_error(String message)
+  void draw_error(int instance, String message)
   {
-    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_error():");
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_error("+instance+"):");
 
     // Sets the color used to draw lines and borders around shapes.
     fill(C_PS_DATA_ERR_TEXT);
     stroke(C_PS_DATA_ERR_TEXT);
-    textSize(FONT_HEIGHT*3);
-    text(message, SCREEN_width / 2 - int(textWidth(message) / 2.0), SCREEN_height / 2 - FONT_HEIGHT);
+    textSize(FONT_HEIGHT*2);
+    text( message,
+          Grid_scr_x_min[instance] + (Grid_scr_x_max[instance] - Grid_scr_x_min[instance]) / 2 - int(textWidth(message) / 2.0),
+          Grid_scr_y_min[instance] + (Grid_scr_y_max[instance] - Grid_scr_y_min[instance]) / 2 - FONT_HEIGHT);
     textSize(FONT_HEIGHT);
   }
 }
