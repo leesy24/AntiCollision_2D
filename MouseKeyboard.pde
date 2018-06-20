@@ -34,14 +34,11 @@ void keyPressed()
   {
     if(keyCode == KeyEvent.VK_F10)
     {
-      UDP_get_src_ip_port_enable = !UDP_get_src_ip_port_enable;
-      SN_get_src_ip_port_enable = !SN_get_src_ip_port_enable;
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
       UART_get_take_time_enable = !UART_get_take_time_enable;
       UDP_get_take_time_enable = !UDP_get_take_time_enable;
-      SN_get_take_time_enable = !SN_get_take_time_enable;
     } 
     else if(keyCode == KeyEvent.VK_F8)
     {

@@ -46,7 +46,6 @@ final static boolean PRINT_INTERFACES_UDP_GET_DBG = false;
 final static boolean PRINT_INTERFACES_UDP_GET_ERR = false;
 
 static boolean UDP_get_take_time_enable = true;
-static boolean UDP_get_src_ip_port_enable = false;
 
 final int INTERFACES_UDP_INSTANCE_MAX = 2;
 static Interfaces_UDP Interfaces_UDP_handle = null;
@@ -373,12 +372,6 @@ class Interfaces_UDP {
           recv_in_length[instance] = recv_length[instance] + 12;
           //println("Read SCAN state changed to PS_CMD_STATE_RECEIVED! " + recv_live_total + "," + recv_length);
           PS_CMD_state[instance] = PS_CMD_STATE_RECEIVED;
-
-          //if(UDP_get_src_ip_port_enable)
-          //{
-          //  ip[instance] = ip;
-          //  port[instance] = port;
-          //}
 
           if(UDP_get_take_time_enable)
           {
