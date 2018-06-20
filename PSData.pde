@@ -148,17 +148,25 @@ void PS_Data_setup() {
   {
     if(PS_Data_interface[i] == PS_DATA_INTERFACE_FILE) {
       Interfaces_File_setup();
+      PS_Data_handle.sensor_ip[i] = null;
+      PS_Data_handle.sensor_port[i] = -1;
     }
     else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UART) {
       Interfaces_UART_setup();
+      PS_Data_handle.sensor_ip[i] = null;
+      PS_Data_handle.sensor_port[i] = -1;
     }
     else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UDP) {
       Interfaces_UDP_setup(UDP_local_port);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
       Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
+      PS_Data_handle.sensor_ip[i] = UDP_remote_ip[i];
+      PS_Data_handle.sensor_port[i] = UDP_remote_port[i];
     }
     else if(PS_Data_interface[i] == PS_DATA_INTERFACE_SN) {
       Interfaces_SN_setup();
+      PS_Data_handle.sensor_ip[i] = Interfaces_SN_get_src_ip();
+      PS_Data_handle.sensor_port[i] = Interfaces_SN_get_src_port();
     }
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_interface["+i+"]="+PS_Data_interface[i]+" error!");
@@ -235,8 +243,6 @@ class PS_Data {
       }
       // No mean in file interface.
       load_take_time[instance] = -1;
-      sensor_ip[instance] = null;
-      sensor_port[instance] = -1;
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():File:ok!");
       return true;
     }
@@ -254,8 +260,6 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UART_get_take_time();
-      sensor_ip[instance] = null;
-      sensor_port[instance] = -1;
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UART:ok!");
       return true;
     }
@@ -273,8 +277,6 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-      sensor_ip[instance] = Interfaces_UDP_handle.get_remote_ip(instance);
-      sensor_port[instance] = Interfaces_UDP_handle.get_remote_port(instance);
       if (PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UDP:ok!");
       return true;
     }
@@ -292,8 +294,6 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_SN_get_take_time();
-      sensor_ip[instance] = Interfaces_SN_get_src_ip();
-      sensor_port[instance] = Interfaces_SN_get_src_port();
       if (PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():SN:ok!");
       return true;
     }
