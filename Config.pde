@@ -36,39 +36,59 @@ void Config_settings()
     {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
-      if(name.equals("PS_Data_interface"))
-        PS_Data_interface[i] = variable.getInt("Value");
-      else if(name.equals("ROTATE_FACTOR"))
+      if (name.equals("PS_Data_interface")) {
+        for (int j = 0; j < PS_Data_interface_str.length; j ++) {
+          if (PS_Data_interface_str[j].equals(variable.getString("Value")))
+            PS_Data_interface[i] = j;
+        }
+      }
+      else if (name.equals("ROTATE_FACTOR")) {
         ROTATE_FACTOR[i] = variable.getFloat("Value"); 
-      else if(name.equals("MIRROR_ENABLE"))
+      }
+      else if (name.equals("MIRROR_ENABLE")) {
         MIRROR_ENABLE[i] = (variable.getString("Value").equals("true"))?true:false; 
-      else if(name.equals("ZOOM_FACTOR"))
+      }
+      else if (name.equals("ZOOM_FACTOR")) {
         ZOOM_FACTOR[i] = variable.getInt("Value"); 
-      else if(name.equals("DRAW_OFFSET_X"))
+      }
+      else if (name.equals("DRAW_OFFSET_X")) {
         DRAW_OFFSET_X[i] = variable.getInt("Value");
-      else if(name.equals("DRAW_OFFSET_Y"))
+      }
+      else if (name.equals("DRAW_OFFSET_Y")) {
         DRAW_OFFSET_Y[i] = variable.getInt("Value");
-      else if(name.equals("FILE_name"))
+      }
+      else if (name.equals("FILE_name")) {
         FILE_name = variable.getString("Value");
-      else if(name.equals("UART_port_name"))
+      }
+      else if (name.equals("UART_port_name")) {
         UART_port_name = variable.getString("Value");
-      else if(name.equals("UART_baud_rate"))
+      }
+      else if (name.equals("UART_baud_rate")) {
         UART_baud_rate = variable.getInt("Value");
-      else if(name.equals("UART_parity"))
+      }
+      else if (name.equals("UART_parity")) {
         UART_parity = variable.getString("Value").charAt(0);
-      else if(name.equals("UART_data_bits"))
+      }
+      else if (name.equals("UART_data_bits")) {
         UART_data_bits = variable.getInt("Value");
-      else if(name.equals("UART_stop_bits"))
+      }
+      else if (name.equals("UART_stop_bits")) {
         UART_stop_bits = variable.getFloat("Value"); 
-      else if(name.equals("UDP_remote_ip"))
+      }
+      else if (name.equals("UDP_remote_ip")) {
         UDP_remote_ip[i] = variable.getString("Value");
-      else if(name.equals("UDP_remote_port"))
+      }
+      else if (name.equals("UDP_remote_port")) {
         UDP_remote_port[i] = variable.getInt("Value");
-      else if(name.equals("UDP_local_port"))
+      }
+      else if (name.equals("UDP_local_port")) {
         UDP_local_port = variable.getInt("Value");
-      else if(name.equals("SN_serial_number"))
+      }
+      else if (name.equals("SN_serial_number")){
         SN_serial_number[i] = variable.getInt("Value");
+      }
     }
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():PS_Data_interface["+i+"]="+PS_Data_interface[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
@@ -101,72 +121,89 @@ void Config_create()
     CONFIG_table = new Table();
     CONFIG_table.addColumn("Name");
     CONFIG_table.addColumn("Value");
-    
+    CONFIG_table.addColumn("Comment");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "PS_Data_interface");
-    variable.setInt("Value", PS_Data_interface[i]);
+    variable.setString("Value", PS_Data_interface_str[PS_Data_interface[i]]);
+    variable.setString("Comment", "PS Interface via File or COM or UDP or SN.");
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "ROTATE_FACTOR");
     variable.setFloat("Value", ROTATE_FACTOR[i]);
+    variable.setString("Comment", "Rotate factor of draws for 45 or 135 or 225 or 315");
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "MIRROR_ENABLE");
     variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
-    
+    variable.setString("Comment", "Mirroring or not.(true or false)");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "ZOOM_FACTOR");
     //variable.setFloat("Value", ZOOM_FACTOR);
     variable.setInt("Value", ZOOM_FACTOR[i]);
-    
+    variable.setString("Comment", "Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "DRAW_OFFSET_X");
     variable.setInt("Value", DRAW_OFFSET_X[i]);
-    
+    variable.setString("Comment", "X Offset of draws.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "DRAW_OFFSET_Y");
     variable.setInt("Value", DRAW_OFFSET_Y[i]);
-    
+    variable.setString("Comment", "Y Offset of draws.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "FILE_name");
     variable.setString("Value", FILE_name);
-    
+    variable.setString("Comment", "File name of PS Interface File.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UART_port_name");
     variable.setString("Value", UART_port_name);
-    
+    variable.setString("Comment", "UART port name of PS Interface UART.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UART_baud_rate");
     variable.setInt("Value", UART_baud_rate);
-    
+    variable.setString("Comment", "UART baud rate of PS Interface UART.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UART_parity");
     variable.setString("Value", Character.toString(UART_parity));
-    
+    variable.setString("Comment", "UART parity of PS Interface UART.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UART_data_bits");
     variable.setInt("Value", UART_data_bits);
-    
+    variable.setString("Comment", "UART baud rate of PS Interface UART.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UART_stop_bits");
     variable.setFloat("Value", UART_stop_bits);
-    
+    variable.setString("Comment", "UART stop bits of PS Interface UART.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UDP_remote_ip");
     variable.setString("Value", UDP_remote_ip[i]);
-    
+    variable.setString("Comment", "UDP remote IP of PS Interface UDP.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UDP_remote_port");
     variable.setInt("Value", UDP_remote_port[i]);
-    
+    variable.setString("Comment", "UDP remote port of PS Interface UDP.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UDP_local_port");
     variable.setInt("Value", UDP_local_port);
-    
+    variable.setString("Comment", "UDP local port of PS Interface UDP.");
+
     variable = CONFIG_table.addRow();
     variable.setString("Name", "SN_serial_number");
     variable.setInt("Value", SN_serial_number[i]);
-    
+    variable.setString("Comment", "Serial Number of PS Interface SN.");
+
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
     saveTable(CONFIG_table, "data/" + CONFIG_file_full_name);
   }
@@ -188,9 +225,9 @@ void Config_save()
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
       if(name.equals("PS_Data_interface")) {
-        value_int = variable.getInt("Value");
-        if(value_int != PS_Data_interface[i]) {
-          variable.setInt("Value", PS_Data_interface[i]);
+        value_string = variable.getString("Value");
+        if(value_string.equals(PS_Data_interface_str[PS_Data_interface[i]]) != true) {
+          variable.setString("Value", PS_Data_interface_str[PS_Data_interface[i]]);
           changed = true;
         }
       }
