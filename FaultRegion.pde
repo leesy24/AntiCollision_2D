@@ -240,8 +240,8 @@ void Fault_Region_draw()
 
     for(int i = 0; i < Fault_Region_data[instance].length; i ++)
     {
-      x_curr = Fault_Region_data[instance].x[i];
-      y_curr = Fault_Region_data[instance].y[i];
+      x_curr = Fault_Region_data[instance].scr_x[i];
+      y_curr = Fault_Region_data[instance].scr_y[i];
       w_curr = Fault_Region_data[instance].w[i];
       c_curr = Fault_Region_data[instance].c[i];
       if (PRINT_FAULT_REGION_DRAW_DBG) println("Fault_Region_data[instance][" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
