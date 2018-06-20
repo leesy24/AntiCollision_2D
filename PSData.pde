@@ -828,7 +828,6 @@ class PS_Data {
             point_x_curr = offset_x - point_x_curr;
           point_y_curr = offset_y - point_y_curr;
         }
-
         point_x_curr += DRAW_OFFSET_X[instance];
         point_y_curr += DRAW_OFFSET_Y[instance];
 
@@ -836,7 +835,9 @@ class PS_Data {
             ||
             Alert_Region_point_is_contains(instance, int(cx), int(cy)))
         {
+          ROI_Data_handle.add_point(instance, int(cx), int(cy), point_x_curr, point_y_curr);
           point_is_contains_curr = true;
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):x="+int(cx)+",y="+int(cy));
         }
         else
         {

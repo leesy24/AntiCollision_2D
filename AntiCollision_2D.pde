@@ -66,6 +66,7 @@ void setup() {
   // Title set to default.
   Title = TITLE;
   Config_setup();
+  ROI_Data_setup();
   PS_Data_setup();
   Screen_setup();
   Fault_Region_setup();
@@ -91,6 +92,7 @@ void draw() {
     // Title set to default.
     Title = TITLE;
     Config_setup();
+    ROI_Data_setup();
     PS_Data_setup();
     Screen_setup();
     Fault_Region_setup();
@@ -123,6 +125,7 @@ void draw() {
     if (PS_Data_handle.load(i) == true) {
       if (PS_Data_handle.parse(i) == false) {
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
+          ROI_Data_setup();
           PS_Data_setup();
         }
       }
