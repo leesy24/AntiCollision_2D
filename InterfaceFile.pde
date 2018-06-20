@@ -32,7 +32,7 @@ void Interfaces_File_setup()
       //FILE_name = "C:\\work\\git\\PSDemoProgram\\Release-windows\\data.bin";
       FILE_name = "C:\\Temp\\data.bin";
     }
-    config_save();
+    Config_save();
   }
   Title += "(" + FILE_name + ")";
 }

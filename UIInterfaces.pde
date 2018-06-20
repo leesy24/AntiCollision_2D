@@ -642,7 +642,7 @@ void UI_Interfaces_ddmenu(int n)
 
   if( PS_Data_interface[0] != n ) {
     PS_Data_interface[0] = n;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -654,7 +654,7 @@ void UI_Interfaces_filename(String theText)
 
   if(theText.equals(FILE_name) != true) {
     FILE_name = theText;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -666,7 +666,7 @@ void UI_Interfaces_UARTport(String theText)
 
   if(theText.equals(UART_port_name) != true) {
     UART_port_name = theText;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -679,7 +679,7 @@ void UI_Interfaces_UARTbaud(String theText)
   int baud_rate = Integer.parseInt(theText);
   if(baud_rate != UART_baud_rate) {
     UART_baud_rate = baud_rate;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -698,7 +698,7 @@ void UI_Interfaces_UARTdps(String theText)
     UART_data_bits = data_bits;
     UART_parity = parity;
     UART_stop_bits = stop_bits;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -710,7 +710,7 @@ void UI_Interfaces_UDPremoteip(String theText)
 
   if(theText.equals(UDP_remote_ip[0]) != true) {
     UDP_remote_ip[0] = theText;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -723,7 +723,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   int remote_port = Integer.parseInt(theText);
   if(remote_port != UDP_remote_port[0]) {
     UDP_remote_port[0] = remote_port;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -736,7 +736,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   int local_port = Integer.parseInt(theText);
   if(local_port != UDP_local_port) {
     UDP_local_port = local_port;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }
@@ -749,7 +749,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   int serial_number = Integer.parseInt(theText);
   if(serial_number != SN_serial_number) {
     SN_serial_number = serial_number;
-    config_save();
+    Config_save();
     UI_Interfaces_changed = true;
   }
 }

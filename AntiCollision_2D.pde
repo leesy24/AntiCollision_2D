@@ -11,46 +11,15 @@ final static int PS_INSTANCE_MAX = 2;
 final String TITLE = "DASAN-InfoTEK - 2D Anti-Collision System";
 String Title;
 
-// Define zoom factor variables.
-int[] ZOOM_FACTOR;
-
-// Define rotate factor variables.
-float[] ROTATE_FACTOR;
-
-// Define mirror variables.
-boolean[] MIRROR_ENABLE;
-
-// Define offset of misc. draw.
-int[] DRAW_OFFSET_X;
-int[] DRAW_OFFSET_Y;
-
 int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
-  ZOOM_FACTOR = new int[PS_INSTANCE_MAX];
-  ROTATE_FACTOR = new float[PS_INSTANCE_MAX];
-  MIRROR_ENABLE = new boolean[PS_INSTANCE_MAX];
-  DRAW_OFFSET_X = new int[PS_INSTANCE_MAX];
-  DRAW_OFFSET_Y = new int[PS_INSTANCE_MAX];
-  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    // Define zoom factor variables.
-    ZOOM_FACTOR[i] = 100;
-    // Define rotate factor variables.
-    ROTATE_FACTOR[i] = 315;/*45;*//*135;*//*225;*/
-    // Define mirror variables.
-    MIRROR_ENABLE[i] = false;
-    // Define offset of misc. draw.
-    DRAW_OFFSET_X[i] = 0;
-    DRAW_OFFSET_Y[i] = 0;
-  }
-
+  Screen_settings();
   PS_Data_settings();
-  const_settings();
-  config_settings();
-  screen_settings();
+  Const_settings();
+  Config_settings();
   BG_Image_settings();
   Grid_settings();
   PS_Image_settings();
@@ -74,7 +43,7 @@ void setup() {
 
   SCREEN_PFront = createFont("SansSerif", 32);
   textFont(SCREEN_PFront);
-  //config_settings();
+  //Config_settings();
 /*
   // fullScreen() opens a sketch using the full size of the computer's display.
   // This function must be the first line in setup().
@@ -96,9 +65,11 @@ void setup() {
 
   // Title set to default.
   Title = TITLE;
-  config_setup();
+  Config_setup();
   PS_Data_setup();
-  screen_setup();
+  Screen_setup();
+  Fault_Region_setup();
+  Alert_Region_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
 
@@ -119,17 +90,21 @@ void draw() {
   if (UI_Interfaces_changed) {
     // Title set to default.
     Title = TITLE;
-    config_setup();
+    Config_setup();
     PS_Data_setup();
-    screen_setup();
+    Screen_setup();
+    Fault_Region_setup();
+    Alert_Region_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
     // Set window title
     surface.setTitle(Title);
   }
-  if (screen_check_update()) {
+  if (Screen_check_update()) {
     //PS_Data_setup();
-    screen_setup();
+    Screen_setup();
+    Fault_Region_setup();
+    Alert_Region_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
   }

@@ -30,7 +30,7 @@ void PS_Image_settings()
     return;
   }
 
-  PS_Image_ready();
+  PS_Image_update();
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     PS_Image_mouse_over[i] = false;
@@ -64,7 +64,7 @@ void PS_Image_draw()
   }
 }
 
-void PS_Image_ready()
+void PS_Image_update()
 {
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {

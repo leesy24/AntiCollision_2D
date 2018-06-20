@@ -31,14 +31,14 @@ final int PS_DATA_INSTANCE_MAX = 2;
 static color C_PS_DATA_ERR_TEXT = #000000; // Black
 static color C_PS_DATA_LINE = #0000FF; // Blue
 static color C_PS_DATA_POINT = #FF0000; // Red
-static int W_PS_DATA_LINE_POINT = 1;
+static int W_PS_DATA_LINE = 1;
 static color C_PS_DATA_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
 static color C_PS_DATA_RECT_STROKE = #000000; // Black
 static int W_PS_DATA_RECT_STROKE = 1;
 static color C_PS_DATA_RECT_TEXT = #404040; // Black + 0x40
 
 final static int PS_DATA_POINTS_MAX = 1000;
-final static int PS_DATA_POINT_SIZE = 3;
+final static int PS_DATA_POINT_WEIGHT = 3;
 
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
@@ -47,6 +47,8 @@ final static int PS_DATA_INTERFACE_FILE = 0;
 final static int PS_DATA_INTERFACE_UART = 1;
 final static int PS_DATA_INTERFACE_UDP = 2;
 final static int PS_DATA_INTERFACE_SN = 3;
+
+final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
 int[] PS_Data_interface;
 
@@ -659,8 +661,8 @@ class PS_Data {
     int distance;
     int pulse_width_curr = -1, pulse_width_prev = -1;
     int x_curr, y_curr;
-    int point_size_curr = PS_DATA_POINT_SIZE; // Set size of point rect
-    int point_size_prev = PS_DATA_POINT_SIZE; // Set size of point rect
+    int point_size_curr = PS_DATA_POINT_WEIGHT; // Set weight of point rect
+    int point_size_prev = PS_DATA_POINT_WEIGHT; // Set weight of point rect
     float cx, cy;
     float angle, radians;
     int x_prev = MIN_INT, y_prev = MIN_INT;
@@ -669,9 +671,9 @@ class PS_Data {
     final int mouse_over_range =
       (ZOOM_FACTOR[instance] < 50)
       ?
-      (PS_DATA_POINT_SIZE + (50 - ZOOM_FACTOR[instance]) / 10)
+      (PS_DATA_POINT_WEIGHT + (50 - ZOOM_FACTOR[instance]) / 10)
       :
-      PS_DATA_POINT_SIZE; // Range for mouse over point rect. Adjust mouse over range by ZOOM_FACTOR.
+      PS_DATA_POINT_WEIGHT; // Range for mouse over point rect. Adjust mouse over range by ZOOM_FACTOR.
     final int offset_x =
       (ROTATE_FACTOR[instance] == 315)
       ?
@@ -728,8 +730,8 @@ class PS_Data {
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):number_of_points="+number_of_points[instance]);
 
-    // Sets the weight used to draw lines and borders around shapes.
-    strokeWeight(W_PS_DATA_LINE_POINT);
+    // Sets the weight used to draw lines and rect borders around shapes.
+    strokeWeight(W_PS_DATA_LINE);
 
     // Check pulse width exist than color mode set to HSB.
     if (data_content[instance] != 4)
@@ -889,24 +891,49 @@ class PS_Data {
         else
         {
           // Reset width and height point rect
-          point_size_curr = PS_DATA_POINT_SIZE;
+          point_size_curr = PS_DATA_POINT_WEIGHT;
         }
 
         if (x_prev != MIN_INT && y_prev != MIN_INT)
         {
           //print(j + ":" + pulse_width_prev + "," + pulse_width_curr + " ");
-          fill(line_color);
-          stroke(line_color);
-          line(x_prev, y_prev, x_curr, y_curr);
-          fill(point_color_prev);
-          stroke(point_color_prev);
-          //point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
-          rect(x_prev - point_size_prev / 2, y_prev - point_size_prev / 2, point_size_prev, point_size_prev );
+          if (PS_DATA_DRAW_POINTS_WITH_LINE)
+          {
+            fill(line_color);
+            stroke(line_color);
+            // Sets the weight used to draw line.
+            strokeWeight(W_PS_DATA_LINE);
+            line(x_prev, y_prev, x_curr, y_curr);
+          }
+          if (Fault_Region_point_is_over(instance, x_prev, y_prev)
+              ||
+              Alert_Region_point_is_over(instance, x_prev, y_prev))
+          {
+            fill(point_color_prev);
+            stroke(point_color_prev);
+            // Sets the weight used to rect borders around shapes.
+            strokeWeight(1);
+            //point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
+            rect( x_prev - point_size_prev / 2,
+                  y_prev - point_size_prev / 2,
+                  point_size_prev,
+                  point_size_prev );
+          }
         }
-        fill(point_color_curr);
-        stroke(point_color_curr);
-        //point(x_curr + DRAW_OFFSET_X[instance], y_curr + DRAW_OFFSET_Y[instance]);
-        rect(x_curr - point_size_curr / 2, y_curr - point_size_curr / 2, point_size_curr, point_size_curr );
+        if (Fault_Region_point_is_over(instance, x_curr, y_curr)
+            ||
+            Alert_Region_point_is_over(instance, x_curr, y_curr))
+        {
+          fill(point_color_curr);
+          stroke(point_color_curr);
+          // Sets the weight used to rect borders around shapes.
+          strokeWeight(1);
+          //point(x_curr + DRAW_OFFSET_X[instance], y_curr + DRAW_OFFSET_Y[instance]);
+          rect( x_curr - point_size_curr / 2,
+                y_curr - point_size_curr / 2,
+                point_size_curr,
+                point_size_curr );
+        }
 
         // Save data for drawing line between previous and current points. 
         x_prev = x_curr;

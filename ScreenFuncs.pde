@@ -1,4 +1,4 @@
-import java.awt.Dimension;
+//import java.awt.Dimension;
 
 //final static boolean PRINT_SCREENFUNC_ALL_DBG = true;
 final static boolean PRINT_SCREENFUNC_ALL_DBG = false;
@@ -31,6 +31,18 @@ static int SCREEN_height = 600;
 //static float SCREEN_width_ratio = 0.5;
 //static float SCREEN_height_ratio = 0.5;
 
+// Define zoom factor variables.
+int[] ZOOM_FACTOR;
+
+// Define rotate factor variables.
+float[] ROTATE_FACTOR;
+
+// Define mirror variables.
+boolean[] MIRROR_ENABLE;
+
+// Define offset of misc. draw.
+int[] DRAW_OFFSET_X;
+int[] DRAW_OFFSET_Y;
 
 // Define just font height variables.
 int FONT_HEIGHT;
@@ -39,7 +51,7 @@ int FONT_HEIGHT;
 int TEXT_MARGIN;
 PFont SCREEN_PFront;
 
-void screen_settings() {
+void Screen_settings() {
 // This is for automatic screen locating with ratio.
 /*
   //println("getContentPane()=", getJFrame(surface).getContentPane());
@@ -51,16 +63,36 @@ void screen_settings() {
   SCREEN_width = int(displayWidth * SCREEN_width_ratio) - SCREEN_BORDER_WIDTH * 2;
   SCREEN_height = int(displayHeight * SCREEN_height_ratio) - (SCREEN_TITLE_HEIGHT + SCREEN_BORDER_WIDTH);
 */
-  if(PRINT_SCREENFUNC_ALL_DBG) println("displayWidth="+displayWidth+",displayHeight="+displayHeight);
-  if(PRINT_SCREENFUNC_ALL_DBG) println("SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():");
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():displayWidth="+displayWidth+",displayHeight="+displayHeight);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
   size(SCREEN_width, SCREEN_height);
+
+  ZOOM_FACTOR = new int[PS_INSTANCE_MAX];
+  ROTATE_FACTOR = new float[PS_INSTANCE_MAX];
+  MIRROR_ENABLE = new boolean[PS_INSTANCE_MAX];
+  DRAW_OFFSET_X = new int[PS_INSTANCE_MAX];
+  DRAW_OFFSET_Y = new int[PS_INSTANCE_MAX];
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    // Define zoom factor variables.
+    ZOOM_FACTOR[i] = 100;
+    // Define rotate factor variables.
+    ROTATE_FACTOR[i] = 315;/*45;*//*135;*//*225;*/
+    // Define mirror variables.
+    MIRROR_ENABLE[i] = false;
+    // Define offset of misc. draw.
+    DRAW_OFFSET_X[i] = 0;
+    DRAW_OFFSET_Y[i] = 0;
+  }
 }
 
 /*
 boolean SCREEN_surface_set = false; // Needs to set one time.
 */
-void screen_setup()
+void Screen_setup()
 {
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():");
 /*
   if(!SCREEN_surface_set)
   {
@@ -74,13 +106,13 @@ void screen_setup()
 */
   // Set text margin to follow min(Width, Height) of screen.
   TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 200) : (SCREEN_height / 200);
-  if (PRINT_SCREENFUNC_ALL_DBG) println("TEXT_MARGIN=" + TEXT_MARGIN);
+  if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():TEXT_MARGIN=" + TEXT_MARGIN);
 
   // Set font height of text to follow min(Width, Height) of screen.
   FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 30) : (SCREEN_height / 30);
   if (FONT_HEIGHT > 15) FONT_HEIGHT = 15;
   if (FONT_HEIGHT < 10) FONT_HEIGHT = 10;
-  if (PRINT_SCREENFUNC_ALL_DBG) println("FONT_HEIGHT=" + FONT_HEIGHT);
+  if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
   textSize(FONT_HEIGHT);
 }
 
@@ -93,8 +125,10 @@ static final javax.swing.JFrame getJFrame(final PSurface surf) {
 }
 */
 
-boolean screen_check_update()
+boolean Screen_check_update()
 {
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():");
+
   boolean updated = false;
 
   //println("frameRate = " + frameRate);
@@ -139,16 +173,16 @@ boolean screen_check_update()
 */
 
   int new_width, new_height;
-  if(PRINT_SCREENFUNC_ALL_DBG) println("screen size width=" + width + ", height=" + height);
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():screen size width=" + width + ", height=" + height);
   // Check screen size changed.
   if (SCREEN_width != width || SCREEN_height != height) {
     new_width = width;
     new_height = height;
-    if (PRINT_SCREENFUNC_ALL_DBG) println("screen size changed! width " + SCREEN_width + "->" + new_width + ", height " + SCREEN_height + "->" + new_height);
+    if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():screen size changed! width " + SCREEN_width + "->" + new_width + ", height " + SCREEN_height + "->" + new_height);
 
     // Check screen size too small.
     if (new_width < MIN_SCREEN_WIDTH || new_height < MIN_SCREEN_HEIGHT) {
-      if (PRINT_SCREENFUNC_ALL_DBG) println("screen size changed too small! width " + new_width + ", height " + new_height);
+      if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():screen size changed too small! width " + new_width + ", height " + new_height);
       
       if (new_width < MIN_SCREEN_WIDTH && new_height < MIN_SCREEN_HEIGHT) {
         new_width = MIN_SCREEN_WIDTH;
@@ -160,7 +194,7 @@ boolean screen_check_update()
       else if (new_height < MIN_SCREEN_HEIGHT) {
         new_height = MIN_SCREEN_HEIGHT;
       }
-      if(PRINT_SCREENFUNC_ALL_DBG) println("surface.setSize(new_width=" + new_width + ", new_height=" + new_height + ")");
+      if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():surface.setSize(new_width=" + new_width + ", new_height=" + new_height + ")");
       surface.setSize(new_width, new_height);
     }
   
@@ -189,10 +223,19 @@ boolean screen_check_update()
   }
 /*
   if(updated) {
-    PS_Image_ready();
-    //config_save();
+    //Screen_update_variable();
   }
 */
 
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_check_update():return=" + updated);
   return updated;
+}
+
+void Screen_update_variable()
+{
+  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_update_variable():");
+  PS_Image_update();
+  Fault_Region_update();
+  Alert_Region_update();
+  Config_save();
 }

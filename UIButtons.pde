@@ -324,7 +324,7 @@ void UI_Buttons_zoom_minus()
       else if (ZOOM_FACTOR[i] < 1000) ZOOM_FACTOR[i] += 100;
       else if (ZOOM_FACTOR[i] < 2000) ZOOM_FACTOR[i] += 200;
       else ZOOM_FACTOR[i] += 500;
-      config_save();
+      Screen_update_variable();
     }
     if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
   }
@@ -340,7 +340,7 @@ void UI_Buttons_zoom_pluse()
       else if (ZOOM_FACTOR[i] <= 1000) ZOOM_FACTOR[i] -= 100;
       else if (ZOOM_FACTOR[i] <= 2000) ZOOM_FACTOR[i] -= 200;
       else ZOOM_FACTOR[i] -= 500;
-      config_save();
+      Screen_update_variable();
     }
     if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
   }
@@ -369,8 +369,7 @@ void UI_Buttons_rotate_ccw()
     DRAW_OFFSET_Y[0] = -int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
     DRAW_OFFSET_X[0] =  int(save_oy);
   }
-  PS_Image_ready();
-  config_save();
+  Screen_update_variable();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
@@ -397,8 +396,7 @@ void UI_Buttons_rotate_cw()
     DRAW_OFFSET_Y[0] =  int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
     DRAW_OFFSET_X[0] = -int(save_oy);
   }
-  PS_Image_ready();
-  config_save();
+  Screen_update_variable();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
@@ -420,8 +418,7 @@ void UI_Buttons_mirror_ud()
     }
     if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
-  PS_Image_ready();
-  config_save();
+  Screen_update_variable();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
@@ -443,8 +440,7 @@ void UI_Buttons_mirror_lr()
     }
     if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
-  PS_Image_ready();
-  config_save();
+  Screen_update_variable();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
@@ -459,8 +455,8 @@ void UI_Buttons_reset_en()
   DRAW_OFFSET_X[0] = DRAW_OFFSET_Y[0] = 0;
   MIRROR_ENABLE[0] = false;
   ZOOM_FACTOR[0] = 100;
-  PS_Image_ready();
-  config_save();
+
+  Screen_update_variable();
 }
 
 

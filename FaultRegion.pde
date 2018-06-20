@@ -1,5 +1,9 @@
 //final static boolean PRINT_FAULT_REGION_SETTINGS_DBG = true; 
 final static boolean PRINT_FAULT_REGION_SETTINGS_DBG = false;
+
+//final static boolean PRINT_FAULT_REGION_UPDATE_DBG = true; 
+final static boolean PRINT_FAULT_REGION_UPDATE_DBG = false;
+
 //final static boolean PRINT_FAULT_REGION_DRAW_DBG = true; 
 final static boolean PRINT_FAULT_REGION_DRAW_DBG = false;
 
@@ -16,9 +20,19 @@ Table Fault_Region_table = null;
 
 Lines[] Fault_Region_data;
 
+int[] Fault_Region_x;
+int[] Fault_Region_y;
+int[] Fault_Region_width;
+int[] Fault_Region_height;
+
 void Fault_Region_settings()
 {
   Fault_Region_data = new Lines[PS_INSTANCE_MAX];
+  Fault_Region_x = new int[PS_INSTANCE_MAX];
+  Fault_Region_y = new int[PS_INSTANCE_MAX];
+  Fault_Region_width = new int[PS_INSTANCE_MAX];
+  Fault_Region_height = new int[PS_INSTANCE_MAX];
+
   for( int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Fault_Region_file_full_name = FAULT_REGION_FILE_NAME + "_" + instance + FAULT_REGION_FILE_EXT;
@@ -97,20 +111,21 @@ void Fault_Region_settings()
   }
 }
 
-void Fault_Region_draw()
+void Fault_Region_setup()
 {
+  Fault_Region_update();
+}
+
+void Fault_Region_update()
+{
+  int x_min = MAX_INT, x_max = MIN_INT, y_min = MAX_INT, y_max = MIN_INT;
+
   for( int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     if(Fault_Region_data[instance] == null) return;
 
     int coor_x, coor_y;
     int x_curr, y_curr;
-    int w_curr;
-    color c_curr;
-    int x_prev = MIN_INT, y_prev = MIN_INT;
-    int w_prev = W_FAULT_REGION_LINE;
-    color c_prev = C_FAULT_REGION_LINE;
-    boolean drawed = false;
     final int offset_x =
       (ROTATE_FACTOR[instance] == 315)
       ?
@@ -140,24 +155,12 @@ void Fault_Region_draw()
     {
       coor_x = Fault_Region_data[instance].x[i];
       coor_y = Fault_Region_data[instance].y[i];
-      w_curr = Fault_Region_data[instance].w[i];
-      c_curr = Fault_Region_data[instance].c[i];
-      if (PRINT_FAULT_REGION_DRAW_DBG) println("Fault_Region_data[instance][" + i + "],coor_x=" + coor_x + ",coor_y=" + coor_y + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
-      if( coor_x == MIN_INT 
-          ||
-          coor_y == MIN_INT
-        )
+      if (PRINT_FAULT_REGION_UPDATE_DBG) println("Fault_Region_data[instance][" + i + "],coor_x=" + coor_x + ",coor_y=" + coor_y);
+      if (coor_x == MIN_INT || coor_y == MIN_INT)
       {
-        if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
-        {
-          fill(c_prev);
-          // Sets the color and weight used to draw lines and borders around shapes.
-          stroke(c_prev);
-          strokeWeight(w_prev);
-          point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
-        }
-        x_prev = MIN_INT;
-        y_prev = MIN_INT;
+        // Save coordinate data for drawing line on screen. 
+        Fault_Region_data[instance].scr_x[i] = MIN_INT;
+        Fault_Region_data[instance].scr_y[i] = MIN_INT;
         continue;
       }
 
@@ -201,6 +204,62 @@ void Fault_Region_draw()
           x_curr = offset_x - x_curr;
         y_curr = offset_y - y_curr;
       }
+      x_curr += DRAW_OFFSET_X[instance];
+      y_curr += DRAW_OFFSET_Y[instance];
+
+      // Get min/max of x/y.
+      x_min = min(x_min, x_curr);
+      x_max = max(x_max, x_curr);
+      y_min = min(y_min, y_curr);
+      y_max = max(y_max, y_curr);
+
+      // Save coordinate data for drawing line on screen. 
+      Fault_Region_data[instance].scr_x[i] = x_curr;
+      Fault_Region_data[instance].scr_y[i] = y_curr;
+    }
+    Fault_Region_x[instance] = x_min;
+    Fault_Region_y[instance] = y_min;
+    Fault_Region_width[instance] = x_max - x_min + 1;
+    Fault_Region_height[instance] = y_max - y_min + 1;
+  }
+}
+
+void Fault_Region_draw()
+{
+  for( int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+  {
+    if(Fault_Region_data[instance] == null) return;
+
+    int x_curr, y_curr;
+    int w_curr;
+    color c_curr;
+    int x_prev = MIN_INT, y_prev = MIN_INT;
+    int w_prev = W_FAULT_REGION_LINE;
+    color c_prev = C_FAULT_REGION_LINE;
+    boolean drawed = false;
+
+    for(int i = 0; i < Fault_Region_data[instance].length; i ++)
+    {
+      x_curr = Fault_Region_data[instance].x[i];
+      y_curr = Fault_Region_data[instance].y[i];
+      w_curr = Fault_Region_data[instance].w[i];
+      c_curr = Fault_Region_data[instance].c[i];
+      if (PRINT_FAULT_REGION_DRAW_DBG) println("Fault_Region_data[instance][" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
+      if (x_curr == MIN_INT || y_curr == MIN_INT)
+      {
+        if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
+        {
+          fill(c_prev);
+          // Sets the color and weight used to draw lines and borders around shapes.
+          stroke(c_prev);
+          strokeWeight(w_prev);
+          point(x_prev, y_prev);
+        }
+        x_prev = MIN_INT;
+        y_prev = MIN_INT;
+        continue;
+      }
+
       //println("coor_x=" + coor_x + ",coor_y=" + coor_y);
       //println("x_curr=" + x_curr + ",y_curr=" + y_curr + ",x_prev=" + x_prev + ",y_prev=" + y_prev);
       if(x_prev != MIN_INT && y_prev != MIN_INT)
@@ -209,7 +268,7 @@ void Fault_Region_draw()
         // Sets the color and weight used to draw lines and borders around shapes.
         stroke(c_prev);
         strokeWeight(w_prev);
-        line(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance], x_curr + DRAW_OFFSET_X[instance], y_curr + DRAW_OFFSET_Y[instance]);
+        line(x_prev, y_prev, x_curr, y_curr);
         drawed = true;
       }
       else
@@ -229,7 +288,25 @@ void Fault_Region_draw()
       // Sets the color and weight used to draw lines and borders around shapes.
       stroke(c_prev);
       strokeWeight(w_prev);
-      point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
+      point(x_prev, y_prev);
     }
   }
+}
+
+boolean Fault_Region_point_is_over(int instance, int point_x, int point_y)
+{
+  if(Fault_Region_data[instance] == null) return true;
+
+  if (
+      point_x >= Fault_Region_x[instance]
+      &&
+      point_x <= Fault_Region_x[instance] + Fault_Region_width[instance]
+      &&
+      point_y >= Fault_Region_y[instance]
+      &&
+      point_y <= Fault_Region_y[instance] + Fault_Region_height[instance]
+      )
+    return true;
+  else
+    return false;
 }

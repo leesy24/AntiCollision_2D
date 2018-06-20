@@ -1,3 +1,6 @@
+//final static boolean PRINT_CONST_ALL_DBG = true;
+final static boolean PRINT_CONST_ALL_DBG = false;
+
 // Define default binary buf filename and path 
 final static String CONST_FILE_NAME = "const";
 final static String CONST_FILE_EXT = ".csv";
@@ -7,8 +10,10 @@ static String CONST_file_full_name;
 static Table CONST_table;
 
 
-void const_settings()
+void Const_settings()
 {
+  if (PRINT_CONST_ALL_DBG) println("Const_settings():");
+
   CONST_file_full_name = CONST_FILE_NAME + CONST_FILE_EXT;
 
   // Load config file(CSV type) into a Table object
@@ -17,7 +22,7 @@ void const_settings()
   // Check loadTable failed.
   if(CONST_table == null)
   {
-    const_create();
+    Const_create();
     return;
   }
 
@@ -59,8 +64,8 @@ void const_settings()
       C_PS_DATA_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_PS_DATA_POINT"))
       C_PS_DATA_POINT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_PS_DATA_LINE_POINT"))
-      W_PS_DATA_LINE_POINT = variable.getInt("Value");
+    else if(name.equals("W_PS_DATA_LINE"))
+      W_PS_DATA_LINE = variable.getInt("Value");
     else if(name.equals("C_PS_DATA_RECT_FILL"))
       C_PS_DATA_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_PS_DATA_RECT_STROKE"))
@@ -100,8 +105,10 @@ void const_settings()
   }
 }
 
-void const_create()
+void Const_create()
 {
+  if (PRINT_CONST_ALL_DBG) println("Const_create():");
+
   TableRow variable;
 
   CONST_table = new Table();
@@ -195,8 +202,8 @@ void const_create()
   variable.setString("Comment", "Scan point default color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_PS_DATA_LINE_POINT");
-  variable.setInt("Value", W_PS_DATA_LINE_POINT);
+  variable.setString("Name", "W_PS_DATA_LINE");
+  variable.setInt("Value", W_PS_DATA_LINE);
   variable.setString("Comment", "Scan line and point default weight.");
 
   variable = CONST_table.addRow();

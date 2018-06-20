@@ -1,3 +1,6 @@
+//final static boolean PRINT_CONFIG_ALL_DBG = true;
+final static boolean PRINT_CONFIG_ALL_DBG = false;
+
 // Define default binary buf filename and path 
 final static String CONFIG_FILE_NAME = "config";
 final static String CONFIG_FILE_EXT = ".csv";
@@ -11,8 +14,10 @@ static String CONFIG_instance_number = null;
 // A Table object
 static Table CONFIG_table;
 
-void config_settings()
+void Config_settings()
 {
+  if (PRINT_CONFIG_ALL_DBG) println("Config_settings():");
+
   for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
   {
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
@@ -23,7 +28,7 @@ void config_settings()
     // Check loadTable failed.
     if(CONFIG_table == null)
     {
-      config_create();
+      Config_create();
       return;
     }
 
@@ -64,11 +69,17 @@ void config_settings()
       else if(name.equals("SN_serial_number"))
         SN_serial_number = variable.getInt("Value");
     }
-  }
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_X["+i+"]="+DRAW_OFFSET_X[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_Y["+i+"]="+DRAW_OFFSET_Y[i]);
+}
 }
 
-void config_setup()
+void Config_setup()
 {
+  if (PRINT_CONFIG_ALL_DBG) println("Config_setup():");
   // This is for argument passed number of config file.
   /*
   if(CONFIG_instance_number != null)
@@ -79,8 +90,10 @@ void config_setup()
   Title = Title + " - ";
 }
 
-void config_create()
+void Config_create()
 {
+  if (PRINT_CONFIG_ALL_DBG) println("Config_create():");
+
   TableRow variable;
   
   for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
@@ -159,8 +172,10 @@ void config_create()
   }
 }
 
-void config_save()
+void Config_save()
 {
+  if (PRINT_CONFIG_ALL_DBG) println("Config_save():");
+
   int value_int;
   float value_float;
   boolean value_boolean;

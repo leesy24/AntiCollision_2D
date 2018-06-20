@@ -196,7 +196,7 @@ void mouseDragged()
   DRAW_OFFSET_X[0] = mouseX - mousePressedX;
   DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
 
-  config_save();
+  Screen_update_variable();
 
   if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X[0]:" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]:" + DRAW_OFFSET_Y[0]);
 */
@@ -245,7 +245,7 @@ void mouseWheel(MouseEvent event)
     DRAW_OFFSET_X[0] += int((const_x_base - const_x_offset) * const_x_ratio);
     DRAW_OFFSET_Y[0] += int((const_y_base - const_y_offset) * const_y_ratio);
 
-    config_save();
+    Screen_update_variable();
   }
 */
 }
