@@ -36,10 +36,10 @@ void Config_settings()
     {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
-      if (name.equals("PS_Data_interface")) {
-        for (int j = 0; j < PS_Data_interface_str.length; j ++) {
-          if (PS_Data_interface_str[j].equals(variable.getString("Value")))
-            PS_Data_interface[i] = j;
+      if (name.equals("PS_Interface")) {
+        for (int j = 0; j < PS_Interface_str.length; j ++) {
+          if (PS_Interface_str[j].equals(variable.getString("Value")))
+            PS_Interface[i] = j;
         }
       }
       else if (name.equals("ROTATE_FACTOR")) {
@@ -88,7 +88,7 @@ void Config_settings()
         SN_serial_number[i] = variable.getInt("Value");
       }
     }
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():PS_Data_interface["+i+"]="+PS_Data_interface[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():PS_Interface["+i+"]="+PS_Interface[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
@@ -124,8 +124,8 @@ void Config_create()
     CONFIG_table.addColumn("Comment");
 
     variable = CONFIG_table.addRow();
-    variable.setString("Name", "PS_Data_interface");
-    variable.setString("Value", PS_Data_interface_str[PS_Data_interface[i]]);
+    variable.setString("Name", "PS_Interface");
+    variable.setString("Value", PS_Interface_str[PS_Interface[i]]);
     variable.setString("Comment", "PS Interface via File or COM or UDP or SN.");
 
     variable = CONFIG_table.addRow();
@@ -224,10 +224,10 @@ void Config_save()
     for (TableRow variable : CONFIG_table.rows()) {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
-      if(name.equals("PS_Data_interface")) {
+      if(name.equals("PS_Interface")) {
         value_string = variable.getString("Value");
-        if(value_string.equals(PS_Data_interface_str[PS_Data_interface[i]]) != true) {
-          variable.setString("Value", PS_Data_interface_str[PS_Data_interface[i]]);
+        if(value_string.equals(PS_Interface_str[PS_Interface[i]]) != true) {
+          variable.setString("Value", PS_Interface_str[PS_Interface[i]]);
           changed = true;
         }
       }

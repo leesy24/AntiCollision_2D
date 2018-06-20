@@ -43,16 +43,16 @@ final static int PS_DATA_POINT_WEIGHT = 3;
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
 
-final static int PS_DATA_INTERFACE_FILE = 0;
-final static int PS_DATA_INTERFACE_UART = 1;
-final static int PS_DATA_INTERFACE_UDP = 2;
-final static int PS_DATA_INTERFACE_SN = 3;
+final static int PS_Interface_FILE = 0;
+final static int PS_Interface_UART = 1;
+final static int PS_Interface_UDP = 2;
+final static int PS_Interface_SN = 3;
 
 final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
 //final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
-int[] PS_Data_interface;
-String[] PS_Data_interface_str = {"File", "UART", "UDP", "SN"};
+int[] PS_Interface;
+String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
 int UDP_local_port = 1025;
 String[] UDP_remote_ip;
@@ -74,10 +74,10 @@ static int PS_Data_draw_params_y;
 //long PS_Data_old_time_stamp = -1;
 
 void PS_Data_settings() {
-  PS_Data_interface = new int[PS_DATA_INSTANCE_MAX];
-  if (PS_Data_interface == null)
+  PS_Interface = new int[PS_DATA_INSTANCE_MAX];
+  if (PS_Interface == null)
   {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_interface=null");
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Interface=null");
     return;
   }
   UDP_remote_ip = new String[PS_DATA_INSTANCE_MAX];
@@ -107,7 +107,7 @@ void PS_Data_settings() {
 
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
   {
-    PS_Data_interface[i] = PS_DATA_INTERFACE_FILE;
+    PS_Interface[i] = PS_Interface_FILE;
     UDP_remote_ip[i] = "10.0.8.86";
     UDP_remote_port[i] = 1024;
     SN_serial_number[i] = 886;
@@ -140,39 +140,39 @@ void PS_Data_setup() {
 
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
   {
-    if(PS_Data_interface[i] == PS_DATA_INTERFACE_FILE) 
+    if(PS_Interface[i] == PS_Interface_FILE) 
       Title += "File";
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UART)
+    else if(PS_Interface[i] == PS_Interface_UART)
       Title += "UART";
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UDP)
+    else if(PS_Interface[i] == PS_Interface_UDP)
       Title += "UDP";
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_SN)
+    else if(PS_Interface[i] == PS_Interface_SN)
       Title += "SN";
     else {
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_interface["+i+"]="+PS_Data_interface[i]+" error!");
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
     }      
   }
   
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
   {
-    if(PS_Data_interface[i] == PS_DATA_INTERFACE_FILE) {
+    if(PS_Interface[i] == PS_Interface_FILE) {
       Interfaces_File_setup();
       PS_Data_handle.remote_ip[i] = null;
       PS_Data_handle.remote_port[i] = -1;
     }
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UART) {
+    else if(PS_Interface[i] == PS_Interface_UART) {
       Interfaces_UART_setup();
       PS_Data_handle.remote_ip[i] = null;
       PS_Data_handle.remote_port[i] = -1;
     }
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_UDP) {
+    else if(PS_Interface[i] == PS_Interface_UDP) {
       Interfaces_UDP_setup(UDP_local_port);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
       Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
       PS_Data_handle.remote_ip[i] = UDP_remote_ip[i];
       PS_Data_handle.remote_port[i] = UDP_remote_port[i];
     }
-    else if(PS_Data_interface[i] == PS_DATA_INTERFACE_SN) {
+    else if(PS_Interface[i] == PS_Interface_SN) {
       String remote_ip = "10.0."+(SN_serial_number[i]/100)+"."+(SN_serial_number[i]%100);
       int remote_port = 1024;
 
@@ -184,7 +184,7 @@ void PS_Data_setup() {
       PS_Data_handle.remote_port[i] = remote_port;
     }
     else {
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_interface["+i+"]="+PS_Data_interface[i]+" error!");
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
     }
   }
 }
@@ -245,62 +245,62 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):");
     //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println(""PS_Data:load("+instance+"):PS_Data_buf["+instance+"]="+PS_Data_buf[instance]);
 
-    if(PS_Data_interface[instance] == PS_DATA_INTERFACE_FILE) {
+    if(PS_Interface[instance] == PS_Interface_FILE) {
       if(Interfaces_File_load() != true) {
         interfaces_err_str = Interfaces_File_get_error();
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":error!:" + interfaces_err_str);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
       // No mean in file interface.
       load_take_time[instance] = -1;
-      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":ok!");
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
       return true;
     }
-    else if(PS_Data_interface[instance] == PS_DATA_INTERFACE_UART) {
+    else if(PS_Interface[instance] == PS_Interface_UART) {
       if(Interfaces_UART_load() != true) {
         interfaces_err_str = Interfaces_UART_get_error();
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":error!:" + interfaces_err_str);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
       load_take_time[instance] = Interfaces_UART_get_take_time();
-      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":ok!");
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
       return true;
     }
-    else if(PS_Data_interface[instance] == PS_DATA_INTERFACE_UDP
+    else if(PS_Interface[instance] == PS_Interface_UDP
             ||
-            PS_Data_interface[instance] == PS_DATA_INTERFACE_SN) {
+            PS_Interface[instance] == PS_Interface_SN) {
       if(Interfaces_UDP_handle.load(instance) != true) {
         interfaces_err_str = Interfaces_UDP_handle.get_error(instance);
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":error!:" + interfaces_err_str);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Data_interface_str[PS_Data_interface[instance]]+":ok!");
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
       return true;
     }
     else {
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):PS_Data_interface["+instance+"] error! " + PS_Data_interface[instance]);
+      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):PS_Interface["+instance+"] error! " + PS_Interface[instance]);
       return false;
     }
   }
@@ -552,7 +552,7 @@ class PS_Data {
     strings[strings.length-3] = "";
     strings[strings.length-4] = "";
     cnt = 0;
-    strings[cnt++] = "Interface:" + PS_Data_interface_str[PS_Data_interface[instance]];
+    strings[cnt++] = "Interface:" + PS_Interface_str[PS_Interface[instance]];
     if(serial_number[instance] != MIN_INT)
       strings[cnt++] = "Serial Number:" + serial_number[instance];
     if(remote_ip[instance] != null)

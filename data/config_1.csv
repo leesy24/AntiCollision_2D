@@ -1,5 +1,5 @@
 Name,Value,Comment
-PS_Data_interface,UDP,PS Interface via File or COM or UDP or SN.
+PS_Interface,UDP,PS Interface via File or COM or UDP or SN.
 ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
 MIRROR_ENABLE,false,Mirroring or not.(true or false)
 ZOOM_FACTOR,140,Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)
