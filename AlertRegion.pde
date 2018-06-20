@@ -1,3 +1,6 @@
+//final static boolean PRINT_ALERT_REGION_ALL_DBG = true; 
+final static boolean PRINT_ALERT_REGION_ALL_DBG = false;
+
 //final static boolean PRINT_ALERT_REGION_SETTINGS_DBG = true; 
 final static boolean PRINT_ALERT_REGION_SETTINGS_DBG = false;
 
@@ -6,6 +9,9 @@ final static boolean PRINT_ALERT_REGION_UPDATE_DBG = false;
 
 //final static boolean PRINT_ALERT_REGION_DRAW_DBG = true; 
 final static boolean PRINT_ALERT_REGION_DRAW_DBG = false;
+
+//final static boolean PRINT_ALERT_REGION_POINT_IS_CONTAINS_DBG = true; 
+final static boolean PRINT_ALERT_REGION_POINT_IS_CONTAINS_DBG = false;
 
 // Define default binary buf filename and path 
 final static String ALERT_REGION_FILE_NAME = "alert_region";
@@ -20,18 +26,18 @@ Table Alert_Region_table = null;
 
 Lines[] Alert_Region_data;
 
-int[] Alert_Region_x;
-int[] Alert_Region_y;
-int[] Alert_Region_width;
-int[] Alert_Region_height;
+int[] Alert_Region_mi_x;
+int[] Alert_Region_mi_y;
+int[] Alert_Region_mi_width;
+int[] Alert_Region_mi_height;
 
 void Alert_Region_settings()
 {
   Alert_Region_data = new Lines[PS_INSTANCE_MAX];
-  Alert_Region_x = new int[PS_INSTANCE_MAX];
-  Alert_Region_y = new int[PS_INSTANCE_MAX];
-  Alert_Region_width = new int[PS_INSTANCE_MAX];
-  Alert_Region_height = new int[PS_INSTANCE_MAX];
+  Alert_Region_mi_x = new int[PS_INSTANCE_MAX];
+  Alert_Region_mi_y = new int[PS_INSTANCE_MAX];
+  Alert_Region_mi_width = new int[PS_INSTANCE_MAX];
+  Alert_Region_mi_height = new int[PS_INSTANCE_MAX];
 
   for( int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
@@ -56,6 +62,7 @@ void Alert_Region_settings()
 
     int i = 0;
     String X, Y, Weight, Color;
+    int x_min = MAX_INT, x_max = MIN_INT, y_min = MAX_INT, y_max = MIN_INT;
 
     for(TableRow variable : Alert_Region_table.rows())
     {
@@ -84,6 +91,13 @@ void Alert_Region_settings()
         // You can access the fields via their column name (or index)
         Alert_Region_data[instance].x[i] = variable.getInt("X") * 100;
         Alert_Region_data[instance].y[i] = variable.getInt("Y") * 100;
+
+        // Get min/max of x/y.
+        x_min = min(x_min, Alert_Region_data[instance].x[i]);
+        x_max = max(x_max, Alert_Region_data[instance].x[i]);
+        y_min = min(y_min, Alert_Region_data[instance].y[i]);
+        y_max = max(y_max, Alert_Region_data[instance].y[i]);
+
         if(Weight == null)
         {
           Alert_Region_data[instance].w[i] = W_ALERT_REGION_LINE;
@@ -100,7 +114,7 @@ void Alert_Region_settings()
         {
           Alert_Region_data[instance].c[i] = (int)Long.parseLong(variable.getString("Color"), 16);
         }
-        if (PRINT_ALERT_REGION_SETTINGS_DBG) println("Alert_Region_data[instance].x[" + i + "]=" + Alert_Region_data[instance].x[i] + ",Alert_Region_data[instance].y[" + i + "]=" + Alert_Region_data[instance].y[i] + ",Alert_Region_data[instance].w[" + i + "]=" + Alert_Region_data[instance].w[i] + ",Alert_Region_data[instance].c[" + i + "]=" + Alert_Region_data[instance].c[i]);
+        if (PRINT_ALERT_REGION_ALL_DBG || PRINT_ALERT_REGION_SETTINGS_DBG) println("Alert_Region_settings():Alert_Region_data["+instance+"].:x[" + i + "]=" + Alert_Region_data[instance].x[i] + ",y[" + i + "]=" + Alert_Region_data[instance].y[i] + ",w[" + i + "]=" + Alert_Region_data[instance].w[i] + ",c[" + i + "]=" + Alert_Region_data[instance].c[i]);
       }
       i ++;
     }
@@ -109,6 +123,11 @@ void Alert_Region_settings()
       Alert_Region_data[instance].x[i] = MIN_INT;
       Alert_Region_data[instance].y[i] = MIN_INT;
     }
+    Alert_Region_mi_x[instance] = x_min;
+    Alert_Region_mi_y[instance] = y_min;
+    Alert_Region_mi_width[instance] = x_max - x_min;
+    Alert_Region_mi_height[instance] = y_max - y_min;
+    if (PRINT_ALERT_REGION_ALL_DBG || PRINT_ALERT_REGION_SETTINGS_DBG) println("Alert_Region_settings():Alert_Region_mi_["+instance+"]:x=" + Alert_Region_mi_x[instance] + ",y=" + Alert_Region_mi_y[instance] + ",width=" + Alert_Region_mi_width[instance] + ",height=" + Alert_Region_mi_height[instance]);
   }
 }
 
@@ -119,8 +138,6 @@ void Alert_Region_setup()
 
 void Alert_Region_update()
 {
-  int x_min = MAX_INT, x_max = MIN_INT, y_min = MAX_INT, y_max = MIN_INT;
-
   for( int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     if(Alert_Region_data[instance] == null) return;
@@ -156,7 +173,7 @@ void Alert_Region_update()
     {
       coor_x = Alert_Region_data[instance].x[i];
       coor_y = Alert_Region_data[instance].y[i];
-      if (PRINT_ALERT_REGION_UPDATE_DBG) println("Alert_Region_data[instance][" + i + "],coor_x=" + coor_x + ",coor_y=" + coor_y);
+      if (PRINT_ALERT_REGION_UPDATE_DBG) println("Alert_Region_update():Alert_Region_data[instance][" + i + "],coor_x=" + coor_x + ",coor_y=" + coor_y);
       if (coor_x == MIN_INT || coor_y == MIN_INT)
       {
         // Save coordinate data for drawing line on screen. 
@@ -208,20 +225,10 @@ void Alert_Region_update()
       x_curr += DRAW_OFFSET_X[instance];
       y_curr += DRAW_OFFSET_Y[instance];
 
-      // Get min/max of x/y.
-      x_min = min(x_min, x_curr);
-      x_max = max(x_max, x_curr);
-      y_min = min(y_min, y_curr);
-      y_max = max(y_max, y_curr);
-
       // Save coordinate data for drawing line on screen. 
       Alert_Region_data[instance].scr_x[i] = x_curr;
       Alert_Region_data[instance].scr_y[i] = y_curr;
     }
-    Alert_Region_x[instance] = x_min;
-    Alert_Region_y[instance] = y_min;
-    Alert_Region_width[instance] = x_max - x_min + 1;
-    Alert_Region_height[instance] = y_max - y_min + 1;
   }
 }
 
@@ -245,7 +252,7 @@ void Alert_Region_draw()
       y_curr = Alert_Region_data[instance].scr_y[i];
       w_curr = Alert_Region_data[instance].w[i];
       c_curr = Alert_Region_data[instance].c[i];
-      if (PRINT_ALERT_REGION_DRAW_DBG) println("Alert_Region_data[instance][" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
+      if (PRINT_ALERT_REGION_DRAW_DBG) println("Alert_Region_draw():Alert_Region_data[instance][" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
       if (x_curr == MIN_INT || y_curr == MIN_INT)
       {
         if(!drawed && x_prev != MIN_INT && y_prev != MIN_INT)
@@ -294,20 +301,28 @@ void Alert_Region_draw()
   }
 }
 
-boolean Alert_Region_point_is_contains(int instance, int point_x, int point_y)
+boolean Alert_Region_point_is_contains(int instance, int point_cm_x, int point_cm_y)
 {
   if(Alert_Region_data[instance] == null) return true;
 
+  if (PRINT_ALERT_REGION_ALL_DBG || PRINT_ALERT_REGION_POINT_IS_CONTAINS_DBG) println("Alert_Region_point_is_contains("+instance+"):point_cm_x=" + point_cm_x + ",point_cm_y=" + point_cm_y);
+
   if (
-      point_x >= Alert_Region_x[instance]
+      point_cm_x >= Alert_Region_mi_x[instance]
       &&
-      point_x <= Alert_Region_x[instance] + Alert_Region_width[instance]
+      point_cm_x <= Alert_Region_mi_x[instance] + Alert_Region_mi_width[instance]
       &&
-      point_y >= Alert_Region_y[instance]
+      point_cm_y >= Alert_Region_mi_y[instance]
       &&
-      point_y <= Alert_Region_y[instance] + Alert_Region_height[instance]
+      point_cm_y <= Alert_Region_mi_y[instance] + Alert_Region_mi_height[instance]
       )
+  {
+    if (PRINT_ALERT_REGION_ALL_DBG || PRINT_ALERT_REGION_POINT_IS_CONTAINS_DBG) println("Alert_Region_point_is_contains("+instance+"):return=" + true);
     return true;
+  }
   else
+  {
+    if (PRINT_ALERT_REGION_ALL_DBG || PRINT_ALERT_REGION_POINT_IS_CONTAINS_DBG) println("Alert_Region_point_is_contains("+instance+"):return=" + false);
     return false;
+  }
 }

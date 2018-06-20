@@ -778,10 +778,10 @@ class PS_Data {
         radians = radians(angle);
         if (ROTATE_FACTOR[instance] == 315)
         {
-          cx = float(distance) * sin(radians);
-          cy = float(distance) * cos(radians);
-          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
-          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          cx = float(distance) * cos(radians);
+          cy = float(distance) * sin(radians);
+          point_x_curr = int(cy / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cx / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
           point_x_curr += offset_x;
           if (MIRROR_ENABLE[instance])
@@ -804,10 +804,10 @@ class PS_Data {
         }
         else if (ROTATE_FACTOR[instance] == 135)
         {
-          cx = float(distance) * sin(radians);
-          cy = float(distance) * cos(radians);
-          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
-          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          cx = float(distance) * cos(radians);
+          cy = float(distance) * sin(radians);
+          point_x_curr = int(cy / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cx / ZOOM_FACTOR[instance]);
           //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
           point_x_curr = offset_x - point_x_curr;
           if (MIRROR_ENABLE[instance])
@@ -832,9 +832,9 @@ class PS_Data {
         point_x_curr += DRAW_OFFSET_X[instance];
         point_y_curr += DRAW_OFFSET_Y[instance];
 
-        if (Fault_Region_point_is_contains(instance, point_x_curr, point_y_curr)
+        if (Fault_Region_point_is_contains(instance, int(cx), int(cy))
             ||
-            Alert_Region_point_is_contains(instance, point_x_curr, point_y_curr))
+            Alert_Region_point_is_contains(instance, int(cx), int(cy)))
         {
           point_is_contains_curr = true;
         }
