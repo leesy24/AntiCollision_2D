@@ -40,6 +40,10 @@ final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = false;
 final static boolean PRINT_INTERFACES_UDP_SET_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_SET_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_SET_ERR = false;
+//final static boolean PRINT_INTERFACES_UDP_GET_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_GET_DBG = false;
+//final static boolean PRINT_INTERFACES_UDP_GET_ERR = true;
+final static boolean PRINT_INTERFACES_UDP_GET_ERR = false;
 
 static boolean UDP_get_take_time_enable = true;
 static boolean UDP_get_src_ip_port_enable = false;
@@ -205,29 +209,33 @@ class Interfaces_UDP {
 
     Comm_UDP_handle.close(instance);
 
-    ip[instance] = "";
-    port[instance] = 0;
+    ip[instance] = null;
+    port[instance] = -1;
     instance_opened[instance] = false;
     return 0;
   }
 
   public String get_error(int instance)
   {
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_error("+instance+"):str_err_last="+str_err_last[instance]);
     return str_err_last[instance];
   }
 
   public int get_take_time(int instance)
   {
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_take_time("+instance+"):comm_take_time="+comm_take_time[instance]);
     return comm_take_time[instance];
   }
 
   public String get_remote_ip(int instance)
   {
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_ip("+instance+"):ip="+ip[instance]);
     return ip[instance];
   }
 
   public int get_remote_port(int instance)
   {
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_port("+instance+"):port="+port[instance]);
     return port[instance];
   }
 
@@ -298,9 +306,6 @@ class Interfaces_UDP {
       return;
     }
 
-    // Init CMD source ip and port
-    ip[instance] = null;
-    port[instance] = -1;
     // Init & Save CMD start end time
     comm_take_time[instance] = -1;
     comm_start_time[instance] = millis();

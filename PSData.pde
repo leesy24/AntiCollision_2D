@@ -1,7 +1,7 @@
 //final static boolean PRINT_PS_DATA_ALL_DBG = true; 
 final static boolean PRINT_PS_DATA_ALL_DBG = false;
-//final static boolean PRINT_PS_DATA_ALL_ERR = true; 
-final static boolean PRINT_PS_DATA_ALL_ERR = false;
+final static boolean PRINT_PS_DATA_ALL_ERR = true; 
+//final static boolean PRINT_PS_DATA_ALL_ERR = false;
 
 //final static boolean PRINT_PS_DATA_SETTINGS_DBG = true; 
 final static boolean PRINT_PS_DATA_SETTINGS_DBG = false;
@@ -544,9 +544,9 @@ class PS_Data {
     strings[strings.length-3] = "";
     cnt = 0;
     if(load_remote_ip[instance] != null)
-      strings[cnt++] = "Source IP:" + load_remote_ip[instance];
+      strings[cnt++] = "Sensor IP:" + load_remote_ip[instance];
     if(load_remote_port[instance] != -1)
-      strings[cnt++] = "Source port:" + load_remote_port[instance];
+      strings[cnt++] = "Sensor port:" + load_remote_port[instance];
     if(load_take_time[instance] != -1)
       strings[cnt++] = "Reponse time:" + load_take_time[instance] + "ms";
     strings[cnt++] = "Scan number:" + scan_number[instance];
@@ -955,7 +955,7 @@ class PS_Data {
                 point_y_curr - point_size_curr / 2,
                 point_size_curr,
                 point_size_curr );
-          // Save data for drawing line between previous and current points. 
+          // Save point data for drawing line between previous and current points. 
           point_x_prev = point_x_curr;
           point_y_prev = point_y_curr;
           point_color_prev = point_color_curr;
