@@ -24,7 +24,7 @@ static int W_FAULT_REGION_LINE = 3;
 // A Table object
 Table Fault_Region_table = null;
 
-Lines[] Fault_Region_data;
+Points_Data[] Fault_Region_data;
 
 int[] Fault_Region_mi_x;
 int[] Fault_Region_mi_y;
@@ -33,7 +33,7 @@ int[] Fault_Region_mi_height;
 
 void Fault_Region_settings()
 {
-  Fault_Region_data = new Lines[PS_INSTANCE_MAX];
+  Fault_Region_data = new Points_Data[PS_INSTANCE_MAX];
   Fault_Region_mi_x = new int[PS_INSTANCE_MAX];
   Fault_Region_mi_y = new int[PS_INSTANCE_MAX];
   Fault_Region_mi_width = new int[PS_INSTANCE_MAX];
@@ -53,7 +53,7 @@ void Fault_Region_settings()
     }
 
     //println("Fault_Region_table.getRowCount()=" + Fault_Region_table.getRowCount());
-    Fault_Region_data[instance] = new Lines(Fault_Region_table.getRowCount());
+    Fault_Region_data[instance] = new Points_Data(Fault_Region_table.getRowCount());
     if(Fault_Region_data[instance] == null)
     {
       return;

@@ -24,7 +24,7 @@ static int W_ALERT_REGION_LINE = 3;
 // A Table object
 Table Alert_Region_table = null;
 
-Lines[] Alert_Region_data;
+Points_Data[] Alert_Region_data;
 
 int[] Alert_Region_mi_x;
 int[] Alert_Region_mi_y;
@@ -33,7 +33,7 @@ int[] Alert_Region_mi_height;
 
 void Alert_Region_settings()
 {
-  Alert_Region_data = new Lines[PS_INSTANCE_MAX];
+  Alert_Region_data = new Points_Data[PS_INSTANCE_MAX];
   Alert_Region_mi_x = new int[PS_INSTANCE_MAX];
   Alert_Region_mi_y = new int[PS_INSTANCE_MAX];
   Alert_Region_mi_width = new int[PS_INSTANCE_MAX];
@@ -53,7 +53,7 @@ void Alert_Region_settings()
     }
 
     //println("Alert_Region_table.getRowCount()=" + Alert_Region_table.getRowCount());
-    Alert_Region_data[instance] = new Lines(Alert_Region_table.getRowCount());
+    Alert_Region_data[instance] = new Points_Data(Alert_Region_table.getRowCount());
     if(Alert_Region_data[instance] == null)
     {
       return;

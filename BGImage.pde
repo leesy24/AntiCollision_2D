@@ -19,7 +19,7 @@ static int W_BG_IMAGE_LINE = 3;
 // A Table object
 Table BG_IMAGE_table = null;
 
-Lines BG_IMAGE_data;
+Points_Data BG_IMAGE_data;
 
 void BG_Image_settings()
 {
@@ -36,7 +36,7 @@ void BG_Image_settings()
   }
 
   //println("BG_IMAGE_table.getRowCount()=" + BG_IMAGE_table.getRowCount());
-  BG_IMAGE_data = new Lines(BG_IMAGE_table.getRowCount());
+  BG_IMAGE_data = new Points_Data(BG_IMAGE_table.getRowCount());
   if(BG_IMAGE_data == null)
   {
     if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_settings():BG_IMAGE_data=null");

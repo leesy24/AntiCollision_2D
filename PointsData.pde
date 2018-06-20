@@ -1,11 +1,11 @@
-class Lines {
+class Points_Data {
   public int length;
   public int x[], y[];
   public int w[];
   public color c[];
   public int scr_x[], scr_y[];
   
-  Lines (int n) {
+  Points_Data (int n) {
     length = n;
     x = new int[n];
     y = new int[n];
