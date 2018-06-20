@@ -48,7 +48,8 @@ final static int PS_DATA_INTERFACE_UART = 1;
 final static int PS_DATA_INTERFACE_UDP = 2;
 final static int PS_DATA_INTERFACE_SN = 3;
 
-final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
+final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
+//final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
 int[] PS_Data_interface;
 
@@ -659,14 +660,18 @@ class PS_Data {
   void draw_points(int instance)
   {
     int distance;
-    int pulse_width_curr = -1, pulse_width_prev = -1;
-    int x_curr, y_curr;
-    int point_size_curr = PS_DATA_POINT_WEIGHT; // Set weight of point rect
-    int point_size_prev = PS_DATA_POINT_WEIGHT; // Set weight of point rect
     float cx, cy;
     float angle, radians;
-    int x_prev = MIN_INT, y_prev = MIN_INT;
-    color point_color_curr = C_PS_DATA_POINT, point_color_prev = C_PS_DATA_POINT;
+    int point_x_curr, point_y_curr;
+    int point_size_curr = PS_DATA_POINT_WEIGHT; // Set weight of point rect
+    int point_pw_curr = -1;
+    color point_color_curr = C_PS_DATA_POINT;
+    boolean point_is_contains_curr;
+    int point_x_prev = MIN_INT, point_y_prev = MIN_INT;
+    int point_size_prev = PS_DATA_POINT_WEIGHT; // Set weight of point rect
+    int point_pw_prev = -1;
+    boolean point_is_contains_prev = false;
+    color point_color_prev = C_PS_DATA_POINT;
     color line_color = C_PS_DATA_LINE;
     final int mouse_over_range =
       (ZOOM_FACTOR[instance] < 50)
@@ -750,17 +755,19 @@ class PS_Data {
       if (distance == 0x80000000)
       {
         //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + "No echo");
-        x_prev = MIN_INT;
-        y_prev = MIN_INT;
-        pulse_width_prev = -1;
+        point_x_prev = MIN_INT;
+        point_y_prev = MIN_INT;
+        point_pw_prev = -1;
+        point_is_contains_prev = false;
       }
       // Check Noisy
       else if (distance == 0x7fffffff)
       {
         //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + "Noise");
-        x_prev = MIN_INT;
-        y_prev = MIN_INT;
-        pulse_width_prev = -1;
+        point_x_prev = MIN_INT;
+        point_y_prev = MIN_INT;
+        point_pw_prev = -1;
+        point_is_contains_prev = false;
       }
       else
       {
@@ -771,176 +778,198 @@ class PS_Data {
         {
           cx = float(distance) * sin(radians);
           cy = float(distance) * cos(radians);
-          x_curr = int(cx / ZOOM_FACTOR[instance]);
-          y_curr = int(cy / ZOOM_FACTOR[instance]);
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
-          x_curr += offset_x;
+          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
+          point_x_curr += offset_x;
           if (MIRROR_ENABLE[instance])
-            y_curr += offset_y;
+            point_y_curr += offset_y;
           else
-            y_curr = offset_y - y_curr;
+            point_y_curr = offset_y - point_y_curr;
         }
         else if (ROTATE_FACTOR[instance] == 45)
         {
           cx = float(distance) * cos(radians);
           cy = float(distance) * sin(radians);
-          x_curr = int(cx / ZOOM_FACTOR[instance]);
-          y_curr = int(cy / ZOOM_FACTOR[instance]);
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
+          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
           if (MIRROR_ENABLE[instance])
-            x_curr = offset_x - x_curr;
+            point_x_curr = offset_x - point_x_curr;
           else
-            x_curr += offset_x;
-          y_curr += offset_y;
+            point_x_curr += offset_x;
+          point_y_curr += offset_y;
         }
         else if (ROTATE_FACTOR[instance] == 135)
         {
           cx = float(distance) * sin(radians);
           cy = float(distance) * cos(radians);
-          x_curr = int(cx / ZOOM_FACTOR[instance]);
-          y_curr = int(cy / ZOOM_FACTOR[instance]);
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
-          x_curr = offset_x - x_curr;
+          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
+          point_x_curr = offset_x - point_x_curr;
           if (MIRROR_ENABLE[instance])
-            y_curr = offset_y - y_curr;
+            point_y_curr = offset_y - point_y_curr;
           else
-            y_curr += offset_y;
+            point_y_curr += offset_y;
         }
         else /*if (ROTATE_FACTOR[instance] == 225)*/
         {
           cx = float(distance) * cos(radians);
           cy = float(distance) * sin(radians);
-          x_curr = int(cx / ZOOM_FACTOR[instance]);
-          y_curr = int(cy / ZOOM_FACTOR[instance]);
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",x_curr=" + x_curr + ",y_curr=", y_curr);
+          point_x_curr = int(cx / ZOOM_FACTOR[instance]);
+          point_y_curr = int(cy / ZOOM_FACTOR[instance]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle=" + (scan_angle_start[instance] + float(j) * scan_angle_size[instance] / float(number_of_points[instance])) + ",point_x_curr=" + point_x_curr + ",point_y_curr=", point_y_curr);
           if (MIRROR_ENABLE[instance])
-            x_curr += offset_x;
+            point_x_curr += offset_x;
           else
-            x_curr = offset_x - x_curr;
-          y_curr = offset_y - y_curr;
+            point_x_curr = offset_x - point_x_curr;
+          point_y_curr = offset_y - point_y_curr;
         }
 
-        x_curr += DRAW_OFFSET_X[instance];
-        y_curr += DRAW_OFFSET_Y[instance];
+        point_x_curr += DRAW_OFFSET_X[instance];
+        point_y_curr += DRAW_OFFSET_Y[instance];
 
-        // Check pulse width exist
-        if (data_content[instance] != 4)
+        if (Fault_Region_point_is_contains(instance, point_x_curr, point_y_curr)
+            ||
+            Alert_Region_point_is_contains(instance, point_x_curr, point_y_curr))
         {
-          pulse_width_curr = pulse_widths[instance][j];
-          //print("[" + j + "]=" + pulse_widths[instance][j] + " ");
-          if(pulse_width_curr > PS_DATA_PULSE_WIDTH_MAX)
-          {
-            point_color_curr =
-              color(
-                point_color_H_max_const,
-                point_line_color_HSB_max_const,
-                point_line_color_HSB_max_const);
-          }
-          else if(pulse_width_curr < PS_DATA_PULSE_WIDTH_MIN)
-          {
-            point_color_curr =
-              color(
-                point_color_H_min_const,
-                point_line_color_HSB_max_const,
-                point_line_color_HSB_max_const);
-          }
-          else
-          {
-            point_color_curr =
-              color(
-                (PS_DATA_PULSE_WIDTH_MAX + int(point_line_color_H_offset_const - pulse_width_curr)) % point_line_color_H_modular_const,
-                point_line_color_HSB_max_const,
-                point_line_color_HSB_max_const);
-          }
-          if(pulse_width_prev != -1)
-          {
-            line_color =
-              color(
-                (PS_DATA_PULSE_WIDTH_MAX + int(point_line_color_H_offset_const - (float(pulse_width_curr + pulse_width_prev) / 2.0))) % point_line_color_H_modular_const,
-                point_line_color_HSB_max_const,
-                point_line_color_HSB_max_const);
-          }
+          point_is_contains_curr = true;
         }
         else
         {
-          point_color_curr = C_PS_DATA_POINT;
-          point_color_prev = C_PS_DATA_POINT;
-          line_color = C_PS_DATA_LINE;
+          point_is_contains_curr = false;
         }
 
-        // Check mouse pointer over point rect.
-        if( BUBBLEINFO_AVAILABLE != true
-            &&
-            (x_curr > mouse_over_x_min && x_curr < mouse_over_x_max)
-            &&
-            (y_curr > mouse_over_y_min && y_curr < mouse_over_y_max)
-          )
+        if (point_is_contains_curr)
         {
-          //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (cx/10000.0) + "," + (cy/10000.0) + ")" + ",pulse width=" + pulse_width_curr);
-          BUBBLEINFO_AVAILABLE = true;
-          BUBBLEINFO_POINT = j;
-          BUBBLEINFO_DISTANCE = float(distance/10)/1000.0;
-          BUBBLEINFO_COR_X = (int(cx/10.0)/1000.0);
-          BUBBLEINFO_COR_Y = (int(cy/10.0)/1000.0);
-          BUBBLEINFO_BOX_X = x_curr;
-          BUBBLEINFO_BOX_Y = y_curr;
-          BUBBLEINFO_ANGLE = float(int(angle*100.0))/100.0;
-          BUBBLEINFO_PULSE_WIDTH = pulse_width_curr;
-          point_size_curr = BUBBLEINFO_POINT_WH;
-        }
-        else
-        {
-          // Reset width and height point rect
-          point_size_curr = PS_DATA_POINT_WEIGHT;
-        }
-
-        if (x_prev != MIN_INT && y_prev != MIN_INT)
-        {
-          //print(j + ":" + pulse_width_prev + "," + pulse_width_curr + " ");
-          if (PS_DATA_DRAW_POINTS_WITH_LINE)
+          // Check pulse width exist
+          if (data_content[instance] != 4)
           {
-            fill(line_color);
-            stroke(line_color);
-            // Sets the weight used to draw line.
-            strokeWeight(W_PS_DATA_LINE);
-            line(x_prev, y_prev, x_curr, y_curr);
+            point_pw_curr = pulse_widths[instance][j];
+            //print("[" + j + "]=" + pulse_widths[instance][j] + " ");
+            if(point_pw_curr > PS_DATA_PULSE_WIDTH_MAX)
+            {
+              point_color_curr =
+                color(
+                  point_color_H_max_const,
+                  point_line_color_HSB_max_const,
+                  point_line_color_HSB_max_const);
+            }
+            else if(point_pw_curr < PS_DATA_PULSE_WIDTH_MIN)
+            {
+              point_color_curr =
+                color(
+                  point_color_H_min_const,
+                  point_line_color_HSB_max_const,
+                  point_line_color_HSB_max_const);
+            }
+            else
+            {
+              point_color_curr =
+                color(
+                  (PS_DATA_PULSE_WIDTH_MAX + int(point_line_color_H_offset_const - point_pw_curr)) % point_line_color_H_modular_const,
+                  point_line_color_HSB_max_const,
+                  point_line_color_HSB_max_const);
+            }
+            if(point_pw_prev != -1)
+            {
+              line_color =
+                color(
+                  (PS_DATA_PULSE_WIDTH_MAX + int(point_line_color_H_offset_const - (float(point_pw_curr + point_pw_prev) / 2.0))) % point_line_color_H_modular_const,
+                  point_line_color_HSB_max_const,
+                  point_line_color_HSB_max_const);
+            }
           }
-          if (Fault_Region_point_is_over(instance, x_prev, y_prev)
-              ||
-              Alert_Region_point_is_over(instance, x_prev, y_prev))
+          else
           {
+            point_color_curr = C_PS_DATA_POINT;
+            point_color_prev = C_PS_DATA_POINT;
+            line_color = C_PS_DATA_LINE;
+          }
+
+          // Check mouse pointer over point rect.
+          if( BUBBLEINFO_AVAILABLE != true
+              &&
+              (point_x_curr > mouse_over_x_min && point_x_curr < mouse_over_x_max)
+              &&
+              (point_y_curr > mouse_over_y_min && point_y_curr < mouse_over_y_max)
+            )
+          {
+            //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (cx/10000.0) + "," + (cy/10000.0) + ")" + ",pulse width=" + point_pw_curr);
+            BUBBLEINFO_AVAILABLE = true;
+            BUBBLEINFO_POINT = j;
+            BUBBLEINFO_DISTANCE = float(distance/10)/1000.0;
+            BUBBLEINFO_COR_X = (int(cx/10.0)/1000.0);
+            BUBBLEINFO_COR_Y = (int(cy/10.0)/1000.0);
+            BUBBLEINFO_BOX_X = point_x_curr;
+            BUBBLEINFO_BOX_Y = point_y_curr;
+            BUBBLEINFO_ANGLE = float(int(angle*100.0))/100.0;
+            BUBBLEINFO_PULSE_WIDTH = point_pw_curr;
+            point_size_curr = BUBBLEINFO_POINT_WH;
+          }
+          else
+          {
+            // Reset width and height point rect
+            point_size_curr = PS_DATA_POINT_WEIGHT;
+          }
+        }
+
+        // Draw first a previous point if possible.
+        if (point_x_prev != MIN_INT && point_y_prev != MIN_INT)
+        {
+          //print(j + ":" + point_pw_prev + "," + point_pw_curr + " ");
+          if (point_is_contains_prev)
+          {
+            if (PS_DATA_DRAW_POINTS_WITH_LINE
+                &&
+                point_is_contains_curr)
+            {
+              fill(line_color);
+              stroke(line_color);
+              // Sets the weight used to draw line.
+              strokeWeight(W_PS_DATA_LINE);
+              line(point_x_prev, point_y_prev, point_x_curr, point_y_curr);
+            }
             fill(point_color_prev);
             stroke(point_color_prev);
             // Sets the weight used to rect borders around shapes.
             strokeWeight(1);
-            //point(x_prev + DRAW_OFFSET_X[instance], y_prev + DRAW_OFFSET_Y[instance]);
-            rect( x_prev - point_size_prev / 2,
-                  y_prev - point_size_prev / 2,
+            //point(point_x_prev + DRAW_OFFSET_X[instance], point_y_prev + DRAW_OFFSET_Y[instance]);
+            rect( point_x_prev - point_size_prev / 2,
+                  point_y_prev - point_size_prev / 2,
                   point_size_prev,
                   point_size_prev );
           }
         }
-        if (Fault_Region_point_is_over(instance, x_curr, y_curr)
-            ||
-            Alert_Region_point_is_over(instance, x_curr, y_curr))
+
+        // And than, Draw current point if possible.
+        if (point_is_contains_curr)
         {
           fill(point_color_curr);
           stroke(point_color_curr);
           // Sets the weight used to rect borders around shapes.
           strokeWeight(1);
-          //point(x_curr + DRAW_OFFSET_X[instance], y_curr + DRAW_OFFSET_Y[instance]);
-          rect( x_curr - point_size_curr / 2,
-                y_curr - point_size_curr / 2,
+          //point(point_x_curr + DRAW_OFFSET_X[instance], point_y_curr + DRAW_OFFSET_Y[instance]);
+          rect( point_x_curr - point_size_curr / 2,
+                point_y_curr - point_size_curr / 2,
                 point_size_curr,
                 point_size_curr );
+          // Save data for drawing line between previous and current points. 
+          point_x_prev = point_x_curr;
+          point_y_prev = point_y_curr;
+          point_color_prev = point_color_curr;
+          point_size_prev = point_size_curr;
+          point_pw_prev = point_pw_curr;
+          point_is_contains_prev = point_is_contains_curr;
         }
-
-        // Save data for drawing line between previous and current points. 
-        x_prev = x_curr;
-        y_prev = y_curr;
-        point_color_prev = point_color_curr;
-        point_size_prev = point_size_curr;
-        pulse_width_prev = pulse_width_curr;
+        else
+        {
+          point_x_prev = MIN_INT;
+          point_y_prev = MIN_INT;
+          point_pw_prev = -1;
+          point_is_contains_prev = false;
+        }
       }
 /*
       // Check pulse width exist
@@ -948,8 +977,8 @@ class PS_Data {
       {
         // Get Pulse width
         // : indications of the signal's strength and are provided in picoseconds.
-        pulse_width_curr = pulse_widths[instance][j];
-        if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",pulse width=" + pulse_width_curr);
+        point_pw_curr = pulse_widths[instance][j];
+        if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",pulse width=" + point_pw_curr);
       }
 */
     } // End of for (int j = 0; j < number_of_points[instance]; j++)

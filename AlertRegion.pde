@@ -294,7 +294,7 @@ void Alert_Region_draw()
   }
 }
 
-boolean Alert_Region_point_is_over(int instance, int point_x, int point_y)
+boolean Alert_Region_point_is_contains(int instance, int point_x, int point_y)
 {
   if(Alert_Region_data[instance] == null) return true;
 

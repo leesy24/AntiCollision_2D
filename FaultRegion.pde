@@ -293,7 +293,7 @@ void Fault_Region_draw()
   }
 }
 
-boolean Fault_Region_point_is_over(int instance, int point_x, int point_y)
+boolean Fault_Region_point_is_contains(int instance, int point_x, int point_y)
 {
   if(Fault_Region_data[instance] == null) return true;
 
