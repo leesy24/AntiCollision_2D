@@ -67,14 +67,14 @@ void Config_settings()
       else if(name.equals("UDP_local_port"))
         UDP_local_port = variable.getInt("Value");
       else if(name.equals("SN_serial_number"))
-        SN_serial_number = variable.getInt("Value");
+        SN_serial_number[i] = variable.getInt("Value");
     }
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_X["+i+"]="+DRAW_OFFSET_X[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_Y["+i+"]="+DRAW_OFFSET_Y[i]);
-}
+  }
 }
 
 void Config_setup()
@@ -165,7 +165,7 @@ void Config_create()
     
     variable = CONFIG_table.addRow();
     variable.setString("Name", "SN_serial_number");
-    variable.setInt("Value", SN_serial_number);
+    variable.setInt("Value", SN_serial_number[i]);
     
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
     saveTable(CONFIG_table, "data/" + CONFIG_file_full_name);
@@ -295,8 +295,8 @@ void Config_save()
       }
       else if(name.equals("SN_serial_number")) {
         value_int = variable.getInt("Value");
-        if(value_int != SN_serial_number) {
-          variable.setInt("Value", SN_serial_number);
+        if(value_int != SN_serial_number[i]) {
+          variable.setInt("Value", SN_serial_number[i]);
           changed = true;
         }
       }

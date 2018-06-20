@@ -409,7 +409,7 @@ void UI_Interfaces_setup()
 */
   }
   else /*if(PS_Data_interface[0] == PS_DATA_INTERFACE_SN)*/ {
-    str = Integer.toString(SN_serial_number);
+    str = Integer.toString(SN_serial_number[0]);
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -591,7 +591,7 @@ void UI_Interfaces_mouseReleased()
   else /*if(PS_Data_interface[0] == PS_DATA_INTERFACE_SN)*/ {
     tf_param = (Textfield)cp5.get("UI_Interfaces_SNserialnumber");
     if( tf_param != null && tf_param.isFocus() == false) {
-      str = Integer.toString(SN_serial_number);
+      str = Integer.toString(SN_serial_number[0]);
       tf_param.setText(str);
     }
   }
@@ -747,8 +747,8 @@ void UI_Interfaces_SNserialnumber(String theText)
   //println("a textfield event for controller 'input' : "+theText);
 
   int serial_number = Integer.parseInt(theText);
-  if(serial_number != SN_serial_number) {
-    SN_serial_number = serial_number;
+  if(serial_number != SN_serial_number[0]) {
+    SN_serial_number[0] = serial_number;
     Config_save();
     UI_Interfaces_changed = true;
   }
