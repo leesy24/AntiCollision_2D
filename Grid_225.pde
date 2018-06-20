@@ -71,6 +71,7 @@ void Grid_draw_rotate_225(int instance)
   // Sets the color used to draw lines and borders around shapes.
   fill(C_GRID_LINE);
   stroke(C_GRID_LINE);
+  strokeWeight(W_GRID_LINE);
   for (ix = -100; ix <= SCREEN_width + 100; ix += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(ix - const_str_offset_ix) / 100.0;

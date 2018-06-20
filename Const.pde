@@ -76,6 +76,8 @@ void Const_settings()
       C_PS_DATA_RECT_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_GRID_LINE"))
       C_GRID_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_GRID_LINE"))
+      W_GRID_LINE = variable.getInt("Value");
     else if(name.equals("C_GRID_TEXT"))
       C_GRID_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_TEXT"))
@@ -230,6 +232,11 @@ void Const_create()
   variable.setString("Name", "C_GRID_LINE");
   variable.setString("Value", String.format("%08X", C_GRID_LINE));
   variable.setString("Comment", "Grid line color. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_GRID_LINE");
+  variable.setInt("Value", W_GRID_LINE);
+  variable.setString("Comment", "Grid line weight.");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_GRID_TEXT");
