@@ -64,6 +64,8 @@ byte[][] PS_Data_buf;
 
 static boolean[] PS_Data_draw_params_enabled;
 static int PS_Data_draw_params_timer;
+static int PS_Data_draw_params_x;
+static int PS_Data_draw_params_y;
 
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
@@ -575,15 +577,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_tl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_bl = 0;
       }
     }
@@ -591,15 +593,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_tr = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_tl = 0;
       }
     }
@@ -607,15 +609,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_br = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_tr = 0;
       }
     }
@@ -623,15 +625,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_bl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Image_mouse_pressed_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Image_mouse_pressed_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
+        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
         rect_br = 0;
       }
     }

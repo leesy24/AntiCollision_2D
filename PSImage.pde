@@ -1,3 +1,8 @@
+//final static boolean PRINT_PS_IMAGE_ALL_DBG = true; 
+final static boolean PRINT_PS_IMAGE_ALL_DBG = false; 
+final static boolean PRINT_PS_IMAGE_ALL_ERR = true; 
+//final static boolean PRINT_PS_IMAGE_ALL_ERR = false; 
+
 //final static boolean PRINT_PS_IMAGE_SETUP_DBG = true; 
 final static boolean PRINT_PS_IMAGE_SETUP_DBG = false; 
 //final static boolean PRINT_PS_IMAGE_SETUP_ERR = true; 
@@ -6,27 +11,25 @@ final static boolean PRINT_PS_IMAGE_SETUP_ERR = false;
 PImage[] PS_Image;
 boolean[] PS_Image_mouse_over;
 boolean[] PS_Image_mouse_pressed;
-int PS_Image_mouse_pressed_x;
-int PS_Image_mouse_pressed_y;
 
 void PS_Image_settings()
 {
   PS_Image = new PImage[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if(PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image=null");
     return;
   }
   PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if(PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_over=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_over=null");
     return;
   }
   PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if(PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_pressed=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_pressed=null");
     return;
   }
 
@@ -112,18 +115,8 @@ void PS_Image_mouse_pressed()
     if (PS_Image_mouse_over[i])
     {
       PS_Image_mouse_pressed[i] = true;
-      PS_Image_mouse_pressed_x = mouseX;
-      PS_Image_mouse_pressed_y = mouseY;
-    }
-  }
-}
-
-void PS_Image_mouse_released()
-{
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    if (PS_Image_mouse_over[i] && PS_Image_mouse_pressed[i])
-    {
+      PS_Data_draw_params_x = mouseX;
+      PS_Data_draw_params_y = mouseY;
       PS_Data_draw_params_enabled[i] = !PS_Data_draw_params_enabled[i];
       if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer = millis();
     }
@@ -132,6 +125,10 @@ void PS_Image_mouse_released()
       PS_Data_draw_params_enabled[i] = false;
     }
   }
+}
+
+void PS_Image_mouse_released()
+{
 }
 
 void PS_Image_mouse_moved()
