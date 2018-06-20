@@ -157,13 +157,10 @@ void PS_Data_setup() {
   {
     if(PS_Interface[i] == PS_Interface_FILE) {
       Interfaces_File_setup();
-      PS_Data_handle.remote_ip[i] = null;
-      PS_Data_handle.remote_port[i] = -1;
+      PS_Data_handle.file_name[i] = FILE_name;
     }
     else if(PS_Interface[i] == PS_Interface_UART) {
       Interfaces_UART_setup();
-      PS_Data_handle.remote_ip[i] = null;
-      PS_Data_handle.remote_port[i] = -1;
     }
     else if(PS_Interface[i] == PS_Interface_UDP) {
       Interfaces_UDP_setup(UDP_local_port);
@@ -206,6 +203,7 @@ class PS_Data {
   String[] parse_err_str = new String[PS_DATA_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_DATA_INSTANCE_MAX];
+  String[] file_name = new String[PS_DATA_INSTANCE_MAX];
   String[] remote_ip = new String[PS_DATA_INSTANCE_MAX];
   int[] remote_port = new int[PS_DATA_INSTANCE_MAX];
   int[] serial_number = new int[PS_DATA_INSTANCE_MAX];
@@ -231,6 +229,7 @@ class PS_Data {
       parse_err_str[i] = null;
       parse_err_cnt[i] = 0;
       load_take_time[i] = 0;
+      file_name[i] = null;
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
@@ -546,13 +545,15 @@ class PS_Data {
     String[] strings = new String[15];
     int cnt;
 
-    // Set to blank string at the end of array to avoid adding string null check code below.
-    strings[strings.length-1] = "";
-    strings[strings.length-2] = "";
-    strings[strings.length-3] = "";
-    strings[strings.length-4] = "";
+    for (cnt = 0 ; cnt < strings.length; cnt ++)
+    {
+      // Set to blank string at the end of array to avoid adding string null check code below.
+      strings[cnt] = "";
+    }
     cnt = 0;
     strings[cnt++] = "Interface:" + PS_Interface_str[PS_Interface[instance]];
+    if(file_name[instance] != null)
+      strings[cnt++] = "File name:" + file_name[instance];
     if(serial_number[instance] != MIN_INT)
       strings[cnt++] = "Serial Number:" + serial_number[instance];
     if(remote_ip[instance] != null)
