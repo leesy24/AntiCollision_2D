@@ -181,8 +181,8 @@ class PS_Data {
   String[] parse_err_str = new String[PS_DATA_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_DATA_INSTANCE_MAX];
-  String[] load_remote_ip = new String[PS_DATA_INSTANCE_MAX];
-  int[] load_remote_port = new int[PS_DATA_INSTANCE_MAX];
+  String[] sensor_ip = new String[PS_DATA_INSTANCE_MAX];
+  int[] sensor_port = new int[PS_DATA_INSTANCE_MAX];
 
   // Create the PS_Data
   PS_Data()
@@ -205,8 +205,8 @@ class PS_Data {
       parse_err_str[i] = null;
       parse_err_cnt[i] = 0;
       load_take_time[i] = 0;
-      load_remote_ip[i] = null;
-      load_remote_port[i] = -1;
+      sensor_ip[i] = null;
+      sensor_port[i] = -1;
     }
   }
 
@@ -233,8 +233,8 @@ class PS_Data {
       }
       // No mean in file interface.
       load_take_time[instance] = -1;
-      load_remote_ip[instance] = null;
-      load_remote_port[instance] = -1;
+      sensor_ip[instance] = null;
+      sensor_port[instance] = -1;
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():File:ok!");
       return true;
     }
@@ -252,8 +252,8 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UART_get_take_time();
-      load_remote_ip[instance] = null;
-      load_remote_port[instance] = -1;
+      sensor_ip[instance] = null;
+      sensor_port[instance] = -1;
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UART:ok!");
       return true;
     }
@@ -271,8 +271,8 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-      load_remote_ip[instance] = Interfaces_UDP_handle.get_remote_ip(instance);
-      load_remote_port[instance] = Interfaces_UDP_handle.get_remote_port(instance);
+      sensor_ip[instance] = Interfaces_UDP_handle.get_remote_ip(instance);
+      sensor_port[instance] = Interfaces_UDP_handle.get_remote_port(instance);
       if (PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():UDP:ok!");
       return true;
     }
@@ -290,8 +290,8 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_SN_get_take_time();
-      load_remote_ip[instance] = Interfaces_SN_get_src_ip();
-      load_remote_port[instance] = Interfaces_SN_get_src_port();
+      sensor_ip[instance] = Interfaces_SN_get_src_ip();
+      sensor_port[instance] = Interfaces_SN_get_src_port();
       if (PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load():SN:ok!");
       return true;
     }
@@ -543,10 +543,10 @@ class PS_Data {
     strings[strings.length-2] = "";
     strings[strings.length-3] = "";
     cnt = 0;
-    if(load_remote_ip[instance] != null)
-      strings[cnt++] = "Sensor IP:" + load_remote_ip[instance];
-    if(load_remote_port[instance] != -1)
-      strings[cnt++] = "Sensor port:" + load_remote_port[instance];
+    if(sensor_ip[instance] != null)
+      strings[cnt++] = "Sensor IP:" + sensor_ip[instance];
+    if(sensor_port[instance] != -1)
+      strings[cnt++] = "Sensor port:" + sensor_port[instance];
     if(load_take_time[instance] != -1)
       strings[cnt++] = "Reponse time:" + load_take_time[instance] + "ms";
     strings[cnt++] = "Scan number:" + scan_number[instance];
