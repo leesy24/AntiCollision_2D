@@ -53,16 +53,15 @@ final static boolean PRINT_ROI_DATA_DRAW_DBG = false;
 //final static boolean PRINT_ROI_DATA_DRAW_ERR = true; 
 final static boolean PRINT_ROI_DATA_DRAW_ERR = false;
 
-static color C_ROI_DATA_ERR_TEXT = #000000; // Black
-static color C_ROI_DATA_LINE = #0000FF; // Blue
-static color C_ROI_DATA_POINT = #FF0000; // Red
-static int W_ROI_DATA_LINE = 1;
-//static color C_ROI_DATA_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
-static color C_ROI_DATA_RECT_FILL = 0x00000000; // Black transparent
-//static color C_ROI_DATA_RECT_STROKE = #000000; // Black
-static color C_ROI_DATA_RECT_STROKE = 0xFFFFFFFF; // White
-static int W_ROI_DATA_RECT_STROKE = 1;
-static color C_ROI_DATA_RECT_TEXT = #404040; // Black + 0x40
+static color C_ROI_FAULT_MARKER_FILL = 0xFFFF0000; // Red transparent
+static color C_ROI_FAULT_MARKER_STROKE = 0xFFFF0000; // Red
+static int W_ROI_FAULT_MARKER_STROKE = 3;
+
+static color C_ROI_ALERT_MARKER_FILL = 0x80FFFF00; // Yellow transparent
+static color C_ROI_ALERT_MARKER_STROKE = 0xFFFFFF00; // Yellow
+static int W_ROI_ALERT_MARKER_STROKE = 3;
+
+static int ROI_OBJECT_MARKER_MARGIN = 10;
 
 static ROI_Data ROI_Data_handle = null;
 //static int ROI_Data_distance_max = 10000; // = 1 meter
@@ -197,28 +196,31 @@ class ROI_Data {
 
   void draw_objects(int instance) {
     for (ROI_Object_Data object:objects[instance]) {
-      int x, y, w, h;
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+object.scr_x_start+",y="+object.scr_y_start+",w="+object.scr_width+",h="+object.scr_height);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x_c="+object.scr_x_center+",y_c="+object.scr_y_center+",d="+object.scr_diameter);
 
-/**/
-      x = object.scr_x_start - 10;
-      y = object.scr_y_start - 10;
-      w = object.scr_x_end - object.scr_x_start + 20;
-      h = object.scr_y_end - object.scr_y_start + 20;
-/**/
-/*
-      x = object.scr_x_start;
-      y = object.scr_y_start;
-      w = object.scr_x_end - object.scr_x_start;
-      h = object.scr_y_end - object.scr_y_start;
-*/      
-
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+x+",y="+y+",w="+w+",h="+h);
-
-      fill(0, 0);
-      // Sets the color and weight used to draw lines and borders around shapes.
-      stroke(C_ROI_DATA_RECT_STROKE);
-      strokeWeight(W_ROI_DATA_RECT_STROKE);
-      rect(x, y, w, h);
+      if (object.region == 0) { // Fault region
+        fill(C_ROI_FAULT_MARKER_FILL%0xFFFFFF, C_ROI_FAULT_MARKER_FILL/0xFFFFFF);
+        // Sets the color and weight used to draw lines and borders around shapes.
+        stroke(C_ROI_FAULT_MARKER_STROKE);
+        strokeWeight(W_ROI_FAULT_MARKER_STROKE);
+      }
+      else { // Alert region
+        fill(C_ROI_ALERT_MARKER_FILL, C_ROI_ALERT_MARKER_FILL/0xFFFFFF);
+        // Sets the color and weight used to draw lines and borders around shapes.
+        stroke(C_ROI_ALERT_MARKER_STROKE);
+        strokeWeight(W_ROI_ALERT_MARKER_STROKE);
+      }
+      /*
+      rect( object.scr_x_start - ROI_OBJECT_MARKER_MARGIN,
+            object.scr_y_start - ROI_OBJECT_MARKER_MARGIN,
+            object.scr_width + ROI_OBJECT_MARKER_MARGIN*2,
+            object.scr_height + ROI_OBJECT_MARKER_MARGIN*2);
+      */
+      ellipse(object.scr_x_center,
+              object.scr_y_center,
+              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
+              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
     }
   }
 
@@ -269,6 +271,9 @@ class ROI_Object_Data {
   public int mi_x_end, mi_y_end;
   public int scr_x_start, scr_y_start;
   public int scr_x_end, scr_y_end;
+  public int scr_width, scr_height;
+  public int scr_x_center, scr_y_center;
+  public int scr_diameter;
   
   ROI_Object_Data(int region, int mi_x_start, int mi_y_start, int mi_x_end, int mi_y_end, int scr_x_start, int scr_y_start, int scr_x_end, int scr_y_end) {
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region="+region);
@@ -284,5 +289,10 @@ class ROI_Object_Data {
     this.scr_y_start = scr_y_start;
     this.scr_x_end = scr_x_end;
     this.scr_y_end = scr_y_end;
+    this.scr_width = scr_x_end - scr_x_start;
+    this.scr_height = scr_y_end - scr_y_start;
+    this.scr_x_center = scr_x_start + this.scr_width / 2;
+    this.scr_y_center = scr_y_start + this.scr_height / 2;
+    this.scr_diameter = int(sqrt(sq(scr_x_end - scr_x_start) + sq(scr_y_end - scr_y_start)));
   }
 }
