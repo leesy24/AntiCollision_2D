@@ -33,6 +33,11 @@ final static boolean PRINT_ROI_DATA_DETECT_OBJECTS_DBG = false;
 //final static boolean PRINT_ROI_DATA_DETECT_OBJECTS_ERR = true; 
 final static boolean PRINT_ROI_DATA_DETECT_OBJECTS_ERR = false;
 
+//final static boolean PRINT_ROI_DATA_ADD_OBJECT_DBG = true; 
+final static boolean PRINT_ROI_DATA_ADD_OBJECT_DBG = false;
+//final static boolean PRINT_ROI_DATA_ADD_OBJECT_ERR = true; 
+final static boolean PRINT_ROI_DATA_ADD_OBJECT_ERR = false;
+
 //final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = true; 
 final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = false;
 //final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = true; 
@@ -47,16 +52,6 @@ final static boolean PRINT_ROI_DATA_PARSE_ERR = false;
 final static boolean PRINT_ROI_DATA_DRAW_DBG = false;
 //final static boolean PRINT_ROI_DATA_DRAW_ERR = true; 
 final static boolean PRINT_ROI_DATA_DRAW_ERR = false;
-
-//final static boolean PRINT_ROI_OBJECT_DATA_ALL_DBG = true; 
-final static boolean PRINT_ROI_OBJECT_DATA_ALL_DBG = false;
-final static boolean PRINT_ROI_OBJECT_DATA_ALL_ERR = true; 
-//final static boolean PRINT_ROI_OBJECT_DATA_ALL_ERR = false;
-
-//final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = true; 
-final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = false;
-//final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = true; 
-final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = false;
 
 static color C_ROI_DATA_ERR_TEXT = #000000; // Black
 static color C_ROI_DATA_LINE = #0000FF; // Blue
@@ -116,65 +111,79 @@ class ROI_Data {
   }
 
   void detect_objects(int instance) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):");
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"points length="+points[instance].size());
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Enter");
     if (points[instance].size() == 0) {
-      if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_DETECT_OBJECTS_ERR) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"points length=0 error!");
+      if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_DETECT_OBJECTS_ERR) println("ROI_Data:detect_objects("+instance+"):"+"points size=0 error!");
       return;
     }
-    int distance_max = 0;
-    int cnt = 0;
-    int i = 0;
-    ROI_Point_Data point_base;
 
     objects[instance].clear();
 
-    for (; i < points[instance].size() - 1; i ++) {
-      point_base = points[instance].get(i);
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"point_base["+i+"]:"+"region="+point_base.region+",mi_x="+point_base.mi_x+",mi_y="+point_base.mi_y+",scr_x="+point_base.scr_x+",scr_y="+point_base.scr_y);
-      distance_max = 0;
-      int max_j = i;
-      ROI_Point_Data point_prev = point_base;
-      for (int j = i + 1; j < points[instance].size(); j ++, cnt ++) {
-        ROI_Point_Data point_target;
-        int distance_base = 0;
-        int distance_prev = 0;
-        point_target = points[instance].get(j);
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"point_target["+j+"]:"+"region="+point_target.region+",mi_x="+point_target.mi_x+",mi_y="+point_target.mi_y+",scr_x="+point_target.scr_x+",scr_y="+point_target.scr_y);
-        distance_prev = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_target.mi_x, point_target.mi_y);
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_prev="+distance_prev);
-        if (distance_prev > ROI_Data_distance_max) {
-          break;
+    do {
+      LinkedList<ROI_Point_Data> points_group = new LinkedList<ROI_Point_Data>();
+      ROI_Point_Data point_curr;
+      ROI_Point_Data point_prev;
+
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"points size="+points[instance].size());
+      point_prev = points[instance].get(0);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"point_prev["+0+"]:"+"region="+point_prev.region+",mi_x="+point_prev.mi_x+",mi_y="+point_prev.mi_y+",scr_x="+point_prev.scr_x+",scr_y="+point_prev.scr_y);
+      points_group.add(point_prev);
+      points[instance].remove(0);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"points size="+points[instance].size());
+      for (int i = 0; i < points[instance].size();) {
+        int distance;
+        point_curr = points[instance].get(i);
+        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
+        distance = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_curr.mi_x, point_curr.mi_y);
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"distance="+distance);
+        if (distance <= ROI_Data_distance_max) {
+          points_group.add(point_curr);
+          points[instance].remove(i);
+          point_prev = point_curr;
         }
-        distance_base = get_points_distance(point_base.mi_x, point_base.mi_y, point_target.mi_x, point_target.mi_y);
-        if (distance_base > distance_max) {
-          distance_max = distance_base;
-          max_j = j;
+        else {
+          i ++;
         }
-        point_prev = point_target;
       }
-      if (cnt != 0) {
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max+",max_j="+max_j);
-        println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max+",max_j="+max_j);
-        add_object(objects[instance], points[instance], i, max_j);
-        if (max_j != i) i = max_j;
-        cnt = 0;
-      }
-      else {
-        distance_max = get_point_rotate_distance(point_base.mi_x, point_base.mi_y, PS_Data_handle.scan_angle_step[instance]);
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max);
-        println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max);
-        add_object(objects[instance], points[instance], i, i);
-      }
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"points_group size="+points_group.size());
+      add_object(instance, points_group);
+      points_group.clear();
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"points size="+points[instance].size());
+    } while (points[instance].size() != 0);
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Exit");
+  }
+
+  private void add_object(int instance, LinkedList<ROI_Point_Data> points_group) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object("+instance+"):Enter");
+
+    int region_min;
+    int mi_x_min, mi_y_min, mi_x_max, mi_y_max;
+    int scr_x_min, scr_y_min, scr_x_max, scr_y_max;
+
+    region_min = MAX_INT;
+    mi_x_min = mi_y_min = scr_x_min = scr_y_min = MAX_INT;
+    mi_x_max = mi_y_max = scr_x_max = scr_y_max = MIN_INT;
+
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:add_object("+instance+"):"+"points_group size="+points_group.size());
+    for (ROI_Point_Data point:points_group) {
+      region_min = min(region_min, point.region);
+      mi_x_min = min(mi_x_min, point.mi_x);
+      mi_y_min = min(mi_y_min, point.mi_y);
+      mi_x_max = max(mi_x_max, point.mi_x);
+      mi_y_max = max(mi_y_max, point.mi_y);
+      scr_x_min = min(scr_x_min, point.scr_x);
+      scr_y_min = min(scr_y_min, point.scr_y);
+      scr_x_max = max(scr_x_max, point.scr_x);
+      scr_y_max = max(scr_y_max, point.scr_y);
     }
-    if (cnt == 0 && i < points[instance].size()) {
-      point_base = points[instance].get(i);
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"point_base["+i+"]:"+"region="+point_base.region+",mi_x="+point_base.mi_x+",mi_y="+point_base.mi_y+",scr_x="+point_base.scr_x+",scr_y="+point_base.scr_y);
-      distance_max = get_point_rotate_distance(point_base.mi_x, point_base.mi_y, PS_Data_handle.scan_angle_step[instance]);
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max);
-      println("ROI_Data:print_points("+instance+"):"+"points["+instance+"]:"+"i="+i+",cnt="+cnt+",distance_max="+distance_max);
-       add_object(objects[instance], points[instance], i, i);
-    }
+    objects[instance].add(
+      new ROI_Object_Data(
+        region_min,
+        mi_x_min, mi_y_min,
+        mi_x_max, mi_y_max,
+        scr_x_min, scr_y_min,
+        scr_x_max, scr_y_max));
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object("+instance+"):Exit");
   }
 
   void print_points(int instance) {
@@ -189,10 +198,20 @@ class ROI_Data {
   void draw_objects(int instance) {
     for (ROI_Object_Data object:objects[instance]) {
       int x, y, w, h;
+
+/**/
       x = object.scr_x_start - 10;
       y = object.scr_y_start - 10;
       w = object.scr_x_end - object.scr_x_start + 20;
       h = object.scr_y_end - object.scr_y_start + 20;
+/**/
+/*
+      x = object.scr_x_start;
+      y = object.scr_y_start;
+      w = object.scr_x_end - object.scr_x_start;
+      h = object.scr_y_end - object.scr_y_start;
+*/      
+
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+x+",y="+y+",w="+w+",h="+h);
 
       fill(0, 0);
@@ -218,36 +237,6 @@ class ROI_Data {
     return get_points_distance(point_x, point_y, point_rot_x, point_rot_y);
   }
 
-  private void add_object(LinkedList<ROI_Object_Data> target_objects, LinkedList<ROI_Point_Data> src_points, int start_i, int end_i) {
-    ROI_Point_Data point;
-    int region_min;
-    int mi_x_min, mi_y_min, mi_x_max, mi_y_max;
-    int scr_x_min, scr_y_min, scr_x_max, scr_y_max;
-    region_min = MAX_INT;
-    mi_x_min = mi_y_min = scr_x_min = scr_y_min = MAX_INT;
-    mi_x_max = mi_y_max = scr_x_max = scr_y_max = MIN_INT;
-    for (int i = start_i; i <= end_i; i ++) {
-      point = src_points.get(i);
-      region_min = min(region_min, point.region);
-      if (point.mi_x < mi_x_min) {
-        mi_x_min = point.mi_x;
-        scr_x_min = point.scr_x;
-      }
-      if (point.mi_y < mi_y_min) {
-        mi_y_min = point.mi_y;
-        scr_y_min = point.scr_y;
-      }
-      if (point.mi_x > mi_x_max) {
-        mi_x_max = point.mi_x;
-        scr_x_max = point.scr_x;
-      }
-      if (point.mi_y > mi_y_max) {
-        mi_y_max = point.mi_y;
-        scr_y_max = point.scr_y;
-      }
-    }
-    target_objects.add(new ROI_Object_Data(region_min, mi_x_min, mi_y_min, mi_x_max, mi_y_max, scr_x_min, scr_y_min, scr_x_max, scr_y_max));
-  }
 }
 
 class ROI_Point_Data {
@@ -263,6 +252,16 @@ class ROI_Point_Data {
     this.scr_y = scr_y;
   }
 }
+
+//final static boolean PRINT_ROI_OBJECT_DATA_ALL_DBG = true; 
+final static boolean PRINT_ROI_OBJECT_DATA_ALL_DBG = false;
+final static boolean PRINT_ROI_OBJECT_DATA_ALL_ERR = true; 
+//final static boolean PRINT_ROI_OBJECT_DATA_ALL_ERR = false;
+
+//final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = true; 
+final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = false;
+//final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = true; 
+final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = false;
 
 class ROI_Object_Data {
   public int region;
@@ -281,9 +280,9 @@ class ROI_Object_Data {
     this.mi_y_start = mi_y_start;
     this.mi_x_end = mi_x_end;
     this.mi_y_end = mi_y_end;
-    this.scr_x_start = min(scr_x_start, scr_x_end);
-    this.scr_y_start = min(scr_y_start, scr_y_end);
-    this.scr_x_end = max(scr_x_start, scr_x_end);
-    this.scr_y_end = max(scr_y_start, scr_y_end);
+    this.scr_x_start = scr_x_start;
+    this.scr_y_start = scr_y_start;
+    this.scr_x_end = scr_x_end;
+    this.scr_y_end = scr_y_end;
   }
 }
