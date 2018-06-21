@@ -379,7 +379,7 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + (4 + 4 + 4 + n_params * 4) + ",number of points=" + t_n_points);
     // Check Number of points
     if (t_n_points > PS_DATA_POINTS_MAX || t_n_points <= 0) {
-      parse_err_str[instance] = "Error: Number of points invalid! number_of_points[instance] is " + t_n_points;
+      parse_err_str[instance] = "Error: Number of points invalid! number_of_points is " + t_n_points;
       draw_error(instance, parse_err_str[instance]);
       if (PRINT_PS_DATA_PARSE_ERR) println(parse_err_str[instance]);
       parse_err_cnt[instance] ++;
