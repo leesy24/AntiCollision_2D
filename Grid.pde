@@ -1,7 +1,7 @@
 //final static boolean PRINT_GRID_ALL_DBG = true; 
 final static boolean PRINT_GRID_ALL_DBG = false;
-//final static boolean PRINT_GRID_ALL_ERR = true; 
-final static boolean PRINT_GRID_ALL_ERR = false;
+final static boolean PRINT_GRID_ALL_ERR = true; 
+//final static boolean PRINT_GRID_ALL_ERR = false;
 
 //final static boolean PRINT_GRID_SETTINGS_DBG = true; 
 final static boolean PRINT_GRID_SETTINGS_DBG = false;

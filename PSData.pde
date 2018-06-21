@@ -1031,7 +1031,7 @@ class PS_Data {
     text( message,
           Grid_scr_x_min[instance],
           Grid_scr_y_min[instance],
-          Grid_scr_x_max[instance],
-          Grid_scr_y_max[instance]);
+          Grid_scr_x_max[instance] - Grid_scr_x_min[instance],
+          Grid_scr_y_max[instance] - Grid_scr_y_min[instance]);
   }
 }
