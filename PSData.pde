@@ -543,43 +543,35 @@ class PS_Data {
       PS_Data_draw_params_enabled[instance] = false;
     }
 
-    String[] strings = new String[15];
-    int cnt;
+    LinkedList<String> strings = new LinkedList<String>();
 
-    for (cnt = 0 ; cnt < strings.length; cnt ++)
-    {
-      // Set to blank string at the end of array to avoid adding string null check code below.
-      strings[cnt] = "";
-    }
-    cnt = 0;
-    strings[cnt++] = "Interface:" + PS_Interface_str[PS_Interface[instance]];
+    strings.add("Interface:" + PS_Interface_str[PS_Interface[instance]]);
     if(file_name[instance] != null)
-      strings[cnt++] = "File name:" + file_name[instance];
+      strings.add("File name:" + file_name[instance]);;
     if(serial_number[instance] != MIN_INT)
-      strings[cnt++] = "Serial Number:" + serial_number[instance];
+      strings.add("Serial Number:" + serial_number[instance]);;
     if(remote_ip[instance] != null)
-      strings[cnt++] = "IP:" + remote_ip[instance];
+      strings.add("IP:" + remote_ip[instance]);
     if(remote_port[instance] != MIN_INT)
-      strings[cnt++] = "Port:" + remote_port[instance];
+      strings.add("Port:" + remote_port[instance]);
     if(load_take_time[instance] != -1)
-      strings[cnt++] = "Reponse time:" + load_take_time[instance] + "ms";
-    strings[cnt++] = "Scan number:" + scan_number[instance];
-    strings[cnt++] = "Time stamp:" + time_stamp[instance];
-    strings[cnt++] = "Scan start direction:" + scan_angle_start[instance] + "°";
-    strings[cnt++] = "Scan angle size:" + scan_angle_size[instance] + "°";
-    strings[cnt++] = "Number of echoes:" + number_of_echoes[instance];
-    strings[cnt++] = "Encoder count:" + incremental_count[instance];
-    strings[cnt++] = "System temp.:" + system_temperature[instance] + "°C";
-    strings[cnt++] = "System status:" + system_status[instance];
-    strings[cnt++] = "Data content:" + data_content[instance];
-    strings[cnt++] = "Number of points:" + number_of_points[instance];
+      strings.add("Reponse time:" + load_take_time[instance] + "ms");
+    strings.add("Scan number:" + scan_number[instance]);
+    strings.add("Time stamp:" + time_stamp[instance]);
+    strings.add("Scan start direction:" + scan_angle_start[instance] + "°");
+    strings.add("Scan angle size:" + scan_angle_size[instance] + "°");
+    strings.add("Number of echoes:" + number_of_echoes[instance]);
+    strings.add("Encoder count:" + incremental_count[instance]);
+    strings.add("System temp.:" + system_temperature[instance] + "°C");
+    strings.add("System status:" + system_status[instance]);
+    strings.add("Data content:" + data_content[instance]);
+    strings.add("Number of points:" + number_of_points[instance]);
 
     // Get max string width
     int witdh_max = 0;
     for (String string:strings)
     {
-      //if(string != null)
-        witdh_max = max(witdh_max, int(textWidth(string)));    
+      witdh_max = max(witdh_max, int(textWidth(string)));    
     }
 
     int rect_w, rect_h;
@@ -588,64 +580,64 @@ class PS_Data {
     if (ROTATE_FACTOR[instance] == 315) {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x;
+        rect_y = PS_Data_draw_params_y;
         rect_tl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x;
+        rect_y = PS_Data_draw_params_y - rect_h - 1;
         rect_bl = 0;
       }
     }
     else if (ROTATE_FACTOR[instance] == 45) {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x - rect_w - 1;
+        rect_y = PS_Data_draw_params_y;
         rect_tr = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x;
+        rect_y = PS_Data_draw_params_y;
         rect_tl = 0;
       }
     }
     else if (ROTATE_FACTOR[instance] == 135) {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x - rect_w - 1;
+        rect_y = PS_Data_draw_params_y - rect_h - 1;
         rect_br = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x - rect_w - 1;
+        rect_y = PS_Data_draw_params_y;
         rect_tr = 0;
       }
     }
     else /*if (ROTATE_FACTOR[instance] == 225)*/ {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x;
+        rect_y = PS_Data_draw_params_y - rect_h - 1;
         rect_bl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * cnt + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1; // FONT_HEIGHT * 3
-        rect_y = PS_Data_draw_params_y - rect_h - 1; // TEXT_MARGIN * 2 + FONT_HEIGHT * 1
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x - rect_w - 1;
+        rect_y = PS_Data_draw_params_y - rect_h - 1;
         rect_br = 0;
       }
     }
@@ -660,13 +652,12 @@ class PS_Data {
     // Sets the color used to draw lines and borders around shapes.
     fill(C_PS_DATA_RECT_TEXT);
     stroke(C_PS_DATA_RECT_TEXT);
-    cnt = 0;
     final int str_x = rect_x + TEXT_MARGIN;
     final int str_y = rect_y + TEXT_MARGIN - 1;
+    int cnt = 0;
     for( String string:strings)
     {
-      text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt));
-      cnt ++;
+      text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt++));
     }
   } // End of draw_params()
   
