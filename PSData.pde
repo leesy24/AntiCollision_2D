@@ -66,6 +66,7 @@ PS_Data PS_Data_handle;
 byte[][] PS_Data_buf; 
 
 static boolean[] PS_Data_draw_params_enabled;
+static boolean PS_Data_draw_points_all_enabled = false;
 static int PS_Data_draw_params_timer;
 static int PS_Data_draw_params_x;
 static int PS_Data_draw_params_y;
@@ -295,7 +296,7 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-      if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
       return true;
     }
     else {
@@ -842,20 +843,26 @@ class PS_Data {
         point_x_curr += DRAW_OFFSET_X[instance];
         point_y_curr += DRAW_OFFSET_Y[instance];
 
-        if (Fault_Region_point_is_contains(instance, int(cx), int(cy))
-            ||
-            Alert_Region_point_is_contains(instance, int(cx), int(cy)))
+        if (Fault_Region_point_is_contains(instance, int(cx), int(cy)))
         {
-          ROI_Data_handle.add_point(instance, int(cx), int(cy), point_x_curr, point_y_curr);
+          ROI_Data_handle.add_point(instance, 0, int(cx), int(cy), point_x_curr, point_y_curr);
           point_is_contains_curr = true;
-          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):x="+int(cx)+",y="+int(cy));
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):0:x="+int(cx)+",y="+int(cy));
+        }
+        else if (Alert_Region_point_is_contains(instance, int(cx), int(cy)))
+        {
+          ROI_Data_handle.add_point(instance, 1, int(cx), int(cy), point_x_curr, point_y_curr);
+          point_is_contains_curr = true;
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):1:x="+int(cx)+",y="+int(cy));
         }
         else
         {
           point_is_contains_curr = false;
         }
 
-        if (point_is_contains_curr)
+        if (point_is_contains_curr
+            ||
+            PS_Data_draw_points_all_enabled)
         {
           // Check pulse width exist
           if (data_content[instance] != 4)
@@ -933,11 +940,15 @@ class PS_Data {
         if (point_x_prev != MIN_INT && point_y_prev != MIN_INT)
         {
           //print(j + ":" + point_pw_prev + "," + point_pw_curr + " ");
-          if (point_is_contains_prev)
+          if (point_is_contains_prev
+              ||
+              PS_Data_draw_points_all_enabled)
           {
             if (PS_DATA_DRAW_POINTS_WITH_LINE
                 &&
-                point_is_contains_curr)
+                ( point_is_contains_curr
+                  ||
+                  PS_Data_draw_points_all_enabled))
             {
               fill(line_color);
               stroke(line_color);
@@ -958,7 +969,9 @@ class PS_Data {
         }
 
         // And than, Draw current point if possible.
-        if (point_is_contains_curr)
+        if (point_is_contains_curr
+            ||
+            PS_Data_draw_points_all_enabled)
         {
           fill(point_color_curr);
           stroke(point_color_curr);

@@ -1,5 +1,5 @@
-final static boolean PRINT_ROI_DATA_ALL_DBG = true; 
-//final static boolean PRINT_ROI_DATA_ALL_DBG = false;
+//final static boolean PRINT_ROI_DATA_ALL_DBG = true; 
+final static boolean PRINT_ROI_DATA_ALL_DBG = false;
 final static boolean PRINT_ROI_DATA_ALL_ERR = true; 
 //final static boolean PRINT_ROI_DATA_ALL_ERR = false;
 
@@ -65,8 +65,8 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():");
   }
 
-  void add_point(int instance, int mi_x, int mi_y, int scr_x, int scr_y)
+  void add_point(int instance, int region, int mi_x, int mi_y, int scr_x, int scr_y)
   {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_LOAD_DBG) println("ROI_Data:add_points("+instance+"):mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_LOAD_DBG) println("ROI_Data:add_points("+instance+"):"+"region="+region+",mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
   }
 }

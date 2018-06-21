@@ -42,8 +42,7 @@ void keyPressed()
     } 
     else if(keyCode == KeyEvent.VK_F8)
     {
-      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-        PS_Data_draw_params_enabled[i] = !PS_Data_draw_params_enabled[i];
+      PS_Data_draw_points_all_enabled = !PS_Data_draw_points_all_enabled;
     } 
     else if(keyCode == KeyEvent.VK_F7)
     {
