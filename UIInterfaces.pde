@@ -164,7 +164,7 @@ void UI_Interfaces_setup()
 
   Textfield tf_param1, tf_param2, tf_param3;
   if(PS_Interface[0] == PS_Interface_FILE) {
-    str = FILE_name;
+    str = FILE_name[0];
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -548,7 +548,7 @@ void UI_Interfaces_mouseReleased()
   if(PS_Interface[0] == PS_Interface_FILE) {
     tf_param = (Textfield)cp5.get("UI_Interfaces_filename");
     if( tf_param != null && tf_param.isFocus() == false) {
-      str = FILE_name;
+      str = FILE_name[0];
       tf_param.setText(str);
     }
   }
@@ -654,8 +654,8 @@ void UI_Interfaces_filename(String theText)
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
 
-  if(theText.equals(FILE_name) != true) {
-    FILE_name = theText;
+  if(theText.equals(FILE_name[0]) != true) {
+    FILE_name[0] = theText;
     Config_save();
     UI_Interfaces_changed = true;
   }

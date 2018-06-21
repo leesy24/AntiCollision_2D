@@ -58,7 +58,7 @@ void Config_settings()
         DRAW_OFFSET_Y[i] = variable.getInt("Value");
       }
       else if (name.equals("FILE_name")) {
-        FILE_name = variable.getString("Value");
+        FILE_name[i] = variable.getString("Value");
       }
       else if (name.equals("UART_port_name")) {
         UART_port_name = variable.getString("Value");
@@ -156,7 +156,7 @@ void Config_create()
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "FILE_name");
-    variable.setString("Value", FILE_name);
+    variable.setString("Value", FILE_name[i]);
     variable.setString("Comment", "File name of PS Interface File.");
 
     variable = CONFIG_table.addRow();
@@ -269,8 +269,8 @@ void Config_save()
       }
       else if(name.equals("FILE_name")) {
         value_string = variable.getString("Value");
-        if(value_string.equals(FILE_name) != true) {
-          variable.setString("Value", FILE_name);
+        if(value_string.equals(FILE_name[i]) != true) {
+          variable.setString("Value", FILE_name[i]);
           changed = true;
         }
       }

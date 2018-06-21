@@ -54,6 +54,8 @@ final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
 int[] PS_Interface;
 String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
+String[] FILE_name;
+
 int UDP_local_port = 1025;
 String[] UDP_remote_ip;
 int[] UDP_remote_port;
@@ -79,6 +81,12 @@ void PS_Data_settings() {
   if (PS_Interface == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Interface=null");
+    return;
+  }
+  FILE_name = new String[PS_DATA_INSTANCE_MAX];
+  if (FILE_name == null)
+  {
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():FILE_name=null");
     return;
   }
   UDP_remote_ip = new String[PS_DATA_INSTANCE_MAX];
@@ -109,6 +117,7 @@ void PS_Data_settings() {
   for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
   {
     PS_Interface[i] = PS_Interface_FILE;
+    FILE_name[i] = "";
     UDP_remote_ip[i] = "10.0.8.86";
     UDP_remote_port[i] = 1024;
     SN_serial_number[i] = 886;
@@ -158,7 +167,7 @@ void PS_Data_setup() {
   {
     if(PS_Interface[i] == PS_Interface_FILE) {
       Interfaces_File_setup();
-      PS_Data_handle.file_name[i] = FILE_name;
+      PS_Data_handle.file_name[i] = FILE_name[i];
     }
     else if(PS_Interface[i] == PS_Interface_UART) {
       Interfaces_UART_setup();
@@ -248,8 +257,8 @@ class PS_Data {
     //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println(""PS_Data:load("+instance+"):PS_Data_buf["+instance+"]="+PS_Data_buf[instance]);
 
     if(PS_Interface[instance] == PS_Interface_FILE) {
-      if(Interfaces_File_load() != true) {
-        interfaces_err_str = Interfaces_File_get_error();
+      if(Interfaces_File_load(instance) != true) {
+        interfaces_err_str = Interfaces_File_get_error(instance);
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
