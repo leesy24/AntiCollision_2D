@@ -18,10 +18,25 @@ final static boolean PRINT_ROI_DATA_CONSTRUCTOR_DBG = false;
 //final static boolean PRINT_ROI_DATA_CONSTRUCTOR_ERR = true; 
 final static boolean PRINT_ROI_DATA_CONSTRUCTOR_ERR = false;
 
-//final static boolean PRINT_ROI_DATA_LOAD_DBG = true; 
-final static boolean PRINT_ROI_DATA_LOAD_DBG = false;
-//final static boolean PRINT_ROI_DATA_LOAD_ERR = true; 
-final static boolean PRINT_ROI_DATA_LOAD_ERR = false;
+//final static boolean PRINT_ROI_DATA_CLEAR_POINTS_DBG = true; 
+final static boolean PRINT_ROI_DATA_CLEAR_POINTS_DBG = false;
+//final static boolean PRINT_ROI_DATA_CLEAR_POINTS_ERR = true; 
+final static boolean PRINT_ROI_DATA_CLEAR_POINTS_ERR = false;
+
+//final static boolean PRINT_ROI_DATA_ADD_POINT_DBG = true; 
+final static boolean PRINT_ROI_DATA_ADD_POINT_DBG = false;
+//final static boolean PRINT_ROI_DATA_ADD_POINT_ERR = true; 
+final static boolean PRINT_ROI_DATA_ADD_POINT_ERR = false;
+
+//final static boolean PRINT_ROI_DATA_GROUPING_POINTS_DBG = true; 
+final static boolean PRINT_ROI_DATA_GROUPING_POINTS_DBG = false;
+//final static boolean PRINT_ROI_DATA_GROUPING_POINTS_ERR = true; 
+final static boolean PRINT_ROI_DATA_GROUPING_POINTS_ERR = false;
+
+//final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = true; 
+final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = false;
+//final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = true; 
+final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = false;
 
 //final static boolean PRINT_ROI_DATA_PARSE_DBG = true; 
 final static boolean PRINT_ROI_DATA_PARSE_DBG = false;
@@ -59,14 +74,58 @@ void ROI_Data_setup() {
 
 // A ROI_Data class
 class ROI_Data {
+  LinkedList<ROI_Points_Data>[] list = new LinkedList[PS_INSTANCE_MAX];
+
   // Create the ROI_Data
-  ROI_Data()
-  {
+  ROI_Data() {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():");
+    for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+    {
+      list[i] = new LinkedList<ROI_Points_Data>();
+    }
   }
 
-  void add_point(int instance, int region, int mi_x, int mi_y, int scr_x, int scr_y)
-  {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_LOAD_DBG) println("ROI_Data:add_points("+instance+"):"+"region="+region+",mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
+  void clear_points(int instance) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_points("+instance+"):");
+    int i = 0;
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_points("+instance+"):"+"list["+instance+"]:"+"points length="+list[instance].size());
+    list[instance].clear();
+  }
+
+  void add_point(int instance, int region, int mi_x, int mi_y, int scr_x, int scr_y) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):"+"region="+region+",mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
+    list[instance].add(new ROI_Points_Data(region, mi_x, mi_y, scr_x, scr_y));
+  }
+
+  void grouping_points(int instance) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GROUPING_POINTS_DBG) println("ROI_Data:print_points("+instance+"):");
+    int i = 0;
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GROUPING_POINTS_DBG) println("ROI_Data:print_points("+instance+"):"+"list["+instance+"]:"+"points length="+list[instance].size());
+    for (ROI_Points_Data point:list[instance]) {
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GROUPING_POINTS_DBG) println("ROI_Data:print_points("+instance+"):"+"list["+instance+"]:"+"point["+i+++"]:"+"region="+point.region+",mi_x="+point.mi_x+",mi_y="+point.mi_y+",scr_x="+point.scr_x+",scr_y="+point.scr_y);
+    }
+  }
+
+  void print_points(int instance) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_PRINT_POINTS_DBG) println("ROI_Data:print_points("+instance+"):");
+    int i = 0;
+    println("ROI_Data:print_points("+instance+"):"+"list["+instance+"]:"+"points length="+list[instance].size());
+    for (ROI_Points_Data point:list[instance]) {
+      println("ROI_Data:print_points("+instance+"):"+"list["+instance+"]:"+"point["+i+++"]:"+"region="+point.region+",mi_x="+point.mi_x+",mi_y="+point.mi_y+",scr_x="+point.scr_x+",scr_y="+point.scr_y);
+    }
+  }
+}
+
+class ROI_Points_Data {
+  public int region;
+  public int mi_x, mi_y;
+  public int scr_x, scr_y;
+  
+  ROI_Points_Data(int region, int mi_x, int mi_y, int scr_x, int scr_y) {
+    this.region = region;
+    this.mi_x = mi_x;
+    this.mi_y = mi_y;
+    this.scr_x = scr_x;
+    this.scr_y = scr_y;
   }
 }

@@ -758,6 +758,8 @@ class PS_Data {
       colorMode(HSB, point_line_color_HSB_max_const);
     }
 
+    ROI_Data_handle.clear_points(instance);
+
     for (int j = 0; j < number_of_points[instance]; j++)
     {
       // Get Distance
@@ -1009,6 +1011,8 @@ class PS_Data {
       }
 */
     } // End of for (int j = 0; j < number_of_points[instance]; j++)
+
+    ROI_Data_handle.grouping_points(instance);
 
     // Check pulse width exist than color mode back to RGB.
     if (data_content[instance] != 4)
