@@ -572,6 +572,7 @@ class PS_Data {
     strings.add("Data content:" + data_content[instance]);
     strings.add("Number of points:" + number_of_points[instance]);
 
+    textSize(FONT_HEIGHT);
     // Get max string width
     int witdh_max = 0;
     for (String string:strings)
@@ -657,7 +658,6 @@ class PS_Data {
     // Sets the color used to draw lines and borders around shapes.
     fill(C_PS_DATA_RECT_TEXT);
     stroke(C_PS_DATA_RECT_TEXT);
-    textSize(FONT_HEIGHT);
     textAlign(LEFT, BASELINE);
     final int str_x = rect_x + TEXT_MARGIN;
     final int str_y = rect_y + TEXT_MARGIN - 1;
