@@ -193,6 +193,7 @@ class PS_Data {
   int[] time_stamp = new int[PS_DATA_INSTANCE_MAX];
   float[] scan_angle_start = new float[PS_DATA_INSTANCE_MAX];
   float[] scan_angle_size = new float[PS_DATA_INSTANCE_MAX];
+  float[] scan_angle_step = new float[PS_DATA_INSTANCE_MAX];
   int[] number_of_echoes = new int[PS_DATA_INSTANCE_MAX];
   int[] incremental_count = new int[PS_DATA_INSTANCE_MAX];
   float[] system_temperature = new float[PS_DATA_INSTANCE_MAX];
@@ -221,6 +222,7 @@ class PS_Data {
       time_stamp[i] = 0;
       scan_angle_start[i] = 0;
       scan_angle_size[i] = 0;
+      scan_angle_step[i] = 0;
       number_of_echoes[i] = 0;
       incremental_count[i] = 0;
       system_temperature[i] = 0;
@@ -320,7 +322,7 @@ class PS_Data {
 
     // Get function code.
     func = get_str_bytes(PS_Data_buf[instance], i, 4);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",func=" + func);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",func=" + func);
     // Check function code is "GSCN".
     if (func.equals("GSCN") != true) {
       parse_err_str[instance] = "Error: Function code is invalid! " + func;
@@ -334,7 +336,7 @@ class PS_Data {
     // Get Data buffer length.
     // : size of the following Data buffer record, without the CRC checksum
     len = get_int32_bytes(PS_Data_buf[instance], i);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",length=" + len);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",length=" + len);
     // Check Data buffer record length with binary Data buffer length
     if (PS_Data_buf[instance].length < (len + 12)) {
       parse_err_str[instance] = "Error: PS_Data buf length is invalid!:" + PS_Data_buf[instance].length + "," + len;
@@ -347,7 +349,7 @@ class PS_Data {
 
     // Get CRC and Calculate CRC
     crc = get_int32_bytes(PS_Data_buf[instance], 4 + 4 + len);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + (4 + 4 + len) + ",crc=" + crc);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + (4 + 4 + len) + ",crc=" + crc);
     crc_c = get_crc32(PS_Data_buf[instance], 0, 4 + 4 + len);
     // Check CRC ok?
     if(crc != crc_c) {
@@ -361,7 +363,7 @@ class PS_Data {
     // Get number of parameters.
     // : the number of following parameters. Becomes 0 if no scan is available.
     n_params = get_int32_bytes(PS_Data_buf[instance], i);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number of parameters=" + n_params);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number of parameters=" + n_params);
     if (n_params == 0) {
       parse_err_str[instance] = "Error: No scan data is available! n_params = 0";
       draw_error(instance, parse_err_str[instance]);
@@ -374,7 +376,7 @@ class PS_Data {
     // Get Number of points
     // : the number of measurement points in the scan.
     t_n_points = get_int32_bytes(PS_Data_buf[instance], 4 + 4 + 4 + n_params * 4);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + (4 + 4 + 4 + n_params * 4) + ",number of points=" + t_n_points);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + (4 + 4 + 4 + n_params * 4) + ",number of points=" + t_n_points);
     // Check Number of points
     if (t_n_points > PS_DATA_POINTS_MAX || t_n_points <= 0) {
       parse_err_str[instance] = "Error: Number of points invalid! number_of_points[instance] is " + t_n_points;
@@ -389,7 +391,7 @@ class PS_Data {
       // Get scan number(index).
       // : the number of the scan (starting with 1), should be the same as in the command request.
       scan_number[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan number=" + scan_number[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan number=" + scan_number[instance]);
       i = i + 4;
     }
 
@@ -397,14 +399,14 @@ class PS_Data {
       // Get time stamp.
       // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
       time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",time stamp=" + time_stamp[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",time stamp=" + time_stamp[instance]);
       i = i + 4;
 /*
       // Check time_stamp is changed
       if (PS_Data_old_time_stamp == time_stamp[instance]) {
         parse_err_str[instance] = "Scan Data buffer is not changed!:" + time_stamp[instance];
         draw_error(instance, parse_err_str[instance]);
-        if (PRINT_PS_DATA_PARSE_DBG) println("Scan Data buffer is not changed!:" + time_stamp[instance]);
+        if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("Scan Data buffer is not changed!:" + time_stamp[instance]);
         //parse_err_cnt[instance] ++;
         //return false;
       }
@@ -416,15 +418,18 @@ class PS_Data {
       // Get Scan start direction.
       // : direction to the first measured point, given in the user angle system (typical unit is 0,001 deg)
       scan_angle_start[instance] = get_int32_bytes(PS_Data_buf[instance], i) / 1000.0;
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan start angle=" + scan_angle_start[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan start angle=" + scan_angle_start[instance]);
       i = i + 4;
     }
   
     if (n_params >= 4) {
       // Get Scan angle
       // : the scan angle in the user angle system. Typically 90.000.
-      scan_angle_size[instance] = get_int32_bytes(PS_Data_buf[instance], i) / 1000.0;
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan range angle=" + scan_angle_size[instance]);
+      int val = get_int32_bytes(PS_Data_buf[instance], i);
+      scan_angle_size[instance] = val / 1000.0;
+      scan_angle_step[instance] = float(val) / float(number_of_points[instance]) / 1000.0;
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan range angle=" + scan_angle_size[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",scan step angle=" + scan_angle_step[instance]);
       i = i + 4;
     }
   
@@ -432,7 +437,7 @@ class PS_Data {
       // Get Number of echoes per point
       // : the number of echoes measured for each direction.
       number_of_echoes[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number of echos=" + number_of_echoes[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number of echos=" + number_of_echoes[instance]);
       i = i + 4;
     }
   
@@ -440,7 +445,7 @@ class PS_Data {
       // Get Incremental count
       // : a direction provided by an external incremental encoder.
       incremental_count[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",encoder value=" + incremental_count[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",encoder value=" + incremental_count[instance]);
       i = i + 4;
     }
   
@@ -449,7 +454,7 @@ class PS_Data {
       // : the system_temperature as measured inside of the scanner.
       // : This information can be used to control an optional air condition.
       system_temperature[instance] = get_int32_bytes(PS_Data_buf[instance], i) / 10f;
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",system temperature=" + system_temperature[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",system temperature=" + system_temperature[instance]);
       i = i + 4;
     }
   
@@ -457,7 +462,7 @@ class PS_Data {
       // Get System status
       // : contains a bit field with about the status of peripheral devices.
       system_status[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",system status=" + system_status[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",system status=" + system_status[instance]);
       i = i + 4;
     }
   
@@ -469,7 +474,7 @@ class PS_Data {
       //    o 8 Bytes: distances in 1/10 mm and pulse widths in picoseconds
       //    o Any other value than 4 be read as "8 Bytes".
       data_content[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",data_content=" + data_content[instance]);
+      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",data_content=" + data_content[instance]);
       i = i + 4;
     }
   
@@ -484,7 +489,7 @@ class PS_Data {
     // Get Number of points
     // : the number of measurement points in the scan.
     number_of_points[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number_of_points[instance]=" + number_of_points[instance]);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",number_of_points[instance]=" + number_of_points[instance]);
     if (number_of_points[instance] > PS_DATA_POINTS_MAX || number_of_points[instance] <= 0) {
       parse_err_str[instance] = "Error: Number of points invalid! number_of_points is " + number_of_points[instance];
       draw_error(instance, parse_err_str[instance]);
@@ -518,7 +523,7 @@ class PS_Data {
     // Get CRC
     // : Checksum
     crc = get_int32_bytes(PS_Data_buf[instance], i);
-    if (PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",crc=" + crc);
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",crc=" + crc);
     i = i + 4;
 */  
 
