@@ -123,6 +123,8 @@ void Grid_draw_rotate_315(int instance)
   // Sets the color used to draw text and borders around shapes.
   fill(C_GRID_TEXT);
   stroke(C_GRID_TEXT);
+  textSize(FONT_HEIGHT);
+  textAlign(LEFT, BASELINE);
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(iy - const_str_offset_iy) / 100.0;

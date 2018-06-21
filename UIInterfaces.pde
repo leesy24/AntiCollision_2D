@@ -463,6 +463,8 @@ void UI_Interfaces_draw()
   fill(C_UI_INTERFACES_TEXT);
   //stroke(#FF0000);
   //fill(#ff0000);
+  textSize(FONT_HEIGHT);
+  textAlign(LEFT, BASELINE);
   
   string = "Interface";
   text(string, SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - int(textWidth(string)), TEXT_MARGIN + FONT_HEIGHT * 2);

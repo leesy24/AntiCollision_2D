@@ -74,6 +74,8 @@ void bubbleinfo_draw()
     // Sets the color used to draw text and borders around shapes.
     fill(C_BUBBLEINFO_TEXT);
     stroke(C_BUBBLEINFO_TEXT);
+    textSize(FONT_HEIGHT);
+    textAlign(LEFT, BASELINE);
     int i = 0;
     x += TEXT_MARGIN;
     y +=  TEXT_MARGIN + FONT_HEIGHT - 1;

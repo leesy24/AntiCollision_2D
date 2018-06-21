@@ -121,6 +121,8 @@ void Grid_draw_rotate_225(int instance)
   // Sets the color used to draw text and borders around shapes.
   fill(C_GRID_TEXT);
   stroke(C_GRID_TEXT);
+  textSize(FONT_HEIGHT);
+  textAlign(LEFT, BASELINE);
   y = const_str_base_ix_y;
   //if (y < const_screen_y_start) y = const_screen_y_start;
   //if (y > const_screen_y_end) y = const_screen_y_end;

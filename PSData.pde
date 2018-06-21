@@ -657,6 +657,8 @@ class PS_Data {
     // Sets the color used to draw lines and borders around shapes.
     fill(C_PS_DATA_RECT_TEXT);
     stroke(C_PS_DATA_RECT_TEXT);
+    textSize(FONT_HEIGHT);
+    textAlign(LEFT, BASELINE);
     final int str_x = rect_x + TEXT_MARGIN;
     final int str_y = rect_y + TEXT_MARGIN - 1;
     int cnt = 0;
@@ -1025,9 +1027,11 @@ class PS_Data {
     fill(C_PS_DATA_ERR_TEXT);
     stroke(C_PS_DATA_ERR_TEXT);
     textSize(FONT_HEIGHT*2);
+    textAlign(CENTER, CENTER);
     text( message,
-          Grid_scr_x_min[instance] + (Grid_scr_x_max[instance] - Grid_scr_x_min[instance]) / 2 - int(textWidth(message) / 2.0),
-          Grid_scr_y_min[instance] + (Grid_scr_y_max[instance] - Grid_scr_y_min[instance]) / 2 - FONT_HEIGHT);
-    textSize(FONT_HEIGHT);
+          Grid_scr_x_min[instance],
+          Grid_scr_y_min[instance],
+          Grid_scr_x_max[instance],
+          Grid_scr_y_max[instance]);
   }
 }

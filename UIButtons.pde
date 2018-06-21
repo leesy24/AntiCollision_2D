@@ -150,6 +150,8 @@ void UI_Buttons_draw()
   // Sets the color and weight used to draw lines and borders around shapes.
   stroke(C_UI_BUTTONS_BOX);
   strokeWeight(W_UI_BUTTONS_BOX);
+  textSize(FONT_HEIGHT);
+  textAlign(LEFT, BASELINE);
 
   if (buttons_zoom_minus_over) {
     fill( C_UI_BUTTONS_HIGHLIGHT);
