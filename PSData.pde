@@ -1008,7 +1008,7 @@ class PS_Data {
 */
     } // End of for (int j = 0; j < number_of_points[instance]; j++)
 
-    ROI_Data_handle.grouping_points(instance);
+    ROI_Data_handle.detect_objects(instance);
 
     // Check pulse width exist than color mode back to RGB.
     if (data_content[instance] != 4)

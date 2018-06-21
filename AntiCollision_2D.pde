@@ -131,6 +131,7 @@ void draw() {
       }
     }
     PS_Data_handle.draw_points(i);
+    ROI_Data_handle.draw_objects(i);
     PS_Data_handle.draw_params(i);
   }
 
