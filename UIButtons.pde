@@ -81,6 +81,7 @@ static boolean UI_Buttons_enabled = false;
 
 void UI_Buttons_setup()
 {
+  textSize(FONT_HEIGHT);
   buttons_zoom_minus_width = FONT_HEIGHT * 2;
   buttons_zoom_minus_height = FONT_HEIGHT * 2;
   buttons_zoom_minus_x = TEXT_MARGIN + FONT_HEIGHT * 3;

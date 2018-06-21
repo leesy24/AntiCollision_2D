@@ -72,6 +72,7 @@ void UI_Interfaces_setup()
     UI_Interfaces_reset();
   }
 
+  textSize(FONT_HEIGHT);
   w = 0;
   for(String s: UI_Interfaces_str_array) {
     w = int(max(w, int(textWidth(s))));
@@ -486,6 +487,7 @@ void UI_Interfaces_mouseReleased()
       int x, y, w, h;
       int c;
   
+      textSize(FONT_HEIGHT);
       w = 0;
       for(String s: UI_Interfaces_str_array) {
         w = int(max(w, int(textWidth(s))));

@@ -40,6 +40,7 @@ void bubbleinfo_draw()
     strings[5] = "PW:" + BUBBLEINFO_PULSE_WIDTH;
 
     // Get max string width
+    textSize(FONT_HEIGHT);
     w = 0;
     for( String string:strings)
     {
@@ -74,7 +75,6 @@ void bubbleinfo_draw()
     // Sets the color used to draw text and borders around shapes.
     fill(C_BUBBLEINFO_TEXT);
     stroke(C_BUBBLEINFO_TEXT);
-    textSize(FONT_HEIGHT);
     textAlign(LEFT, BASELINE);
     int i = 0;
     x += TEXT_MARGIN;

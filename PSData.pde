@@ -581,8 +581,8 @@ class PS_Data {
     strings.add("Data content:" + data_content[instance]);
     strings.add("Number of points:" + number_of_points[instance]);
 
-    textSize(FONT_HEIGHT);
     // Get max string width
+    textSize(FONT_HEIGHT);
     int witdh_max = 0;
     for (String string:strings)
     {
