@@ -116,6 +116,8 @@ void Const_settings()
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
       ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
+      ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
     else if(name.equals("C_BG_IMAGE_LINE"))
       C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BG_IMAGE_LINE"))
@@ -348,6 +350,11 @@ void Const_create()
   variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
   variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
   variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
+  variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_BG_IMAGE_LINE");

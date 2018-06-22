@@ -765,6 +765,7 @@ class PS_Data {
       colorMode(HSB, point_line_color_HSB_max_const);
     }
 
+    ROI_Data_handle.set_time_stamp(instance, time_stamp[instance]);
     ROI_Data_handle.clear_points(instance);
 
     for (int j = 0; j < number_of_points[instance]; j++)
