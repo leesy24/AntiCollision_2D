@@ -219,6 +219,7 @@ class PS_Data {
   String[] remote_ip = new String[PS_DATA_INSTANCE_MAX];
   int[] remote_port = new int[PS_DATA_INSTANCE_MAX];
   int[] serial_number = new int[PS_DATA_INSTANCE_MAX];
+  boolean[] time_stamp_wraped = new boolean[PS_DATA_INSTANCE_MAX];
   // Test time_stamp wrap-around.
   //int[] time_stamp_offset = new int[PS_DATA_INSTANCE_MAX];
   //long[] time_stamp_offset = new long[PS_DATA_INSTANCE_MAX];
@@ -249,6 +250,7 @@ class PS_Data {
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
+      time_stamp_wraped[i] = false;
       // Test time_stamp wrap-around.
       //time_stamp_offset[i] = -1;
       //time_stamp_last[i] = -1L;
@@ -334,7 +336,7 @@ class PS_Data {
     int n_params;
     int crc;
 
-    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("PS_Data:parse("+instance+"):");
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("PS_Data:parse("+instance+"):Enter");
 
     // Get function code.
     func = get_str_bytes(PS_Data_buf[instance], i, 4);
@@ -412,9 +414,19 @@ class PS_Data {
     }
 
     if (n_params >= 2) {
+      int time_stamp_new;
+      //long time_stamp_new;
       // Get time stamp.
       // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
-      time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
+      //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
+      time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
+      if (time_stamp_new < time_stamp[instance]) {
+        if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is wrap-around or PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+        // time_stamp is wrap-around or PS rebooted.
+        time_stamp_wraped[instance] = true;
+      }
+      time_stamp[instance] = time_stamp_new;
+
       //time_stamp[instance] = get_long32_bytes(PS_Data_buf[instance], i);
       // Test time_stamp wrap-around.
       /*
@@ -783,6 +795,10 @@ class PS_Data {
       colorMode(HSB, point_line_color_HSB_max_const);
     }
 
+    if (time_stamp_wraped[instance]) {
+      ROI_Data_handle.clear_objects(instance);
+      time_stamp_wraped[instance] = false;
+    }
     ROI_Data_handle.set_time_stamp(instance, time_stamp[instance]);
     ROI_Data_handle.clear_points(instance);
 
