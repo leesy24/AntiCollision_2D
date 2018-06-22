@@ -136,6 +136,6 @@ void draw() {
   }
 
   UI_Buttons_draw();
-  bubbleinfo_draw();
+  Bubble_Info_draw();
   UI_Interfaces_draw();
 } 

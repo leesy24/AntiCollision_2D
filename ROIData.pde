@@ -80,8 +80,38 @@ static int ROI_OBJECT_TIME_LIMIT = 500; // unit is milli-second(ms)
 
 static ROI_Data ROI_Data_handle = null;
 
+static boolean[] ROI_Data_mouse_over;
+static boolean[] ROI_Data_mouse_pressed;
+static boolean[] ROI_Data_draw_info_enabled;
+static int ROI_Data_draw_info_timer;
+static int ROI_Data_draw_info_x;
+static int ROI_Data_draw_info_y;
+
 void ROI_Data_settings() {
-  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():");
+  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():Enter");
+
+  ROI_Data_draw_info_enabled = new boolean[PS_INSTANCE_MAX];
+  if (ROI_Data_draw_info_enabled == null)
+  {
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_draw_info_enabled=null");
+    return;
+  }
+
+  ROI_Data_mouse_over = new boolean[PS_INSTANCE_MAX];
+  if (PS_Image == null)
+  {
+    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_mouse_over=null");
+    return;
+  }
+
+  ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
+  if (PS_Image == null)
+  {
+    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_mouse_pressed=null");
+    return;
+  }
+
+  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():Exit");
 }
 
 void ROI_Data_setup() {
@@ -92,6 +122,70 @@ void ROI_Data_setup() {
   {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETUP_ERR) println("ROI_Data_setup():ROI_Data_handle=null");
     return;
+  }
+}
+
+void ROI_Data_mouse_pressed()
+{
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    ROI_Data_mouse_pressed[i] = false;
+    if (ROI_Data_mouse_over[i])
+    {
+      ROI_Data_mouse_pressed[i] = true;
+      ROI_Data_draw_info_x = mouseX;
+      ROI_Data_draw_info_y = mouseY;
+      ROI_Data_draw_info_enabled[i] = !ROI_Data_draw_info_enabled[i];
+      if (ROI_Data_draw_info_enabled[i]) ROI_Data_draw_info_timer = millis();
+    }
+    else
+    {
+      ROI_Data_draw_info_enabled[i] = false;
+    }
+  }
+}
+
+void ROI_Data_mouse_released()
+{
+}
+
+void ROI_Data_mouse_moved()
+{
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if( mouse_is_over(
+          Grid_zero_x[i] - PS_Image[i].width / 2,
+          Grid_zero_y[i] - PS_Image[i].height / 2,
+          PS_Image[i].width,
+          PS_Image[i].height) )
+    {
+      ROI_Data_mouse_over[i] = true;
+      if (ROI_Data_draw_info_enabled[i]) ROI_Data_draw_info_timer = millis();
+    }
+    else
+    {
+      ROI_Data_mouse_over[i] = false;
+    }
+  }
+}
+
+void ROI_Data_mouse_dragged()
+{
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if( mouse_is_over(
+          Grid_zero_x[i] - PS_Image[i].width / 2,
+          Grid_zero_y[i] - PS_Image[i].height / 2,
+          PS_Image[i].width,
+          PS_Image[i].height) )
+    {
+      ROI_Data_mouse_over[i] = true;
+      if (ROI_Data_draw_info_enabled[i]) ROI_Data_draw_info_timer = millis();
+    }
+    else
+    {
+      ROI_Data_mouse_over[i] = false;
+    }
   }
 }
 

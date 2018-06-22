@@ -3,10 +3,10 @@ final static boolean PRINT_PS_IMAGE_ALL_DBG = false;
 final static boolean PRINT_PS_IMAGE_ALL_ERR = true; 
 //final static boolean PRINT_PS_IMAGE_ALL_ERR = false; 
 
-//final static boolean PRINT_PS_IMAGE_SETUP_DBG = true; 
-final static boolean PRINT_PS_IMAGE_SETUP_DBG = false; 
-//final static boolean PRINT_PS_IMAGE_SETUP_ERR = true; 
-final static boolean PRINT_PS_IMAGE_SETUP_ERR = false; 
+//final static boolean PRINT_PS_IMAGE_SETTINGS_DBG = true; 
+final static boolean PRINT_PS_IMAGE_SETTINGS_DBG = false; 
+//final static boolean PRINT_PS_IMAGE_SETTINGS_ERR = true; 
+final static boolean PRINT_PS_IMAGE_SETTINGS_ERR = false; 
 
 PImage[] PS_Image;
 boolean[] PS_Image_mouse_over;
@@ -17,19 +17,19 @@ void PS_Image_settings()
   PS_Image = new PImage[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETTINGS_ERR) println("PS_Image_settings():PS_Image=null");
     return;
   }
   PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_over=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETTINGS_ERR) println("PS_Image_settings():PS_Image_mouse_over=null");
     return;
   }
   PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];
   if (PS_Image == null)
   {
-    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETUP_ERR) println("PS_Image_settings():PS_Image_mouse_pressed=null");
+    if (PRINT_PS_IMAGE_ALL_ERR || PRINT_PS_IMAGE_SETTINGS_ERR) println("PS_Image_settings():PS_Image_mouse_pressed=null");
     return;
   }
 

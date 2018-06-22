@@ -1,44 +1,49 @@
-static color C_BUBBLEINFO_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
-static color C_BUBBLEINFO_RECT_STROKE = #000000; // Black
-static color C_BUBBLEINFO_TEXT = #000000; // Black
+static boolean Bubble_Info_enabled = false;
+//final static boolean Bubble_Info_enabled = true;
 
-final int BUBBLEINFO_TIMEOUT = 2000; // 2 seconds
+static color C_BUBBLE_INFO_RECT_FILL = 0xC0F8F8F8; // White - 0x8 w/ Opaque 75%
+static color C_BUBBLE_INFO_RECT_STROKE = #000000; // Black
+static color C_BUBBLE_INFO_TEXT = #000000; // Black
 
-boolean BUBBLEINFO_AVAILABLE = false;
-boolean BUBBLEINFO_DISPLAY = false;
-int BUBBLEINFO_POINT;
-float BUBBLEINFO_DISTANCE;
-float BUBBLEINFO_COR_X;
-float BUBBLEINFO_COR_Y;
-float BUBBLEINFO_ANGLE;
-int BUBBLEINFO_PULSE_WIDTH;
-int BUBBLEINFO_TIMER = -BUBBLEINFO_TIMEOUT;
-int BUBBLEINFO_BOX_X, BUBBLEINFO_BOX_Y;
-final static int BUBBLEINFO_POINT_WH = 10;
+final int BUBBLE_INFO_TIMEOUT = 2000; // 2 seconds
 
-void bubbleinfo_draw()
+boolean BUBBLE_INFO_AVAILABLE = false;
+boolean BUBBLE_INFO_DISPLAY = false;
+int BUBBLE_INFO_POINT;
+float BUBBLE_INFO_DISTANCE;
+float BUBBLE_INFO_COR_X;
+float BUBBLE_INFO_COR_Y;
+float BUBBLE_INFO_ANGLE;
+int BUBBLE_INFO_PULSE_WIDTH;
+int BUBBLE_INFO_TIMER = -BUBBLE_INFO_TIMEOUT;
+int BUBBLE_INFO_BOX_X, BUBBLE_INFO_BOX_Y;
+final static int BUBBLE_INFO_POINT_WH = 10;
+
+void Bubble_Info_draw()
 {
+  if (!Bubble_Info_enabled) return;
+
   LinkedList<String> strings = new LinkedList<String>();
   int x, y, w, h, tl = 5, tr = 5, br = 0, bl = 5;
 
-  if (BUBBLEINFO_AVAILABLE || (millis() - BUBBLEINFO_TIMER) < BUBBLEINFO_TIMEOUT)
+  if (BUBBLE_INFO_AVAILABLE || (millis() - BUBBLE_INFO_TIMER) < BUBBLE_INFO_TIMEOUT)
   {
 
-    BUBBLEINFO_DISPLAY = true;
-    if (BUBBLEINFO_AVAILABLE)
+    BUBBLE_INFO_DISPLAY = true;
+    if (BUBBLE_INFO_AVAILABLE)
     {
-      BUBBLEINFO_TIMER = millis();
-      BUBBLEINFO_AVAILABLE = false;
-      //BUBBLEINFO_BOX_X = mouseX;
-      //BUBBLEINFO_BOX_Y = mouseY;
+      BUBBLE_INFO_TIMER = millis();
+      BUBBLE_INFO_AVAILABLE = false;
+      //BUBBLE_INFO_BOX_X = mouseX;
+      //BUBBLE_INFO_BOX_Y = mouseY;
     }
 
-    strings.add("Point:" + BUBBLEINFO_POINT);
-    strings.add("Angle:" + BUBBLEINFO_ANGLE + "°");
-    strings.add("Distance:" + BUBBLEINFO_DISTANCE + "m");
-    strings.add("Coord. X:" + BUBBLEINFO_COR_X + "m");
-    strings.add("Coord. Y:" + BUBBLEINFO_COR_Y + "m");
-    strings.add("Pulse width:" + BUBBLEINFO_PULSE_WIDTH);
+    strings.add("Point:" + BUBBLE_INFO_POINT);
+    strings.add("Angle:" + BUBBLE_INFO_ANGLE + "°");
+    strings.add("Distance:" + BUBBLE_INFO_DISTANCE + "m");
+    strings.add("Coord. X:" + BUBBLE_INFO_COR_X + "m");
+    strings.add("Coord. Y:" + BUBBLE_INFO_COR_Y + "m");
+    strings.add("Pulse width:" + BUBBLE_INFO_PULSE_WIDTH);
 
     // Get max string width
     textSize(FONT_HEIGHT);
@@ -50,33 +55,33 @@ void bubbleinfo_draw()
     w += TEXT_MARGIN + TEXT_MARGIN;
 
     h = TEXT_MARGIN + FONT_HEIGHT * strings.size() + TEXT_MARGIN;
-    x = BUBBLEINFO_BOX_X - BUBBLEINFO_POINT_WH/2 - w;
-    y = BUBBLEINFO_BOX_Y - BUBBLEINFO_POINT_WH/2 - h;
+    x = BUBBLE_INFO_BOX_X - BUBBLE_INFO_POINT_WH/2 - w;
+    y = BUBBLE_INFO_BOX_Y - BUBBLE_INFO_POINT_WH/2 - h;
     if(x < 0 && y < 0) {
       br = 5;
       tl = 0;
-      x = BUBBLEINFO_BOX_X + BUBBLEINFO_POINT_WH/2;
-      y = BUBBLEINFO_BOX_Y + BUBBLEINFO_POINT_WH/2;
+      x = BUBBLE_INFO_BOX_X + BUBBLE_INFO_POINT_WH/2;
+      y = BUBBLE_INFO_BOX_Y + BUBBLE_INFO_POINT_WH/2;
     }
     else if(x < 0) {
       br = 5;
       bl = 0;
-      x = BUBBLEINFO_BOX_X + BUBBLEINFO_POINT_WH/2;
+      x = BUBBLE_INFO_BOX_X + BUBBLE_INFO_POINT_WH/2;
     }
     else if(y < 0) {
       br = 5;
       tr = 0;
-      y = BUBBLEINFO_BOX_Y + BUBBLEINFO_POINT_WH/2;
+      y = BUBBLE_INFO_BOX_Y + BUBBLE_INFO_POINT_WH/2;
     }
     
     // Sets the color used to draw box and borders around shapes.
-    fill(C_BUBBLEINFO_RECT_FILL);
-    stroke(C_BUBBLEINFO_RECT_STROKE);
+    fill(C_BUBBLE_INFO_RECT_FILL);
+    stroke(C_BUBBLE_INFO_RECT_STROKE);
     strokeWeight(1);
     rect(x, y, w, h, tl, tr, br, bl);
     // Sets the color used to draw text and borders around shapes.
-    fill(C_BUBBLEINFO_TEXT);
-    stroke(C_BUBBLEINFO_TEXT);
+    fill(C_BUBBLE_INFO_TEXT);
+    stroke(C_BUBBLE_INFO_TEXT);
     textAlign(LEFT, BASELINE);
     int i = 0;
     x += TEXT_MARGIN;
@@ -89,6 +94,6 @@ void bubbleinfo_draw()
   }
   else
   {
-    BUBBLEINFO_DISPLAY = false;
+    BUBBLE_INFO_DISPLAY = false;
   }
 }

@@ -44,12 +44,12 @@ void Const_settings()
       C_BG = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_PS_DATA_ERR_TEXT"))
       C_PS_DATA_ERR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BUBBLEINFO_RECT_FILL"))
-      C_BUBBLEINFO_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BUBBLEINFO_RECT_STROKE"))
-      C_BUBBLEINFO_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_BUBBLEINFO_TEXT"))
-      C_BUBBLEINFO_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_BUBBLE_INFO_RECT_FILL"))
+      C_BUBBLE_INFO_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_BUBBLE_INFO_RECT_STROKE"))
+      C_BUBBLE_INFO_RECT_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_BUBBLE_INFO_TEXT"))
+      C_BUBBLE_INFO_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_BUTTONS_NORMAL"))
       C_UI_BUTTONS_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_BUTTONS_HIGHLIGHT"))
@@ -172,18 +172,18 @@ void Const_create()
   variable.setString("Comment", "Error text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BUBBLEINFO_RECT_FILL");
-  variable.setString("Value", String.format("%08X", C_BUBBLEINFO_RECT_FILL));
+  variable.setString("Name", "C_BUBBLE_INFO_RECT_FILL");
+  variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_RECT_FILL));
   variable.setString("Comment", "Bubble info box fill color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BUBBLEINFO_RECT_STROKE");
-  variable.setString("Value", String.format("%08X", C_BUBBLEINFO_RECT_STROKE));
+  variable.setString("Name", "C_BUBBLE_INFO_RECT_STROKE");
+  variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_RECT_STROKE));
   variable.setString("Comment", "Bubble info box border color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_BUBBLEINFO_TEXT");
-  variable.setString("Value", String.format("%08X", C_BUBBLEINFO_TEXT));
+  variable.setString("Name", "C_BUBBLE_INFO_TEXT");
+  variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_TEXT));
   variable.setString("Comment", "Bubble infor box text color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();

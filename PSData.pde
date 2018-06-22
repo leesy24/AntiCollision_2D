@@ -953,30 +953,32 @@ class PS_Data {
             line_color = C_PS_DATA_LINE;
           }
 
-          // Check mouse pointer over point rect.
-          if( BUBBLEINFO_AVAILABLE != true
-              &&
-              (point_x_curr > mouse_over_x_min && point_x_curr < mouse_over_x_max)
-              &&
-              (point_y_curr > mouse_over_y_min && point_y_curr < mouse_over_y_max)
-            )
-          {
-            //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (cx/10000.0) + "," + (cy/10000.0) + ")" + ",pulse width=" + point_pw_curr);
-            BUBBLEINFO_AVAILABLE = true;
-            BUBBLEINFO_POINT = j;
-            BUBBLEINFO_DISTANCE = float(distance/10)/1000.0;
-            BUBBLEINFO_COR_X = (int(cx/10.0)/1000.0);
-            BUBBLEINFO_COR_Y = (int(cy/10.0)/1000.0);
-            BUBBLEINFO_BOX_X = point_x_curr;
-            BUBBLEINFO_BOX_Y = point_y_curr;
-            BUBBLEINFO_ANGLE = float(int(angle*100.0))/100.0;
-            BUBBLEINFO_PULSE_WIDTH = point_pw_curr;
-            point_size_curr = BUBBLEINFO_POINT_WH;
-          }
-          else
-          {
-            // Reset width and height point rect
-            point_size_curr = PS_DATA_POINT_WEIGHT;
+          if (Bubble_Info_enabled) {
+            // Check mouse pointer over point rect.
+            if( BUBBLE_INFO_AVAILABLE != true
+                &&
+                (point_x_curr > mouse_over_x_min && point_x_curr < mouse_over_x_max)
+                &&
+                (point_y_curr > mouse_over_y_min && point_y_curr < mouse_over_y_max)
+              )
+            {
+              //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (cx/10000.0) + "," + (cy/10000.0) + ")" + ",pulse width=" + point_pw_curr);
+              BUBBLE_INFO_AVAILABLE = true;
+              BUBBLE_INFO_POINT = j;
+              BUBBLE_INFO_DISTANCE = float(distance/10)/1000.0;
+              BUBBLE_INFO_COR_X = (int(cx/10.0)/1000.0);
+              BUBBLE_INFO_COR_Y = (int(cy/10.0)/1000.0);
+              BUBBLE_INFO_BOX_X = point_x_curr;
+              BUBBLE_INFO_BOX_Y = point_y_curr;
+              BUBBLE_INFO_ANGLE = float(int(angle*100.0))/100.0;
+              BUBBLE_INFO_PULSE_WIDTH = point_pw_curr;
+              point_size_curr = BUBBLE_INFO_POINT_WH;
+            }
+            else
+            {
+              // Reset width and height point rect
+              point_size_curr = PS_DATA_POINT_WEIGHT;
+            }
           }
         }
 

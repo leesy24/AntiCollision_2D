@@ -37,8 +37,7 @@ void keyPressed()
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
-      UART_get_take_time_enable = !UART_get_take_time_enable;
-      UDP_get_take_time_enable = !UDP_get_take_time_enable;
+      Bubble_Info_enabled = !Bubble_Info_enabled;
     } 
     else if(keyCode == KeyEvent.VK_F8)
     {

@@ -6,9 +6,9 @@ SCREEN_X_OFFSET,1,Adjuest X offset of window of Windows. default = 3
 SCREEN_Y_OFFSET,1,Adjuest Y offset of window of Windows. default = 5
 C_BG,FFF8F8F8,Background color. Color data format is AARRGGBB
 C_PS_DATA_ERR_TEXT,FF000000,Error text color. Color data format is AARRGGBB
-C_BUBBLEINFO_RECT_FILL,C0F8F8F8,Bubble info box fill color. Color data format is AARRGGBB
-C_BUBBLEINFO_RECT_STROKE,FF000000,Bubble info box border color. Color data format is AARRGGBB
-C_BUBBLEINFO_TEXT,FF000000,Bubble infor box text color. Color data format is AARRGGBB
+C_BUBBLE_INFO_RECT_FILL,C0F8F8F8,Bubble info box fill color. Color data format is AARRGGBB
+C_BUBBLE_INFO_RECT_STROKE,FF000000,Bubble info box border color. Color data format is AARRGGBB
+C_BUBBLE_INFO_TEXT,FF000000,Bubble infor box text color. Color data format is AARRGGBB
 C_UI_BUTTONS_NORMAL,FFFFFFFF,Button normal background color. Color data format is AARRGGBB
 C_UI_BUTTONS_HIGHLIGHT,FFC0C0C0,Button highlight background color. Color data format is AARRGGBB
 C_UI_BUTTONS_TEXT,FF000000,Button text color. Color data format is AARRGGBB
