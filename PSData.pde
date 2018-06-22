@@ -431,18 +431,23 @@ class PS_Data {
     }
 
     if (n_params >= 2) {
-      int time_stamp_new;
-      //long time_stamp_new;
-      // Get time stamp.
-      // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
-      //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
-      time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
-      if (time_stamp_new < time_stamp[instance]) {
-        if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is wrap-around or PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
-        // time_stamp is wrap-around or PS rebooted.
-        time_stamp_wraped[instance] = true;
+      if (PS_Interface[instance] == PS_Interface_FILE) {
+        time_stamp[instance] = millis();
       }
-      time_stamp[instance] = time_stamp_new;
+      else {
+        int time_stamp_new;
+        //long time_stamp_new;
+        // Get time stamp.
+        // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
+        //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
+        time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
+        if (time_stamp_new < time_stamp[instance]) {
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is wrap-around or PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+          // time_stamp is wrap-around or PS rebooted.
+          time_stamp_wraped[instance] = true;
+        }
+        time_stamp[instance] = time_stamp_new;
+      }
 
       //time_stamp[instance] = get_long32_bytes(PS_Data_buf[instance], i);
       // Test time_stamp wrap-around.

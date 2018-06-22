@@ -83,6 +83,7 @@ boolean Interfaces_File_load(int instance)
     return false;
   } // End of load()
 
+/*
   // Check file changed
   if (FILE_last_modified_time[instance] == file.lastModified())
   {
@@ -90,7 +91,8 @@ boolean Interfaces_File_load(int instance)
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println(string);
     return false;
   }
-  
+*/
+
   // Load binary buf.
   PS_Data_buf[instance] = loadBytes(FILE_name[instance]);
   if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("buf.length = " + PS_Data_buf[instance].length);
