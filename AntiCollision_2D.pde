@@ -23,6 +23,7 @@ void settings() {
   BG_Image_settings();
   Grid_settings();
   PS_Image_settings();
+  ROI_Data_settings();
   Fault_Region_settings();
   Alert_Region_settings();
 }
@@ -133,6 +134,7 @@ void draw() {
     PS_Data_handle.draw_points(i);
     ROI_Data_handle.draw_objects(i);
     PS_Data_handle.draw_params(i);
+    ROI_Data_handle.draw_object_info(i);
   }
 
   UI_Buttons_draw();

@@ -119,6 +119,7 @@ void mousePressed()
   }
 
   PS_Image_mouse_pressed();
+  ROI_Data_mouse_pressed();
 }
 
 void mouseReleased()
@@ -163,6 +164,7 @@ void mouseReleased()
   }
 
   PS_Image_mouse_released();
+  ROI_Data_mouse_released();
 }
 
 void mouseMoved()
@@ -172,6 +174,7 @@ void mouseMoved()
 
   UI_Buttons_check_over();
   PS_Image_mouse_moved();
+  ROI_Data_mouse_moved();
 }
 
 void mouseDragged() 
@@ -185,6 +188,7 @@ void mouseDragged()
 
   UI_Buttons_check_over();
   PS_Image_mouse_dragged();
+  ROI_Data_mouse_dragged();
 
 // Disable Drag feature.
 /*

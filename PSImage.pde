@@ -153,7 +153,10 @@ void PS_Image_mouse_moved()
           PS_Image[i].height) )
     {
       PS_Image_mouse_over[i] = true;
-      if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer[i] = millis();
+      if (PS_Data_draw_params_enabled[i])
+      {
+        PS_Data_draw_params_timer[i] = millis();
+      }
     }
     else
     {
