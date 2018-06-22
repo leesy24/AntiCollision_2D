@@ -105,6 +105,7 @@ class ROI_Data {
   LinkedList<ROI_Point_Data>[] points_array = new LinkedList[PS_INSTANCE_MAX];
   LinkedList<ROI_Object_Data>[] objects_array = new LinkedList[PS_INSTANCE_MAX];
   int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
+  //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
   ROI_Data() {
@@ -117,11 +118,12 @@ class ROI_Data {
   }
 
   void set_time_stamp(int instance, int time_stamp) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:clear_points("+instance+"):");
+  //void set_time_stamp(int instance, long time_stamp) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):");
     int i = 0;
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:clear_points("+instance+"):"+"points length="+points_array[instance].size());
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):"+"time_stamp="+time_stamp);
     time_stamp_curr[instance] = time_stamp;
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:clear_points("+instance+"):Exit");
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):Exit");
   }
 
   void clear_points(int instance) {
@@ -172,10 +174,21 @@ class ROI_Data {
           break;
         }
       }
-      if (!found &&
-          object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2) {
-        object_prev.time_stamp_start -= object_prev.time_stamp_last - time_stamp_curr[instance];
-        objects.add(object_prev);
+      if (!found) {
+        int time_duration = object_prev.time_stamp_last - object_prev.time_stamp_start;
+        //int time_duration = int(object_prev.time_stamp_last - object_prev.time_stamp_start);
+        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
+        println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
+        if (time_duration >= ROI_OBJECT_TIME_LIMIT) {
+        //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2L) {
+          if (time_duration > ROI_OBJECT_TIME_LIMIT * W_ROI_FAULT_MARKER_STROKE) {
+            object_prev.time_stamp_start = object_prev.time_stamp_last - ROI_OBJECT_TIME_LIMIT * W_ROI_FAULT_MARKER_STROKE;
+          }
+          else {
+            object_prev.time_stamp_start -= object_prev.time_stamp_last - time_stamp_curr[instance];
+          }
+          objects.add(object_prev);
+        }
       }
     }
 
@@ -324,9 +337,11 @@ class ROI_Data {
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_stamp_start="+object.time_stamp_start+",time_stamp_last="+object.time_stamp_last);
 
       int time_duration = object.time_stamp_last - object.time_stamp_start;
+      //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
       int weight;
 
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+      //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
 
       if (time_duration < ROI_OBJECT_TIME_LIMIT) {
         continue;
@@ -411,6 +426,8 @@ class ROI_Object_Data {
   public int scr_diameter;
   public int time_stamp_start;
   public int time_stamp_last;
+  //public long time_stamp_start;
+  //public long time_stamp_last;
   
   ROI_Object_Data(int region, int mi_x_start, int mi_y_start, int mi_x_end, int mi_y_end, int scr_x_start, int scr_y_start, int scr_x_end, int scr_y_end) {
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region="+region);

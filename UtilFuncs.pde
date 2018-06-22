@@ -47,8 +47,17 @@ int get_crc32(byte[] buf, int offset, int length)
     return (crc ^ 0xFFFFFFFF);
 }
 
-// Get 32bits data by network byte order(big-endian)
+// Get 32bits data by network byte order(big-endian) to int type
 int get_int32_bytes(byte[] buf, int offset)
+{
+  return ((buf[offset + 0] & 0xff) << 24) +
+    ((buf[offset + 1] & 0xff) << 16) +
+    ((buf[offset + 2] & 0xff) << 8) +
+    ((buf[offset + 3] & 0xff) << 0);
+}
+
+// Get 32bits data by network byte order(big-endian) to long type
+long get_long32_bytes(byte[] buf, int offset)
 {
   return ((buf[offset + 0] & 0xff) << 24) +
     ((buf[offset + 1] & 0xff) << 16) +

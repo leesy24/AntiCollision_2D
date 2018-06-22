@@ -200,6 +200,7 @@ void PS_Data_setup() {
 class PS_Data {
   int[] scan_number = new int[PS_DATA_INSTANCE_MAX];
   int[] time_stamp = new int[PS_DATA_INSTANCE_MAX];
+  //long[] time_stamp = new long[PS_DATA_INSTANCE_MAX];
   float[] scan_angle_start = new float[PS_DATA_INSTANCE_MAX];
   float[] scan_angle_size = new float[PS_DATA_INSTANCE_MAX];
   float[] scan_angle_step = new float[PS_DATA_INSTANCE_MAX];
@@ -218,6 +219,9 @@ class PS_Data {
   String[] remote_ip = new String[PS_DATA_INSTANCE_MAX];
   int[] remote_port = new int[PS_DATA_INSTANCE_MAX];
   int[] serial_number = new int[PS_DATA_INSTANCE_MAX];
+  // Test time_stamp wrap-around.
+  //int[] time_stamp_offset = new int[PS_DATA_INSTANCE_MAX];
+  //long[] time_stamp_offset = new long[PS_DATA_INSTANCE_MAX];
 
   // Create the PS_Data
   PS_Data()
@@ -228,7 +232,7 @@ class PS_Data {
     for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
     {
       scan_number[i] = 0;
-      time_stamp[i] = 0;
+      time_stamp[i] = -1;
       scan_angle_start[i] = 0;
       scan_angle_size[i] = 0;
       scan_angle_step[i] = 0;
@@ -245,6 +249,9 @@ class PS_Data {
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
+      // Test time_stamp wrap-around.
+      //time_stamp_offset[i] = -1;
+      //time_stamp_last[i] = -1L;
     }
   }
 
@@ -408,6 +415,17 @@ class PS_Data {
       // Get time stamp.
       // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
       time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
+      //time_stamp[instance] = get_long32_bytes(PS_Data_buf[instance], i);
+      // Test time_stamp wrap-around.
+      /*
+      if (time_stamp_offset[instance] == -1) {
+      //if (time_stamp_offset[instance] == -1L) {
+        time_stamp_offset[instance] = 0xffffffff - time_stamp[instance] - 10000;
+        //time_stamp_offset[instance] = 0x7fffffffffffffffL - time_stamp[instance] - 10000;
+      }
+      time_stamp[instance] += time_stamp_offset[instance];
+      */
+
       if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_PARSE_DBG) println("index=" + i + ",time stamp=" + time_stamp[instance]);
       i = i + 4;
 /*
