@@ -115,14 +115,25 @@ void PS_Image_mouse_pressed()
     if (PS_Image_mouse_over[i])
     {
       PS_Image_mouse_pressed[i] = true;
-      PS_Data_draw_params_x = mouseX;
-      PS_Data_draw_params_y = mouseY;
+      PS_Data_draw_params_x[i] = mouseX;
+      PS_Data_draw_params_y[i] = mouseY;
       PS_Data_draw_params_enabled[i] = !PS_Data_draw_params_enabled[i];
-      if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer = millis();
+      if (PS_Data_draw_params_enabled[i])
+      {
+        PS_Data_draw_params_timer[i] = millis();
+      }
     }
     else
     {
-      PS_Data_draw_params_enabled[i] = false;
+      int j;
+      for (j = 0; j < PS_INSTANCE_MAX; j ++)
+      {
+        if (PS_Image_mouse_over[j]) break;
+      }
+      if (j == PS_INSTANCE_MAX)
+      {
+        PS_Data_draw_params_enabled[i] = false;
+      }
     }
   }
 }
@@ -142,7 +153,7 @@ void PS_Image_mouse_moved()
           PS_Image[i].height) )
     {
       PS_Image_mouse_over[i] = true;
-      if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer = millis();
+      if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer[i] = millis();
     }
     else
     {
@@ -153,21 +164,6 @@ void PS_Image_mouse_moved()
 
 void PS_Image_mouse_dragged()
 {
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    if( mouse_is_over(
-          Grid_zero_x[i] - PS_Image[i].width / 2,
-          Grid_zero_y[i] - PS_Image[i].height / 2,
-          PS_Image[i].width,
-          PS_Image[i].height) )
-    {
-      PS_Image_mouse_over[i] = true;
-      if (PS_Data_draw_params_enabled[i]) PS_Data_draw_params_timer = millis();
-    }
-    else
-    {
-      PS_Image_mouse_over[i] = false;
-    }
-  }
+  PS_Image_mouse_moved();
 }
 

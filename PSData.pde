@@ -26,8 +26,6 @@ final static boolean PRINT_PS_DATA_PARSE_ERR = false;
 //final static boolean PRINT_PS_DATA_DRAW_DBG = true; 
 final static boolean PRINT_PS_DATA_DRAW_DBG = false;
 
-final int PS_DATA_INSTANCE_MAX = 2;
-
 static color C_PS_DATA_ERR_TEXT = #000000; // Black
 static color C_PS_DATA_LINE = #0000FF; // Blue
 static color C_PS_DATA_POINT = #FF0000; // Red
@@ -67,54 +65,73 @@ PS_Data PS_Data_handle;
 // Define Data buffer array to load binary Data buffer from interfaces
 byte[][] PS_Data_buf; 
 
-static boolean[] PS_Data_draw_params_enabled;
 static boolean PS_Data_draw_points_all_enabled = false;
-static int PS_Data_draw_params_timer;
-static int PS_Data_draw_params_x;
-static int PS_Data_draw_params_y;
+
+static boolean[] PS_Data_draw_params_enabled;
+static int[] PS_Data_draw_params_timer;
+static int[] PS_Data_draw_params_x;
+static int[] PS_Data_draw_params_y;
 
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
 
 void PS_Data_settings() {
-  PS_Interface = new int[PS_DATA_INSTANCE_MAX];
+  PS_Interface = new int[PS_INSTANCE_MAX];
   if (PS_Interface == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Interface=null");
     return;
   }
-  FILE_name = new String[PS_DATA_INSTANCE_MAX];
+  FILE_name = new String[PS_INSTANCE_MAX];
   if (FILE_name == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():FILE_name=null");
     return;
   }
-  UDP_remote_ip = new String[PS_DATA_INSTANCE_MAX];
+  UDP_remote_ip = new String[PS_INSTANCE_MAX];
   if (UDP_remote_ip == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_ip=null");
     return;
   }
-  UDP_remote_port = new int[PS_DATA_INSTANCE_MAX];
+  UDP_remote_port = new int[PS_INSTANCE_MAX];
   if (UDP_remote_port == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_port=null");
     return;
   }
-  SN_serial_number = new int[PS_DATA_INSTANCE_MAX];
+  SN_serial_number = new int[PS_INSTANCE_MAX];
   if (SN_serial_number == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():SN_serial_number=null");
     return;
   }
-  PS_Data_draw_params_enabled = new boolean[PS_DATA_INSTANCE_MAX];
+  PS_Data_draw_params_enabled = new boolean[PS_INSTANCE_MAX];
   if (PS_Data_draw_params_enabled == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_enabled=null");
     return;
   }
+  PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
+  if (PS_Data_draw_params_timer == null)
+  {
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_timer=null");
+    return;
+  }
+  PS_Data_draw_params_x = new int[PS_INSTANCE_MAX];
+  if (PS_Data_draw_params_x == null)
+  {
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_x=null");
+    return;
+  }
+  PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
+  if (PS_Data_draw_params_y == null)
+  {
+    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_y=null");
+    return;
+  }
 
-  for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
+  for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
     PS_Interface[i] = PS_Interface_FILE;
     FILE_name[i] = "";
@@ -122,15 +139,15 @@ void PS_Data_settings() {
     UDP_remote_port[i] = 1024;
     SN_serial_number[i] = 886;
     PS_Data_draw_params_enabled[i] = false;
+    PS_Data_draw_params_timer[i] = millis();
   }
-  PS_Data_draw_params_timer = millis();
 }
 
 void PS_Data_setup() {
   if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():");
   // Append interface name to window title
 
-  PS_Data_buf = new byte[PS_DATA_INSTANCE_MAX][];
+  PS_Data_buf = new byte[PS_INSTANCE_MAX][];
   //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():PS_Data_buf[0]="+PS_Data_buf[0]+",PS_Data_buf[1]="+PS_Data_buf[1]);
   if(PS_Data_buf == null)
   {
@@ -148,7 +165,7 @@ void PS_Data_setup() {
   Interfaces_UART_reset();
   Interfaces_UDP_reset();
 
-  for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if(PS_Interface[i] == PS_Interface_FILE) 
       Title += "File";
@@ -163,7 +180,7 @@ void PS_Data_setup() {
     }      
   }
   
-  for (int i = 0; i < PS_DATA_INSTANCE_MAX; i ++)
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if(PS_Interface[i] == PS_Interface_FILE) {
       Interfaces_File_setup();
@@ -198,31 +215,31 @@ void PS_Data_setup() {
 
 // A PS_Data class
 class PS_Data {
-  int[] scan_number = new int[PS_DATA_INSTANCE_MAX];
-  int[] time_stamp = new int[PS_DATA_INSTANCE_MAX];
-  //long[] time_stamp = new long[PS_DATA_INSTANCE_MAX];
-  float[] scan_angle_start = new float[PS_DATA_INSTANCE_MAX];
-  float[] scan_angle_size = new float[PS_DATA_INSTANCE_MAX];
-  float[] scan_angle_step = new float[PS_DATA_INSTANCE_MAX];
-  int[] number_of_echoes = new int[PS_DATA_INSTANCE_MAX];
-  int[] incremental_count = new int[PS_DATA_INSTANCE_MAX];
-  float[] system_temperature = new float[PS_DATA_INSTANCE_MAX];
-  int[] system_status = new int[PS_DATA_INSTANCE_MAX];
-  int[] data_content = new int[PS_DATA_INSTANCE_MAX];
-  int[] number_of_points = new int[PS_DATA_INSTANCE_MAX];
-  int[][] distances = new int[PS_DATA_INSTANCE_MAX][PS_DATA_POINTS_MAX];
-  int[][] pulse_widths = new int[PS_DATA_INSTANCE_MAX][PS_DATA_POINTS_MAX];
-  String[] parse_err_str = new String[PS_DATA_INSTANCE_MAX];
+  int[] scan_number = new int[PS_INSTANCE_MAX];
+  int[] time_stamp = new int[PS_INSTANCE_MAX];
+  //long[] time_stamp = new long[PS_INSTANCE_MAX];
+  float[] scan_angle_start = new float[PS_INSTANCE_MAX];
+  float[] scan_angle_size = new float[PS_INSTANCE_MAX];
+  float[] scan_angle_step = new float[PS_INSTANCE_MAX];
+  int[] number_of_echoes = new int[PS_INSTANCE_MAX];
+  int[] incremental_count = new int[PS_INSTANCE_MAX];
+  float[] system_temperature = new float[PS_INSTANCE_MAX];
+  int[] system_status = new int[PS_INSTANCE_MAX];
+  int[] data_content = new int[PS_INSTANCE_MAX];
+  int[] number_of_points = new int[PS_INSTANCE_MAX];
+  int[][] distances = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
+  int[][] pulse_widths = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
+  String[] parse_err_str = new String[PS_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
-  int[] load_take_time = new int[PS_DATA_INSTANCE_MAX];
-  String[] file_name = new String[PS_DATA_INSTANCE_MAX];
-  String[] remote_ip = new String[PS_DATA_INSTANCE_MAX];
-  int[] remote_port = new int[PS_DATA_INSTANCE_MAX];
-  int[] serial_number = new int[PS_DATA_INSTANCE_MAX];
-  boolean[] time_stamp_wraped = new boolean[PS_DATA_INSTANCE_MAX];
+  int[] load_take_time = new int[PS_INSTANCE_MAX];
+  String[] file_name = new String[PS_INSTANCE_MAX];
+  String[] remote_ip = new String[PS_INSTANCE_MAX];
+  int[] remote_port = new int[PS_INSTANCE_MAX];
+  int[] serial_number = new int[PS_INSTANCE_MAX];
+  boolean[] time_stamp_wraped = new boolean[PS_INSTANCE_MAX];
   // Test time_stamp wrap-around.
-  //int[] time_stamp_offset = new int[PS_DATA_INSTANCE_MAX];
-  //long[] time_stamp_offset = new long[PS_DATA_INSTANCE_MAX];
+  //int[] time_stamp_offset = new int[PS_INSTANCE_MAX];
+  //long[] time_stamp_offset = new long[PS_INSTANCE_MAX];
 
   // Create the PS_Data
   PS_Data()
@@ -230,7 +247,7 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG) println("PS_Data:constructor():");
     // Init. class variables.
     //println("PS_Data_buf[0]="+PS_Data_buf[0]+",PS_Data_buf[1]="+PS_Data_buf[1]);
-    for (int i = 0; i < PS_DATA_INSTANCE_MAX; i++)
+    for (int i = 0; i < PS_INSTANCE_MAX; i++)
     {
       scan_number[i] = 0;
       time_stamp[i] = -1;
@@ -582,7 +599,7 @@ class PS_Data {
 
     if(!PS_Data_draw_params_enabled[instance]) return;
 
-    if((millis() - PS_Data_draw_params_timer) >= DRAW_PARAMS_TIMEOUT)
+    if((millis() - PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT)
     {
       PS_Data_draw_params_enabled[instance] = false;
     }
@@ -626,15 +643,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x;
-        rect_y = PS_Data_draw_params_y;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance];
         rect_tl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x;
-        rect_y = PS_Data_draw_params_y - rect_h - 1;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_bl = 0;
       }
     }
@@ -642,15 +659,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1;
-        rect_y = PS_Data_draw_params_y;
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
+        rect_y = PS_Data_draw_params_y[instance];
         rect_tr = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x;
-        rect_y = PS_Data_draw_params_y;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance];
         rect_tl = 0;
       }
     }
@@ -658,15 +675,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1;
-        rect_y = PS_Data_draw_params_y - rect_h - 1;
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
+        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_br = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1;
-        rect_y = PS_Data_draw_params_y;
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
+        rect_y = PS_Data_draw_params_y[instance];
         rect_tr = 0;
       }
     }
@@ -674,15 +691,15 @@ class PS_Data {
       if (MIRROR_ENABLE[instance]) { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x;
-        rect_y = PS_Data_draw_params_y - rect_h - 1;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_bl = 0;
       }
       else { // OK
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x - rect_w - 1;
-        rect_y = PS_Data_draw_params_y - rect_h - 1;
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
+        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_br = 0;
       }
     }
