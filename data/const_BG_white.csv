@@ -34,5 +34,13 @@ C_FAULT_REGION_LINE,FF000000,Line color of fault region lines. Color data format
 W_FAULT_REGION_LINE,3,Line weight of fault region lines.
 C_ALERT_REGION_LINE,FF000000,Line color of alert region lines. Color data format is AARRGGBB
 W_ALERT_REGION_LINE,3,Line weight of alert region lines.
+C_ROI_FAULT_MARKER_FILL,40FF0000,Fill color of fault object ROI marker. Color data format is AARRGGBB
+C_ROI_FAULT_MARKER_STROKE,FFFF0000,Border color of fault object ROI marker. Color data format is AARRGGBB
+W_ROI_FAULT_MARKER_STROKE,5,Border weight of fault object ROI marker.
+C_ROI_ALERT_MARKER_FILL,40FFFF00,Fill color of alert object ROI marker. Color data format is AARRGGBB
+C_ROI_ALERT_MARKER_STROKE,FFFFFF00,Border color of alert object ROI marker. Color data format is AARRGGBB
+W_ROI_ALERT_MARKER_STROKE,5,Border weight of alert object ROI marker.
+ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
+ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
 C_BG_IMAGE_LINE,FF000000,Line color of background image lines. Color data format is AARRGGBB
 W_BG_IMAGE_LINE,3,Line weight of background image lines.

@@ -48,8 +48,8 @@ final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
 final static int PS_Interface_SN = 3;
 
-final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
-//final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
+//final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
+final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
 int[] PS_Interface;
 String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};

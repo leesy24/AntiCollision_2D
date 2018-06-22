@@ -53,19 +53,20 @@ final static boolean PRINT_ROI_DATA_DRAW_DBG = false;
 //final static boolean PRINT_ROI_DATA_DRAW_ERR = true; 
 final static boolean PRINT_ROI_DATA_DRAW_ERR = false;
 
-static color C_ROI_FAULT_MARKER_FILL = 0xFFFF0000; // Red transparent
+static color C_ROI_FAULT_MARKER_FILL = 0x40FF0000; // Red transparent
 static color C_ROI_FAULT_MARKER_STROKE = 0xFFFF0000; // Red
-static int W_ROI_FAULT_MARKER_STROKE = 3;
+static int W_ROI_FAULT_MARKER_STROKE = 5;
 
-static color C_ROI_ALERT_MARKER_FILL = 0x80FFFF00; // Yellow transparent
+static color C_ROI_ALERT_MARKER_FILL = 0x40FFFF00; // Yellow transparent
 static color C_ROI_ALERT_MARKER_STROKE = 0xFFFFFF00; // Yellow
-static int W_ROI_ALERT_MARKER_STROKE = 3;
+static int W_ROI_ALERT_MARKER_STROKE = 5;
 
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
+//static int ROI_OBJECT_DISTANCE_LIMIT = 10000; // = 1 meter
+static int ROI_OBJECT_DISTANCE_LIMIT = 5000; // = 50 cm= 0.5 meter
+
 static ROI_Data ROI_Data_handle = null;
-//static int ROI_Data_distance_max = 10000; // = 1 meter
-static int ROI_Data_distance_max = 5000; // = 0.5 meter = 50 cm
 
 void ROI_Data_settings() {
   if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():");
@@ -135,7 +136,7 @@ class ROI_Data {
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
         distance = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_curr.mi_x, point_curr.mi_y);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"distance="+distance);
-        if (distance <= ROI_Data_distance_max) {
+        if (distance <= ROI_OBJECT_DISTANCE_LIMIT) {
           points_group.add(point_curr);
           points[instance].remove(i);
           point_prev = point_curr;
@@ -200,13 +201,13 @@ class ROI_Data {
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x_c="+object.scr_x_center+",y_c="+object.scr_y_center+",d="+object.scr_diameter);
 
       if (object.region == 0) { // Fault region
-        fill(C_ROI_FAULT_MARKER_FILL%0xFFFFFF, C_ROI_FAULT_MARKER_FILL/0xFFFFFF);
+        fill(C_ROI_FAULT_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
         stroke(C_ROI_FAULT_MARKER_STROKE);
         strokeWeight(W_ROI_FAULT_MARKER_STROKE);
       }
       else { // Alert region
-        fill(C_ROI_ALERT_MARKER_FILL, C_ROI_ALERT_MARKER_FILL/0xFFFFFF);
+        fill(C_ROI_ALERT_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
         stroke(C_ROI_ALERT_MARKER_STROKE);
         strokeWeight(W_ROI_ALERT_MARKER_STROKE);

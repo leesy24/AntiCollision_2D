@@ -100,6 +100,22 @@ void Const_settings()
       C_ALERT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_ALERT_REGION_LINE"))
       W_ALERT_REGION_LINE = variable.getInt("Value");
+    else if(name.equals("C_ROI_FAULT_MARKER_FILL"))
+      C_ROI_FAULT_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_ROI_FAULT_MARKER_STROKE"))
+      C_ROI_FAULT_MARKER_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_ROI_FAULT_MARKER_STROKE"))
+      W_ROI_FAULT_MARKER_STROKE = variable.getInt("Value");
+    else if(name.equals("C_ROI_ALERT_MARKER_FILL"))
+      C_ROI_ALERT_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_ROI_ALERT_MARKER_STROKE"))
+      C_ROI_ALERT_MARKER_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_ROI_ALERT_MARKER_STROKE"))
+      W_ROI_ALERT_MARKER_STROKE = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
+      ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
+      ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
     else if(name.equals("C_BG_IMAGE_LINE"))
       C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BG_IMAGE_LINE"))
@@ -292,6 +308,46 @@ void Const_create()
   variable.setString("Name", "W_ALERT_REGION_LINE");
   variable.setInt("Value", W_ALERT_REGION_LINE);
   variable.setString("Comment", "Line weight of alert region lines.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_ROI_FAULT_MARKER_FILL");
+  variable.setString("Value", String.format("%08X", C_ROI_FAULT_MARKER_FILL));
+  variable.setString("Comment", "Fill color of fault object ROI marker. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_ROI_FAULT_MARKER_STROKE");
+  variable.setString("Value", String.format("%08X", C_ROI_FAULT_MARKER_STROKE));
+  variable.setString("Comment", "Border color of fault object ROI marker. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_ROI_FAULT_MARKER_STROKE");
+  variable.setInt("Value", W_ROI_FAULT_MARKER_STROKE);
+  variable.setString("Comment", "Border weight of fault object ROI marker.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_ROI_ALERT_MARKER_FILL");
+  variable.setString("Value", String.format("%08X", C_ROI_ALERT_MARKER_FILL));
+  variable.setString("Comment", "Fill color of alert object ROI marker. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_ROI_ALERT_MARKER_STROKE");
+  variable.setString("Value", String.format("%08X", C_ROI_ALERT_MARKER_STROKE));
+  variable.setString("Comment", "Border color of alert object ROI marker. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_ROI_ALERT_MARKER_STROKE");
+  variable.setInt("Value", W_ROI_ALERT_MARKER_STROKE);
+  variable.setString("Comment", "Border weight of alert object ROI marker.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");
+  variable.setInt("Value", ROI_OBJECT_MARKER_MARGIN);
+  variable.setString("Comment", "Margin of objects ROI marker.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
+  variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_BG_IMAGE_LINE");
