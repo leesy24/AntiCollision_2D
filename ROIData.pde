@@ -431,14 +431,10 @@ class ROI_Data {
       int distance_min = MAX_INT;
       int distance;
       object = objects_array[instance].get(i);
-      if( ROI_Data_draw_info_x[instance] >= object.scr_x_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          ROI_Data_draw_info_x[instance] <= object.scr_x_end + ROI_OBJECT_MARKER_MARGIN
-          && 
-          ROI_Data_draw_info_y[instance] >= object.scr_y_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          ROI_Data_draw_info_y[instance] <= object.scr_y_end + ROI_OBJECT_MARKER_MARGIN
-        ) {
+      if (check_xy_over_object(
+            ROI_Data_draw_info_x[instance],
+            ROI_Data_draw_info_y[instance],
+            object, ROI_OBJECT_MARKER_MARGIN)) {
         distance =
           get_points_distance(
             ROI_Data_draw_info_x[instance], ROI_Data_draw_info_y[instance],
@@ -600,14 +596,7 @@ class ROI_Data {
     for (i = objects_array[instance].size() - 1; i >= 0 ; i --) {
       ROI_Object_Data object;
       object = objects_array[instance].get(i);
-      if( x >= object.scr_x_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          x <= object.scr_x_end + ROI_OBJECT_MARKER_MARGIN
-          && 
-          y >= object.scr_y_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          y <= object.scr_y_end + ROI_OBJECT_MARKER_MARGIN
-        ) {
+      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN)) {
         break;
       }
     }
@@ -625,14 +614,7 @@ class ROI_Data {
     boolean ret = false;
 
     for (ROI_Object_Data object:objects_array[instance]) {
-      if( x >= object.scr_x_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          x <= object.scr_x_end + ROI_OBJECT_MARKER_MARGIN
-          && 
-          y >= object.scr_y_start - ROI_OBJECT_MARKER_MARGIN
-          &&
-          y <= object.scr_y_end + ROI_OBJECT_MARKER_MARGIN
-        ) {
+      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN)) {
         ret = true;
         break;
       }
@@ -645,48 +627,48 @@ class ROI_Data {
     return ret;
   }
 
+  private boolean check_xy_over_object(int x, int y, ROI_Object_Data object, int margin) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_object():Enter");
+
+    boolean ret = false;
+
+    if(sqrt(sq(object.scr_x_center - x) + sq(object.scr_y_center - y)) < (object.scr_diameter + margin * 2) / 2 ) {
+      ret = true;
+    }
+/*
+    if( x >= object.scr_x_start - margin
+        &&
+        x <= object.scr_x_end + margin
+        && 
+        y >= object.scr_y_start - margin
+        &&
+        y <= object.scr_y_end + margin
+      ) {
+      ret = true;
+      break;
+    }
+*/
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_object():ret="+ret);
+
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_object():Exit");
+
+    return ret;
+  }
+
   private boolean check_objects_overlapped(ROI_Object_Data object_a, ROI_Object_Data object_b, int margin) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_OBJECTS_OVERLAPPED_DBG) println("ROI_Data:check_objects_overlapped():Enter");
     boolean ret = false;
 
-    if( object_a.scr_x_start >= object_b.scr_x_start - margin
-        &&
-        object_a.scr_x_start <= object_b.scr_x_end + margin
-        && 
-        object_a.scr_y_start >= object_b.scr_y_start - margin
-        &&
-        object_a.scr_y_start <= object_b.scr_y_end + margin
-      ) {
+    if (check_xy_over_object(object_a.scr_x_start, object_a.scr_y_start, object_b, margin)) {
       ret = true;
     }
-    if( object_a.scr_x_end >= object_b.scr_x_start - margin
-        &&
-        object_a.scr_x_end <= object_b.scr_x_end + margin
-        && 
-        object_a.scr_y_end >= object_b.scr_y_start - margin
-        &&
-        object_a.scr_y_end <= object_b.scr_y_end + margin
-      ) {
+    if (check_xy_over_object(object_a.scr_x_end, object_a.scr_y_end, object_b, margin)) {
       ret = true;
     }
-    if( object_b.scr_x_start >= object_a.scr_x_start - margin
-        &&
-        object_b.scr_x_start <= object_a.scr_x_end + margin
-        && 
-        object_b.scr_y_start >= object_a.scr_y_start - margin
-        &&
-        object_b.scr_y_start <= object_a.scr_y_end + margin
-      ) {
+    if (check_xy_over_object(object_b.scr_x_start, object_b.scr_y_start, object_a, margin)) {
       ret = true;
     }
-    if( object_b.scr_x_end >= object_a.scr_x_start - margin
-        &&
-        object_b.scr_x_end <= object_a.scr_x_end + margin
-        && 
-        object_b.scr_y_end >= object_a.scr_y_start - margin
-        &&
-        object_b.scr_y_end <= object_a.scr_y_end + margin
-      ) {
+    if (check_xy_over_object(object_b.scr_x_end, object_b.scr_y_end, object_a, margin)) {
       ret = true;
     }
 
