@@ -117,7 +117,7 @@ void PS_Image_mouse_pressed()
       PS_Image_mouse_pressed[i] = true;
       PS_Data_draw_params_x[i] = mouseX;
       PS_Data_draw_params_y[i] = mouseY;
-      PS_Data_draw_params_enabled[i] = !PS_Data_draw_params_enabled[i];
+      PS_Data_draw_params_enabled[i] = true;
       if (PS_Data_draw_params_enabled[i])
       {
         PS_Data_draw_params_timer[i] = millis();
