@@ -632,6 +632,7 @@ class PS_Data {
     strings.add("System status:" + system_status[instance]);
     strings.add("Data content:" + data_content[instance]);
     strings.add("Number of points:" + number_of_points[instance]);
+    strings.add("Time-out:" + ((DRAW_PARAMS_TIMEOUT + 1000 - millis() + PS_Data_draw_params_timer[instance])/1000) + "s");
 
     // Get max string width
     textSize(FONT_HEIGHT);
