@@ -138,7 +138,8 @@ class Interfaces_UDP {
     {
       PS_CMD_state[i] = PS_CMD_STATE_NONE;
 
-      PS_CMD_SCAN_DONE[i] = false;
+      PS_CMD_SCAN_DONE[i] = true;
+      //PS_CMD_SCAN_DONE[i] = false;
 
       recv_in_buf[i] = null;
       recv_live_total[i] = 0; // Init. live total received data bytes.
@@ -181,7 +182,8 @@ class Interfaces_UDP {
 
     ip[instance] = remote_ip;
     port[instance] = remote_port;
-    PS_CMD_SCAN_DONE[instance] = false;
+    PS_CMD_SCAN_DONE[instance] = true;
+    //PS_CMD_SCAN_DONE[instance] = false;
 
     instance_opened[instance] = true;
     return 0;

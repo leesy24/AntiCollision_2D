@@ -178,7 +178,7 @@ class ROI_Data {
         int time_duration = object_prev.time_stamp_last - object_prev.time_stamp_start;
         //int time_duration = int(object_prev.time_stamp_last - object_prev.time_stamp_start);
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
-        println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
+        //println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         if (time_duration >= ROI_OBJECT_TIME_LIMIT) {
         //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2L) {
           if (time_duration > ROI_OBJECT_TIME_LIMIT * W_ROI_FAULT_MARKER_STROKE) {
