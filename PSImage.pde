@@ -62,7 +62,7 @@ void PS_Image_draw()
       //println("image xy=" + Grid_zero_x[i] + "," + Grid_zero_y[i]);
       image(  PS_Image[i],
               Grid_zero_x[i] - PS_Image[i].width / 2,
-              Grid_zero_y[i] - PS_Image[i].height / 2);
+              Grid_zero_y[i] - PS_Image[i].height / 4);
     }
   }
 }
