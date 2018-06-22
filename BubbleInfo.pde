@@ -18,37 +18,38 @@ final static int BUBBLEINFO_POINT_WH = 10;
 
 void bubbleinfo_draw()
 {
-  String[] strings = new String[6];
+  LinkedList<String> strings = new LinkedList<String>();
   int x, y, w, h, tl = 5, tr = 5, br = 0, bl = 5;
 
-  if(BUBBLEINFO_AVAILABLE || (millis() - BUBBLEINFO_TIMER) < BUBBLEINFO_TIMEOUT)
+  if (BUBBLEINFO_AVAILABLE || (millis() - BUBBLEINFO_TIMER) < BUBBLEINFO_TIMEOUT)
   {
 
     BUBBLEINFO_DISPLAY = true;
-    if(BUBBLEINFO_AVAILABLE) {
+    if (BUBBLEINFO_AVAILABLE)
+    {
       BUBBLEINFO_TIMER = millis();
       BUBBLEINFO_AVAILABLE = false;
       //BUBBLEINFO_BOX_X = mouseX;
       //BUBBLEINFO_BOX_Y = mouseY;
     }
 
-    strings[0] = "Point:" + BUBBLEINFO_POINT;
-    strings[1] = "Angle:" + BUBBLEINFO_ANGLE + "°";
-    strings[2] = "Distance:" + BUBBLEINFO_DISTANCE + "m";
-    strings[3] = "Coord. X:" + BUBBLEINFO_COR_X + "m";
-    strings[4] = "Coord. Y:" + BUBBLEINFO_COR_Y + "m";
-    strings[5] = "PW:" + BUBBLEINFO_PULSE_WIDTH;
+    strings.add("Point:" + BUBBLEINFO_POINT);
+    strings.add("Angle:" + BUBBLEINFO_ANGLE + "°");
+    strings.add("Distance:" + BUBBLEINFO_DISTANCE + "m");
+    strings.add("Coord. X:" + BUBBLEINFO_COR_X + "m");
+    strings.add("Coord. Y:" + BUBBLEINFO_COR_Y + "m");
+    strings.add("Pulse width:" + BUBBLEINFO_PULSE_WIDTH);
 
     // Get max string width
     textSize(FONT_HEIGHT);
     w = 0;
-    for( String string:strings)
+    for (String string:strings)
     {
-      w = max(w, int(textWidth(string)));    
+      w = max(w, int(textWidth(string)));
     }
     w += TEXT_MARGIN + TEXT_MARGIN;
 
-    h = TEXT_MARGIN + FONT_HEIGHT * 6 + TEXT_MARGIN;
+    h = TEXT_MARGIN + FONT_HEIGHT * strings.size() + TEXT_MARGIN;
     x = BUBBLEINFO_BOX_X - BUBBLEINFO_POINT_WH/2 - w;
     y = BUBBLEINFO_BOX_Y - BUBBLEINFO_POINT_WH/2 - h;
     if(x < 0 && y < 0) {
@@ -71,6 +72,7 @@ void bubbleinfo_draw()
     // Sets the color used to draw box and borders around shapes.
     fill(C_BUBBLEINFO_RECT_FILL);
     stroke(C_BUBBLEINFO_RECT_STROKE);
+    strokeWeight(1);
     rect(x, y, w, h, tl, tr, br, bl);
     // Sets the color used to draw text and borders around shapes.
     fill(C_BUBBLEINFO_TEXT);
@@ -79,7 +81,7 @@ void bubbleinfo_draw()
     int i = 0;
     x += TEXT_MARGIN;
     y +=  TEXT_MARGIN + FONT_HEIGHT - 1;
-    for( String string:strings)
+    for (String string:strings)
     {
       text(string, x, y + FONT_HEIGHT * i);
       i ++;
