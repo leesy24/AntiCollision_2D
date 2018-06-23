@@ -753,15 +753,6 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():Exit");
   }
 
-  private int get_point_rotate_distance(int point_x, int point_y, float deg) {
-    int point_rot_x, point_rot_y;
-    float radians = radians(deg);
-    point_rot_x = int(point_x * cos(radians) - point_y * sin(radians));
-    point_rot_y = int(point_x * sin(radians) + point_y * cos(radians));
-    //println("ROI_Data:get_points_distance():"+"distance="+distance);
-    return get_points_distance(point_x, point_y, point_rot_x, point_rot_y);
-  }
-
 }
 
 class ROI_Point_Data {
