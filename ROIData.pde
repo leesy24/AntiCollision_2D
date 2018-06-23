@@ -502,8 +502,10 @@ class ROI_Data {
 
     strings.add("Region:" + ROI_Data_Region_str[object.region]);
     strings.add("Time dur.:" + ((object.time_stamp_last - object.time_stamp_start)/1000) + "s");
+    strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
     strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");
     strings.add("Center Y:" + ((object.mi_center_y/10)/1000.0) + "m");
+    strings.add("Diameter:" + ((object.mi_diameter/10)/1000.0) + "m");
     strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
     strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
     strings.add("Time-out:" + ((ROI_OBJECT_DRAW_INFO_TIMEOUT + 1000 - millis() + ROI_Data_draw_info_timer[instance])/1000) + "s");
@@ -808,6 +810,8 @@ class ROI_Object_Data {
   public int mi_end_x, mi_end_y;
   public int mi_width, mi_height;
   public int mi_center_x, mi_center_y;
+  public int mi_diameter;
+  public int mi_distance;
   public int scr_start_x, scr_start_y;
   public int scr_end_x, scr_end_y;
   public int scr_width, scr_height;
@@ -832,6 +836,8 @@ class ROI_Object_Data {
     this.mi_height = mi_end_y - mi_start_y;
     this.mi_center_x = mi_start_x + this.mi_width / 2;
     this.mi_center_y = mi_start_y + this.mi_height / 2;
+    this.mi_diameter = get_points_distance(mi_start_x, mi_start_y, mi_end_x, mi_end_y);
+    this.mi_distance = get_points_distance(0, 0, mi_start_x, mi_start_y);
     this.scr_start_x = scr_start_x;
     this.scr_start_y = scr_start_y;
     this.scr_end_x = scr_end_x;
