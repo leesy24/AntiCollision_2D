@@ -519,6 +519,7 @@ class ROI_Data {
     strings.add("Diameter:" + ((object.mi_diameter/10)/1000.0) + "m");
     strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
     strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
+    strings.add("Num. of points:" + object.number_of_points);
     strings.add("Time-out:" + ((ROI_OBJECT_DRAW_INFO_TIMEOUT + 1000 - millis() + ROI_Data_draw_info_timer[instance])/1000) + "s");
 
     // Get max string width
@@ -856,7 +857,8 @@ class ROI_Data {
         mi_x_min, mi_y_min,
         mi_x_max, mi_y_max,
         scr_x_min, scr_y_min,
-        scr_x_max, scr_y_max));
+        scr_x_max, scr_y_max,
+        points_group.size()));
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():Exit");
   }
 
@@ -903,8 +905,9 @@ class ROI_Object_Data {
   public int time_stamp_last;
   //public long time_stamp_start;
   //public long time_stamp_last;
+  public int number_of_points;
   
-  ROI_Object_Data(int region, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y) {
+  ROI_Object_Data(int region, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y, int number_of_points) {
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region="+region);
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"mi x="+mi_start_x+",y="+mi_start_y+",x="+mi_end_x+",y="+mi_end_y);
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"scr x="+scr_start_x+",y="+scr_start_y+",x="+scr_end_x+",y="+scr_end_y);
@@ -946,6 +949,7 @@ class ROI_Object_Data {
     else {
       this.scr_diameter = get_points_distance(scr_start_x, scr_start_y, scr_end_x, scr_end_y);
     }
+    this.number_of_points = number_of_points;
   }
 
 }
