@@ -96,6 +96,22 @@ int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b
   return distance;
 }
 
+int get_point_rotate_x(int point_x, int point_y, float degree)
+{
+  int point_rot_x;
+  point_rot_x = int(point_x * cos(radians(degree)) - point_y * sin(radians(degree)));
+  //println("get_point_rotate_x():"+"point_rot_x="+point_rot_x);
+  return point_rot_x;
+}
+
+int get_point_rotate_y(int point_x, int point_y, float degree)
+{
+  int point_rot_y;
+  point_rot_y = int(point_x * sin(radians(degree)) + point_y * cos(radians(degree)));
+  //println("get_point_rotate_y():"+"point_rot_y="+point_rot_y);
+  return point_rot_y;
+}
+
 int get_point_rotate_distance(int point_x, int point_y, float degree)
 {
   int point_rot_x, point_rot_y;

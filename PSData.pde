@@ -574,9 +574,10 @@ class PS_Data {
       // : The distance value is -2147483648 (0x80000000) in case that the echo signal was too low.
       // : The distance value is 2147483647 (0x7FFFFFFF) in case that the echo signal was noisy.
       distances[instance][j] = get_int32_bytes(PS_Data_buf[instance], i);
-      angle_degree[instance][j] =  scan_angle_start[instance] - 45.0
-                                  +
-                                  float(j) * scan_angle_size[instance] / float(number_of_points[instance]);
+      angle_degree[instance][j] =
+        scan_angle_start[instance] - 45.0
+        +
+        float(j) * scan_angle_size[instance] / float(number_of_points[instance]);
       // No echo or Noisy
       if (distances[instance][j] == 0x80000000
           ||
@@ -911,8 +912,9 @@ class PS_Data {
       ROI_Data_handle.clear_objects(instance);
       time_stamp_wraped[instance] = false;
     }
-    ROI_Data_handle.set_time_stamp(instance, time_stamp[instance]);
     ROI_Data_handle.clear_points(instance);
+    ROI_Data_handle.set_time_stamp(instance, time_stamp[instance]);
+    ROI_Data_handle.set_angle_step(instance, scan_angle_step[instance]);
 
     for (int j = 0; j < number_of_points[instance]; j++) {
       // Get Distance

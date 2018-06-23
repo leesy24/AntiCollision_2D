@@ -23,6 +23,11 @@ final static boolean PRINT_ROI_DATA_SET_TIME_STAMP_DBG = false;
 //final static boolean PRINT_ROI_DATA_SET_TIME_STAMP_ERR = true;
 final static boolean PRINT_ROI_DATA_SET_TIME_STAMP_ERR = false;
 
+//final static boolean PRINT_ROI_DATA_SET_ANGLE_STEP_DBG = true;
+final static boolean PRINT_ROI_DATA_SET_ANGLE_STEP_DBG = false;
+//final static boolean PRINT_ROI_DATA_SET_ANGLE_STEP_ERR = true;
+final static boolean PRINT_ROI_DATA_SET_ANGLE_STEP_ERR = false;
+
 //final static boolean PRINT_ROI_DATA_CLEAR_POINTS_DBG = true;
 final static boolean PRINT_ROI_DATA_CLEAR_POINTS_DBG = false;
 //final static boolean PRINT_ROI_DATA_CLEAR_POINTS_ERR = true;
@@ -251,6 +256,7 @@ class ROI_Data {
   LinkedList<ROI_Object_Data>[] objects_array = new LinkedList[PS_INSTANCE_MAX];
   int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
+  float[] angle_step = new float[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
   ROI_Data() {
@@ -266,15 +272,21 @@ class ROI_Data {
   void set_time_stamp(int instance, int time_stamp) {
   //void set_time_stamp(int instance, long time_stamp) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):");
-    int i = 0;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):"+"time_stamp="+time_stamp);
     time_stamp_curr[instance] = time_stamp;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_time_stamp("+instance+"):Exit");
   }
 
+  void set_angle_step(int instance, float angle_step) {
+  //void set_time_stamp(int instance, long time_stamp) {
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_ANGLE_STEP_DBG) println("ROI_Data:set_angle_step("+instance+"):");
+    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_angle_step("+instance+"):"+"angle_step="+angle_step);
+    this.angle_step[instance] = angle_step;
+    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SET_TIME_STAMP_DBG) println("ROI_Data:set_angle_step("+instance+"):Exit");
+  }
+
   void clear_points(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_points("+instance+"):Enter");
-    int i = 0;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_points("+instance+"):"+"points length="+points_array[instance].size());
     points_array[instance].clear();
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_points("+instance+"):Exit");
@@ -282,7 +294,6 @@ class ROI_Data {
 
   void clear_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Enter");
-    int i = 0;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):"+"objects length="+objects_array[instance].size());
     objects_array[instance].clear();
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
@@ -307,7 +318,7 @@ class ROI_Data {
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"objects_array["+instance+"]="+objects_array[instance]);
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"objects="+objects);
 
-    get_objects(objects, points_array[instance]);
+    get_objects(objects, points_array[instance], angle_step[instance]);
 
     for (ROI_Object_Data object_new:objects) {
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
@@ -764,7 +775,7 @@ class ROI_Data {
     return ret;
   }
 
-  private void get_objects(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points) {
+  private void get_objects(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():Enter");
     if (points.size() == 0) {
       if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_ADD_OBJECTS_ERR) println("ROI_Data:get_objects():"+"points size=0 error!");
@@ -776,16 +787,16 @@ class ROI_Data {
       ROI_Point_Data point_curr;
       ROI_Point_Data point_prev;
 
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
       point_prev = points.get(0);
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_prev["+0+"]:"+"region="+point_prev.region+",mi_x="+point_prev.mi_x+",mi_y="+point_prev.mi_y+",scr_x="+point_prev.scr_x+",scr_y="+point_prev.scr_y);
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_prev["+0+"]:"+"region="+point_prev.region+",mi_x="+point_prev.mi_x+",mi_y="+point_prev.mi_y+",scr_x="+point_prev.scr_x+",scr_y="+point_prev.scr_y);
       points_group.add(point_prev);
       points.remove(0);
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
       for (int i = 0; i < points.size();) {
         int distance;
         point_curr = points.get(i);
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
         distance = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_curr.mi_x, point_curr.mi_y);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"distance="+distance);
         if (distance <= ROI_OBJECT_DISTANCE_LIMIT) {
@@ -797,15 +808,15 @@ class ROI_Data {
           i ++;
         }
       }
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_group size="+points_group.size());
-      add_object(objects, points_group);
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_group size="+points_group.size());
+      add_object(objects, points_group, angle_step);
       points_group.clear();
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size="+points.size());
     } while (points.size() != 0);
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():Exit");
   }
 
-  private void add_object(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points_group) {
+  private void add_object(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points_group, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():Enter");
 
     int region_min;
@@ -816,7 +827,7 @@ class ROI_Data {
     mi_x_min = mi_y_min = scr_x_min = scr_y_min = MAX_INT;
     mi_x_max = mi_y_max = scr_x_max = scr_y_max = MIN_INT;
 
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():"+"points_group size="+points_group.size());
+    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():"+"points_group size="+points_group.size());
     for (ROI_Point_Data point:points_group) {
       region_min = min(region_min, point.region);
       mi_x_min = min(mi_x_min, point.mi_x);
@@ -828,6 +839,12 @@ class ROI_Data {
       scr_x_max = max(scr_x_max, point.scr_x);
       scr_y_max = max(scr_y_max, point.scr_y);
     }
+
+    if (mi_x_min == mi_x_max && mi_y_min == mi_y_max) {
+      mi_x_max = get_point_rotate_x(mi_x_min, mi_y_min, angle_step / 2.0);
+      mi_y_max = get_point_rotate_y(mi_x_min, mi_y_min, angle_step / 2.0);
+    }
+
     objects.add(
       new ROI_Object_Data(
         region_min,
@@ -897,16 +914,33 @@ class ROI_Object_Data {
     this.mi_center_x = mi_start_x + this.mi_width / 2;
     this.mi_center_y = mi_start_y + this.mi_height / 2;
     this.mi_diameter = get_points_distance(mi_start_x, mi_start_y, mi_end_x, mi_end_y);
-    this.mi_distance = get_points_distance(0, 0, mi_start_x, mi_start_y);
+    this.mi_distance = get_points_distance(0, 0, mi_center_x, mi_center_y);
     this.scr_start_x = scr_start_x;
     this.scr_start_y = scr_start_y;
     this.scr_end_x = scr_end_x;
     this.scr_end_y = scr_end_y;
-    this.scr_width = scr_end_x - scr_start_x;
-    this.scr_height = scr_end_y - scr_start_y;
-    this.scr_center_x = scr_start_x + this.scr_width / 2;
-    this.scr_center_y = scr_start_y + this.scr_height / 2;
-    this.scr_diameter = get_points_distance(scr_start_x, scr_start_y, scr_end_x, scr_end_y);
+    if (scr_start_x == scr_end_x) {
+      this.scr_width = 1;
+      this.scr_center_x = scr_start_x;
+    }
+    else {
+      this.scr_width = scr_end_x - scr_start_x;
+      this.scr_center_x = scr_start_x + this.scr_width / 2;
+    }
+    if (scr_start_y == scr_end_y) {
+      this.scr_height = 1;
+      this.scr_center_y = scr_start_y;
+    }
+    else {
+      this.scr_height = scr_end_y - scr_start_y;
+      this.scr_center_y = scr_start_y + this.scr_height / 2;
+    }
+    if (scr_start_x == scr_end_x && scr_start_y == scr_end_y) {
+      this.scr_diameter = 1;
+    }
+    else {
+      this.scr_diameter = get_points_distance(scr_start_x, scr_start_y, scr_end_x, scr_end_y);
+    }
   }
 
 }
