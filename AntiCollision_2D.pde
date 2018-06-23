@@ -72,6 +72,7 @@ void setup() {
   Screen_setup();
   Fault_Region_setup();
   Alert_Region_setup();
+  Grid_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
 
@@ -98,6 +99,7 @@ void draw() {
     Screen_setup();
     Fault_Region_setup();
     Alert_Region_setup();
+    Grid_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
     // Set window title
@@ -108,6 +110,7 @@ void draw() {
     Screen_setup();
     Fault_Region_setup();
     Alert_Region_setup();
+    Grid_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
   }

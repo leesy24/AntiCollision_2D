@@ -1,4 +1,4 @@
-void Grid_draw_rotate_315(int instance)
+void Grid_update_rotate_315(int instance)
 {
   final int const_screen_height_d_2 = SCREEN_height / 2;
   final int const_screen_x_start = TEXT_MARGIN;
@@ -70,11 +70,6 @@ void Grid_draw_rotate_315(int instance)
     x_zero = SCREEN_width;
   //println("x_zero="+x_zero);
 
-  // Sets the color used to draw lines and borders around shapes.
-  fill(C_GRID_LINE);
-  stroke(C_GRID_LINE);
-  strokeWeight(W_GRID_LINE);
-
   Grid_scr_x_min[instance] = min(Grid_scr_x_min[instance], x_zero);
   Grid_scr_x_max[instance] = max(Grid_scr_x_max[instance], SCREEN_width);
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
@@ -86,7 +81,7 @@ void Grid_draw_rotate_315(int instance)
       distance = (ZOOM_FACTOR[instance] * (const_str_offset_iy - iy)) / 100.0 / 100.0;
     y = iy + const_grid_offset_y;
     if (distance >= 0.0 && y >= 0 && y <= SCREEN_height) {
-      line(x_zero, y, SCREEN_width, y);
+      Grid_Lines_array[instance].add(new Grid_Line_Data(x_zero, y, SCREEN_width, y));
       //println("iy="+iy+":offset_y="+const_grid_offset_y+",y="+(iy + const_grid_offset_y));
       //println("iy="+iy+":y="+y);
       Grid_scr_y_min[instance] = min(Grid_scr_y_min[instance], y);
@@ -109,10 +104,12 @@ void Grid_draw_rotate_315(int instance)
     distance = (ZOOM_FACTOR[instance] * (ix - const_str_offset_ix)) / 100.0 / 100.0;
     x = ix + const_grid_offset_x;
     if (distance >= 0.0 && x >= 0 && x <= SCREEN_width) {
-      if (MIRROR_ENABLE[instance])
-        line(x, y_zero, x, SCREEN_height);
-      else
-        line(x, 0, x, y_zero);
+      if (MIRROR_ENABLE[instance]) {
+        Grid_Lines_array[instance].add(new Grid_Line_Data(x, y_zero, x, SCREEN_height));
+      }
+      else {
+        Grid_Lines_array[instance].add(new Grid_Line_Data(x, 0, x, y_zero));
+      }
       //println("ix="+ix+":offset_x="+const_grid_offset_x+",x="+x);
       //println("ix="+ix+":x="+x);
       Grid_scr_x_min[instance] = min(Grid_scr_x_min[instance], x);
@@ -120,11 +117,6 @@ void Grid_draw_rotate_315(int instance)
     }
   }
 
-  // Sets the color used to draw text and borders around shapes.
-  fill(C_GRID_TEXT);
-  stroke(C_GRID_TEXT);
-  textSize(FONT_HEIGHT);
-  textAlign(LEFT, BASELINE);
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(iy - const_str_offset_iy) / 100.0;
@@ -142,7 +134,7 @@ void Grid_draw_rotate_315(int instance)
       y = iy + const_grid_offset_y;
       if(distance == 0.0)
         Grid_zero_y[instance] = y;
-      text(string, x, y + const_font_height_d_2);
+      Grid_Texts_array[instance].add(new Grid_Text_Data(string, x, y + const_font_height_d_2));
       //println("iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
     }
   }
@@ -158,7 +150,7 @@ void Grid_draw_rotate_315(int instance)
       x = ix + const_grid_offset_x;
       if(distance == 0.0)
         Grid_zero_x[instance] = x;
-      text(string, x - int(textWidth(string) / 2.0), y);
+      Grid_Texts_array[instance].add(new Grid_Text_Data(string, x - int(textWidth(string) / 2.0), y));
       //println("ix=" + ix + ":x=" + x + ",y=" + y + ",const_zoom_factor_d_100=" + const_zoom_factor_d_100 + ",const_str_offset_ix=" + const_str_offset_ix + "," + string);
     }
   }
