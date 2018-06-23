@@ -521,17 +521,15 @@ class ROI_Data {
     int rect_w, rect_h;
     int rect_x, rect_y;
     int rect_tl = 5, rect_tr = 5, rect_br = 5, rect_bl = 5;
+    rect_w = witdh_max + TEXT_MARGIN * 2;
+    rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
     if (ROTATE_FACTOR[instance] == 315) {
       if (MIRROR_ENABLE[instance]) { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x;
         rect_y = object.scr_center_y;
         rect_tl = 0;
       }
       else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x;
         rect_y = object.scr_center_y - rect_h - 1;
         rect_bl = 0;
@@ -539,15 +537,11 @@ class ROI_Data {
     }
     else if (ROTATE_FACTOR[instance] == 45) {
       if (MIRROR_ENABLE[instance]) { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x - rect_w - 1;
         rect_y = object.scr_center_y;
         rect_tr = 0;
       }
       else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x;
         rect_y = object.scr_center_y;
         rect_tl = 0;
@@ -555,15 +549,11 @@ class ROI_Data {
     }
     else if (ROTATE_FACTOR[instance] == 135) {
       if (MIRROR_ENABLE[instance]) { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x - rect_w - 1;
         rect_y = object.scr_center_y - rect_h - 1;
         rect_br = 0;
       }
       else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x - rect_w - 1;
         rect_y = object.scr_center_y;
         rect_tr = 0;
@@ -571,19 +561,89 @@ class ROI_Data {
     }
     else /*if (ROTATE_FACTOR[instance] == 225)*/ {
       if (MIRROR_ENABLE[instance]) { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x;
         rect_y = object.scr_center_y - rect_h - 1;
         rect_bl = 0;
       }
       else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = object.scr_center_x - rect_w - 1;
         rect_y = object.scr_center_y - rect_h - 1;
         rect_br = 0;
       }
+    }
+
+    if (rect_x < 0 && rect_y < 0) {
+      if (rect_br == 0) {
+        rect_x = object.scr_center_x;
+        rect_y = object.scr_center_y;
+        if (rect_x < 0)
+          rect_x = 0;
+        if (rect_y < 0)
+          rect_y = 0;
+        rect_tl = 0;
+        rect_br = 5;
+      }
+      else {
+        rect_x = rect_y = 0;
+      }
+    }
+    else if (rect_x < 0) {
+      if (rect_br == 0) {
+        rect_x = object.scr_center_x;
+        if (rect_x < 0)
+          rect_x = 0;
+        rect_bl = 0;
+        rect_br = 5;
+      }
+      else {
+        rect_x = 0;
+      }
+    }
+    else if (rect_y < 0) {
+      if (rect_br == 0) {
+        rect_y = object.scr_center_y;
+        if (rect_y < 0)
+          rect_y = 0;
+        rect_tr = 0;
+        rect_br = 5;
+      }
+      else if (rect_bl == 0) {
+        rect_y = object.scr_center_y;
+        if (rect_y < 0)
+          rect_y = 0;
+        rect_tl = 0;
+        rect_bl = 5;
+      }
+      else {
+        rect_y = 0;
+      }
+    }
+
+    if (rect_x + rect_w > SCREEN_width && rect_y + rect_h > SCREEN_height) {
+      rect_x = SCREEN_width - rect_w;
+      rect_y = SCREEN_height - rect_h;
+    }
+    else if (rect_x + rect_w > SCREEN_width ) {
+      if (rect_bl == 0) {
+        rect_x = object.scr_center_x - rect_w - 1;
+        if (rect_x + rect_w > SCREEN_width)
+          rect_x = SCREEN_width - rect_w;
+        rect_br = 0;
+        rect_bl = 5;
+      }
+      else if (rect_tl == 0) {
+        rect_x = object.scr_center_x - rect_w - 1;
+        if (rect_x + rect_w > SCREEN_width)
+          rect_x = SCREEN_width - rect_w;
+        rect_tr = 0;
+        rect_tl = 5;
+      }
+      else {
+        rect_x = SCREEN_width - rect_w;
+      }
+    }
+    else if (rect_y + rect_h > SCREEN_height) {
+      rect_y = SCREEN_height - rect_h;
     }
 
     // Draw rect
