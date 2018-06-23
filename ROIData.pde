@@ -407,6 +407,16 @@ class ROI_Data {
               object.scr_center_y,
               object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
               object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
+      /*
+      //fill(0x00000000);
+      fill(0x00FFFFFF);
+      stroke(0);
+      strokeWeight(1);
+      ellipse(object.scr_center_x,
+              object.scr_center_y,
+              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
+              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
+      */
     }
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Exit");
   }
@@ -425,27 +435,33 @@ class ROI_Data {
     //if (objects_array[instance].size() <= ROI_Data_mouse_over_object_index[instance]) return;
 
     ROI_Object_Data object;
-    int i, distance_min_index = -1;;
+    int distance_min = MAX_INT, distance_min_index = MAX_INT;
 
-    for (i = 0; i < objects_array[instance].size(); i ++) {
-      int distance_min = MAX_INT;
+    //println(instance+":x="+ROI_Data_draw_info_x[instance]+",y="+ROI_Data_draw_info_y[instance]);
+    for (int i = 0; i < objects_array[instance].size(); i ++) {
       int distance;
       object = objects_array[instance].get(i);
+      //println(instance+","+i+":c.x="+object.scr_center_x+",y="+object.scr_center_y+",d="+object.scr_diameter);
       if (check_xy_over_object(
             ROI_Data_draw_info_x[instance],
             ROI_Data_draw_info_y[instance],
-            object, ROI_OBJECT_MARKER_MARGIN)) {
+            object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
         distance =
           get_points_distance(
             ROI_Data_draw_info_x[instance], ROI_Data_draw_info_y[instance],
             object.scr_center_x, object.scr_center_y);
+        //println(instance+","+i+":distance="+distance);
         if (distance < distance_min) {
           distance_min = distance;
           distance_min_index = i;
         }
       }
     }
-    if (distance_min_index < 0) return;
+    if (distance_min_index == MAX_INT) return;
+    //println(instance+":distance_min="+distance_min+":distance_min_index="+distance_min_index);
+
+    //ROI_Data_draw_info_enabled[instance] = false;
+
     object = objects_array[instance].get(distance_min_index);
     /*
     ROI_Object_Data object;
@@ -598,7 +614,7 @@ class ROI_Data {
     for (i = objects_array[instance].size() - 1; i >= 0 ; i --) {
       ROI_Object_Data object;
       object = objects_array[instance].get(i);
-      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN)) {
+      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
         break;
       }
     }
@@ -616,7 +632,7 @@ class ROI_Data {
     boolean ret = false;
 
     for (ROI_Object_Data object:objects_array[instance]) {
-      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN)) {
+      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
         ret = true;
         break;
       }
@@ -634,10 +650,17 @@ class ROI_Data {
 
     boolean ret = false;
 
-    if(sqrt(sq(object.scr_center_x - x) + sq(object.scr_center_y - y)) < (object.scr_diameter + margin * 2) / 2 ) {
+    if( get_points_distance(x, y, object.scr_center_x, object.scr_center_y)
+        <=
+        (object.scr_diameter + margin * 2) / 2 ) {
       ret = true;
     }
-/*
+    /*
+    if(sqrt(sq(object.scr_center_x - x) + sq(object.scr_center_y - y)) <= (object.scr_diameter + margin * 2) / 2 ) {
+      ret = true;
+    }
+    */
+    /*
     if( x >= object.scr_start_x - margin
         &&
         x <= object.scr_end_x + margin
@@ -649,7 +672,7 @@ class ROI_Data {
       ret = true;
       break;
     }
-*/
+    */
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_object():ret="+ret);
 
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_object():Exit");
