@@ -221,10 +221,10 @@ void ROI_Data_mouse_moved()
 /*
     int object_index;
 
-    object_index = ROI_Data_handle.get_object_index_over_xy(i, mouseX, mouseY);
+    object_index = ROI_Data_handle.get_object_index_over_xy(i, mouseX, mouseY, ROI_OBJECT_MARKER_MARGIN);
     if (object_index >= 0)
 */
-    if (ROI_Data_handle.check_xy_over_objects(i, mouseX, mouseY))
+    if (ROI_Data_handle.check_xy_over_objects(i, mouseX, mouseY, ROI_OBJECT_MARKER_MARGIN))
     {
       ROI_Data_mouse_over[i] = true;
 /*
@@ -445,7 +445,7 @@ class ROI_Data {
       if (check_xy_over_object(
             ROI_Data_draw_info_x[instance],
             ROI_Data_draw_info_y[instance],
-            object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
+            object, ROI_OBJECT_MARKER_MARGIN)) {
         distance =
           get_points_distance(
             ROI_Data_draw_info_x[instance], ROI_Data_draw_info_y[instance],
@@ -606,7 +606,7 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECT_INFO_DBG) println("ROI_Data:draw_object_info("+instance+"):Enter");
   }
 
-  int get_object_index_over_xy(int instance, int x, int y) {
+  int get_object_index_over_xy(int instance, int x, int y, int margin) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GET_OBJECT_INDEX_OVER_XY_DBG) println("ROI_Data:get_object_index_over_xy():Enter");
 
     int i;
@@ -614,7 +614,7 @@ class ROI_Data {
     for (i = objects_array[instance].size() - 1; i >= 0 ; i --) {
       ROI_Object_Data object;
       object = objects_array[instance].get(i);
-      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
+      if (check_xy_over_object(x, y, object, margin)) {
         break;
       }
     }
@@ -626,13 +626,13 @@ class ROI_Data {
     return i;
   }
 
-  boolean check_xy_over_objects(int instance, int x, int y) {
+  boolean check_xy_over_objects(int instance, int x, int y, int margin) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_xy_over_objects():Enter");
 
     boolean ret = false;
 
     for (ROI_Object_Data object:objects_array[instance]) {
-      if (check_xy_over_object(x, y, object, ROI_OBJECT_MARKER_MARGIN + W_ROI_FAULT_MARKER_STROKE / 2)) {
+      if (check_xy_over_object(x, y, object, margin)) {
         ret = true;
         break;
       }
