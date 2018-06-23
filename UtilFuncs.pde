@@ -88,3 +88,19 @@ void set_str_bytes(byte[] buf, int offset, String str)
     buf[offset + i] = byte(str.charAt(i));
   }
 }
+
+int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
+{
+  int distance = int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y)));
+  //println("get_points_distance():"+"distance="+distance);
+  return distance;
+}
+
+int get_point_rotate_distance(int point_x, int point_y, float degree)
+{
+  int point_rot_x, point_rot_y;
+  point_rot_x = int(point_x * cos(radians(degree)) - point_y * sin(radians(degree)));
+  point_rot_y = int(point_x * sin(radians(degree)) + point_y * cos(radians(degree)));
+  //println("get_point_rotate_distance():"+"distance="+distance);
+  return get_points_distance(point_x, point_y, point_rot_x, point_rot_y);
+}
