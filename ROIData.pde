@@ -841,8 +841,13 @@ class ROI_Data {
     }
 
     if (mi_x_min == mi_x_max && mi_y_min == mi_y_max) {
-      mi_x_max = get_point_rotate_x(mi_x_min, mi_y_min, angle_step / 2.0);
-      mi_y_max = get_point_rotate_y(mi_x_min, mi_y_min, angle_step / 2.0);
+      int rot_x, rot_y;
+      rot_x = get_point_rotate_x(mi_x_min, mi_y_min, angle_step);
+      rot_y = get_point_rotate_y(mi_x_min, mi_y_min, angle_step);
+      mi_x_min = min(mi_x_min, rot_x);
+      mi_y_min = min(mi_y_min, rot_y);
+      mi_x_max = max(mi_x_max, rot_x);
+      mi_y_max = max(mi_y_max, rot_y);
     }
 
     objects.add(
