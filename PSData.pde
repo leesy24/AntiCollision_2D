@@ -304,8 +304,6 @@ class PS_Data {
       }
       // No mean in file interface.
       load_take_time[instance] = -1;
-      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
-      return true;
     }
     else if(PS_Interface[instance] == PS_Interface_UART) {
       if(Interfaces_UART_load() != true) {
@@ -321,8 +319,6 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UART_get_take_time();
-      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
-      return true;
     }
     else if(PS_Interface[instance] == PS_Interface_UDP
             ||
@@ -340,13 +336,20 @@ class PS_Data {
         return false;
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-      if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
-      return true;
     }
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):PS_Interface["+instance+"] error! " + PS_Interface[instance]);
       return false;
     }
+
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
+
+/*
+    // Save bytes to file.
+    saveBytes("log\\"+instance+"_"+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+nf(millis()%1000,3)+".dat", PS_Data_buf[instance]);
+*/
+
+    return true;
   }
 
   // Parsing Data buffer

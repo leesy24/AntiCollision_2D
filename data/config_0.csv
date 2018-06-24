@@ -5,7 +5,7 @@ MIRROR_ENABLE,true,Mirroring or not.(true or false)
 ZOOM_FACTOR,140,Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)
 DRAW_OFFSET_X,-546,X Offset of draws.
 DRAW_OFFSET_Y,257,Y Offset of draws.
-FILE_name,C:\Temp\data.bin,File name of PS Interface File.
+FILE_name,data\data_1.bin,File name of PS Interface File.
 UART_port_name,COM1,UART port name of PS Interface UART.
 UART_baud_rate,115200,UART baud rate of PS Interface UART.
 UART_parity,N,UART parity of PS Interface UART.

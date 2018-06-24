@@ -43,6 +43,7 @@ void Interfaces_File_setup()
   FILE_last_modified_time = new long[PS_INSTANCE_MAX];
   FILE_str_err_last = new String[PS_INSTANCE_MAX];
   for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
+    /*
     // Check config FILE_name
     if( FILE_name[i].equals("") == true ||
         FILE_name[i].equals(FILE_NAME) == true) {
@@ -59,6 +60,7 @@ void Interfaces_File_setup()
       }
       Config_save();
     }
+    */
     Title += "(" + FILE_name[i] + ")";
     FILE_str_err_last[i] = null;
     FILE_last_modified_time[i] = 0;
@@ -73,16 +75,16 @@ String Interfaces_File_get_error(int instance)
 
 boolean Interfaces_File_load(int instance)
 {
-  String string;
+  //String string;
+  String abs_filename = sketchPath(FILE_name[instance]);
 
   // Check file exists to avoid exception error on loadBytes().
-  File file = new File(FILE_name[instance]);
+  File file = new File(abs_filename);
   if (file.exists() != true || file.isDirectory()) {
     FILE_str_err_last[instance] = "Error: File not exist! " + FILE_name[instance];
     if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(FILE_str_err_last[instance]);
     return false;
   } // End of load()
-
 /*
   // Check file changed
   if (FILE_last_modified_time[instance] == file.lastModified())
@@ -95,6 +97,11 @@ boolean Interfaces_File_load(int instance)
 
   // Load binary buf.
   PS_Data_buf[instance] = loadBytes(FILE_name[instance]);
+  if (PS_Data_buf[instance] == null) {
+    FILE_str_err_last[instance] = "Error: File not exist! " + FILE_name[instance];
+    if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(FILE_str_err_last[instance]);
+    return false;
+  }
   if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("buf.length = " + PS_Data_buf[instance].length);
   // Check binary buf length is valid.
   // Must larger than Function code(4B) + Length(4B) + Number of parameters(4B) + Number of points(4B) + CRC(4B).
