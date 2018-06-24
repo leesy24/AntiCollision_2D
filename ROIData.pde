@@ -345,8 +345,17 @@ class ROI_Data {
         //println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         if (time_duration >= ROI_OBJECT_TIME_LIMIT) {
         //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2L) {
-          if (time_duration > ROI_OBJECT_TIME_LIMIT * W_REGION_FAULT_ROI_MARKER_STROKE) {
-            object_prev.time_stamp_start = object_prev.time_stamp_last - ROI_OBJECT_TIME_LIMIT * W_REGION_FAULT_ROI_MARKER_STROKE;
+          if (time_duration
+              >
+              ( ROI_OBJECT_TIME_LIMIT
+                *
+                Regions_handle.get_marker_stroke_weight(instance, object_prev.region))) {
+            object_prev.time_stamp_start =
+              object_prev.time_stamp_last
+              -
+              ( ROI_OBJECT_TIME_LIMIT
+                *
+                Regions_handle.get_marker_stroke_weight(instance, object_prev.region));
           }
           else {
             object_prev.time_stamp_start -= object_prev.time_stamp_last - time_stamp_curr[instance];
@@ -391,27 +400,11 @@ class ROI_Data {
         continue;
       }
       weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
-      if (object.region == Region_Fault) {
-        weight = min(weight, W_REGION_FAULT_ROI_MARKER_STROKE);
-        fill(C_REGION_FAULT_ROI_MARKER_FILL);
-        // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_REGION_FAULT_ROI_MARKER_STROKE);
-        strokeWeight(weight);
-      }
-      else if (object.region == Region_Alert) {
-        weight = min(weight, W_REGION_ALERT_ROI_MARKER_STROKE);
-        fill(C_REGION_ALERT_ROI_MARKER_FILL);
-        // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_REGION_ALERT_ROI_MARKER_STROKE);
-        strokeWeight(weight);
-      }
-      else /*if (object.region == Region_Monitor)*/ {
-        weight = min(weight, W_REGION_MONITOR_ROI_MARKER_STROKE);
-        fill(C_REGION_MONITOR_ROI_MARKER_FILL);
-        // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_REGION_MONITOR_ROI_MARKER_STROKE);
-        strokeWeight(weight);
-      }
+      weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region));
+      fill(Regions_handle.get_marker_fill_color(instance, object.region));
+      // Sets the color and weight used to draw lines and borders around shapes.
+      stroke(Regions_handle.get_marker_stroke_color(instance, object.region));
+      strokeWeight(weight);
       /*
       rect( object.scr_start_x - ROI_OBJECT_MARKER_MARGIN,
             object.scr_start_y - ROI_OBJECT_MARKER_MARGIN,
@@ -515,7 +508,7 @@ class ROI_Data {
 
     LinkedList<String> strings = new LinkedList<String>();
 
-    strings.add("Region:" + Region_name[object.region]);
+    strings.add("Region:" + Regions_handle.get_region_name(instance, object.region));
     strings.add("Time dur.:" + ((object.time_stamp_last - object.time_stamp_start)/1000) + "s");
     strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
     strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");

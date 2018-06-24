@@ -30,21 +30,6 @@ C_UI_INTERFACES_FILL_HIGHLIGHT,FF404040,Interface menu hightlight color. Color d
 C_UI_INTERFACES_BORDER_ACTIVE,FFFF0000,Interface menu border active color. Color data format is AARRGGBB
 C_UI_INTERFACES_BORDER_NORMAL,FFFFFFFF,Interface menu border normal color. Color data format is AARRGGBB
 C_UI_INTERFACES_CURSOR,FF00FF00,Interface menu cursor color. Color data format is AARRGGBB
-C_REGION_FAULT_DEFAULT_LINE,FFFFFFFF,Line color of fault region lines. Color data format is AARRGGBB
-W_REGION_FAULT_DEFAULT_LINE,3,Line weight of fault region lines.
-C_REGION_ALERT_DEFAULT_LINE,FFFFFFFF,Line color of alert region lines. Color data format is AARRGGBB
-W_REGION_ALERT_DEFAULT_LINE,3,Line weight of alert region lines.
-C_REGION_MONITOR_DEFAULT_LINE,FFFFFFFF,Line color of monitor region lines. Color data format is AARRGGBB
-W_REGION_MONITOR_DEFAULT_LINE,3,Line weight of monitor region lines.
-C_REGION_FAULT_ROI_MARKER_FILL,40FF0000,Fill color of fault object ROI marker. Color data format is AARRGGBB
-C_REGION_FAULT_ROI_MARKER_STROKE,FFFF0000,Border color of fault object ROI marker. Color data format is AARRGGBB
-W_REGION_FAULT_ROI_MARKER_STROKE,5,Border weight of fault object ROI marker.
-C_REGION_ALERT_ROI_MARKER_FILL,40FFFF00,Fill color of alert object ROI marker. Color data format is AARRGGBB
-C_REGION_ALERT_ROI_MARKER_STROKE,FFFFFF00,Border color of alert object ROI marker. Color data format is AARRGGBB
-W_REGION_ALERT_ROI_MARKER_STROKE,5,Border weight of alert object ROI marker.
-C_REGION_MONITOR_ROI_MARKER_FILL,40FFFFFF,Fill color of monitor object ROI marker. Color data format is AARRGGBB
-C_REGION_MONITOR_ROI_MARKER_STROKE,FFFFFFFF,Border color of monitor object ROI marker. Color data format is AARRGGBB
-W_REGION_MONITOR_ROI_MARKER_STROKE,5,Border weight of monitor object ROI marker.
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
 ROI_OBJECT_TIME_LIMIT,500,Time limit of object to decide one object ROI.(unit is milli-seconds)

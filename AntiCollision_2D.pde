@@ -24,7 +24,7 @@ void settings() {
   Grid_settings();
   PS_Image_settings();
   ROI_Data_settings();
-  Region_settings();
+  Regions_settings();
 }
 
 // The setup() function is run once, when the program starts.
@@ -69,7 +69,7 @@ void setup() {
   ROI_Data_setup();
   PS_Data_setup();
   Screen_setup();
-  Region_setup();
+  Regions_setup();
   Grid_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
@@ -95,7 +95,7 @@ void draw() {
     ROI_Data_setup();
     PS_Data_setup();
     Screen_setup();
-    Region_setup();
+    Regions_setup();
     Grid_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
@@ -105,7 +105,7 @@ void draw() {
   if (Screen_check_update()) {
     //PS_Data_setup();
     Screen_setup();
-    Region_setup();
+    Regions_setup();
     Grid_setup();
     UI_Buttons_setup();
     UI_Interfaces_setup();
@@ -117,7 +117,7 @@ void draw() {
   Grid_draw();
   BG_Image_draw();
   PS_Image_draw();
-  Region_draw();
+  Regions_draw();
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {

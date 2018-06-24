@@ -64,15 +64,15 @@ void BG_Image_settings()
         Y.toUpperCase().equals("CUT")
       )
     {
-      BG_IMAGE_data.x[i] = MIN_INT;
-      BG_IMAGE_data.y[i] = MIN_INT;
+      BG_IMAGE_data.scr_x[i] = MIN_INT;
+      BG_IMAGE_data.scr_y[i] = MIN_INT;
       //println("BG_IMAGE_data.x[" + i + "]=" + "CUT" + ",BG_IMAGE_data.y[" + i + "]=" + "CUT");
     }
     else
     {
       // You can access the fields via their column name (or index)
-      BG_IMAGE_data.x[i] = variable.getInt("X");
-      BG_IMAGE_data.y[i] = variable.getInt("Y");
+      BG_IMAGE_data.scr_x[i] = variable.getInt("X");
+      BG_IMAGE_data.scr_y[i] = variable.getInt("Y");
       if(Weight == null)
       {
         BG_IMAGE_data.w[i] = W_BG_IMAGE_LINE;
@@ -89,14 +89,14 @@ void BG_Image_settings()
       {
         BG_IMAGE_data.c[i] = (int)Long.parseLong(variable.getString("Color"), 16);
       }
-      if (PRINT_BG_IMAGE_SETTINGS_DBG) println("BG_IMAGE_data.x[" + i + "]=" + BG_IMAGE_data.x[i] + ",BG_IMAGE_data.y[" + i + "]=" + BG_IMAGE_data.y[i] + ",BG_IMAGE_data.w[" + i + "]=" + BG_IMAGE_data.w[i] + ",BG_IMAGE_data.c[" + i + "]=" + BG_IMAGE_data.c[i]);
+      if (PRINT_BG_IMAGE_SETTINGS_DBG) println("BG_IMAGE_data.x[" + i + "]=" + BG_IMAGE_data.scr_x[i] + ",BG_IMAGE_data.y[" + i + "]=" + BG_IMAGE_data.scr_y[i] + ",BG_IMAGE_data.w[" + i + "]=" + BG_IMAGE_data.w[i] + ",BG_IMAGE_data.c[" + i + "]=" + BG_IMAGE_data.c[i]);
     }
     i ++;
   }
   for(; i < BG_IMAGE_data.length; i ++)
   {
-    BG_IMAGE_data.x[i] = MIN_INT;
-    BG_IMAGE_data.y[i] = MIN_INT;
+    BG_IMAGE_data.scr_x[i] = MIN_INT;
+    BG_IMAGE_data.scr_y[i] = MIN_INT;
   }
 }
 
@@ -114,8 +114,8 @@ void BG_Image_draw()
 
   for(int i = 0; i < BG_IMAGE_data.length; i ++)
   {
-    x_curr = BG_IMAGE_data.x[i];
-    y_curr = BG_IMAGE_data.y[i];
+    x_curr = BG_IMAGE_data.scr_x[i];
+    y_curr = BG_IMAGE_data.scr_y[i];
     w_curr = BG_IMAGE_data.w[i];
     c_curr = BG_IMAGE_data.c[i];
     if (PRINT_BG_IMAGE_DRAW_DBG) println("BG_IMAGE_data[" + i + "]:x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);

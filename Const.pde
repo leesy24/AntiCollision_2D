@@ -20,7 +20,7 @@ void Const_settings()
   // "header" option indicates the file has a header row
   CONST_table = loadTable(CONST_file_full_name, "header");
   // Check loadTable failed.
-  if(CONST_table == null)
+  if (CONST_table == null)
   {
     Const_create();
     return;
@@ -92,36 +92,6 @@ void Const_settings()
       C_UI_INTERFACES_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_CURSOR"))
       C_UI_INTERFACES_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_REGION_FAULT_DEFAULT_LINE"))
-      C_REGION_FAULT_DEFAULT_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_FAULT_DEFAULT_LINE"))
-      W_REGION_FAULT_DEFAULT_LINE = variable.getInt("Value");
-    else if(name.equals("C_REGION_ALERT_DEFAULT_LINE"))
-      C_REGION_ALERT_DEFAULT_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_ALERT_DEFAULT_LINE"))
-      W_REGION_ALERT_DEFAULT_LINE = variable.getInt("Value");
-    else if(name.equals("C_REGION_MONITOR_DEFAULT_LINE"))
-      C_REGION_MONITOR_DEFAULT_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_MONITOR_DEFAULT_LINE"))
-      W_REGION_MONITOR_DEFAULT_LINE = variable.getInt("Value");
-    else if(name.equals("C_REGION_FAULT_ROI_MARKER_FILL"))
-      C_REGION_FAULT_ROI_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_REGION_FAULT_ROI_MARKER_STROKE"))
-      C_REGION_FAULT_ROI_MARKER_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_FAULT_ROI_MARKER_STROKE"))
-      W_REGION_FAULT_ROI_MARKER_STROKE = variable.getInt("Value");
-    else if(name.equals("C_REGION_ALERT_ROI_MARKER_FILL"))
-      C_REGION_ALERT_ROI_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_REGION_ALERT_ROI_MARKER_STROKE"))
-      C_REGION_ALERT_ROI_MARKER_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_ALERT_ROI_MARKER_STROKE"))
-      W_REGION_ALERT_ROI_MARKER_STROKE = variable.getInt("Value");
-    else if(name.equals("C_REGION_MONITOR_ROI_MARKER_FILL"))
-      C_REGION_MONITOR_ROI_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_REGION_MONITOR_ROI_MARKER_STROKE"))
-      C_REGION_MONITOR_ROI_MARKER_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_REGION_MONITOR_ROI_MARKER_STROKE"))
-      W_REGION_MONITOR_ROI_MARKER_STROKE = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
@@ -300,81 +270,6 @@ void Const_create()
   variable.setString("Name", "C_UI_INTERFACES_CURSOR");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_CURSOR));
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_FAULT_DEFAULT_LINE");
-  variable.setString("Value", String.format("%08X", C_REGION_FAULT_DEFAULT_LINE));
-  variable.setString("Comment", "Line color of fault region lines. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_FAULT_DEFAULT_LINE");
-  variable.setInt("Value", W_REGION_FAULT_DEFAULT_LINE);
-  variable.setString("Comment", "Line weight of fault region lines.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_ALERT_DEFAULT_LINE");
-  variable.setString("Value", String.format("%08X", C_REGION_ALERT_DEFAULT_LINE));
-  variable.setString("Comment", "Line color of alert region lines. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_ALERT_DEFAULT_LINE");
-  variable.setInt("Value", W_REGION_ALERT_DEFAULT_LINE);
-  variable.setString("Comment", "Line weight of alert region lines.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_MONITOR_DEFAULT_LINE");
-  variable.setString("Value", String.format("%08X", C_REGION_MONITOR_DEFAULT_LINE));
-  variable.setString("Comment", "Line color of monitor region lines. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_MONITOR_DEFAULT_LINE");
-  variable.setInt("Value", W_REGION_MONITOR_DEFAULT_LINE);
-  variable.setString("Comment", "Line weight of monitor region lines.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_FAULT_ROI_MARKER_FILL");
-  variable.setString("Value", String.format("%08X", C_REGION_FAULT_ROI_MARKER_FILL));
-  variable.setString("Comment", "Fill color of fault object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_FAULT_ROI_MARKER_STROKE");
-  variable.setString("Value", String.format("%08X", C_REGION_FAULT_ROI_MARKER_STROKE));
-  variable.setString("Comment", "Border color of fault object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_FAULT_ROI_MARKER_STROKE");
-  variable.setInt("Value", W_REGION_FAULT_ROI_MARKER_STROKE);
-  variable.setString("Comment", "Border weight of fault object ROI marker.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_ALERT_ROI_MARKER_FILL");
-  variable.setString("Value", String.format("%08X", C_REGION_ALERT_ROI_MARKER_FILL));
-  variable.setString("Comment", "Fill color of alert object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_ALERT_ROI_MARKER_STROKE");
-  variable.setString("Value", String.format("%08X", C_REGION_ALERT_ROI_MARKER_STROKE));
-  variable.setString("Comment", "Border color of alert object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_ALERT_ROI_MARKER_STROKE");
-  variable.setInt("Value", W_REGION_ALERT_ROI_MARKER_STROKE);
-  variable.setString("Comment", "Border weight of alert object ROI marker.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_MONITOR_ROI_MARKER_FILL");
-  variable.setString("Value", String.format("%08X", C_REGION_MONITOR_ROI_MARKER_FILL));
-  variable.setString("Comment", "Fill color of monitor object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "C_REGION_MONITOR_ROI_MARKER_STROKE");
-  variable.setString("Value", String.format("%08X", C_REGION_MONITOR_ROI_MARKER_STROKE));
-  variable.setString("Comment", "Border color of monitor object ROI marker. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "W_REGION_MONITOR_ROI_MARKER_STROKE");
-  variable.setInt("Value", W_REGION_MONITOR_ROI_MARKER_STROKE);
-  variable.setString("Comment", "Border weight of monitor object ROI marker.");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");

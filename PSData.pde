@@ -938,11 +938,11 @@ class PS_Data {
         point_is_contains_prev = false;
       }
       else {
-        int region_index = Region_check_point_contains(instance, mi_x, mi_y);
+        int region_index = Regions_check_point_contains(instance, mi_x, mi_y);
         if (region_index >= 0) {
           ROI_Data_handle.add_point(instance, region_index, mi_x, mi_y, point_x_curr, point_y_curr);
           point_is_contains_curr = true;
-          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Region_name[region_index]+":x="+mi_x+",y="+mi_y);
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         else {
           point_is_contains_curr = false;
