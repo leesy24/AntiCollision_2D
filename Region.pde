@@ -13,12 +13,12 @@ final static boolean PRINT_REGION_DRAW_DBG = false;
 //final static boolean PRINT_REGION_POINT_IS_CONTAINS_DBG = true; 
 final static boolean PRINT_REGION_POINT_IS_CONTAINS_DBG = false;
 
-// Define default binary buf filename and path 
-final static String REGION_FAULT_FILE_NAME = "fault_region";
-final static String REGION_FAULT_FILE_EXT = ".csv";
+// Define default table filename and ext.
+final static String REGION_MONITOR_FILE_NAME = "monitor_region";
+final static String REGION_MONITOR_FILE_EXT = ".csv";
 
-static color C_REGION_FAULT_DEFAULT_LINE = #000000;
-static int W_REGION_FAULT_DEFAULT_LINE = 3;
+static color C_REGION_MONITOR_DEFAULT_LINE = #000000;
+static int W_REGION_MONITOR_DEFAULT_LINE = 3;
 
 final static String REGION_ALERT_FILE_NAME = "alert_region";
 final static String REGION_ALERT_FILE_EXT = ".csv";
@@ -26,37 +26,79 @@ final static String REGION_ALERT_FILE_EXT = ".csv";
 static color C_REGION_ALERT_DEFAULT_LINE = #000000;
 static int W_REGION_ALERT_DEFAULT_LINE = 3;
 
+final static String REGION_FAULT_FILE_NAME = "fault_region";
+final static String REGION_FAULT_FILE_EXT = ".csv";
+
+static color C_REGION_FAULT_DEFAULT_LINE = #000000;
+static int W_REGION_FAULT_DEFAULT_LINE = 3;
+
 Region Region_Fault_handle;
 Region Region_Alert_handle;
+Region Region_Monitor_handle;
 
 final static int Region_Fault = 0;
 final static int Region_Alert = 1;
+final static int Region_Monitor = 2;
+final static int Region_Count_Max = 3;
 
-final static String[] Region_name = {"Fault", "Alert"};
+final static String[] Region_name = {"Fault", "Alert", "Monotor"};
 
 
 void Region_settings()
 {
-  Region_Fault_handle = new Region(REGION_FAULT_FILE_NAME, REGION_FAULT_FILE_EXT, C_REGION_FAULT_DEFAULT_LINE, W_REGION_FAULT_DEFAULT_LINE);
-  Region_Alert_handle = new Region(REGION_ALERT_FILE_NAME, REGION_ALERT_FILE_EXT, C_REGION_ALERT_DEFAULT_LINE, W_REGION_ALERT_DEFAULT_LINE);
+  Region_Monitor_handle =
+    new Region(
+      REGION_MONITOR_FILE_NAME,
+      REGION_MONITOR_FILE_EXT,
+      C_REGION_MONITOR_DEFAULT_LINE,
+      W_REGION_MONITOR_DEFAULT_LINE);
+  Region_Alert_handle =
+    new Region(
+      REGION_ALERT_FILE_NAME,
+      REGION_ALERT_FILE_EXT,
+      C_REGION_ALERT_DEFAULT_LINE,
+      W_REGION_ALERT_DEFAULT_LINE);
+  Region_Fault_handle =
+    new Region(
+      REGION_FAULT_FILE_NAME,
+      REGION_FAULT_FILE_EXT,
+      C_REGION_FAULT_DEFAULT_LINE,
+      W_REGION_FAULT_DEFAULT_LINE);
 }
 
 void Region_setup()
 {
-  Region_Fault_handle.setup();
+  Region_Monitor_handle.setup();
   Region_Alert_handle.setup();
+  Region_Fault_handle.setup();
 }
 
 void Region_update()
 {
-  Region_Fault_handle.update();
+  Region_Monitor_handle.update();
   Region_Alert_handle.update();
+  Region_Fault_handle.update();
 }
 
 void Region_draw()
 {
-  Region_Fault_handle.draw();
+  Region_Monitor_handle.draw();
   Region_Alert_handle.draw();
+  Region_Fault_handle.draw();
+}
+
+int Region_check_point_contains(int instance, int mi_x, int mi_y)
+{
+  if (Region_Fault_handle.point_is_over(instance, mi_x, mi_y)) {
+    return Region_Fault;
+  }
+  else if (Region_Alert_handle.point_is_over(instance, mi_x, mi_y)) {
+    return Region_Alert;
+  }
+  else if (Region_Monitor_handle.point_is_over(instance, mi_x, mi_y)) {
+    return Region_Monitor;
+  }
+  return -1;
 }
 
 class Region {
