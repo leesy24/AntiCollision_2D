@@ -138,4 +138,32 @@ void draw() {
   UI_Buttons_draw();
   Bubble_Info_draw();
   UI_Interfaces_draw();
+  Notice_Messages_draw();
 } 
+
+void Notice_Messages_draw()
+{
+  LinkedList<String> strings = new LinkedList<String>();
+
+  if (PS_Data_save_enabled)
+  {
+    strings.add("Saving PS data ...");
+  }
+  if (Bubble_Info_enabled)
+  {
+    strings.add("Bubble Info enabled.");
+  }
+
+  float gray = (millis()/10)%255;
+  // Sets the color used to draw lines and borders around shapes.
+  fill(gray);
+  stroke(gray);
+  textSize(FONT_HEIGHT);
+  textAlign(LEFT, BASELINE);
+  int i = 0;
+  for (String str:strings)
+  {
+    text(str, SCREEN_width / 2 - textWidth(str) / 2, TEXT_MARGIN + FONT_HEIGHT + i * FONT_HEIGHT);
+    i ++;
+  }
+}
