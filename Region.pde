@@ -41,7 +41,7 @@ final static int Region_Alert = 1;
 final static int Region_Monitor = 2;
 final static int Region_Count_Max = 3;
 
-final static String[] Region_name = {"Fault", "Alert", "Monotor"};
+final static String[] Region_name = {"Fault", "Alert", "Moniotor"};
 
 
 void Region_settings()

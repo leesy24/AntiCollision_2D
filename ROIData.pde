@@ -101,6 +101,10 @@ static color C_ROI_ALERT_MARKER_FILL = 0x40FFFF00; // Yellow transparent
 static color C_ROI_ALERT_MARKER_STROKE = 0xFFFFFF00; // Yellow
 static int W_ROI_ALERT_MARKER_STROKE = 5;
 
+static color C_ROI_MONITOR_MARKER_FILL = 0x40FFFFFF; // White transparent
+static color C_ROI_MONITOR_MARKER_STROKE = 0xFFFFFFFF; // White
+static int W_ROI_MONITOR_MARKER_STROKE = 3;
+
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
 //static int ROI_OBJECT_DISTANCE_LIMIT = 10000; // = 1 meter
@@ -399,18 +403,25 @@ class ROI_Data {
         continue;
       }
       weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
-      if (object.region == 0) { // Fault region
+      if (object.region == Region_Fault) {
         weight = min(weight, W_ROI_FAULT_MARKER_STROKE);
         fill(C_ROI_FAULT_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
         stroke(C_ROI_FAULT_MARKER_STROKE);
         strokeWeight(weight);
       }
-      else { // Alert region
-        weight = min(weight, W_ROI_FAULT_MARKER_STROKE);
+      else if (object.region == Region_Alert) {
+        weight = min(weight, W_ROI_ALERT_MARKER_STROKE);
         fill(C_ROI_ALERT_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
         stroke(C_ROI_ALERT_MARKER_STROKE);
+        strokeWeight(weight);
+      }
+      else /*if (object.region == Region_Monitor)*/ {
+        weight = min(weight, W_ROI_MONITOR_MARKER_STROKE);
+        fill(C_ROI_MONITOR_MARKER_FILL);
+        // Sets the color and weight used to draw lines and borders around shapes.
+        stroke(C_ROI_MONITOR_MARKER_STROKE);
         strokeWeight(weight);
       }
       /*
