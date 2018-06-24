@@ -210,14 +210,14 @@ void mouseWheel(MouseEvent event)
 
   if (wheel_count > 0)
   {
-    for (; wheel_count > 0; wheel_count -= 1)
+    //for (; wheel_count > 0; wheel_count -= 1)
     {  
       UI_Buttons_zoom_minus();
     }
   }
   else if (wheel_count < 0)
   {
-    for (; wheel_count < 0; wheel_count += 1)
+    //for (; wheel_count < 0; wheel_count += 1)
     {  
       UI_Buttons_zoom_pluse();
     }
