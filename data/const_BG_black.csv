@@ -42,8 +42,8 @@ W_REGION_FAULT_ROI_MARKER_STROKE,5,Border weight of fault object ROI marker.
 C_REGION_ALERT_ROI_MARKER_FILL,40FFFF00,Fill color of alert object ROI marker. Color data format is AARRGGBB
 C_REGION_ALERT_ROI_MARKER_STROKE,FFFFFF00,Border color of alert object ROI marker. Color data format is AARRGGBB
 W_REGION_ALERT_ROI_MARKER_STROKE,5,Border weight of alert object ROI marker.
-C_REGION_MONITOR_ROI_MARKER_FILL,40FFFF00,Fill color of monitor object ROI marker. Color data format is AARRGGBB
-C_REGION_MONITOR_ROI_MARKER_STROKE,FFFFFF00,Border color of monitor object ROI marker. Color data format is AARRGGBB
+C_REGION_MONITOR_ROI_MARKER_FILL,40FFFFFF,Fill color of monitor object ROI marker. Color data format is AARRGGBB
+C_REGION_MONITOR_ROI_MARKER_STROKE,FFFFFFFF,Border color of monitor object ROI marker. Color data format is AARRGGBB
 W_REGION_MONITOR_ROI_MARKER_STROKE,5,Border weight of monitor object ROI marker.
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
