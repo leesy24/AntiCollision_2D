@@ -383,48 +383,54 @@ class ROI_Data {
 
   void draw_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Enter");
-    for (ROI_Object_Data object:objects_array[instance]) {
-      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+object.scr_start_x+",y="+object.scr_start_y+",w="+object.scr_width+",h="+object.scr_height);
-      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x_c="+object.scr_center_x+",y_c="+object.scr_center_y+",d="+object.scr_diameter);
-      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_stamp_start="+object.time_stamp_start+",time_stamp_last="+object.time_stamp_last);
 
-      int time_duration = object.time_stamp_last - object.time_stamp_start;
-      //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
-      int weight;
+    for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
+      for (ROI_Object_Data object:objects_array[instance]) {
+        if (Regions_handle.get_region_priority(instance, object.region) != priority) {
+          continue;
+        }
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+object.scr_start_x+",y="+object.scr_start_y+",w="+object.scr_width+",h="+object.scr_height);
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x_c="+object.scr_center_x+",y_c="+object.scr_center_y+",d="+object.scr_diameter);
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_stamp_start="+object.time_stamp_start+",time_stamp_last="+object.time_stamp_last);
 
-      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
-      //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+        int time_duration = object.time_stamp_last - object.time_stamp_start;
+        //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
+        int weight;
 
-      if (time_duration < ROI_OBJECT_TIME_LIMIT) {
-        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
-        continue;
+        //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+        //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+
+        if (time_duration < ROI_OBJECT_TIME_LIMIT) {
+          if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+          continue;
+        }
+        weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
+        weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region));
+        fill(Regions_handle.get_marker_fill_color(instance, object.region));
+        // Sets the color and weight used to draw lines and borders around shapes.
+        stroke(Regions_handle.get_marker_stroke_color(instance, object.region));
+        strokeWeight(weight);
+        /*
+        rect( object.scr_start_x - ROI_OBJECT_MARKER_MARGIN,
+              object.scr_start_y - ROI_OBJECT_MARKER_MARGIN,
+              object.scr_width + ROI_OBJECT_MARKER_MARGIN*2,
+              object.scr_height + ROI_OBJECT_MARKER_MARGIN*2);
+        */
+        ellipse(object.scr_center_x,
+                object.scr_center_y,
+                object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
+                object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
+        /*
+        //fill(0x00000000);
+        fill(0x00FFFFFF);
+        stroke(0);
+        strokeWeight(1);
+        ellipse(object.scr_center_x,
+                object.scr_center_y,
+                object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
+                object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
+        */
       }
-      weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
-      weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region));
-      fill(Regions_handle.get_marker_fill_color(instance, object.region));
-      // Sets the color and weight used to draw lines and borders around shapes.
-      stroke(Regions_handle.get_marker_stroke_color(instance, object.region));
-      strokeWeight(weight);
-      /*
-      rect( object.scr_start_x - ROI_OBJECT_MARKER_MARGIN,
-            object.scr_start_y - ROI_OBJECT_MARKER_MARGIN,
-            object.scr_width + ROI_OBJECT_MARKER_MARGIN*2,
-            object.scr_height + ROI_OBJECT_MARKER_MARGIN*2);
-      */
-      ellipse(object.scr_center_x,
-              object.scr_center_y,
-              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
-              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
-      /*
-      //fill(0x00000000);
-      fill(0x00FFFFFF);
-      stroke(0);
-      strokeWeight(1);
-      ellipse(object.scr_center_x,
-              object.scr_center_y,
-              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2,
-              object.scr_diameter + ROI_OBJECT_MARKER_MARGIN*2);
-      */
     }
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Exit");
   }

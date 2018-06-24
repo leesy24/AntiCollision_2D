@@ -266,6 +266,10 @@ class Regions {
     return regions_array[instance].get(region_index).name;
   }
 
+  int get_region_priority(int instance, int region_index) {
+    return regions_array[instance].get(region_index).priority;
+  }
+
   color get_marker_stroke_color(int instance, int region_index) {
     return regions_array[instance].get(region_index).marker_stroke_color;
   }
