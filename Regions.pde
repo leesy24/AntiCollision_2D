@@ -67,9 +67,14 @@ class Regions {
       }
 
       for (TableRow variable:table.rows()) {
+        String name = variable.getString("Name");
+        // If name start with # than skip it.
+        if (name.charAt(0) == '#') {
+          continue;
+        }
         Region_Data region_data =
           new Region_Data(
-            variable.getString("Name"),
+            name,
             variable.getInt("Priority"));
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETTINGS_DBG) println("Regions:settings():"+instance+"region_data]:name="+region_data.name+",priority="+region_data.priority);
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
