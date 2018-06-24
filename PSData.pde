@@ -938,13 +938,13 @@ class PS_Data {
         point_is_contains_prev = false;
       }
       else {
-        if (Fault_Region_point_is_contains(instance, mi_x, mi_y)) {
-          ROI_Data_handle.add_point(instance, 0, mi_x, mi_y, point_x_curr, point_y_curr);
+        if (Region_Fault_handle.point_is_over(instance, mi_x, mi_y)) {
+          ROI_Data_handle.add_point(instance, Region_Fault, mi_x, mi_y, point_x_curr, point_y_curr);
           point_is_contains_curr = true;
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):0:x="+mi_x+",y="+mi_y);
         }
-        else if (Alert_Region_point_is_contains(instance, mi_x, mi_y)) {
-          ROI_Data_handle.add_point(instance, 1, mi_x, mi_y, point_x_curr, point_y_curr);
+        else if (Region_Alert_handle.point_is_over(instance, mi_x, mi_y)) {
+          ROI_Data_handle.add_point(instance, Region_Alert, mi_x, mi_y, point_x_curr, point_y_curr);
           point_is_contains_curr = true;
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):1:x="+mi_x+",y="+mi_y);
         }

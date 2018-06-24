@@ -120,11 +120,6 @@ static boolean[] ROI_Data_mouse_over;
 //static int[] ROI_Data_mouse_over_object_index;
 static boolean[] ROI_Data_mouse_pressed;
 
-final static int ROI_Data_Region_Fault = 0;
-final static int ROI_Data_Region_Alert = 1;
-
-String[] ROI_Data_Region_str = {"Fault", "Alert"};
-
 void ROI_Data_settings() {
   if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():Enter");
 
@@ -521,7 +516,7 @@ class ROI_Data {
 
     LinkedList<String> strings = new LinkedList<String>();
 
-    strings.add("Region:" + ROI_Data_Region_str[object.region]);
+    strings.add("Region:" + Region_name[object.region]);
     strings.add("Time dur.:" + ((object.time_stamp_last - object.time_stamp_start)/1000) + "s");
     strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
     strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");

@@ -120,3 +120,21 @@ int get_point_rotate_distance(int point_x, int point_y, float degree)
   //println("get_point_rotate_distance():"+"distance="+distance);
   return get_points_distance(point_x, point_y, point_rot_x, point_rot_y);
 }
+
+boolean is_point_over_rect(int point_x, int point_y, int rect_x, int rect_y, int rect_w, int rect_h)
+{
+  if (
+      point_x >= rect_x
+      &&
+      point_x <= rect_x + rect_w
+      &&
+      point_y >= rect_y
+      &&
+      point_y <= rect_y + rect_h
+      )
+  {
+    return true;
+  }
+
+  return false;
+}

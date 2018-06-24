@@ -92,14 +92,14 @@ void Const_settings()
       C_UI_INTERFACES_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_CURSOR"))
       C_UI_INTERFACES_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_FAULT_REGION_LINE"))
-      C_FAULT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_FAULT_REGION_LINE"))
-      W_FAULT_REGION_LINE = variable.getInt("Value");
-    else if(name.equals("C_ALERT_REGION_LINE"))
-      C_ALERT_REGION_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_ALERT_REGION_LINE"))
-      W_ALERT_REGION_LINE = variable.getInt("Value");
+    else if(name.equals("C_REGION_FAULT_DEFAULT_LINE"))
+      C_REGION_FAULT_DEFAULT_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_REGION_FAULT_DEFAULT_LINE"))
+      W_REGION_FAULT_DEFAULT_LINE = variable.getInt("Value");
+    else if(name.equals("C_REGION_ALERT_DEFAULT_LINE"))
+      C_REGION_ALERT_DEFAULT_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_REGION_ALERT_DEFAULT_LINE"))
+      W_REGION_ALERT_DEFAULT_LINE = variable.getInt("Value");
     else if(name.equals("C_ROI_FAULT_MARKER_FILL"))
       C_ROI_FAULT_MARKER_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_ROI_FAULT_MARKER_STROKE"))
@@ -292,23 +292,23 @@ void Const_create()
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_FAULT_REGION_LINE");
-  variable.setString("Value", String.format("%08X", C_FAULT_REGION_LINE));
+  variable.setString("Name", "C_REGION_FAULT_DEFAULT_LINE");
+  variable.setString("Value", String.format("%08X", C_REGION_FAULT_DEFAULT_LINE));
   variable.setString("Comment", "Line color of fault region lines. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_FAULT_REGION_LINE");
-  variable.setInt("Value", W_FAULT_REGION_LINE);
+  variable.setString("Name", "W_REGION_FAULT_DEFAULT_LINE");
+  variable.setInt("Value", W_REGION_FAULT_DEFAULT_LINE);
   variable.setString("Comment", "Line weight of fault region lines.");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "C_ALERT_REGION_LINE");
-  variable.setString("Value", String.format("%08X", C_ALERT_REGION_LINE));
+  variable.setString("Name", "C_REGION_ALERT_DEFAULT_LINE");
+  variable.setString("Value", String.format("%08X", C_REGION_ALERT_DEFAULT_LINE));
   variable.setString("Comment", "Line color of alert region lines. Color data format is AARRGGBB");
 
   variable = CONST_table.addRow();
-  variable.setString("Name", "W_ALERT_REGION_LINE");
-  variable.setInt("Value", W_ALERT_REGION_LINE);
+  variable.setString("Name", "W_REGION_ALERT_DEFAULT_LINE");
+  variable.setInt("Value", W_REGION_ALERT_DEFAULT_LINE);
   variable.setString("Comment", "Line weight of alert region lines.");
 
   variable = CONST_table.addRow();

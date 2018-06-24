@@ -236,7 +236,6 @@ void Screen_update_variable()
   if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_update_variable():");
   Geid_update();
   PS_Image_update();
-  Fault_Region_update();
-  Alert_Region_update();
+  Region_update();
   Config_save();
 }
