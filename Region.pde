@@ -32,6 +32,18 @@ final static String REGION_FAULT_FILE_EXT = ".csv";
 static color C_REGION_FAULT_DEFAULT_LINE = #000000;
 static int W_REGION_FAULT_DEFAULT_LINE = 3;
 
+static color C_REGION_FAULT_ROI_MARKER_FILL = 0x40FF0000; // Red transparent
+static color C_REGION_FAULT_ROI_MARKER_STROKE = 0xFFFF0000; // Red
+static int W_REGION_FAULT_ROI_MARKER_STROKE = 5;
+
+static color C_REGION_ALERT_ROI_MARKER_FILL = 0x40FFFF00; // Yellow transparent
+static color C_REGION_ALERT_ROI_MARKER_STROKE = 0xFFFFFF00; // Yellow
+static int W_REGION_ALERT_ROI_MARKER_STROKE = 5;
+
+static color C_REGION_MONITOR_ROI_MARKER_FILL = 0x40FFFFFF; // White transparent
+static color C_REGION_MONITOR_ROI_MARKER_STROKE = 0xFFFFFFFF; // White
+static int W_REGION_MONITOR_ROI_MARKER_STROKE = 3;
+
 Region Region_Fault_handle;
 Region Region_Alert_handle;
 Region Region_Monitor_handle;

@@ -93,18 +93,6 @@ final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = false;
 //final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = true;
 final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = false;
 
-static color C_ROI_FAULT_MARKER_FILL = 0x40FF0000; // Red transparent
-static color C_ROI_FAULT_MARKER_STROKE = 0xFFFF0000; // Red
-static int W_ROI_FAULT_MARKER_STROKE = 5;
-
-static color C_ROI_ALERT_MARKER_FILL = 0x40FFFF00; // Yellow transparent
-static color C_ROI_ALERT_MARKER_STROKE = 0xFFFFFF00; // Yellow
-static int W_ROI_ALERT_MARKER_STROKE = 5;
-
-static color C_ROI_MONITOR_MARKER_FILL = 0x40FFFFFF; // White transparent
-static color C_ROI_MONITOR_MARKER_STROKE = 0xFFFFFFFF; // White
-static int W_ROI_MONITOR_MARKER_STROKE = 3;
-
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
 //static int ROI_OBJECT_DISTANCE_LIMIT = 10000; // = 1 meter
@@ -357,8 +345,8 @@ class ROI_Data {
         //println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         if (time_duration >= ROI_OBJECT_TIME_LIMIT) {
         //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2L) {
-          if (time_duration > ROI_OBJECT_TIME_LIMIT * W_ROI_FAULT_MARKER_STROKE) {
-            object_prev.time_stamp_start = object_prev.time_stamp_last - ROI_OBJECT_TIME_LIMIT * W_ROI_FAULT_MARKER_STROKE;
+          if (time_duration > ROI_OBJECT_TIME_LIMIT * W_REGION_FAULT_ROI_MARKER_STROKE) {
+            object_prev.time_stamp_start = object_prev.time_stamp_last - ROI_OBJECT_TIME_LIMIT * W_REGION_FAULT_ROI_MARKER_STROKE;
           }
           else {
             object_prev.time_stamp_start -= object_prev.time_stamp_last - time_stamp_curr[instance];
@@ -404,24 +392,24 @@ class ROI_Data {
       }
       weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
       if (object.region == Region_Fault) {
-        weight = min(weight, W_ROI_FAULT_MARKER_STROKE);
-        fill(C_ROI_FAULT_MARKER_FILL);
+        weight = min(weight, W_REGION_FAULT_ROI_MARKER_STROKE);
+        fill(C_REGION_FAULT_ROI_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_ROI_FAULT_MARKER_STROKE);
+        stroke(C_REGION_FAULT_ROI_MARKER_STROKE);
         strokeWeight(weight);
       }
       else if (object.region == Region_Alert) {
-        weight = min(weight, W_ROI_ALERT_MARKER_STROKE);
-        fill(C_ROI_ALERT_MARKER_FILL);
+        weight = min(weight, W_REGION_ALERT_ROI_MARKER_STROKE);
+        fill(C_REGION_ALERT_ROI_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_ROI_ALERT_MARKER_STROKE);
+        stroke(C_REGION_ALERT_ROI_MARKER_STROKE);
         strokeWeight(weight);
       }
       else /*if (object.region == Region_Monitor)*/ {
-        weight = min(weight, W_ROI_MONITOR_MARKER_STROKE);
-        fill(C_ROI_MONITOR_MARKER_FILL);
+        weight = min(weight, W_REGION_MONITOR_ROI_MARKER_STROKE);
+        fill(C_REGION_MONITOR_ROI_MARKER_FILL);
         // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(C_ROI_MONITOR_MARKER_STROKE);
+        stroke(C_REGION_MONITOR_ROI_MARKER_STROKE);
         strokeWeight(weight);
       }
       /*
