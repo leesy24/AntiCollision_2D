@@ -1,5 +1,8 @@
 Name,Value,Comment
-FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz = 50msec
+FRAME_RATE,50,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
+ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
+ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
+ROI_OBJECT_TIME_LIMIT,500,Time limit of object to decide one object ROI.(unit is milli-seconds)
 SCREEN_BORDER_WIDTH,4,Border width of window of Windows. default = 8
 SCREEN_TITLE_HEIGHT,27,Title height of window of Windows. default = 31
 SCREEN_X_OFFSET,1,Adjuest X offset of window of Windows. default = 3
@@ -30,8 +33,5 @@ C_UI_INTERFACES_FILL_HIGHLIGHT,FF404040,Interface menu hightlight color. Color d
 C_UI_INTERFACES_BORDER_ACTIVE,FFFF0000,Interface menu border active color. Color data format is AARRGGBB
 C_UI_INTERFACES_BORDER_NORMAL,FFFFFFFF,Interface menu border normal color. Color data format is AARRGGBB
 C_UI_INTERFACES_CURSOR,FF00FF00,Interface menu cursor color. Color data format is AARRGGBB
-ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
-ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
-ROI_OBJECT_TIME_LIMIT,500,Time limit of object to decide one object ROI.(unit is milli-seconds)
 C_BG_IMAGE_LINE,FFFFFFFF,Line color of background image lines. Color data format is AARRGGBB
 W_BG_IMAGE_LINE,3,Line weight of background image lines.

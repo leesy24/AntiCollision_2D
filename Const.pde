@@ -32,6 +32,12 @@ void Const_settings()
     String name = variable.getString("Name");
     if(name.equals("FRAME_RATE"))
       FRAME_RATE = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
+      ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
+      ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
+      ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
     else if(name.equals("SCREEN_BORDER_WIDTH"))
       SCREEN_BORDER_WIDTH = variable.getInt("Value");
     else if(name.equals("SCREEN_TITLE_HEIGHT"))
@@ -92,12 +98,6 @@ void Const_settings()
       C_UI_INTERFACES_BORDER_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_CURSOR"))
       C_UI_INTERFACES_CURSOR = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
-      ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
-      ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
-      ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
     else if(name.equals("C_BG_IMAGE_LINE"))
       C_BG_IMAGE_LINE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_BG_IMAGE_LINE"))
@@ -119,7 +119,22 @@ void Const_create()
   variable = CONST_table.addRow();
   variable.setString("Name", "FRAME_RATE");
   variable.setInt("Value", FRAME_RATE);
-  variable.setString("Comment", "Frame rate per second of screen update in Hz. 20Hz = 50msec");
+  variable.setString("Comment", "Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");
+  variable.setInt("Value", ROI_OBJECT_MARKER_MARGIN);
+  variable.setString("Comment", "Margin of objects ROI marker.");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
+  variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
+  variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "SCREEN_BORDER_WIDTH");
@@ -270,21 +285,6 @@ void Const_create()
   variable.setString("Name", "C_UI_INTERFACES_CURSOR");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_CURSOR));
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");
-  variable.setInt("Value", ROI_OBJECT_MARKER_MARGIN);
-  variable.setString("Comment", "Margin of objects ROI marker.");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
-  variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
-
-  variable = CONST_table.addRow();
-  variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
-  variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_BG_IMAGE_LINE");
