@@ -49,6 +49,8 @@ final static int PS_Interface_SN = 3;
 //final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
 final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
+static boolean PS_Data_save_enabled = false;
+
 int[] PS_Interface;
 String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
@@ -344,10 +346,10 @@ class PS_Data {
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
 
-/*
-    // Save bytes to file.
-    saveBytes("log\\"+instance+"_"+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+nf(millis()%1000,3)+".dat", PS_Data_buf[instance]);
-*/
+    if (PS_Data_save_enabled) {
+      // Save bytes to file.
+      saveBytes("log\\"+instance+"_"+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+nf(millis()%1000,3)+".dat", PS_Data_buf[instance]);
+    }
 
     return true;
   }

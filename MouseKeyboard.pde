@@ -34,6 +34,7 @@ void keyPressed()
   {
     if(keyCode == KeyEvent.VK_F10)
     {
+      PS_Data_save_enabled = !PS_Data_save_enabled;
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
