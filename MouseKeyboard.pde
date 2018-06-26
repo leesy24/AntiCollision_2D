@@ -82,6 +82,8 @@ void mousePressed()
   mousePressedY = mouseY - DRAW_OFFSET_Y[0];
 */
 
+  UI_NumPad_mouse_pressed();
+
   buttons_zoom_minus_pressed = false;
   buttons_zoom_pluse_pressed = false;
   buttons_rotate_ccw_pressed = false;
@@ -126,6 +128,8 @@ void mousePressed()
 void mouseReleased()
 {
   if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse released! ");
+
+  UI_NumPad_mouse_released();
 
   UI_Interfaces_mouseReleased();
 
@@ -173,6 +177,7 @@ void mouseMoved()
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse moved!");
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
+  UI_NumPad_mouse_moved();
   UI_Buttons_check_over();
   PS_Image_mouse_moved();
   ROI_Data_mouse_moved();
@@ -187,6 +192,7 @@ void mouseDragged()
   if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
 */
 
+  UI_NumPad_mouse_dragged();
   UI_Buttons_check_over();
   PS_Image_mouse_dragged();
   ROI_Data_mouse_dragged();
@@ -264,4 +270,3 @@ boolean mouse_is_over(int r_x, int r_y, int r_width, int r_height)
     return false;
   }
 }
-

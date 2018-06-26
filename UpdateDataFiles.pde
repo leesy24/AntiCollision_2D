@@ -4,12 +4,14 @@ final static String UPDATE_DATA_FILES_ZIP_FILE_NAME = "data";
 final static String UPDATE_DATA_FILES_ZIP_FILE_EXT = ".zip";
 
 static enum Update_Data_Files_state_enum {
-    IDLE,
-    ZIP_READY,
-    PASSWORD_REQ,
-    UPDATE_PERFORM
+  IDLE,
+  ZIP_READY,
+  PASSWORD_REQ,
+  UPDATE_PERFORM,
+  ERROR
 }
 static Update_Data_Files_state_enum Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+static Update_Data_Files_state_enum Update_Data_Files_state_next;
 static String Update_Data_Files_zip_file_password;
 static String Update_Data_Files_zip_file_full_name;
 
@@ -26,18 +28,31 @@ void Update_Data_Files()
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
       break;
     case ZIP_READY:
+      UI_Num_Pad_setup("Input Password");
       Update_Data_Files_state = Update_Data_Files_state_enum.PASSWORD_REQ;
       break;
     case PASSWORD_REQ:
-      Update_Data_Files_zip_file_password = "1234";
+      UI_Num_Pad_handle.draw();
+      if (!UI_Num_Pad_handle.input_done())
+      {
+        break;
+      }
+      Update_Data_Files_zip_file_password = UI_Num_Pad_handle.input_string;
       Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
       break;
     case UPDATE_PERFORM:
-      if (Update_Data_Files_performe_update())
+      if (!Update_Data_Files_performe_update())
       {
-        // Update done! Indicate updated.
+        // Update fail...
+        Update_Data_Files_state = Update_Data_Files_state_enum.ERROR;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.ZIP_READY;
+        break;
       }
+      // Update done! Indicate updated.
       Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+      break;
+    case ERROR:
+      Update_Data_Files_state = Update_Data_Files_state_next;
       break;
   }
 }
@@ -88,14 +103,14 @@ boolean Update_Data_Files_check_new_zip_file_exist()
 
 boolean Update_Data_Files_performe_update()
 {
-  boolean done = false;
+  boolean ret = false;
   String source_file_full_name, target_file_full_name;
   File source_file_handle, target_file_handle;
 
   source_file_handle = new File(Update_Data_Files_zip_file_full_name);
   if (!source_file_handle.isFile())
   {
-    return done;
+    return ret;
   }
   target_file_full_name = sketchPath("unzip\\") + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
@@ -104,13 +119,17 @@ boolean Update_Data_Files_performe_update()
       &&
       is_files_equals(Update_Data_Files_zip_file_full_name, target_file_full_name))
   {
-    return done;
+    return ret;
   }
   target_file_handle.delete();
 
-  unzip_perform(
-    Update_Data_Files_zip_file_full_name,
-    sketchPath("unzip\\"), Update_Data_Files_zip_file_password);
+  if (unzip_perform(
+        Update_Data_Files_zip_file_full_name,
+        sketchPath("unzip\\"), Update_Data_Files_zip_file_password)
+      < 0)
+  {
+    return ret;
+  }
 
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
@@ -144,5 +163,7 @@ boolean Update_Data_Files_performe_update()
     Update_Data_Files_zip_file_full_name,
     sketchPath("unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT));
 
-  return done;
+  ret = true;
+
+  return ret;
 }

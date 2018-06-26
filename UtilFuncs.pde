@@ -241,7 +241,7 @@ boolean unzip_check_password_protected(String zip_file_full_name)
   return false;
 }
 
-void unzip_perform(String zip_file_full_name, String unzip_dir, String password)
+int unzip_perform(String zip_file_full_name, String unzip_dir, String password)
 {
   try
   {
@@ -251,7 +251,7 @@ void unzip_perform(String zip_file_full_name, String unzip_dir, String password)
     if (!zipFile.isEncrypted())
     {
       // Do not support non password protected zip file.
-      return;
+      return -1;
     }
     // set the password for the zip file
     zipFile.setPassword(password);
@@ -269,5 +269,8 @@ void unzip_perform(String zip_file_full_name, String unzip_dir, String password)
   catch (ZipException e)
   {
     e.printStackTrace();
+    return -1;
   }
+
+  return 0;
 }
