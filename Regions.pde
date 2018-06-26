@@ -13,6 +13,10 @@ final static boolean PRINT_REGIONS_DRAW_DBG = false;
 //final static boolean PRINT_REGIONS_POINT_IS_CONTAINS_DBG = true; 
 final static boolean PRINT_REGIONS_POINT_IS_CONTAINS_DBG = false;
 
+// Define default table filename and ext.
+final static String REGIONS_FILE_NAME = "regions";
+final static String REGIONS_FILE_EXT = ".csv";
+
 Regions Regions_handle;
 
 void Regions_settings()
@@ -41,10 +45,6 @@ int Regions_check_point_contains(int instance, int mi_x, int mi_y)
 }
 
 class Regions {
-  // Define default table filename and ext.
-  final static String FILE_NAME = "regions";
-  final static String FILE_EXT = ".csv";
-
   LinkedList<Region_Data>[] regions_array = new LinkedList[PS_INSTANCE_MAX];
   int[] regions_priority_max = new int[PS_INSTANCE_MAX];
 
@@ -56,7 +56,7 @@ class Regions {
       String file_full_name;
       Table table;
 
-      file_full_name = FILE_NAME + "_" + instance + FILE_EXT;
+      file_full_name = REGIONS_FILE_NAME + "_" + instance + REGIONS_FILE_EXT;
 
       // Load lines file(CSV type) into a Table object
       // "header" option indicates the file has a header row
