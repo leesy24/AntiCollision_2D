@@ -10,9 +10,9 @@ static String CONST_file_full_name;
 static Table CONST_table;
 
 
-void Const_settings()
+void Const_setup()
 {
-  if (PRINT_CONST_ALL_DBG) println("Const_settings():");
+  if (PRINT_CONST_ALL_DBG) println("Const_setup():");
 
   CONST_file_full_name = CONST_FILE_NAME + CONST_FILE_EXT;
 

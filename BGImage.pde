@@ -21,7 +21,7 @@ Table BG_IMAGE_table = null;
 
 Points_Data BG_IMAGE_data;
 
-void BG_Image_settings()
+void BG_Image_setup()
 {
   BG_IMAGE_file_full_name = BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT;
 
@@ -31,7 +31,7 @@ void BG_Image_settings()
   // Check loadTable failed.
   if(BG_IMAGE_table == null)
   {
-    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_settings():BG_IMAGE_table=null");
+    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_setup():BG_IMAGE_table=null");
     return;
   }
 
@@ -39,7 +39,7 @@ void BG_Image_settings()
   BG_IMAGE_data = new Points_Data(BG_IMAGE_table.getRowCount());
   if(BG_IMAGE_data == null)
   {
-    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_settings():BG_IMAGE_data=null");
+    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_setup():BG_IMAGE_data=null");
     return;
   }
   //println("BG_IMAGE_data.length=" + BG_IMAGE_data.length);

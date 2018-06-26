@@ -14,9 +14,9 @@ static String CONFIG_instance_number = null;
 // A Table object
 static Table CONFIG_table;
 
-void Config_settings()
+void Config_setup()
 {
-  if (PRINT_CONFIG_ALL_DBG) println("Config_settings():");
+  if (PRINT_CONFIG_ALL_DBG) println("Config_setup():");
 
   for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
   {
@@ -88,18 +88,13 @@ void Config_settings()
         SN_serial_number[i] = variable.getInt("Value");
       }
     }
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():PS_Interface["+i+"]="+PS_Interface[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_X["+i+"]="+DRAW_OFFSET_X[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_settings():DRAW_OFFSET_Y["+i+"]="+DRAW_OFFSET_Y[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():PS_Interface["+i+"]="+PS_Interface[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():DRAW_OFFSET_X["+i+"]="+DRAW_OFFSET_X[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():DRAW_OFFSET_Y["+i+"]="+DRAW_OFFSET_Y[i]);
   }
-}
-
-void Config_setup()
-{
-  if (PRINT_CONFIG_ALL_DBG) println("Config_setup():");
   // This is for argument passed number of config file.
   /*
   if(CONFIG_instance_number != null)

@@ -18,14 +18,6 @@ int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50m
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
   Screen_settings();
-  PS_Data_settings();
-  Const_settings();
-  Config_settings();
-  BG_Image_settings();
-  Grid_settings();
-  PS_Image_settings();
-  ROI_Data_settings();
-  Regions_settings();
 }
 
 // The setup() function is run once, when the program starts.
@@ -34,6 +26,21 @@ void settings() {
 // There can only be one setup() function for each program
 //  and it shouldn't be called again after its initial execution.
 void setup() {
+  // Title set to default.
+  Title = TITLE;
+
+  Const_setup();
+  Config_setup();
+  Screen_setup();
+  BG_Image_setup();
+  Grid_setup();
+  PS_Data_setup();
+  PS_Image_setup();
+  ROI_Data_setup();
+  Regions_setup();
+  UI_Buttons_setup();
+  UI_Interfaces_setup();
+
   frameRate(FRAME_RATE);
   //noStroke();
   // This is only pertains to the desktop version of Processing (not JavaScript or Android),
@@ -63,17 +70,6 @@ void setup() {
   // The default rate is 60 frames per second.
   //frameRate(1);
   //frameRate(30);
-
-  // Title set to default.
-  Title = TITLE;
-  Config_setup();
-  ROI_Data_setup();
-  PS_Data_setup();
-  Screen_setup();
-  Regions_setup();
-  Grid_setup();
-  UI_Buttons_setup();
-  UI_Interfaces_setup();
 
   // Set window title
   surface.setTitle(Title);

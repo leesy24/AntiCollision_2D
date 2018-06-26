@@ -19,13 +19,9 @@ final static String REGIONS_FILE_EXT = ".csv";
 
 Regions Regions_handle;
 
-void Regions_settings()
-{
-  Regions_handle = new Regions();
-}
-
 void Regions_setup()
 {
+  Regions_handle = new Regions();
   Regions_handle.setup();
 }
 

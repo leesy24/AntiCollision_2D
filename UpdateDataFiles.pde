@@ -8,7 +8,8 @@ static enum Update_Data_Files_state_enum {
   ZIP_READY,
   PASSWORD_REQ,
   UPDATE_PERFORM,
-  DISPLAY_MESSAGE
+  DISPLAY_MESSAGE,
+  RESET
 }
 static Update_Data_Files_state_enum Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
 static Update_Data_Files_state_enum Update_Data_Files_state_next;
@@ -59,7 +60,7 @@ void Update_Data_Files()
       // Update done! Indicate updated.
       UI_Message_Box_setup("Update done.", "New configuration applied right now .", 3000);
       Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
-      Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
+      Update_Data_Files_state_next = Update_Data_Files_state_enum.RESET;
       break;
     case DISPLAY_MESSAGE:
       if (UI_Message_Box_handle.draw())
@@ -67,6 +68,9 @@ void Update_Data_Files()
         break;
       }
       Update_Data_Files_state = Update_Data_Files_state_next;
+      break;
+    case RESET:
+      frameCount = -1;
       break;
   }
 }

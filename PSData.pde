@@ -51,112 +51,50 @@ final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
 
 static boolean PS_Data_save_enabled = false;
 
-int[] PS_Interface;
+int[] PS_Interface = new int[PS_INSTANCE_MAX];
 String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
-String[] FILE_name;
+String[] FILE_name = new String[PS_INSTANCE_MAX];
 
 int UDP_local_port = 1025;
-String[] UDP_remote_ip;
-int[] UDP_remote_port;
+String[] UDP_remote_ip = new String[PS_INSTANCE_MAX];
+int[] UDP_remote_port = new int[PS_INSTANCE_MAX];
 
-int[] SN_serial_number;
+int[] SN_serial_number = new int[PS_INSTANCE_MAX];
 
 PS_Data PS_Data_handle;
 
 // Define Data buffer array to load binary Data buffer from interfaces
-byte[][] PS_Data_buf; 
+byte[][] PS_Data_buf = new byte[PS_INSTANCE_MAX][]; 
 
 //static boolean PS_Data_draw_points_all_enabled = true;
 static boolean PS_Data_draw_points_all_enabled = false;
 
-static boolean[] PS_Data_draw_params_enabled;
-static int[] PS_Data_draw_params_timer;
-static int[] PS_Data_draw_params_x;
-static int[] PS_Data_draw_params_y;
+static boolean[] PS_Data_draw_params_enabled = new boolean[PS_INSTANCE_MAX];
+static int[] PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
+static int[] PS_Data_draw_params_x = new int[PS_INSTANCE_MAX];
+static int[] PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
 
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
-
-void PS_Data_settings() {
-  PS_Interface = new int[PS_INSTANCE_MAX];
-  if (PS_Interface == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Interface=null");
-    return;
-  }
-  FILE_name = new String[PS_INSTANCE_MAX];
-  if (FILE_name == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():FILE_name=null");
-    return;
-  }
-  UDP_remote_ip = new String[PS_INSTANCE_MAX];
-  if (UDP_remote_ip == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_ip=null");
-    return;
-  }
-  UDP_remote_port = new int[PS_INSTANCE_MAX];
-  if (UDP_remote_port == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():UDP_remote_port=null");
-    return;
-  }
-  SN_serial_number = new int[PS_INSTANCE_MAX];
-  if (SN_serial_number == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():SN_serial_number=null");
-    return;
-  }
-  PS_Data_draw_params_enabled = new boolean[PS_INSTANCE_MAX];
-  if (PS_Data_draw_params_enabled == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_enabled=null");
-    return;
-  }
-  PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
-  if (PS_Data_draw_params_timer == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_timer=null");
-    return;
-  }
-  PS_Data_draw_params_x = new int[PS_INSTANCE_MAX];
-  if (PS_Data_draw_params_x == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_x=null");
-    return;
-  }
-  PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
-  if (PS_Data_draw_params_y == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETTINGS_ERR) println("PS_Data_settings():PS_Data_draw_params_y=null");
-    return;
-  }
-
-  for (int i = 0; i < PS_INSTANCE_MAX; i++)
-  {
-    PS_Interface[i] = PS_Interface_FILE;
-    FILE_name[i] = "";
-    UDP_remote_ip[i] = "10.0.8.86";
-    UDP_remote_port[i] = 1024;
-    SN_serial_number[i] = 886;
-    PS_Data_draw_params_enabled[i] = false;
-    PS_Data_draw_params_timer[i] = millis();
-  }
-}
 
 void PS_Data_setup() {
   if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():");
   // Append interface name to window title
 
-  PS_Data_buf = new byte[PS_INSTANCE_MAX][];
-  //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():PS_Data_buf[0]="+PS_Data_buf[0]+",PS_Data_buf[1]="+PS_Data_buf[1]);
-  if(PS_Data_buf == null)
+  for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_buf allocation error!");
-    return;
+/*
+    PS_Interface[i] = PS_Interface_FILE;
+    FILE_name[i] = "";
+    UDP_remote_ip[i] = "10.0.8.86";
+    UDP_remote_port[i] = 1024;
+    SN_serial_number[i] = 886;
+*/
+    PS_Data_draw_params_enabled[i] = false;
+    PS_Data_draw_params_timer[i] = millis();
   }
+
   PS_Data_handle = new PS_Data();
   if(PS_Data_handle == null)
   {

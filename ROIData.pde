@@ -104,61 +104,16 @@ static int ROI_OBJECT_DRAW_INFO_TIMEOUT = 10000; // 10 seconds
 
 static ROI_Data ROI_Data_handle = null;
 
-static boolean[] ROI_Data_draw_info_enabled;
-static int[] ROI_Data_draw_info_timer;
-static int[] ROI_Data_draw_info_x;
-static int[] ROI_Data_draw_info_y;
-static boolean[] ROI_Data_mouse_over;
-//static int[] ROI_Data_mouse_over_object_index;
-static boolean[] ROI_Data_mouse_pressed;
+static boolean[] ROI_Data_draw_info_enabled = new boolean[PS_INSTANCE_MAX];
+static int[] ROI_Data_draw_info_timer = new int[PS_INSTANCE_MAX];
+static int[] ROI_Data_draw_info_x = new int[PS_INSTANCE_MAX];
+static int[] ROI_Data_draw_info_y = new int[PS_INSTANCE_MAX];
+static boolean[] ROI_Data_mouse_over = new boolean[PS_INSTANCE_MAX];
+//static int[] ROI_Data_mouse_over_object_index = new int[PS_INSTANCE_MAX];
+static boolean[] ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 
-void ROI_Data_settings() {
-  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():Enter");
-
-  ROI_Data_draw_info_enabled = new boolean[PS_INSTANCE_MAX];
-  if (ROI_Data_draw_info_enabled == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_draw_info_enabled=null");
-    return;
-  }
-  ROI_Data_draw_info_timer = new int[PS_INSTANCE_MAX];
-  if (ROI_Data_draw_info_timer == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_draw_info_timer=null");
-    return;
-  }
-  ROI_Data_draw_info_x = new int[PS_INSTANCE_MAX];
-  if (ROI_Data_draw_info_x == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_draw_info_x=null");
-    return;
-  }
-  ROI_Data_draw_info_y = new int[PS_INSTANCE_MAX];
-  if (ROI_Data_draw_info_y == null)
-  {
-    if (PRINT_PS_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_draw_info_y=null");
-    return;
-  }
-  ROI_Data_mouse_over = new boolean[PS_INSTANCE_MAX];
-  if (PS_Image == null)
-  {
-    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_mouse_over=null");
-    return;
-  }
-/*
-  ROI_Data_mouse_over_object_index = new int[PS_INSTANCE_MAX];
-  if (PS_Image == null)
-  {
-    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_mouse_over_object_index=null");
-    return;
-  }
-*/
-  ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
-  if (PS_Image == null)
-  {
-    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():ROI_Data_mouse_pressed=null");
-    return;
-  }
+void ROI_Data_setup() {
+  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():");
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -168,12 +123,6 @@ void ROI_Data_settings() {
     //ROI_Data_mouse_over_object_index[i] = -1;
     ROI_Data_mouse_pressed[i] = false;
   }
-
-  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETTINGS_DBG) println("ROI_Data_settings():Exit");
-}
-
-void ROI_Data_setup() {
-  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():");
 
   ROI_Data_handle = new ROI_Data();
   if(ROI_Data_handle == null)

@@ -38,40 +38,10 @@ int[] Grid_scr_y_max = new int[PS_INSTANCE_MAX];
 LinkedList<Grid_Line_Data>[] Grid_Lines_array = new LinkedList[PS_INSTANCE_MAX];
 LinkedList<Grid_Text_Data>[] Grid_Texts_array = new LinkedList[PS_INSTANCE_MAX];
 
-void Grid_settings()
+void Grid_setup()
 {
-/*
-  if (Grid_zero_x == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_zero_x == null");
-    return;
-  }
-  if (Grid_zero_y == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_zero_y == null");
-    return;
-  }
-  if (Grid_scr_x_min == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_scr_x_min == null");
-    return;
-  }
-  if (Grid_scr_x_max == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_scr_x_max == null");
-    return;
-  }
-  if (Grid_scr_y_min == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_scr_y_min == null");
-    return;
-  }
-  if (Grid_scr_y_max == null)
-  {
-    if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_scr_y_max == null");
-    return;
-  }
-*/
+  if (PRINT_GRID_ALL_DBG || PRINT_GRID_SETUP_DBG) println("Grid_setup():Enter");
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     Grid_Lines_array[i] = new LinkedList<Grid_Line_Data>();
@@ -87,18 +57,15 @@ void Grid_settings()
       return;
     }
   }
-}
 
-void Grid_setup()
-{
-  if (PRINT_GRID_ALL_DBG || PRINT_GRID_SETUP_DBG) println("Grid_setup():Enter");
-  Geid_update();
+  Grid_update();
+
   if (PRINT_GRID_ALL_DBG || PRINT_GRID_SETUP_DBG) println("Grid_setup():Exit");
 }
 
-void Geid_update()
+void Grid_update()
 {
-  if (PRINT_GRID_ALL_DBG || PRINT_GRID_UPDATE_DBG) println("Geid_update():Enter");
+  if (PRINT_GRID_ALL_DBG || PRINT_GRID_UPDATE_DBG) println("Grid_update():Enter");
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     Grid_scr_x_min[i] = Grid_scr_y_min[i] = MAX_INT;
@@ -116,13 +83,13 @@ void Geid_update()
     }
     if (PRINT_GRID_ALL_DBG || PRINT_GRID_DRAW_DBG)
     {
-      println("Geid_update():Grid_scr_x_min["+i+"]="+Grid_scr_x_min[i]);
-      println("Geid_update():Grid_scr_x_max["+i+"]="+Grid_scr_x_max[i]);
-      println("Geid_update():Grid_scr_y_min["+i+"]="+Grid_scr_y_min[i]);
-      println("Geid_update():Grid_scr_y_max["+i+"]="+Grid_scr_y_max[i]);
+      println("Grid_update():Grid_scr_x_min["+i+"]="+Grid_scr_x_min[i]);
+      println("Grid_update():Grid_scr_x_max["+i+"]="+Grid_scr_x_max[i]);
+      println("Grid_update():Grid_scr_y_min["+i+"]="+Grid_scr_y_min[i]);
+      println("Grid_update():Grid_scr_y_max["+i+"]="+Grid_scr_y_max[i]);
     }
   }
-  if (PRINT_GRID_ALL_DBG || PRINT_GRID_UPDATE_DBG) println("Geid_update():Exit");
+  if (PRINT_GRID_ALL_DBG || PRINT_GRID_UPDATE_DBG) println("Grid_update():Exit");
 }
 
 void Grid_draw()
