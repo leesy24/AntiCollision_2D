@@ -72,7 +72,7 @@ class UI_Num_Pad {
   String title;
   int title_x, title_y, title_w, title_h;
   int border_x, border_y, border_w, border_h;
-  char input_chars[] = {' ', ' ', ' ', ' '};
+  char input_chars[] = {'_', '_', '_', '_'};
   String input_text = "_ _ _ _";
   int input_index = 0;
   String input_string;
@@ -293,13 +293,13 @@ class UI_Num_Pad {
                 input_text = input_text + " ";
               }
             }
-            input_chars[input_index] = ' ';
+            input_chars[input_index] = '_';
             set_button_text(UI_Num_Pad_button_enum.OUTPUT, input_text);
             break;
           case CLEAR:
             input_index = 0;
             input_text = "_ _ _ _";
-            input_chars[0] = input_chars[1] = input_chars[2] = input_chars[3] = ' ';
+            input_chars[0] = input_chars[1] = input_chars[2] = input_chars[3] = '_';
             set_button_text(UI_Num_Pad_button_enum.OUTPUT, input_text);
             break;
           case OUTPUT:

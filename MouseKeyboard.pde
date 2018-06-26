@@ -81,7 +81,7 @@ void mousePressed()
   mousePressedX = mouseX - DRAW_OFFSET_X[0];
   mousePressedY = mouseY - DRAW_OFFSET_Y[0];
 */
-
+  UI_Message_Box_mouse_pressed();
   UI_NumPad_mouse_pressed();
 
   buttons_zoom_minus_pressed = false;

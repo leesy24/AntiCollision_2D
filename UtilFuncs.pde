@@ -243,6 +243,7 @@ boolean unzip_check_password_protected(String zip_file_full_name)
 
 int unzip_perform(String zip_file_full_name, String unzip_dir, String password)
 {
+  //println("unzip_perform():password ="+password); 
   try
   {
     // Initiate ZipFile object with the path/name of the zip file.

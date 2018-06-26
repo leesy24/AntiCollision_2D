@@ -8,7 +8,7 @@ static enum Update_Data_Files_state_enum {
   ZIP_READY,
   PASSWORD_REQ,
   UPDATE_PERFORM,
-  ERROR
+  DISPLAY_MESSAGE
 }
 static Update_Data_Files_state_enum Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
 static Update_Data_Files_state_enum Update_Data_Files_state_next;
@@ -44,14 +44,21 @@ void Update_Data_Files()
       if (!Update_Data_Files_performe_update())
       {
         // Update fail...
-        Update_Data_Files_state = Update_Data_Files_state_enum.ERROR;
+        UI_Message_Box_setup("Error !", "Wrong password !\nOr, Zip file currupted !", 5000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.ZIP_READY;
         break;
       }
       // Update done! Indicate updated.
-      Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+      UI_Message_Box_setup("Update done.", "New configuration applied right now .", 3000);
+      Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+      Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
       break;
-    case ERROR:
+    case DISPLAY_MESSAGE:
+      if (UI_Message_Box_handle.draw())
+      {
+        break;
+      }
       Update_Data_Files_state = Update_Data_Files_state_next;
       break;
   }

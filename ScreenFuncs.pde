@@ -107,12 +107,14 @@ void Screen_setup()
   // Set text margin to follow min(Width, Height) of screen.
   TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 200) : (SCREEN_height / 200);
   if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():TEXT_MARGIN=" + TEXT_MARGIN);
+  //println("Screen_setup():TEXT_MARGIN=" + TEXT_MARGIN);
 
   // Set font height of text to follow min(Width, Height) of screen.
   FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 30) : (SCREEN_height / 30);
   if (FONT_HEIGHT > 15) FONT_HEIGHT = 15;
   if (FONT_HEIGHT < 10) FONT_HEIGHT = 10;
   if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
+  //println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
   textSize(FONT_HEIGHT);
 }
 
