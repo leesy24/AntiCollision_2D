@@ -1,3 +1,4 @@
+
 // Define to enable or disable the log print in console.
 //final boolean PRINT = true; 
 final boolean PRINT = false; 
@@ -139,6 +140,8 @@ void draw() {
   Bubble_Info_draw();
   UI_Interfaces_draw();
   Notice_Messages_draw();
+
+  Update_Data_Files();
 } 
 
 void Notice_Messages_draw()

@@ -138,3 +138,136 @@ boolean is_point_over_rect(int point_x, int point_y, int rect_x, int rect_y, int
 
   return false;
 }
+
+import java.util.Arrays;
+
+boolean is_files_equals(String file1, String file2)
+{
+  boolean ret;
+
+  //println("is_files_equals():"+"file1="+file1);
+  //println("is_files_equals():"+"file2="+file2);
+
+  byte[] f1 = loadBytes(file1);
+  byte[] f2 = loadBytes(file2);
+
+  ret = Arrays.equals(f1, f2);
+
+  //println("is_files_equals():"+file1+","+file2+"="+ret);
+  //println("is_files_equals():"+"file1="+file1);
+  //println("is_files_equals():"+"file2="+file2);
+  //println("is_files_equals():"+"ret="+ret);
+  return ret;
+}
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.CopyOption;
+import java.nio.file.StandardCopyOption;
+import java.io.IOException;
+import java.io.BufferedWriter;
+
+void copy_file(String source_file, String target_file)
+{
+  //println("copy_file():"+"from "+source_file);
+  //println("copy_file():"+"to   "+target_file);
+  CopyOption[] options = new CopyOption[] 
+  {
+    StandardCopyOption.REPLACE_EXISTING,
+    StandardCopyOption.COPY_ATTRIBUTES
+  };
+
+  try
+  {
+    Files.copy(
+      Paths.get(source_file),
+      Paths.get(target_file),
+      options);
+  }
+  catch (IOException e)
+  {
+    e.printStackTrace();
+  }
+}
+
+void move_file(String source_file, String target_file)
+{
+  //println("move_file():"+"from "+source_file);
+  //println("move_file():"+"to   "+target_file);
+  try
+  {
+    Files.move(
+      Paths.get(source_file),
+      Paths.get(target_file),
+      StandardCopyOption.REPLACE_EXISTING);
+  }
+  catch (IOException e)
+  {
+    e.printStackTrace();
+  }
+}
+
+import net.lingala.zip4j.core.*;
+import net.lingala.zip4j.crypto.*;
+import net.lingala.zip4j.crypto.engine.*;
+import net.lingala.zip4j.crypto.PBKDF2.*;
+import net.lingala.zip4j.exception.*;
+import net.lingala.zip4j.io.*;
+import net.lingala.zip4j.model.*;
+import net.lingala.zip4j.progress.*;
+import net.lingala.zip4j.unzip.*;
+import net.lingala.zip4j.util.*;
+import net.lingala.zip4j.zip.*;
+
+boolean unzip_check_password_protected(String zip_file_full_name)
+{
+  try
+  {
+    // Initiate ZipFile object with the path/name of the zip file.
+    ZipFile zipFile = new ZipFile(zip_file_full_name);
+    // Check to see if the zip file is password protected 
+    if (zipFile.isEncrypted())
+    {
+      // if yes, then set the password for the zip file
+      return true;
+    }
+  }
+  catch (ZipException e)
+  {
+    e.printStackTrace();
+  }
+  return false;
+}
+
+void unzip_perform(String zip_file_full_name, String unzip_dir, String password)
+{
+  try
+  {
+    // Initiate ZipFile object with the path/name of the zip file.
+    ZipFile zipFile = new ZipFile(zip_file_full_name);
+    // Check to see if the zip file is password protected 
+    if (!zipFile.isEncrypted())
+    {
+      // Do not support non password protected zip file.
+      return;
+    }
+    // set the password for the zip file
+    zipFile.setPassword(password);
+
+    List fileHeaderList = zipFile.getFileHeaders();
+
+    for (int i = 0; i < fileHeaderList.size(); i++)
+    {
+      FileHeader fileHeader = (FileHeader) fileHeaderList.get(i);
+      //Path where you want to Extract
+      zipFile.extractFile(fileHeader, unzip_dir);
+    }
+    //println("Extracted");
+  }
+  catch (ZipException e)
+  {
+    e.printStackTrace();
+  }
+}
