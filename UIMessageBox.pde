@@ -104,12 +104,12 @@ class UI_Message_Box {
     this.msg = msg;
     this.msg_w = min(width, width_max);
     this.msg_h = int((TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 1.5) * 3;
-    println("msg_h="+msg_h);
+    //println("msg_h="+msg_h);
     this.title = title;
     this.title_w = min(width, width_max);
     //this.title_h = int(FONT_HEIGHT * 2.0 * ((this.title_w / width_max) + 1));
     this.title_h = int((TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 2.0);
-    println("title_h="+title_h);
+    //println("title_h="+title_h);
     this.box_w = max(this.msg_w, this.title_w) + TEXT_MARGIN * 2;
     this.box_h = this.title_h + this.msg_h + TEXT_MARGIN * 2;
 

@@ -25,6 +25,13 @@ void Update_Data_Files()
       {
         break;
       }
+      if (!unzip_check_password_protected(Update_Data_Files_zip_file_full_name))
+      {
+        UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.", 5000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
+        break;
+      }
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
       break;
     case ZIP_READY:
@@ -100,6 +107,7 @@ boolean Update_Data_Files_check_new_zip_file_exist()
     {
       continue;
     }
+
     Update_Data_Files_zip_file_full_name = source_file_full_name;
     found = true;
     break;

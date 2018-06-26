@@ -17,10 +17,10 @@ static color C_UI_NUM_PAD_TEXT = #000000; // Black
 static color C_UI_NUM_PAD_BOX = #000000; // Black
 static int W_UI_NUM_PAD_BOX = 1; // Black
 */
-static color C_UI_NUM_PAD_NORMAL = 0xC0000000; // White
-static color C_UI_NUM_PAD_HIGHLIGHT = 0xC0404040; //
-static color C_UI_NUM_PAD_TEXT = 0xC0FFFFFF; // Black
-static color C_UI_NUM_PAD_BOX = 0xC0FFFFFF; // Black
+static color C_UI_NUM_PAD_NORMAL = 0xA0000000; // White
+static color C_UI_NUM_PAD_HIGHLIGHT = 0xA0404040; //
+static color C_UI_NUM_PAD_TEXT = 0xA0FFFFFF; // Black
+static color C_UI_NUM_PAD_BOX = 0xA0FFFFFF; // Black
 static int W_UI_NUM_PAD_BOX = 1; // Black
 
 static boolean UI_Num_Pad_enabled = false;
@@ -95,23 +95,37 @@ class UI_Num_Pad {
     this.input_count = input_count;
     this.input_hide = input_hide;
 
-    int base_w = 65;
-    int base_h = 65;
-    int base_margin = 7;
-    int offset_x = SCREEN_width / 2 - (base_w * 3 + base_margin * 2) / 2;
-    int offset_y = SCREEN_height / 2 - (base_h * 5 + base_margin * 4) / 2;
+    int center_x = SCREEN_width / 2;
+    int center_y = SCREEN_height / 2;
 
     this.title = title;
-    this.title_w = base_w * 3 + base_margin * 2;
-    this.title_h = base_h + base_margin;
-    this.title_x = offset_x;
-    this.title_y = offset_y - this.title_h;
+    textSize(FONT_HEIGHT*2);
+    this.title_w = int(textWidth(title)) + TEXT_MARGIN * 2 * 2;
+    //this.title_w = base_w * 3 + base_margin * 2;
+    this.title_h = (TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 2;
+    //println("t_w="+title_w);
     //println("x="+title_x+"y="+title_y+"w="+title_w+"h="+title_h);
 
+    //int base_w = this.title_w / 3 - this.title_w / 3 / 10 + this.title_w / 3 / 10 / 3;
+    int base_w = this.title_w * 28 / 3 / 10 / 3 + 1;
+    int base_h = base_w;
+    int base_margin = this.title_w / 3 / 10;
+
+    //println("b_w="+base_w);
+    //println("b_m="+base_margin);
+
     this.border_w = this.title_w + base_margin * 2;
-    this.border_h = this.title_h + (base_h * 5 + base_margin * 4) + base_margin * 2;
+    this.border_h = this.title_h + (base_h * 5 + base_margin * 4) + base_margin * 3;
+
+    int offset_x = SCREEN_width / 2 - this.title_w / 2;
+    int offset_y = SCREEN_height / 2 - this.border_h / 2;
+
+
+    this.title_x = center_x - this.title_w / 2;
+    this.title_y = offset_y - this.title_h - base_margin;
     this.border_x = offset_x - base_margin;
     this.border_y = this.title_y - base_margin;
+    //println("x="+title_x+"y="+title_y+"w="+title_w+"h="+title_h);
 
     buttons.add(
       new UI_Num_Pad_Button(
@@ -222,11 +236,13 @@ class UI_Num_Pad {
         rect(button.x, button.y, button.w, button.h);
       }
     }
+    //rect(title_x, title_y, title_w, title_h);
 
     fill(C_UI_NUM_PAD_TEXT);
-    textAlign(CENTER, CENTER);
+    textAlign(CENTER, TOP);
     textSize(FONT_HEIGHT*2);
     text(title, title_x, title_y, title_w, title_h);
+    textAlign(CENTER, CENTER);
     textSize(FONT_HEIGHT*1.5);
     for (UI_Num_Pad_Button button:buttons) {
       text(button.text, button.x, button.y, button.w, button.h);
