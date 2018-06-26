@@ -50,6 +50,16 @@ void Const_settings()
       C_BG = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_PS_DATA_ERR_TEXT"))
       C_PS_DATA_ERR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_NUM_PAD_NORMAL"))
+      C_UI_NUM_PAD_NORMAL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_NUM_PAD_HIGHLIGHT"))
+      C_UI_NUM_PAD_HIGHLIGHT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_NUM_PAD_TEXT"))
+      C_UI_NUM_PAD_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_NUM_PAD_BOX"))
+      C_UI_NUM_PAD_BOX = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_UI_NUM_PAD_BOX"))
+      W_UI_NUM_PAD_BOX = variable.getInt("Value");
     else if(name.equals("C_BUBBLE_INFO_RECT_FILL"))
       C_BUBBLE_INFO_RECT_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_BUBBLE_INFO_RECT_STROKE"))
@@ -165,6 +175,31 @@ void Const_create()
   variable.setString("Name", "C_PS_DATA_ERR_TEXT");
   variable.setString("Value", String.format("%08X", C_PS_DATA_ERR_TEXT));
   variable.setString("Comment", "Error text color. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_UI_NUM_PAD_NORMAL");
+  variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_NORMAL));
+  variable.setString("Comment", "Color of normal button of number pad. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_UI_NUM_PAD_HIGHLIGHT");
+  variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_HIGHLIGHT));
+  variable.setString("Comment", "Color of highlighted button of number pad. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_UI_NUM_PAD_TEXT");
+  variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_TEXT));
+  variable.setString("Comment", "Color of text of number pad. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "C_UI_NUM_PAD_BOX");
+  variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_BOX));
+  variable.setString("Comment", "Color of button box of number pad. Color data format is AARRGGBB");
+
+  variable = CONST_table.addRow();
+  variable.setString("Name", "W_UI_NUM_PAD_BOX");
+  variable.setInt("Value", W_UI_NUM_PAD_BOX);
+  variable.setString("Comment", "Weight of border lines of number pad.");
 
   variable = CONST_table.addRow();
   variable.setString("Name", "C_BUBBLE_INFO_RECT_FILL");

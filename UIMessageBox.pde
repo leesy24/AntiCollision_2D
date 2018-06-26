@@ -11,17 +11,15 @@ final static boolean PRINT_UI_MESSAGE_BOX_MIRROR_DBG = false;
 final static boolean PRINT_UI_MESSAGE_BOX_RESET_DBG = false;
 
 /*
-static color C_UI_MESSAGE_BOX_NORMAL = #FFFFFF; // White
-static color C_UI_MESSAGE_BOX_HIGHLIGHT = #C0C0C0; //
+static color C_UI_MESSAGE_BOX_FILL = #FFFFFF; // White
 static color C_UI_MESSAGE_BOX_TEXT = #000000; // Black
-static color C_UI_MESSAGE_BOX_BOX = #000000; // Black
-static int W_UI_MESSAGE_BOX_BOX = 1; // Black
+static color C_UI_MESSAGE_BOX_RECT = #000000; // Black
+static int W_UI_MESSAGE_BOX_RECT = 1; // Black
 */
-static color C_UI_MESSAGE_BOX_NORMAL = 0xC0000000; // White
-static color C_UI_MESSAGE_BOX_HIGHLIGHT = 0xC0404040; //
+static color C_UI_MESSAGE_BOX_FILL = 0xC0000000; // White
 static color C_UI_MESSAGE_BOX_TEXT = 0xC0FFFFFF; // Black
-static color C_UI_MESSAGE_BOX_BOX = 0xC0FFFFFF; // Black
-static int W_UI_MESSAGE_BOX_BOX = 1; // Black
+static color C_UI_MESSAGE_BOX_RECT = 0xC0FFFFFF; // Black
+static int W_UI_MESSAGE_BOX_RECT = 1; // Black
 
 static boolean UI_Message_Box_enabled = false;
 
@@ -126,10 +124,10 @@ class UI_Message_Box {
 
   boolean draw() {
     // Sets the color and weight used to draw lines and borders around shapes.
-    stroke(C_UI_MESSAGE_BOX_BOX);
-    strokeWeight(W_UI_MESSAGE_BOX_BOX);
+    stroke(C_UI_MESSAGE_BOX_RECT);
+    strokeWeight(W_UI_MESSAGE_BOX_RECT);
 
-    fill(C_UI_MESSAGE_BOX_NORMAL);
+    fill(C_UI_MESSAGE_BOX_FILL);
     rect(box_x, box_y, box_w, box_h, 3, 3, 3, 3);
     rect(box_x, box_y, box_w, title_h, 3, 3, 0, 0);
     //rect(title_x, title_y, title_w, title_h);

@@ -12,6 +12,11 @@ C_PS_DATA_ERR_TEXT,FF000000,Error text color. Color data format is AARRGGBB
 C_BUBBLE_INFO_RECT_FILL,C0F8F8F8,Bubble info box fill color. Color data format is AARRGGBB
 C_BUBBLE_INFO_RECT_STROKE,FF000000,Bubble info box border color. Color data format is AARRGGBB
 C_BUBBLE_INFO_TEXT,FF000000,Bubble infor box text color. Color data format is AARRGGBB
+C_UI_NUM_PAD_NORMAL,A0FFFFFF,Color of normal button of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_HIGHLIGHT,A0C0C0C0,Color of highlighted button of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_TEXT,A0000000,Color of text of number pad. Color data format is AARRGGBB
+C_UI_NUM_PAD_BOX,A0000000,Color of button box of number pad. Color data format is AARRGGBB
+W_UI_NUM_PAD_BOX,1,Weight of border lines of number pad.
 C_UI_BUTTONS_NORMAL,FFFFFFFF,Button normal background color. Color data format is AARRGGBB
 C_UI_BUTTONS_HIGHLIGHT,FFC0C0C0,Button highlight background color. Color data format is AARRGGBB
 C_UI_BUTTONS_TEXT,FF000000,Button text color. Color data format is AARRGGBB
@@ -27,6 +32,10 @@ C_PS_DATA_RECT_TEXT,FF404040,Scan info box text color. Color data format is AARR
 C_GRID_LINE,FFC0C0C0,Grid line color. Color data format is AARRGGBB
 W_GRID_LINE,1,Grid line weight.
 C_GRID_TEXT,FF404040,Grid text color. Color data format is AARRGGBB
+C_UI_MESSAGE_BOX_FILL,C0FFFFFF,Color of fill of message box. Color data format is AARRGGBB
+C_UI_MESSAGE_BOX_TEXT,C0000000,Color of text of message box. Color data format is AARRGGBB
+C_UI_MESSAGE_BOX_RECT,C0000000,Color of rect of message box. Color data format is AARRGGBB
+W_UI_MESSAGE_BOX_RECT,1,Weight of rect lines of message box.
 C_UI_INTERFACES_TEXT,FF000000,Interface menu text color. Color data format is AARRGGBB
 C_UI_INTERFACES_FILL_NORMAL,FFFFFFFF,Interface menu fill color. Color data format is AARRGGBB
 C_UI_INTERFACES_FILL_HIGHLIGHT,FFC0C0C0,Interface menu hightlight color. Color data format is AARRGGBB
