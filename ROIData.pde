@@ -288,7 +288,7 @@ class ROI_Data {
         }
       }
       if (!found) {
-        int time_duration = object_prev.time_stamp_last - object_prev.time_stamp_start;
+        int time_duration = get_int_diff(object_prev.time_stamp_last, object_prev.time_stamp_start);
         //int time_duration = int(object_prev.time_stamp_last - object_prev.time_stamp_start);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         //println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
@@ -307,7 +307,7 @@ class ROI_Data {
                 Regions_handle.get_marker_stroke_weight(instance, object_prev.region));
           }
           else {
-            object_prev.time_stamp_start -= object_prev.time_stamp_last - time_stamp_curr[instance];
+            object_prev.time_stamp_start -= get_int_diff(object_prev.time_stamp_last, time_stamp_curr[instance]);
           }
           objects.add(object_prev);
         }
@@ -342,7 +342,7 @@ class ROI_Data {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x_c="+object.scr_center_x+",y_c="+object.scr_center_y+",d="+object.scr_diameter);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_stamp_start="+object.time_stamp_start+",time_stamp_last="+object.time_stamp_last);
 
-        int time_duration = object.time_stamp_last - object.time_stamp_start;
+        int time_duration = get_int_diff(object.time_stamp_last, object.time_stamp_start);
         //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
         int weight;
 
@@ -464,7 +464,7 @@ class ROI_Data {
     LinkedList<String> strings = new LinkedList<String>();
 
     strings.add("Region:" + Regions_handle.get_region_name(instance, object.region));
-    strings.add("Time dur.:" + ((object.time_stamp_last - object.time_stamp_start)/1000) + "s");
+    strings.add("Time dur.:" + ((get_int_diff(object.time_stamp_last, object.time_stamp_start))/1000) + "s");
     strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
     strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");
     strings.add("Center Y:" + ((object.mi_center_y/10)/1000.0) + "m");
