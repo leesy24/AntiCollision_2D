@@ -55,6 +55,8 @@ static String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
 static String[] FILE_name = new String[PS_INSTANCE_MAX];
 
+final static int UDP_TIME_OUT = 1000; // timeout 1secs for UDP
+
 static int[] UDP_local_port = new int[PS_INSTANCE_MAX];
 static String[] UDP_remote_ip = new String[PS_INSTANCE_MAX];
 static int[] UDP_remote_port = new int[PS_INSTANCE_MAX];
@@ -140,7 +142,7 @@ void PS_Data_setup()
     else if(PS_Interface[i] == PS_Interface_UDP) {
       Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
-      Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
+      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIME_OUT); // timeout 1secs for UDP
       PS_Data_handle.remote_ip[i] = UDP_remote_ip[i];
       PS_Data_handle.remote_port[i] = UDP_remote_port[i];
     }
@@ -150,7 +152,7 @@ void PS_Data_setup()
 
       Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, remote_ip, remote_port);
-      Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
+      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIME_OUT); // timeout 1secs for UDP
       PS_Data_handle.serial_number[i] = SN_serial_number[i];
       PS_Data_handle.remote_ip[i] = remote_ip;
       PS_Data_handle.remote_port[i] = remote_port;
@@ -190,7 +192,7 @@ class PS_Data {
   String[] remote_ip = new String[PS_INSTANCE_MAX];
   int[] remote_port = new int[PS_INSTANCE_MAX];
   int[] serial_number = new int[PS_INSTANCE_MAX];
-  boolean[] time_stamp_wraped = new boolean[PS_INSTANCE_MAX];
+  boolean[] time_stamp_reseted = new boolean[PS_INSTANCE_MAX];
   // Test time_stamp wrap-around.
   //int[] time_stamp_offset = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_offset = new long[PS_INSTANCE_MAX];
@@ -221,7 +223,7 @@ class PS_Data {
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
-      time_stamp_wraped[i] = false;
+      time_stamp_reseted[i] = false;
       // Test time_stamp wrap-around.
       //time_stamp_offset[i] = -1;
       //time_stamp_last[i] = -1L;
@@ -393,15 +395,17 @@ class PS_Data {
       }
       else {
         int time_stamp_new;
+        int time_stamp_diff;
         //long time_stamp_new;
         // Get time stamp.
         // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
         //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
-        if (time_stamp_new < time_stamp[instance]) {
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is wrap-around or PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
-          // time_stamp is wrap-around or PS rebooted.
-          time_stamp_wraped[instance] = true;
+        time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
+        if ( time_stamp_diff < 0 && time_stamp_diff > UDP_TIME_OUT * 2) {
+          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+          // time_stamp is big different. PS rebooted!
+          time_stamp_reseted[instance] = true;
         }
         time_stamp[instance] = time_stamp_new;
       }
@@ -858,9 +862,9 @@ class PS_Data {
       colorMode(HSB, point_line_color_HSB_max_const);
     }
 
-    if (time_stamp_wraped[instance]) {
+    if (time_stamp_reseted[instance]) {
       ROI_Data_handle.clear_objects(instance);
-      time_stamp_wraped[instance] = false;
+      time_stamp_reseted[instance] = false;
     }
     ROI_Data_handle.clear_points(instance);
     ROI_Data_handle.set_time_stamp(instance, time_stamp[instance]);
