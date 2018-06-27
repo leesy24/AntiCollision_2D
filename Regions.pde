@@ -203,39 +203,44 @@ class Regions {
   }
 
   void draw_instance(int instance) {
-    for (Region_Data region_data:regions_array[instance]) {
-      int x_curr, y_curr;
-      int w_curr;
-      color c_curr;
-      int x_prev, y_prev;
-      int w_prev;
-      color c_prev;
-      int i = 0;
+    for (int priority = regions_priority_max[instance]; priority >= 0; priority --) {
+      for (Region_Data region_data:regions_array[instance]) {
+        if (region_data.priority != priority) {
+          continue;
+        }
+        int x_curr, y_curr;
+        int w_curr;
+        color c_curr;
+        int x_prev, y_prev;
+        int w_prev;
+        color c_prev;
+        int i = 0;
 
-      x_prev = region_data.points_data.scr_x[i];
-      y_prev = region_data.points_data.scr_y[i];
-      w_prev = region_data.points_data.w[i];
-      c_prev = region_data.points_data.c[i];
-      i ++;
+        x_prev = region_data.points_data.scr_x[i];
+        y_prev = region_data.points_data.scr_y[i];
+        w_prev = region_data.points_data.w[i];
+        c_prev = region_data.points_data.c[i];
+        i ++;
 
-      for (; i < region_data.points_data.length; i ++) {
-        x_curr = region_data.points_data.scr_x[i];
-        y_curr = region_data.points_data.scr_y[i];
-        w_curr = region_data.points_data.w[i];
-        c_curr = region_data.points_data.c[i];
-        //if (PRINT_REGIONS_DRAW_DBG) println("Regions:draw_instance("+instance+"):points_data[" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
+        for (; i < region_data.points_data.length; i ++) {
+          x_curr = region_data.points_data.scr_x[i];
+          y_curr = region_data.points_data.scr_y[i];
+          w_curr = region_data.points_data.w[i];
+          c_curr = region_data.points_data.c[i];
+          //if (PRINT_REGIONS_DRAW_DBG) println("Regions:draw_instance("+instance+"):points_data[" + i + "],x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
 
-        fill(c_prev);
-        // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(c_prev);
-        strokeWeight(w_prev);
-        line(x_prev, y_prev, x_curr, y_curr);
+          fill(c_prev);
+          // Sets the color and weight used to draw lines and borders around shapes.
+          stroke(c_prev);
+          strokeWeight(w_prev);
+          line(x_prev, y_prev, x_curr, y_curr);
 
-        // Save data for drawing line between previous and current points. 
-        x_prev = x_curr;
-        y_prev = y_curr;
-        w_prev = w_curr;
-        c_prev = c_curr;
+          // Save data for drawing line between previous and current points. 
+          x_prev = x_curr;
+          y_prev = y_curr;
+          w_prev = w_curr;
+          c_prev = c_curr;
+        }
       }
     }
   }
