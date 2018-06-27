@@ -472,5 +472,3 @@ void UI_Buttons_reset_en()
 
   Screen_update_variable();
 }
-
-

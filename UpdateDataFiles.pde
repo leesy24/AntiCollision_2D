@@ -70,7 +70,7 @@ void Update_Data_Files()
         // unzip fail...
         UI_Message_Box_setup("Error !", "Wrong password !\nOr, Zip file currupted !", 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
-        Update_Data_Files_state_next = Update_Data_Files_state_enum.ZIP_READY;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       // unzip done! Indicate updated.
@@ -89,6 +89,8 @@ void Update_Data_Files()
       Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
       break;
     case UPDATE_PERFORM:
+      // Need to call gc() to use file copy and move functions.
+      System.gc();
       Update_Data_error = "";
       if (!Update_Data_Files_perform_update())
       {
@@ -127,7 +129,7 @@ boolean Update_Data_Files_check_new_zip_file_exist()
   target_file_handle = new File(target_file_full_name);
   // if target zip file exist and same on local.
   tartget_file_is_file = target_file_handle.isFile();
-  
+
   for (char d = 'd'; d <= 'z'; d ++)
   {
     drive = d + ":\\";
@@ -207,16 +209,16 @@ boolean Update_Data_Files_check_updates()
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
   files_list = source_file_handle.list();
-  for ( String file_full_name:files_list)
+  for ( String file_name:files_list)
   {
-    //println("file name:"+file_full_name);
-    source_file_full_name = sketchPath("unzip\\") + file_full_name;
+    //println("file name:"+file_name);
+    source_file_full_name = sketchPath("unzip\\") + file_name;
     source_file_handle = new File(source_file_full_name);
     if (!source_file_handle.isFile())
     {
       continue;
     }
-    target_file_full_name = sketchPath("data\\") + file_full_name;
+    target_file_full_name = sketchPath("data\\") + file_name;
     target_file_handle = new File(target_file_full_name);
     if (target_file_handle.isFile()
         &&
@@ -235,26 +237,60 @@ boolean Update_Data_Files_perform_update()
   boolean ret = true;
   String source_file_full_name, target_file_full_name;
   File source_file_handle;
+  //File target_file_handle;
 
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
   files_list = source_file_handle.list();
-  for ( String file_full_name:files_list)
+  for ( String file_name:files_list)
   {
-    //println("file name:"+file_full_name);
-    source_file_full_name = sketchPath("unzip\\") + file_full_name;
-    target_file_full_name = sketchPath("data\\") + file_full_name;
-    //println("New File found! "+source_file_full_name);
-    if (!move_file(
-      source_file_full_name,
-      target_file_full_name))
+    //println("file name:"+file_name);
+    source_file_full_name = sketchPath("unzip\\") + file_name;
+    //source_file_handle = new File(source_file_full_name);
+    target_file_full_name = sketchPath("data\\") + file_name;
+    //target_file_full_name = sketchPath("data\\") + file_name + ".new";
+    //target_file_handle = new File(target_file_full_name);
+/*
+    if (!delete_file(target_file_full_name))
+    {
+      Update_Data_error = Update_Data_error+"\n"+"delete:\n"+delete_file_error;
+      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      ret = false;
+      //continue;
+    }
+    if (!copy_file(source_file_full_name, target_file_full_name))
+    {
+      Update_Data_error = Update_Data_error+"\n"+"copy_file:\n"+copy_file_error;
+      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      ret = false;
+      //continue;
+    }
+    if (!delete_file(source_file_full_name))
+    {
+      Update_Data_error = Update_Data_error+"\n"+"delete:\n"+delete_file_error;
+      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      ret = false;
+      //continue;
+    }
+*/
+/**/
+    if (!move_file(source_file_full_name, target_file_full_name))
     {
       Update_Data_error = Update_Data_error+"\n"+"move_file:\n"+move_file_error;
       //Update_Data_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
-      continue;
+      return ret;
     }
-
+/**/
+/*
+    if (!move_file_atomic(source_file_full_name, target_file_full_name))
+    {
+      Update_Data_error = Update_Data_error+"\n"+"move_file_atomic:\n"+move_file_atomic_error;
+      //Update_Data_error = "move_file_atomic:\n"+source_file_full_name+"\n"+target_file_full_name;
+      ret = false;
+      return ret;
+    }
+*/
   }
 
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.

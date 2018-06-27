@@ -166,10 +166,33 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.CopyOption;
 import java.nio.file.StandardCopyOption;
+//import java.nio.file.AtomicMoveNotSupportedException;
 import java.io.IOException;
-import java.io.BufferedWriter;
 
 String copy_file_error;
+/**/
+boolean copy_file(String source_file, String target_file)
+{
+  //println("copy_file():"+"from "+source_file);
+  //println("copy_file():"+"to   "+target_file);
+  try
+  {
+    Files.copy(
+      Paths.get(source_file),
+      Paths.get(target_file),
+      StandardCopyOption.REPLACE_EXISTING);
+  }
+  catch (IOException e)
+  {
+    copy_file_error = e.toString();
+    //e.printStackTrace();
+    return false;
+  }
+
+  return true;
+}
+/**/
+/*
 boolean copy_file(String source_file, String target_file)
 {
   //println("copy_file():"+"from "+source_file);
@@ -179,7 +202,6 @@ boolean copy_file(String source_file, String target_file)
     StandardCopyOption.REPLACE_EXISTING,
     StandardCopyOption.COPY_ATTRIBUTES
   };
-
   try
   {
     Files.copy(
@@ -196,6 +218,8 @@ boolean copy_file(String source_file, String target_file)
 
   return true;
 }
+*/
+
 
 String move_file_error;
 boolean move_file(String source_file, String target_file)
@@ -212,6 +236,55 @@ boolean move_file(String source_file, String target_file)
   catch (IOException e)
   {
     move_file_error = e.toString();
+    //e.printStackTrace();
+    return false;
+  }
+
+  return true;
+}
+
+String move_file_atomic_error;
+boolean move_file_atomic(String source_file, String target_file)
+{
+  boolean ret = true;
+  //println("move_file_atomic():"+"from "+source_file);
+  //println("move_file_atomic():"+"to   "+target_file);
+  try
+  {
+    Files.move(
+      Paths.get(source_file),
+      Paths.get(target_file),
+      StandardCopyOption.ATOMIC_MOVE);
+  }
+  catch (IOException e)
+  {
+    move_file_atomic_error = e.toString();
+    //e.printStackTrace();
+    ret = false;
+  }
+/*
+  catch (AtomicMoveNotSupportedException e)
+  {
+    move_file_atomic_error = e.toString();
+    //e.printStackTrace();
+    ret = false;
+  }
+*/
+
+  return ret;
+}
+
+String delete_file_error;
+boolean delete_file(String target_file)
+{
+  //println("delete_file():"+"to   "+target_file);
+  try
+  {
+    Files.delete(Paths.get(target_file));
+  }
+  catch (IOException e)
+  {
+    delete_file_error = e.toString();
     //e.printStackTrace();
     return false;
   }

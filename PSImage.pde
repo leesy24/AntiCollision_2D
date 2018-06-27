@@ -153,4 +153,3 @@ void PS_Image_mouse_dragged()
 {
   PS_Image_mouse_moved();
 }
-
