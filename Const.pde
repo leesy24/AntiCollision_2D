@@ -10,26 +10,26 @@ final static String CONST_FILE_EXT = ".csv";
 
 static String CONST_file_full_name;
 
-// A Table object
-static Table CONST_table;
-
 void Const_setup()
 {
   if (PRINT_CONST_ALL_DBG || PRINT_CONST_SETUP_DBG) println("Const_setup():Enter");
+
+  // A Table object
+  Table table;
 
   CONST_file_full_name = CONST_FILE_NAME + CONST_FILE_EXT;
 
   // Load config file(CSV type) into a Table object
   // "header" option indicates the file has a header row
-  CONST_table = loadTable(CONST_file_full_name, "header");
+  table = loadTable(CONST_file_full_name, "header");
   // Check loadTable failed.
-  if (CONST_table == null)
+  if (table == null)
   {
     Const_create();
     return;
   }
 
-  for (TableRow variable : CONST_table.rows())
+  for (TableRow variable : table.rows())
   {
     // You can access the fields via their column name (or index)
     String name = variable.getString("Name");
@@ -122,217 +122,219 @@ void Const_create()
 {
   if (PRINT_CONST_ALL_DBG) println("Const_create():");
 
+  // A Table object
+  Table table;
   TableRow variable;
 
-  CONST_table = new Table();
-  CONST_table.addColumn("Name");
-  CONST_table.addColumn("Value");
-  CONST_table.addColumn("Comment");
+  table = new Table();
+  table.addColumn("Name");
+  table.addColumn("Value");
+  table.addColumn("Comment");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "FRAME_RATE");
   variable.setInt("Value", FRAME_RATE);
   variable.setString("Comment", "Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");
   variable.setInt("Value", ROI_OBJECT_MARKER_MARGIN);
   variable.setString("Comment", "Margin of objects ROI marker.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
   variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
   variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
   variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
   variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "SCREEN_BORDER_WIDTH");
   variable.setInt("Value", SCREEN_BORDER_WIDTH);
   variable.setString("Comment", "Border width of window of Windows. default = 8");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "SCREEN_TITLE_HEIGHT");
   variable.setInt("Value", SCREEN_TITLE_HEIGHT);
   variable.setString("Comment", "Title height of window of Windows. default = 31");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "SCREEN_X_OFFSET");
   variable.setInt("Value", SCREEN_X_OFFSET);
   variable.setString("Comment", "Adjuest X offset of window of Windows. default = 3");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "SCREEN_Y_OFFSET");
   variable.setInt("Value", SCREEN_Y_OFFSET);
   variable.setString("Comment", "Adjuest Y offset of window of Windows. default = 5");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_BG");
   variable.setString("Value", String.format("%08X", C_BG));
   variable.setString("Comment", "Background color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_ERR_TEXT");
   variable.setString("Value", String.format("%08X", C_PS_DATA_ERR_TEXT));
   variable.setString("Comment", "Error text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_NUM_PAD_NORMAL");
   variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_NORMAL));
   variable.setString("Comment", "Color of normal button of number pad. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_NUM_PAD_HIGHLIGHT");
   variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_HIGHLIGHT));
   variable.setString("Comment", "Color of highlighted button of number pad. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_NUM_PAD_TEXT");
   variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_TEXT));
   variable.setString("Comment", "Color of text of number pad. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_NUM_PAD_BOX");
   variable.setString("Value", String.format("%08X", C_UI_NUM_PAD_BOX));
   variable.setString("Comment", "Color of button box of number pad. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_UI_NUM_PAD_BOX");
   variable.setInt("Value", W_UI_NUM_PAD_BOX);
   variable.setString("Comment", "Weight of border lines of number pad.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_BUBBLE_INFO_RECT_FILL");
   variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_RECT_FILL));
   variable.setString("Comment", "Bubble info box fill color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_BUBBLE_INFO_RECT_STROKE");
   variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_RECT_STROKE));
   variable.setString("Comment", "Bubble info box border color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_BUBBLE_INFO_TEXT");
   variable.setString("Value", String.format("%08X", C_BUBBLE_INFO_TEXT));
   variable.setString("Comment", "Bubble infor box text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_BUTTONS_NORMAL");
   variable.setString("Value", String.format("%08X", C_UI_BUTTONS_NORMAL));
   variable.setString("Comment", "Button normal background color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_BUTTONS_HIGHLIGHT");
   variable.setString("Value", String.format("%08X", C_UI_BUTTONS_HIGHLIGHT));
   variable.setString("Comment", "Button highlight background color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_BUTTONS_TEXT");
   variable.setString("Value", String.format("%08X", C_UI_BUTTONS_TEXT));
   variable.setString("Comment", "Button text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_BUTTONS_BOX");
   variable.setString("Value", String.format("%08X", C_UI_BUTTONS_BOX));
   variable.setString("Comment", "Button box color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_UI_BUTTONS_BOX");
   variable.setInt("Value", W_UI_BUTTONS_BOX);
   variable.setString("Comment", "Button box weight.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_LINE");
   variable.setString("Value", String.format("%08X", C_PS_DATA_LINE));
   variable.setString("Comment", "Scan points line default color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_POINT");
   variable.setString("Value", String.format("%08X", C_PS_DATA_POINT));
   variable.setString("Comment", "Scan point default color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_PS_DATA_LINE");
   variable.setInt("Value", W_PS_DATA_LINE);
   variable.setString("Comment", "Scan line and point default weight.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_RECT_FILL");
   variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_FILL));
   variable.setString("Comment", "Scan info box fill color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_RECT_STROKE");
   variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_STROKE));
   variable.setString("Comment", "Scan info box border color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_PS_DATA_RECT_STROKE");
   variable.setInt("Value", W_PS_DATA_RECT_STROKE);
   variable.setString("Comment", "Scan info box border line weight.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_RECT_TEXT");
   variable.setString("Value", String.format("%08X", C_PS_DATA_RECT_TEXT));
   variable.setString("Comment", "Scan info box text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_GRID_LINE");
   variable.setString("Value", String.format("%08X", C_GRID_LINE));
   variable.setString("Comment", "Grid line color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_GRID_LINE");
   variable.setInt("Value", W_GRID_LINE);
   variable.setString("Comment", "Grid line weight.");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_GRID_TEXT");
   variable.setString("Value", String.format("%08X", C_GRID_TEXT));
   variable.setString("Comment", "Grid text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_TEXT");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_TEXT));
   variable.setString("Comment", "Interface menu text color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_FILL_NORMAL");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_FILL_NORMAL));
   variable.setString("Comment", "Interface menu fill color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_FILL_HIGHLIGHT");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_FILL_HIGHLIGHT));
   variable.setString("Comment", "Interface menu hightlight color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_BORDER_ACTIVE");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_BORDER_ACTIVE));
   variable.setString("Comment", "Interface menu border active color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_BORDER_NORMAL");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_BORDER_NORMAL));
   variable.setString("Comment", "Interface menu border normal color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_CURSOR");
   variable.setString("Value", String.format("%08X", C_UI_INTERFACES_CURSOR));
   variable.setString("Comment", "Interface menu cursor color. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "C_BG_IMAGE_LINE");
   variable.setString("Value", String.format("%08X", C_BG_IMAGE_LINE));
   variable.setString("Comment", "Line color of background image lines. Color data format is AARRGGBB");
 
-  variable = CONST_table.addRow();
+  variable = table.addRow();
   variable.setString("Name", "W_BG_IMAGE_LINE");
   variable.setInt("Value", W_BG_IMAGE_LINE);
   variable.setString("Comment", "Line weight of background image lines.");
 
-  saveTable(CONST_table, "data/" + CONST_file_full_name);
+  saveTable(table, "data/" + CONST_file_full_name);
 }

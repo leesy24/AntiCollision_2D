@@ -14,9 +14,6 @@ static String CONFIG_file_full_name;
 static String CONFIG_instance_number = null;
 */
 
-// A Table object
-static Table CONFIG_table;
-
 void Config_setup()
 {
   if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup():Enter");
@@ -25,17 +22,20 @@ void Config_setup()
   {
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
  
+    // A Table object
+    Table table;
+
     // Load config file(CSV type) into a Table object
     // "header" option indicates the file has a header row
-    CONFIG_table = loadTable(CONFIG_file_full_name, "header");
+    table = loadTable(CONFIG_file_full_name, "header");
     // Check loadTable failed.
-    if(CONFIG_table == null)
+    if(table == null)
     {
       Config_create();
       return;
     }
 
-    for (TableRow variable : CONFIG_table.rows())
+    for (TableRow variable : table.rows())
     {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
@@ -116,100 +116,103 @@ void Config_create()
   
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    CONFIG_table = new Table();
-    CONFIG_table.addColumn("Name");
-    CONFIG_table.addColumn("Value");
-    CONFIG_table.addColumn("Comment");
+    // A Table object
+    Table table;
 
-    variable = CONFIG_table.addRow();
+    table = new Table();
+    table.addColumn("Name");
+    table.addColumn("Value");
+    table.addColumn("Comment");
+
+    variable = table.addRow();
     variable.setString("Name", "PS_Interface");
     variable.setString("Value", PS_Interface_str[PS_Interface[i]]);
     variable.setString("Comment", "PS Interface via File or COM or UDP or SN.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "ROTATE_FACTOR");
     variable.setFloat("Value", ROTATE_FACTOR[i]);
     variable.setString("Comment", "Rotate factor of draws for 45 or 135 or 225 or 315");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "MIRROR_ENABLE");
     variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
     variable.setString("Comment", "Mirroring or not.(true or false)");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "ZOOM_FACTOR");
     //variable.setFloat("Value", ZOOM_FACTOR);
     variable.setInt("Value", ZOOM_FACTOR[i]);
     variable.setString("Comment", "Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "DRAW_OFFSET_X");
     variable.setInt("Value", DRAW_OFFSET_X[i]);
     variable.setString("Comment", "X Offset of draws.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "DRAW_OFFSET_Y");
     variable.setInt("Value", DRAW_OFFSET_Y[i]);
     variable.setString("Comment", "Y Offset of draws.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "FILE_name");
     variable.setString("Value", FILE_name[i]);
     variable.setString("Comment", "File name of PS Interface File.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UART_port_name");
     variable.setString("Value", UART_port_name);
     variable.setString("Comment", "UART port name of PS Interface UART.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UART_baud_rate");
     variable.setInt("Value", UART_baud_rate);
     variable.setString("Comment", "UART baud rate of PS Interface UART.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UART_parity");
     variable.setString("Value", Character.toString(UART_parity));
     variable.setString("Comment", "UART parity of PS Interface UART.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UART_data_bits");
     variable.setInt("Value", UART_data_bits);
     variable.setString("Comment", "UART baud rate of PS Interface UART.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UART_stop_bits");
     variable.setFloat("Value", UART_stop_bits);
     variable.setString("Comment", "UART stop bits of PS Interface UART.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UDP_remote_ip");
     variable.setString("Value", UDP_remote_ip[i]);
     variable.setString("Comment", "UDP remote IP of PS Interface UDP.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UDP_remote_port");
     variable.setInt("Value", UDP_remote_port[i]);
     variable.setString("Comment", "UDP remote port of PS Interface UDP.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "UDP_local_port");
     variable.setInt("Value", UDP_local_port[i]);
     variable.setString("Comment", "UDP local port of PS Interface UDP.");
 
-    variable = CONFIG_table.addRow();
+    variable = table.addRow();
     variable.setString("Name", "SN_serial_number");
     variable.setInt("Value", SN_serial_number[i]);
     variable.setString("Comment", "Serial Number of PS Interface SN.");
 
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
-    saveTable(CONFIG_table, "data/" + CONFIG_file_full_name);
+    saveTable(table, "data/" + CONFIG_file_full_name);
   }
 }
 
 void Config_save()
 {
-  if (PRINT_CONFIG_ALL_DBG) println("Config_save():");
+  if (PRINT_CONFIG_ALL_DBG) println("Config_save():Enter");
 
   int value_int;
   float value_float;
@@ -219,7 +222,21 @@ void Config_save()
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    for (TableRow variable : CONFIG_table.rows()) {
+    CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
+ 
+    // A Table object
+    Table table;
+
+    // Load config file(CSV type) into a Table object
+    // "header" option indicates the file has a header row
+    table = loadTable(CONFIG_file_full_name, "header");
+    // Check loadTable failed.
+    if(table == null)
+    {
+      return;
+    }
+
+    for (TableRow variable : table.rows()) {
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
       if(name.equals("PS_Interface")) {
@@ -341,7 +358,7 @@ void Config_save()
     if(changed) {
       // Writing the config file(CSV type) back to the same file
       CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
-      saveTable(CONFIG_table, "data/" + CONFIG_file_full_name);
+      saveTable(table, "data/" + CONFIG_file_full_name);
     }
   }
 }

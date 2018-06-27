@@ -21,9 +21,6 @@ static String BG_IMAGE_file_full_name;
 static color C_BG_IMAGE_LINE = #000000;
 static int W_BG_IMAGE_LINE = 3;
 
-// A Table object
-static Table BG_IMAGE_table;
-
 static Points_Data BG_IMAGE_data;
 
 void BG_Image_setup()
@@ -32,18 +29,21 @@ void BG_Image_setup()
 
   BG_IMAGE_file_full_name = BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT;
 
+  // A Table object
+  Table table;
+
   // Load lines file(CSV type) into a Table object
   // "header" option indicates the file has a header row
-  BG_IMAGE_table = loadTable(BG_IMAGE_file_full_name, "header");
+  table = loadTable(BG_IMAGE_file_full_name, "header");
   // Check loadTable failed.
-  if(BG_IMAGE_table == null)
+  if(table == null)
   {
-    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():BG_IMAGE_table=null");
+    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():table=null");
     return;
   }
 
-  //println("BG_IMAGE_table.getRowCount()=" + BG_IMAGE_table.getRowCount());
-  BG_IMAGE_data = new Points_Data(BG_IMAGE_table.getRowCount());
+  //println("table.getRowCount()=" + table.getRowCount());
+  BG_IMAGE_data = new Points_Data(table.getRowCount());
   if(BG_IMAGE_data == null)
   {
     if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():BG_IMAGE_data=null");
@@ -53,7 +53,7 @@ void BG_Image_setup()
 
   int i = 0;
   String X, Y, Weight, Color;
-  for(TableRow variable : BG_IMAGE_table.rows())
+  for(TableRow variable : table.rows())
   {
     X = variable.getString("X");
     Y = variable.getString("Y");
