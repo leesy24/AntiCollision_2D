@@ -23,6 +23,7 @@ static Update_Data_Files_state_enum Update_Data_Files_state;
 static Update_Data_Files_state_enum Update_Data_Files_state_next;
 static String Update_Data_Files_zip_file_password;
 static String Update_Data_Files_zip_file_full_name;
+static String Update_Data_error;
 
 void Update_Data_setup()
 {
@@ -91,7 +92,7 @@ void Update_Data_Files()
       if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !", 5000);
+        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_error, 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -247,6 +248,7 @@ boolean Update_Data_Files_perform_update()
       source_file_full_name,
       target_file_full_name))
     {
+      Update_Data_error = "move_file:"+source_file_full_name+","+target_file_full_name;
       ret = false;
       continue;
     }
@@ -254,10 +256,18 @@ boolean Update_Data_Files_perform_update()
   }
 
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
+  target_file_full_name =
+    sketchPath(
+      "unzip\\"
+      +
+      UPDATE_DATA_FILES_ZIP_FILE_NAME
+      +
+      UPDATE_DATA_FILES_ZIP_FILE_EXT);
   if (!copy_file(
     Update_Data_Files_zip_file_full_name,
-    sketchPath("unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT)))
+    target_file_full_name))
   {
+    Update_Data_error = "copy_file:"+Update_Data_Files_zip_file_full_name+","+target_file_full_name;
     ret = false;
   }
 
