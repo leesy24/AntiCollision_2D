@@ -169,6 +169,7 @@ import java.nio.file.StandardCopyOption;
 import java.io.IOException;
 import java.io.BufferedWriter;
 
+String copy_file_error;
 boolean copy_file(String source_file, String target_file)
 {
   //println("copy_file():"+"from "+source_file);
@@ -188,13 +189,15 @@ boolean copy_file(String source_file, String target_file)
   }
   catch (IOException e)
   {
-    e.printStackTrace();
+    copy_file_error = e.toString();
+    //e.printStackTrace();
     return false;
   }
 
   return true;
 }
 
+String move_file_error;
 boolean move_file(String source_file, String target_file)
 {
   //println("move_file():"+"from "+source_file);
@@ -208,7 +211,8 @@ boolean move_file(String source_file, String target_file)
   }
   catch (IOException e)
   {
-    e.printStackTrace();
+    move_file_error = e.toString();
+    //e.printStackTrace();
     return false;
   }
 

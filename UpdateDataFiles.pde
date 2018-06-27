@@ -248,7 +248,8 @@ boolean Update_Data_Files_perform_update()
       source_file_full_name,
       target_file_full_name))
     {
-      Update_Data_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_error = "move_file:\n"+move_file_error;
+      //Update_Data_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       continue;
     }
@@ -267,7 +268,8 @@ boolean Update_Data_Files_perform_update()
     Update_Data_Files_zip_file_full_name,
     target_file_full_name))
   {
-    Update_Data_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
+    Update_Data_error = "copy_file:\n"+copy_file_error;
+    //Update_Data_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
     ret = false;
   }
 
