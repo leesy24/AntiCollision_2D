@@ -89,6 +89,8 @@ class UI_Message_Box {
   }
 
   private void set(String title, String msg, int time_out, int width, int height) {
+    String[] lines = msg.split("\r\n|\r|\n");
+
     int center_x, center_y;
     int width_max = 0;
     center_x = SCREEN_width / 2;
@@ -101,7 +103,7 @@ class UI_Message_Box {
 
     this.msg = msg;
     this.msg_w = min(width, width_max);
-    this.msg_h = int((TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 1.5) * 3;
+    this.msg_h = int((TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 1.5) * (lines.length + 2);
     //println("msg_h="+msg_h);
     this.title = title;
     this.title_w = min(width, width_max);
