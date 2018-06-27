@@ -189,7 +189,7 @@ boolean copy_file(String source_file, String target_file)
   }
   catch (IOException e)
   {
-    copy_file_error = copy_file_error+"\n" +e.toString();
+    copy_file_error = e.toString();
     //e.printStackTrace();
     return false;
   }
@@ -211,7 +211,7 @@ boolean move_file(String source_file, String target_file)
   }
   catch (IOException e)
   {
-    move_file_error = move_file_error+"\n" +e.toString();
+    move_file_error = e.toString();
     //e.printStackTrace();
     return false;
   }

@@ -239,7 +239,6 @@ boolean Update_Data_Files_perform_update()
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
   files_list = source_file_handle.list();
-  move_file_error = "";
   for ( String file_full_name:files_list)
   {
     //println("file name:"+file_full_name);
@@ -258,7 +257,6 @@ boolean Update_Data_Files_perform_update()
 
   }
 
-  copy_file_error = "";
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
   target_file_full_name =
     sketchPath(
