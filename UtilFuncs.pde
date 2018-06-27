@@ -358,3 +358,24 @@ int unzip_perform(String zip_file_full_name, String unzip_dir, String password)
 
   return 0;
 }
+
+int get_millis_diff(int old_millis)
+{
+  int diff, new_millis;
+
+  new_millis = millis();
+  if (new_millis < old_millis) diff = MAX_INT - old_millis + new_millis - MIN_INT;
+  else diff = new_millis - old_millis;
+
+  return diff;
+}
+
+int get_int_diff(int new_val, int old_val)
+{
+  int diff;
+
+  if (new_val < old_val) diff = MAX_INT - old_val + new_val - MIN_INT;
+  else diff = new_val - old_val;
+
+  return diff;
+}

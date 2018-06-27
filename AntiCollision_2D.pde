@@ -32,7 +32,7 @@ void setup() {
 
   Const_setup();
   Config_setup();
-  Update_Data_setup();
+  Update_Data_Files_setup();
   Screen_setup();
   BG_Image_setup();
   Grid_setup();
@@ -142,7 +142,7 @@ void draw() {
   UI_Interfaces_draw();
   Notice_Messages_draw();
 
-  Update_Data_Files();
+  Update_Data_Files_check();
 } 
 
 void Notice_Messages_draw()

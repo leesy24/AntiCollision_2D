@@ -9,6 +9,8 @@ final static boolean PRINT_UPDATE_DATA_SETUP_DBG = false;
 final static String UPDATE_DATA_FILES_ZIP_FILE_NAME = "data";
 final static String UPDATE_DATA_FILES_ZIP_FILE_EXT = ".zip";
 
+final static int UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT = 1000;
+
 static enum Update_Data_Files_state_enum {
   IDLE,
   ZIP_READY,
@@ -23,21 +25,29 @@ static Update_Data_Files_state_enum Update_Data_Files_state;
 static Update_Data_Files_state_enum Update_Data_Files_state_next;
 static String Update_Data_Files_zip_file_password;
 static String Update_Data_Files_zip_file_full_name;
-static String Update_Data_error;
+static String Update_Data_Files_error;
+static int Update_Data_Files_check_interval;
+static int Update_Data_Files_check_timer;
 
-void Update_Data_setup()
+void Update_Data_Files_setup()
 {
-  if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_SETUP_DBG) println("Update_Data_setup():Enter");
+  if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_SETUP_DBG) println("Update_Data_Files_setup():Enter");
 
   Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+  Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT; // 1sec
+  Update_Data_Files_check_timer = millis();
 }
 
-void Update_Data_Files()
+void Update_Data_Files_check()
 {
+  if (get_millis_diff(Update_Data_Files_check_timer) < Update_Data_Files_check_interval) return;
+  Update_Data_Files_check_timer = millis();
+
   //println("Update_Data_Files_state=", Update_Data_Files_state);
   switch (Update_Data_Files_state)
   {
     case IDLE:
+      Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT;
       if (!Update_Data_Files_check_new_zip_file_exist())
       {
         break;
@@ -50,6 +60,7 @@ void Update_Data_Files()
         break;
       }
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
+      Update_Data_Files_check_interval = 0;
       break;
     case ZIP_READY:
       UI_Num_Pad_setup("Input Password");
@@ -91,11 +102,11 @@ void Update_Data_Files()
     case UPDATE_PERFORM:
       // Need to call gc() to use file copy and move functions.
       System.gc();
-      Update_Data_error = "";
+      Update_Data_Files_error = "";
       if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_error, 0);
+        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_Files_error, 0);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -253,22 +264,22 @@ boolean Update_Data_Files_perform_update()
 /*
     if (!delete_file(target_file_full_name))
     {
-      Update_Data_error = Update_Data_error+"\n"+"delete:\n"+delete_file_error;
-      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_Files_error = Update_Data_Files_error+"\n"+"delete:\n"+delete_file_error;
+      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       //continue;
     }
     if (!copy_file(source_file_full_name, target_file_full_name))
     {
-      Update_Data_error = Update_Data_error+"\n"+"copy_file:\n"+copy_file_error;
-      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_Files_error = Update_Data_Files_error+"\n"+"copy_file:\n"+copy_file_error;
+      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       //continue;
     }
     if (!delete_file(source_file_full_name))
     {
-      Update_Data_error = Update_Data_error+"\n"+"delete:\n"+delete_file_error;
-      //Update_Data_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_Files_error = Update_Data_Files_error+"\n"+"delete:\n"+delete_file_error;
+      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       //continue;
     }
@@ -276,8 +287,8 @@ boolean Update_Data_Files_perform_update()
 /**/
     if (!move_file(source_file_full_name, target_file_full_name))
     {
-      Update_Data_error = Update_Data_error+"\n"+"move_file:\n"+move_file_error;
-      //Update_Data_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_Files_error = Update_Data_Files_error+"\n"+"move_file:\n"+move_file_error;
+      //Update_Data_Files_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       return ret;
     }
@@ -285,8 +296,8 @@ boolean Update_Data_Files_perform_update()
 /*
     if (!move_file_atomic(source_file_full_name, target_file_full_name))
     {
-      Update_Data_error = Update_Data_error+"\n"+"move_file_atomic:\n"+move_file_atomic_error;
-      //Update_Data_error = "move_file_atomic:\n"+source_file_full_name+"\n"+target_file_full_name;
+      Update_Data_Files_error = Update_Data_Files_error+"\n"+"move_file_atomic:\n"+move_file_atomic_error;
+      //Update_Data_Files_error = "move_file_atomic:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       return ret;
     }
@@ -305,8 +316,8 @@ boolean Update_Data_Files_perform_update()
     Update_Data_Files_zip_file_full_name,
     target_file_full_name))
   {
-    Update_Data_error = Update_Data_error+"\n"+"copy_file:\n"+copy_file_error;
-    //Update_Data_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
+    Update_Data_Files_error = Update_Data_Files_error+"\n"+"copy_file:\n"+copy_file_error;
+    //Update_Data_Files_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
     ret = false;
   }
 
