@@ -301,15 +301,7 @@ int UART_PS_perform_SCAN(int on)
     return UART_CMD_state;
   }
   else if(UART_CMD_state == UART_CMD_STATE_SENT) {
-    int time_dif;
-    // Check time out
-    time_dif = millis();
-    // Check millis wrap around
-    if(time_dif < UART_CMD_start_time)
-      time_dif = MAX_INT - UART_CMD_start_time + time_dif;
-    else
-      time_dif = time_dif - UART_CMD_start_time;
-    if(time_dif > UART_CMD_timeout) {
+    if(get_millis_diff(UART_CMD_start_time) > UART_CMD_timeout) {
       UART_CMD_state = UART_CMD_STATE_NONE;
       UART_str_err_last = "Error: UART SCAN timeout! " + UART_CMD_inLength + "," + UART_total;
       if(PRINT_UART_LOAD_ERR) println(UART_str_err_last);
@@ -370,15 +362,7 @@ int UART_PS_perform_GSCN(int scan_number)
     return UART_CMD_state;
   }
   else if(UART_CMD_state == UART_CMD_STATE_SENT) {
-    int time_dif;
-    // Check time out
-    time_dif = millis();
-    // Check millis wrap around
-    if(time_dif < UART_CMD_start_time)
-      time_dif = MAX_INT - UART_CMD_start_time + time_dif;
-    else
-      time_dif = time_dif - UART_CMD_start_time;
-    if(time_dif > UART_CMD_timeout) {
+    if(get_millis_diff(UART_CMD_start_time) > UART_CMD_timeout) {
       UART_str_err_last = "Error: UART GSCN timeout! " + UART_CMD_inLength + "," + UART_total;
       if(PRINT_UART_LOAD_ERR) println(UART_str_err_last);
       UART_CMD_state = UART_CMD_STATE_NONE;

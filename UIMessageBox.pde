@@ -158,7 +158,7 @@ class UI_Message_Box {
         ||
         ( time_out > 0
           &&
-          millis() - time_start > time_out)) {
+          get_millis_diff(time_start) > time_out)) {
       return false;
     }
 

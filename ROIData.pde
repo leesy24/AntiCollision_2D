@@ -389,7 +389,7 @@ class ROI_Data {
 
     if (!ROI_Data_draw_info_enabled[instance]) return;
 
-    if ((millis() - ROI_Data_draw_info_timer[instance]) >= ROI_OBJECT_DRAW_INFO_TIMEOUT)
+    if (get_millis_diff(ROI_Data_draw_info_timer[instance]) >= ROI_OBJECT_DRAW_INFO_TIMEOUT)
     {
       ROI_Data_draw_info_enabled[instance] = false;
     }
@@ -472,7 +472,7 @@ class ROI_Data {
     strings.add("Width:" + ((object.mi_width/10)/1000.0) + "m");
     strings.add("Height:" + ((object.mi_height/10)/1000.0) + "m");
     strings.add("Num. of points:" + object.number_of_points);
-    strings.add("Time-out:" + ((ROI_OBJECT_DRAW_INFO_TIMEOUT + 1000 - millis() + ROI_Data_draw_info_timer[instance])/1000) + "s");
+    strings.add("Time-out:" + ((ROI_OBJECT_DRAW_INFO_TIMEOUT + 1000 - get_millis_diff(ROI_Data_draw_info_timer[instance]))/1000) + "s");
 
     // Get max string width
     textSize(FONT_HEIGHT);

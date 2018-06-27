@@ -26,7 +26,7 @@ void Bubble_Info_draw()
   LinkedList<String> strings = new LinkedList<String>();
   int x, y, w, h, tl = 5, tr = 5, br = 0, bl = 5;
 
-  if (BUBBLE_INFO_AVAILABLE || (millis() - BUBBLE_INFO_TIMER) < BUBBLE_INFO_TIMEOUT)
+  if (BUBBLE_INFO_AVAILABLE || get_millis_diff(BUBBLE_INFO_TIMER) < BUBBLE_INFO_TIMEOUT)
   {
 
     BUBBLE_INFO_DISPLAY = true;

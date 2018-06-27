@@ -707,7 +707,7 @@ class PS_Data {
 
     if(!PS_Data_draw_params_enabled[instance]) return;
 
-    if((millis() - PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT) {
+    if(get_millis_diff(PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT) {
       PS_Data_draw_params_enabled[instance] = false;
     }
 
@@ -734,7 +734,7 @@ class PS_Data {
     strings.add("System status:" + system_status[instance]);
     strings.add("Data content:" + data_content[instance]);
     strings.add("Number of points:" + number_of_points[instance]);
-    strings.add("Time-out:" + ((DRAW_PARAMS_TIMEOUT + 1000 - millis() + PS_Data_draw_params_timer[instance])/1000) + "s");
+    strings.add("Time-out:" + ((DRAW_PARAMS_TIMEOUT + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
 
     // Get max string width
     textSize(FONT_HEIGHT);
