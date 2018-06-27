@@ -1,7 +1,11 @@
-//import java.awt.Dimension;
-
 //final static boolean PRINT_SCREENFUNC_ALL_DBG = true;
 final static boolean PRINT_SCREENFUNC_ALL_DBG = false;
+
+//final static boolean PRINT_SCREENFUNC_SETTINGS_DBG = true;
+final static boolean PRINT_SCREENFUNC_SETTINGS_DBG = false;
+
+//final static boolean PRINT_SCREENFUNC_SETUP_DBG = true;
+final static boolean PRINT_SCREENFUNC_SETUP_DBG = false;
 
 // Define minimum screen width and height.
 final static int MIN_SCREEN_WIDTH = 100;
@@ -63,11 +67,11 @@ void Screen_settings() {
   SCREEN_width = int(displayWidth * SCREEN_width_ratio) - SCREEN_BORDER_WIDTH * 2;
   SCREEN_height = int(displayHeight * SCREEN_height_ratio) - (SCREEN_TITLE_HEIGHT + SCREEN_BORDER_WIDTH);
 */
-  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():");
-  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():displayWidth="+displayWidth+",displayHeight="+displayHeight);
-  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_settings():SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
+  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():");
+  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():displayWidth="+displayWidth+",displayHeight="+displayHeight);
+  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
+ 
   size(SCREEN_width, SCREEN_height);
-
 }
 
 /*
@@ -75,7 +79,8 @@ boolean SCREEN_surface_set = false; // Needs to set one time.
 */
 void Screen_setup()
 {
-  if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():");
+  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETUP_DBG) println("Screen_setup():Enter");
+
 /*
   if(!SCREEN_surface_set)
   {

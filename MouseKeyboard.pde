@@ -51,8 +51,12 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F6)
     {
       UI_Interfaces_enabled = !UI_Interfaces_enabled;
-      UI_Interfaces_setup();
-    } 
+      UI_Interfaces_update();
+    }
+    else if(keyCode == KeyEvent.VK_F5)
+    {
+      PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
+    }
   }
 }
 /**/

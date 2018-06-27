@@ -1,13 +1,19 @@
-//final static boolean PRINT_UI_BUTTONS_ZOOM_DBG = true; 
+//final static boolean PRINT_UI_BUTTONS_ALL_DBG = true;
+final static boolean PRINT_UI_BUTTONS_ALL_DBG = false;
+
+//final static boolean PRINT_UI_BUTTONS_SETUP_DBG = true;
+final static boolean PRINT_UI_BUTTONS_SETUP_DBG = false;
+
+//final static boolean PRINT_UI_BUTTONS_ZOOM_DBG = true;
 final static boolean PRINT_UI_BUTTONS_ZOOM_DBG = false;
 
-//final static boolean PRINT_UI_BUTTONS_ROTATE_DBG = true; 
+//final static boolean PRINT_UI_BUTTONS_ROTATE_DBG = true;
 final static boolean PRINT_UI_BUTTONS_ROTATE_DBG = false;
 
-//final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = true; 
+//final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = true;
 final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = false;
 
-//final static boolean PRINT_UI_BUTTONS_RESET_DBG = true; 
+//final static boolean PRINT_UI_BUTTONS_RESET_DBG = true;
 final static boolean PRINT_UI_BUTTONS_RESET_DBG = false;
 
 static color C_UI_BUTTONS_NORMAL = #FFFFFF; // White
@@ -77,10 +83,15 @@ static boolean buttons_reset_en_pressed = false;
 static int buttons_reset_en_caption_str_x, buttons_reset_en_caption_str_y;  // Position of button string reset enable
 static String buttons_reset_en_caption_str = "Reset";                      // button string reset enable
 
-static boolean UI_Buttons_enabled = false;
+static boolean UI_Buttons_enabled;
 
 void UI_Buttons_setup()
 {
+  if (PRINT_UI_BUTTONS_ALL_DBG || PRINT_UI_BUTTONS_SETUP_DBG) println("UI_Buttons_setup():Enter");
+
+  //UI_Buttons_enabled = true;
+  UI_Buttons_enabled = false;
+
   textSize(FONT_HEIGHT);
   buttons_zoom_minus_width = FONT_HEIGHT * 2;
   buttons_zoom_minus_height = FONT_HEIGHT * 2;

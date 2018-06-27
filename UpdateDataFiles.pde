@@ -1,5 +1,11 @@
 import java.io.File;
 
+//final static boolean PRINT_UPDATE_DATA_ALL_DBG = true;
+final static boolean PRINT_UPDATE_DATA_ALL_DBG = false;
+
+//final static boolean PRINT_UPDATE_DATA_SETUP_DBG = true;
+final static boolean PRINT_UPDATE_DATA_SETUP_DBG = false;
+
 final static String UPDATE_DATA_FILES_ZIP_FILE_NAME = "data";
 final static String UPDATE_DATA_FILES_ZIP_FILE_EXT = ".zip";
 
@@ -7,14 +13,22 @@ static enum Update_Data_Files_state_enum {
   IDLE,
   ZIP_READY,
   PASSWORD_REQ,
+  UNZIP,
   UPDATE_PERFORM,
   DISPLAY_MESSAGE,
   RESET
 }
-static Update_Data_Files_state_enum Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+static Update_Data_Files_state_enum Update_Data_Files_state;
 static Update_Data_Files_state_enum Update_Data_Files_state_next;
 static String Update_Data_Files_zip_file_password;
 static String Update_Data_Files_zip_file_full_name;
+
+void Update_Data_setup()
+{
+  if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_SETUP_DBG) println("Update_Data_setup():Enter");
+
+  Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
+}
 
 void Update_Data_Files()
 {
@@ -46,15 +60,27 @@ void Update_Data_Files()
         break;
       }
       Update_Data_Files_zip_file_password = UI_Num_Pad_handle.input_string;
-      Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
+      Update_Data_Files_state = Update_Data_Files_state_enum.UNZIP;
       break;
-    case UPDATE_PERFORM:
-      if (!Update_Data_Files_performe_update())
+    case UNZIP:
+      if (!Update_Data_Files_unzip())
       {
-        // Update fail...
+        // unzip fail...
         UI_Message_Box_setup("Error !", "Wrong password !\nOr, Zip file currupted !", 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.ZIP_READY;
+        break;
+      }
+      // unzip done! Indicate updated.
+      Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
+      break;
+    case UPDATE_PERFORM:
+      if (!Update_Data_Files_update())
+      {
+        // Noting to update...
+        UI_Message_Box_setup("Update done.", "But, Nothing to update.\nPlease check Zip file has new configurations !", 5000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       // Update done! Indicate updated.
@@ -120,7 +146,7 @@ boolean Update_Data_Files_check_new_zip_file_exist()
   return found;
 }
 
-boolean Update_Data_Files_performe_update()
+boolean Update_Data_Files_unzip()
 {
   boolean ret = false;
   String source_file_full_name, target_file_full_name;
@@ -131,6 +157,7 @@ boolean Update_Data_Files_performe_update()
   {
     return ret;
   }
+
   target_file_full_name = sketchPath("unzip\\") + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
   // if zip file exist and same on local.
@@ -140,6 +167,7 @@ boolean Update_Data_Files_performe_update()
   {
     return ret;
   }
+
   target_file_handle.delete();
 
   if (unzip_perform(
@@ -149,6 +177,17 @@ boolean Update_Data_Files_performe_update()
   {
     return ret;
   }
+
+  ret = true;
+
+  return ret;
+}
+
+boolean Update_Data_Files_update()
+{
+  boolean ret = false;
+  String source_file_full_name, target_file_full_name;
+  File source_file_handle, target_file_handle;
 
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
@@ -175,14 +214,15 @@ boolean Update_Data_Files_performe_update()
     move_file(
       source_file_full_name,
       target_file_full_name);
+
+    ret = true;
   }
 
+  //ret = true;
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
   copy_file(
     Update_Data_Files_zip_file_full_name,
     sketchPath("unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT));
-
-  ret = true;
 
   return ret;
 }

@@ -1,18 +1,21 @@
 //final static boolean PRINT_CONST_ALL_DBG = true;
 final static boolean PRINT_CONST_ALL_DBG = false;
 
+//final static boolean PRINT_CONST_SETUP_DBG = true;
+final static boolean PRINT_CONST_SETUP_DBG = false;
+
 // Define default binary buf filename and path 
 final static String CONST_FILE_NAME = "const";
 final static String CONST_FILE_EXT = ".csv";
+
 static String CONST_file_full_name;
 
 // A Table object
 static Table CONST_table;
 
-
 void Const_setup()
 {
-  if (PRINT_CONST_ALL_DBG) println("Const_setup():");
+  if (PRINT_CONST_ALL_DBG || PRINT_CONST_SETUP_DBG) println("Const_setup():Enter");
 
   CONST_file_full_name = CONST_FILE_NAME + CONST_FILE_EXT;
 

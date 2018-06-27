@@ -3,23 +3,26 @@ final static boolean PRINT_PS_IMAGE_ALL_DBG = false;
 final static boolean PRINT_PS_IMAGE_ALL_ERR = true; 
 //final static boolean PRINT_PS_IMAGE_ALL_ERR = false; 
 
-//final static boolean PRINT_PS_IMAGE_SETTINGS_DBG = true; 
-final static boolean PRINT_PS_IMAGE_SETTINGS_DBG = false; 
-//final static boolean PRINT_PS_IMAGE_SETTINGS_ERR = true; 
-final static boolean PRINT_PS_IMAGE_SETTINGS_ERR = false; 
+//final static boolean PRINT_PS_IMAGE_SETUP_DBG = true; 
+final static boolean PRINT_PS_IMAGE_SETUP_DBG = false; 
+//final static boolean PRINT_PS_IMAGE_SETUP_ERR = true; 
+final static boolean PRINT_PS_IMAGE_SETUP_ERR = false; 
 
-PImage[] PS_Image = new PImage[PS_INSTANCE_MAX];;
-boolean[] PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];;
-boolean[] PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];;
+static PImage[] PS_Image = new PImage[PS_INSTANCE_MAX];;
+static boolean[] PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];;
+static boolean[] PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];;
 
 void PS_Image_setup()
 {
-  PS_Image_update();
+  if (PRINT_PS_IMAGE_ALL_DBG || PRINT_PS_IMAGE_SETUP_DBG) println("PS_Image_setup():Enter");
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     PS_Image_mouse_over[i] = false;
     PS_Image_mouse_pressed[i] = false;
   }
+
+  PS_Image_update();
 }
 
 void PS_Image_draw()

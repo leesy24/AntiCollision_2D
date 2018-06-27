@@ -1,10 +1,13 @@
 //final static boolean PRINT_CONFIG_ALL_DBG = true;
 final static boolean PRINT_CONFIG_ALL_DBG = false;
 
+//final static boolean PRINT_CONFIG_SETUP_DBG = true;
+final static boolean PRINT_CONFIG_SETUP_DBG = false;
+
 // Define default binary buf filename and path 
 final static String CONFIG_FILE_NAME = "config";
 final static String CONFIG_FILE_EXT = ".csv";
-final int CONFIG_FILE_INSTANCE_MAX = 2;
+
 static String CONFIG_file_full_name;
 // This is for argument passed number of config file.
 /*
@@ -16,9 +19,9 @@ static Table CONFIG_table;
 
 void Config_setup()
 {
-  if (PRINT_CONFIG_ALL_DBG) println("Config_setup():");
+  if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup():Enter");
 
-  for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
  
@@ -82,7 +85,7 @@ void Config_setup()
         UDP_remote_port[i] = variable.getInt("Value");
       }
       else if (name.equals("UDP_local_port")) {
-        UDP_local_port = variable.getInt("Value");
+        UDP_local_port[i] = variable.getInt("Value");
       }
       else if (name.equals("SN_serial_number")){
         SN_serial_number[i] = variable.getInt("Value");
@@ -111,7 +114,7 @@ void Config_create()
 
   TableRow variable;
   
-  for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     CONFIG_table = new Table();
     CONFIG_table.addColumn("Name");
@@ -191,7 +194,7 @@ void Config_create()
 
     variable = CONFIG_table.addRow();
     variable.setString("Name", "UDP_local_port");
-    variable.setInt("Value", UDP_local_port);
+    variable.setInt("Value", UDP_local_port[i]);
     variable.setString("Comment", "UDP local port of PS Interface UDP.");
 
     variable = CONFIG_table.addRow();
@@ -214,7 +217,7 @@ void Config_save()
   String value_string;
   boolean changed = false;
 
-  for(int i = 0; i < CONFIG_FILE_INSTANCE_MAX; i ++)
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     for (TableRow variable : CONFIG_table.rows()) {
       // You can access the fields via their column name (or index)
@@ -320,8 +323,8 @@ void Config_save()
       }
       else if(name.equals("UDP_local_port")) {
         value_int = variable.getInt("Value");
-        if(value_int != UDP_local_port) {
-          variable.setInt("Value", UDP_local_port);
+        if(value_int != UDP_local_port[i]) {
+          variable.setInt("Value", UDP_local_port[i]);
           changed = true;
         }
       }

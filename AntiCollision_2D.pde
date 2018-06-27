@@ -1,7 +1,7 @@
 
 // Define to enable or disable the log print in console.
-//final boolean PRINT = true; 
-final boolean PRINT = false; 
+//final static boolean PRINT_DBG = true; 
+final static boolean PRINT_DBG = false; 
 
 //static color C_BG = #FFFFFF; // White
 static color C_BG = #F8F8F8; // White - 0x8
@@ -26,11 +26,13 @@ void settings() {
 // There can only be one setup() function for each program
 //  and it shouldn't be called again after its initial execution.
 void setup() {
+  if (PRINT_DBG) println("setup():Enter");
   // Title set to default.
   Title = TITLE;
 
   Const_setup();
   Config_setup();
+  Update_Data_setup();
   Screen_setup();
   BG_Image_setup();
   Grid_setup();
@@ -42,12 +44,15 @@ void setup() {
   UI_Interfaces_setup();
 
   frameRate(FRAME_RATE);
+
   //noStroke();
+/*
   // This is only pertains to the desktop version of Processing (not JavaScript or Android),
   //  because it's the only one to use windows and frames.
   // It's possible to make the window resizable.
   surface.setResizable(true);
   surface.setLocation(SCREEN_x, SCREEN_y);
+*/
 
   SCREEN_PFront = createFont("SansSerif", 32);
   textFont(SCREEN_PFront);
@@ -95,7 +100,7 @@ void draw() {
     Regions_setup();
     Grid_setup();
     UI_Buttons_setup();
-    UI_Interfaces_setup();
+    UI_Interfaces_update();
     // Set window title
     surface.setTitle(Title);
   }
@@ -105,7 +110,7 @@ void draw() {
     Regions_setup();
     Grid_setup();
     UI_Buttons_setup();
-    UI_Interfaces_setup();
+    UI_Interfaces_update();
   }
 
   // Move to mouseMoved() and mouseDragged().

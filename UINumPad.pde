@@ -289,7 +289,7 @@ class UI_Num_Pad {
         switch(button.button_enum) {
           case ENTER:
             input_string = new String(input_chars);
-            println("input_chars=\""+input_string+"\"");
+            //println("input_chars=\""+input_string+"\"");
             input_done = true;
             break;
           case BACK:

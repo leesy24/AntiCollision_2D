@@ -11,6 +11,15 @@
 import controlP5.*;
 import java.util.*;
 
+//final static boolean PRINT_UI_INTERFACES_ALL_DBG = true;
+final static boolean PRINT_UI_INTERFACES_ALL_DBG = false;
+
+//final static boolean PRINT_UI_INTERFACES_SETUP_DBG = true;
+final static boolean PRINT_UI_INTERFACES_SETUP_DBG = false;
+
+//final static boolean PRINT_UI_INTERFACES_UPDATE_DBG = true;
+final static boolean PRINT_UI_INTERFACES_UPDATE_DBG = false;
+
 static color C_UI_INTERFACES_TEXT = #000000; // Black
 static color C_UI_INTERFACES_FILL_NORMAL = #FFFFFF; // White
 static color C_UI_INTERFACES_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
@@ -18,37 +27,35 @@ static color C_UI_INTERFACES_BORDER_ACTIVE = #FF0000; // Red
 static color C_UI_INTERFACES_BORDER_NORMAL = #000000; // Black
 static color C_UI_INTERFACES_CURSOR = #0000FF; // Blue
 
-static boolean UI_Interfaces_enabled = false;
+static boolean UI_Interfaces_enabled;
 
-boolean UI_Interfaces_changed = false;
-String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN"};
+static boolean UI_Interfaces_changed = false;
+static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN"};
 
-ControlFont cf1 = null;
-ControlP5 cp5 = null;
-
-void UI_Interfaces_reset()
-{
-  if(cp5 == null) {
-    return;
-  }
-
-  cp5.remove("UI_Interfaces_ddmenu");
-  cp5.remove("UI_Interfaces_ddborder");
-  cp5.remove("UI_Interfaces_ddlabel");
-  cp5.remove("UI_Interfaces_filename");
-  cp5.remove("UI_Interfaces_UARTport");
-  cp5.remove("UI_Interfaces_UARTbaud");
-  cp5.remove("UI_Interfaces_UARTdps");
-  cp5.remove("UI_Interfaces_UDPremoteip");
-  cp5.remove("UI_Interfaces_UDPremoteport");
-  cp5.remove("UI_Interfaces_UDPlocalport");
-  cp5.remove("UI_Interfaces_SNserialnumber");
-
-  cp5.setGraphics(this,0,0);
-}
+static ControlFont cf1;
+static ControlP5 cp5;
 
 void UI_Interfaces_setup()
 {
+  if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_SETUP_DBG) println("UI_Interfaces_setup():Enter");
+
+  //UI_Interfaces_enabled = true;
+  UI_Interfaces_enabled = false;
+  //UI_Interfaces_changed = true;
+  UI_Interfaces_changed = false;
+  cf1 = null;
+  cp5 = null;
+
+  if (UI_Interfaces_enabled)
+  {
+    UI_Interfaces_update();
+  }
+}
+
+void UI_Interfaces_update()
+{
+  if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_UPDATE_DBG) println("UI_Interfaces_update():Enter");
+
   if (!UI_Interfaces_enabled)
   {
     UI_Interfaces_reset();
@@ -64,6 +71,7 @@ void UI_Interfaces_setup()
   if(cf1 == null) {
     cf1 = new ControlFont(SCREEN_PFront,12);
   }
+
   if(cp5 == null) {
     cp5 = new ControlP5(this, cf1);
     cp5.setBackground(C_UI_INTERFACES_FILL_NORMAL);
@@ -375,7 +383,7 @@ void UI_Interfaces_setup()
           .marginLeft = TEXT_MARGIN;
 */
 
-    str = Integer.toString(UDP_local_port);
+    str = Integer.toString(UDP_local_port[0]);
     w = int(textWidth(str)) + TEXT_MARGIN*2;
     x = SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - w - 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -452,6 +460,27 @@ void UI_Interfaces_setup()
   sl_ddmenu.bringToFront();
   //println(sl_ddmenu.getBackgroundColor());
   //printArray(PFont.list());
+}
+
+void UI_Interfaces_reset()
+{
+  if(cp5 == null) {
+    return;
+  }
+
+  cp5.remove("UI_Interfaces_ddmenu");
+  cp5.remove("UI_Interfaces_ddborder");
+  cp5.remove("UI_Interfaces_ddlabel");
+  cp5.remove("UI_Interfaces_filename");
+  cp5.remove("UI_Interfaces_UARTport");
+  cp5.remove("UI_Interfaces_UARTbaud");
+  cp5.remove("UI_Interfaces_UARTdps");
+  cp5.remove("UI_Interfaces_UDPremoteip");
+  cp5.remove("UI_Interfaces_UDPremoteport");
+  cp5.remove("UI_Interfaces_UDPlocalport");
+  cp5.remove("UI_Interfaces_SNserialnumber");
+
+  cp5.setGraphics(this,0,0);
 }
 
 void UI_Interfaces_draw()
@@ -588,7 +617,7 @@ void UI_Interfaces_mouseReleased()
     }
     tf_param = (Textfield)cp5.get("UI_Interfaces_UDPlocalport");
     if( tf_param != null && tf_param.isFocus() == false) {
-      str = Integer.toString(UDP_local_port);
+      str = Integer.toString(UDP_local_port[0]);
       tf_param.setText(str);
     }
   }
@@ -738,8 +767,8 @@ void UI_Interfaces_UDPlocalport(String theText)
   //println("a textfield event for controller 'input' : "+theText);
 
   int local_port = Integer.parseInt(theText);
-  if(local_port != UDP_local_port) {
-    UDP_local_port = local_port;
+  if(local_port != UDP_local_port[0]) {
+    UDP_local_port[0] = local_port;
     Config_save();
     UI_Interfaces_changed = true;
   }

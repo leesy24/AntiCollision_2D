@@ -1,7 +1,12 @@
-//final static boolean PRINT_BG_IMAGE_SETTINGS_DBG = true; 
-final static boolean PRINT_BG_IMAGE_SETTINGS_DBG = false;
-//final static boolean PRINT_BG_IMAGE_SETTINGS_ERR = true; 
-final static boolean PRINT_BG_IMAGE_SETTINGS_ERR = false;
+//final static boolean PRINT_BG_IMAGE_ALL_DBG = true;
+final static boolean PRINT_BG_IMAGE_ALL_DBG = false;
+//final static boolean PRINT_BG_IMAGE_ALL_ERR = true;
+final static boolean PRINT_BG_IMAGE_ALL_ERR = false;
+
+//final static boolean PRINT_BG_IMAGE_SETUP_DBG = true; 
+final static boolean PRINT_BG_IMAGE_SETUP_DBG = false;
+//final static boolean PRINT_BG_IMAGE_SETUP_ERR = true; 
+final static boolean PRINT_BG_IMAGE_SETUP_ERR = false;
 
 //final static boolean PRINT_BG_IMAGE_DRAW_DBG = true; 
 final static boolean PRINT_BG_IMAGE_DRAW_DBG = false;
@@ -17,12 +22,14 @@ static color C_BG_IMAGE_LINE = #000000;
 static int W_BG_IMAGE_LINE = 3;
 
 // A Table object
-Table BG_IMAGE_table = null;
+static Table BG_IMAGE_table;
 
-Points_Data BG_IMAGE_data;
+static Points_Data BG_IMAGE_data;
 
 void BG_Image_setup()
 {
+  if(PRINT_BG_IMAGE_ALL_DBG || PRINT_BG_IMAGE_SETUP_DBG) println("BG_Image_setup():Enter");
+
   BG_IMAGE_file_full_name = BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT;
 
   // Load lines file(CSV type) into a Table object
@@ -31,7 +38,7 @@ void BG_Image_setup()
   // Check loadTable failed.
   if(BG_IMAGE_table == null)
   {
-    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_setup():BG_IMAGE_table=null");
+    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():BG_IMAGE_table=null");
     return;
   }
 
@@ -39,7 +46,7 @@ void BG_Image_setup()
   BG_IMAGE_data = new Points_Data(BG_IMAGE_table.getRowCount());
   if(BG_IMAGE_data == null)
   {
-    if (PRINT_BG_IMAGE_SETTINGS_ERR) println("BG_Image_setup():BG_IMAGE_data=null");
+    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():BG_IMAGE_data=null");
     return;
   }
   //println("BG_IMAGE_data.length=" + BG_IMAGE_data.length);
@@ -89,7 +96,7 @@ void BG_Image_setup()
       {
         BG_IMAGE_data.c[i] = (int)Long.parseLong(variable.getString("Color"), 16);
       }
-      if (PRINT_BG_IMAGE_SETTINGS_DBG) println("BG_IMAGE_data.x[" + i + "]=" + BG_IMAGE_data.scr_x[i] + ",BG_IMAGE_data.y[" + i + "]=" + BG_IMAGE_data.scr_y[i] + ",BG_IMAGE_data.w[" + i + "]=" + BG_IMAGE_data.w[i] + ",BG_IMAGE_data.c[" + i + "]=" + BG_IMAGE_data.c[i]);
+      if (PRINT_BG_IMAGE_ALL_DBG || PRINT_BG_IMAGE_SETUP_DBG) println("BG_IMAGE_data.x[" + i + "]=" + BG_IMAGE_data.scr_x[i] + ",BG_IMAGE_data.y[" + i + "]=" + BG_IMAGE_data.scr_y[i] + ",BG_IMAGE_data.w[" + i + "]=" + BG_IMAGE_data.w[i] + ",BG_IMAGE_data.c[" + i + "]=" + BG_IMAGE_data.c[i]);
     }
     i ++;
   }
@@ -118,7 +125,7 @@ void BG_Image_draw()
     y_curr = BG_IMAGE_data.scr_y[i];
     w_curr = BG_IMAGE_data.w[i];
     c_curr = BG_IMAGE_data.c[i];
-    if (PRINT_BG_IMAGE_DRAW_DBG) println("BG_IMAGE_data[" + i + "]:x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
+    if (PRINT_BG_IMAGE_ALL_DBG || PRINT_BG_IMAGE_DRAW_DBG) println("BG_IMAGE_data[" + i + "]:x_curr=" + x_curr + ",y_curr=" + y_curr + ",w_curr=" + w_curr + ",c_curr=" + c_curr);
     if( x_curr == MIN_INT 
         ||
         y_curr == MIN_INT

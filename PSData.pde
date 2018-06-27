@@ -46,29 +46,27 @@ final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
 final static int PS_Interface_SN = 3;
 
-//final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = true;
-final static boolean PS_DATA_DRAW_POINTS_WITH_LINE = false;
+static boolean PS_Data_draw_points_with_line;
 
-static boolean PS_Data_save_enabled = false;
+static boolean PS_Data_save_enabled;
 
-int[] PS_Interface = new int[PS_INSTANCE_MAX];
-String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
+static int[] PS_Interface = new int[PS_INSTANCE_MAX];
+static String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
-String[] FILE_name = new String[PS_INSTANCE_MAX];
+static String[] FILE_name = new String[PS_INSTANCE_MAX];
 
-int UDP_local_port = 1025;
-String[] UDP_remote_ip = new String[PS_INSTANCE_MAX];
-int[] UDP_remote_port = new int[PS_INSTANCE_MAX];
+static int[] UDP_local_port = new int[PS_INSTANCE_MAX];
+static String[] UDP_remote_ip = new String[PS_INSTANCE_MAX];
+static int[] UDP_remote_port = new int[PS_INSTANCE_MAX];
 
-int[] SN_serial_number = new int[PS_INSTANCE_MAX];
+static int[] SN_serial_number = new int[PS_INSTANCE_MAX];
 
-PS_Data PS_Data_handle;
+static PS_Data PS_Data_handle;
 
 // Define Data buffer array to load binary Data buffer from interfaces
-byte[][] PS_Data_buf = new byte[PS_INSTANCE_MAX][]; 
+static byte[][] PS_Data_buf = new byte[PS_INSTANCE_MAX][]; 
 
-//static boolean PS_Data_draw_points_all_enabled = true;
-static boolean PS_Data_draw_points_all_enabled = false;
+static boolean PS_Data_draw_points_all_enabled;
 
 static boolean[] PS_Data_draw_params_enabled = new boolean[PS_INSTANCE_MAX];
 static int[] PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
@@ -78,9 +76,18 @@ static int[] PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
 
-void PS_Data_setup() {
-  if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():");
+void PS_Data_setup()
+{
+  if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():Enter");
+
   // Append interface name to window title
+
+  //PS_Data_draw_points_with_line = true;
+  PS_Data_draw_points_with_line = false;
+  //PS_Data_save_enabled = true;
+  PS_Data_save_enabled = false;
+  //PS_Data_draw_points_all_enabled = true;
+  PS_Data_draw_points_all_enabled = false;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -131,7 +138,7 @@ void PS_Data_setup() {
       Interfaces_UART_setup();
     }
     else if(PS_Interface[i] == PS_Interface_UDP) {
-      Interfaces_UDP_setup(UDP_local_port);
+      Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
       Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
       PS_Data_handle.remote_ip[i] = UDP_remote_ip[i];
@@ -141,7 +148,7 @@ void PS_Data_setup() {
       String remote_ip = "10.0."+(SN_serial_number[i]/100)+"."+(SN_serial_number[i]%100);
       int remote_port = 1024;
 
-      Interfaces_UDP_setup(UDP_local_port);
+      Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, remote_ip, remote_port);
       Interfaces_UDP_handle.set_comm_timeout(i, 1000); // timeout 1secs for UDP
       PS_Data_handle.serial_number[i] = SN_serial_number[i];
@@ -947,7 +954,7 @@ class PS_Data {
           if (point_is_contains_prev
               ||
               PS_Data_draw_points_all_enabled) {
-            if (PS_DATA_DRAW_POINTS_WITH_LINE
+            if (PS_Data_draw_points_with_line
                 &&
                 ( point_is_contains_curr
                   ||

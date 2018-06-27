@@ -1,8 +1,8 @@
 //final static boolean PRINT_REGIONS_ALL_DBG = true; 
 final static boolean PRINT_REGIONS_ALL_DBG = false;
 
-//final static boolean PRINT_REGIONS_SETTINGS_DBG = true; 
-final static boolean PRINT_REGIONS_SETTINGS_DBG = false;
+//final static boolean PRINT_REGIONS_SETUP_DBG = true; 
+final static boolean PRINT_REGIONS_SETUP_DBG = false;
 
 //final static boolean PRINT_REGIONS_UPDATE_DBG = true; 
 final static boolean PRINT_REGIONS_UPDATE_DBG = false;
@@ -21,6 +21,8 @@ Regions Regions_handle;
 
 void Regions_setup()
 {
+  if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions_setup():Enter");
+
   Regions_handle = new Regions();
   Regions_handle.setup();
 }
@@ -72,7 +74,7 @@ class Regions {
           new Region_Data(
             name,
             variable.getInt("Priority"));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETTINGS_DBG) println("Regions:settings():"+instance+"region_data]:name="+region_data.name+",priority="+region_data.priority);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:name="+region_data.name+",priority="+region_data.priority);
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
 
         color first_color, other_color;
@@ -84,14 +86,14 @@ class Regions {
           (int)Long.parseLong(variable.getString("Rect_First_Color"), 16),
           (int)Long.parseLong(variable.getString("Rect_Color"), 16),
           variable.getInt("Rect_Weight"));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETTINGS_DBG) println("Regions:settings():"+instance+"region_data]:x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
-        //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETTINGS_DBG) println("Regions:settings():"+instance+"region_data["+i+"]:f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
+        //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data["+i+"]:f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
 
         region_data.set_marker_data(
           (int)Long.parseLong(variable.getString("Marker_Stroke_Color"), 16),
           variable.getInt("Marker_Stroke_Weight"),
           (int)Long.parseLong(variable.getString("Marker_Fill_Color"), 16));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETTINGS_DBG) println("Regions:settings():"+instance+"region_data]:m_s_c="+region_data.marker_stroke_color+",m_s_w="+region_data.marker_stroke_weight+",m_f_c="+region_data.marker_fill_color);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:m_s_c="+region_data.marker_stroke_color+",m_s_w="+region_data.marker_stroke_weight+",m_f_c="+region_data.marker_fill_color);
 
         regions_array[instance].add(region_data);
       }

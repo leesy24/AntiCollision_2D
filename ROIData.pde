@@ -113,7 +113,7 @@ static boolean[] ROI_Data_mouse_over = new boolean[PS_INSTANCE_MAX];
 static boolean[] ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 
 void ROI_Data_setup() {
-  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():");
+  if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():Enter");
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
