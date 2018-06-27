@@ -14,6 +14,7 @@ static enum Update_Data_Files_state_enum {
   ZIP_READY,
   PASSWORD_REQ,
   UNZIP,
+  CHECK_UPDATES,
   UPDATE_PERFORM,
   DISPLAY_MESSAGE,
   RESET
@@ -72,13 +73,25 @@ void Update_Data_Files()
         break;
       }
       // unzip done! Indicate updated.
+      Update_Data_Files_state = Update_Data_Files_state_enum.CHECK_UPDATES;
+      break;
+    case CHECK_UPDATES:
+      if (!Update_Data_Files_check_updates())
+      {
+        // Noting to update...
+        UI_Message_Box_setup("Update already done.", "Already updated.\nPlease check Zip file has new configurations !", 5000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
+        break;
+      }
+      // Update available.
       Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
       break;
     case UPDATE_PERFORM:
-      if (!Update_Data_Files_update())
+      if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Update done.", "But, Nothing to update.\nPlease check Zip file has new configurations !", 5000);
+        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !", 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -183,7 +196,7 @@ boolean Update_Data_Files_unzip()
   return ret;
 }
 
-boolean Update_Data_Files_update()
+boolean Update_Data_Files_check_updates()
 {
   boolean ret = false;
   String source_file_full_name, target_file_full_name;
@@ -207,22 +220,46 @@ boolean Update_Data_Files_update()
         &&
         is_files_equals(target_file_full_name, source_file_full_name))
     {
-      source_file_handle.delete();
       continue;
     }
-    //println("New File found! "+source_file_full_name);
-    move_file(
-      source_file_full_name,
-      target_file_full_name);
-
     ret = true;
   }
 
-  //ret = true;
+  return ret;
+}
+
+boolean Update_Data_Files_perform_update()
+{
+  boolean ret = true;
+  String source_file_full_name, target_file_full_name;
+  File source_file_handle;
+
+  String[] files_list;
+  source_file_handle = new File(sketchPath("unzip\\"));
+  files_list = source_file_handle.list();
+  for ( String file_full_name:files_list)
+  {
+    //println("file name:"+file_full_name);
+    source_file_full_name = sketchPath("unzip\\") + file_full_name;
+    target_file_full_name = sketchPath("data\\") + file_full_name;
+    //println("New File found! "+source_file_full_name);
+    if (!move_file(
+      source_file_full_name,
+      target_file_full_name))
+    {
+      ret = false;
+      continue;
+    }
+
+  }
+
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
-  copy_file(
+  if (!copy_file(
     Update_Data_Files_zip_file_full_name,
-    sketchPath("unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT));
+    sketchPath("unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT)))
+  {
+    ret = false;
+  }
 
   return ret;
 }

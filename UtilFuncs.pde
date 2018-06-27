@@ -169,7 +169,7 @@ import java.nio.file.StandardCopyOption;
 import java.io.IOException;
 import java.io.BufferedWriter;
 
-void copy_file(String source_file, String target_file)
+boolean copy_file(String source_file, String target_file)
 {
   //println("copy_file():"+"from "+source_file);
   //println("copy_file():"+"to   "+target_file);
@@ -189,10 +189,13 @@ void copy_file(String source_file, String target_file)
   catch (IOException e)
   {
     e.printStackTrace();
+    return false;
   }
+
+  return true;
 }
 
-void move_file(String source_file, String target_file)
+boolean move_file(String source_file, String target_file)
 {
   //println("move_file():"+"from "+source_file);
   //println("move_file():"+"to   "+target_file);
@@ -206,7 +209,10 @@ void move_file(String source_file, String target_file)
   catch (IOException e)
   {
     e.printStackTrace();
+    return false;
   }
+
+  return true;
 }
 
 import net.lingala.zip4j.core.*;
