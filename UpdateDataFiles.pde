@@ -89,10 +89,11 @@ void Update_Data_Files()
       Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
       break;
     case UPDATE_PERFORM:
+      Update_Data_error = "";
       if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_error, 5000);
+        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_error, 0);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -238,6 +239,7 @@ boolean Update_Data_Files_perform_update()
   String[] files_list;
   source_file_handle = new File(sketchPath("unzip\\"));
   files_list = source_file_handle.list();
+  move_file_error = "";
   for ( String file_full_name:files_list)
   {
     //println("file name:"+file_full_name);
@@ -248,7 +250,7 @@ boolean Update_Data_Files_perform_update()
       source_file_full_name,
       target_file_full_name))
     {
-      Update_Data_error = "move_file:\n"+move_file_error;
+      Update_Data_error = Update_Data_error+"\n"+"move_file:\n"+move_file_error;
       //Update_Data_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
       ret = false;
       continue;
@@ -256,6 +258,7 @@ boolean Update_Data_Files_perform_update()
 
   }
 
+  copy_file_error = "";
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
   target_file_full_name =
     sketchPath(
@@ -268,7 +271,7 @@ boolean Update_Data_Files_perform_update()
     Update_Data_Files_zip_file_full_name,
     target_file_full_name))
   {
-    Update_Data_error = "copy_file:\n"+copy_file_error;
+    Update_Data_error = Update_Data_error+"\n"+"copy_file:\n"+copy_file_error;
     //Update_Data_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
     ret = false;
   }

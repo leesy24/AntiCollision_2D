@@ -79,6 +79,7 @@ class UI_Message_Box {
   int time_out;
   int time_start;
   boolean forced_time_out = false;
+  boolean long_message_mode = false;
 
   UI_Message_Box(String title, String msg, int time_out) {
     set(title, msg, time_out, SCREEN_width, SCREEN_height);
@@ -109,6 +110,10 @@ class UI_Message_Box {
     this.title_w = min(width, width_max);
     //this.title_h = int(FONT_HEIGHT * 2.0 * ((this.title_w / width_max) + 1));
     this.title_h = int((TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN) * 2.0);
+    if (width_max > width) {
+      this.msg_h = height - this.title_h - TEXT_MARGIN * 2;
+      long_message_mode = true;
+    }
     //println("title_h="+title_h);
     this.box_w = max(this.msg_w, this.title_w) + TEXT_MARGIN * 2;
     this.box_h = this.title_h + this.msg_h + TEXT_MARGIN * 2;
@@ -139,8 +144,14 @@ class UI_Message_Box {
     textAlign(LEFT, TOP);
     textSize(FONT_HEIGHT*2);
     text(title, title_x, title_y, title_w, title_h);
-    textAlign(CENTER, CENTER);
-    textSize(FONT_HEIGHT*1.5);
+    if (long_message_mode) {
+      textAlign(LEFT, TOP);
+      textSize(FONT_HEIGHT);
+    }
+    else {
+      textAlign(CENTER, CENTER);
+      textSize(FONT_HEIGHT*1.5);
+    }
     text(msg, msg_x, msg_y, msg_w, msg_h);
 
     if (forced_time_out
