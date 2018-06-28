@@ -74,8 +74,12 @@ class Regions {
           new Region_Data(
             name,
             variable.getInt("Priority"));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:name="+region_data.name+",priority="+region_data.priority);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",priority="+region_data.priority);
+
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
+
+        region_data.relay_index = variable.getInt("Relay_Num");
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+"relay_index="+region_data.relay_index);
 
         color first_color, other_color;
         region_data.set_rect_data(
@@ -86,14 +90,14 @@ class Regions {
           (int)Long.parseLong(variable.getString("Rect_First_Color"), 16),
           (int)Long.parseLong(variable.getString("Rect_Color"), 16),
           variable.getInt("Rect_Weight"));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
         //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data["+i+"]:f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
 
         region_data.set_marker_data(
           (int)Long.parseLong(variable.getString("Marker_Stroke_Color"), 16),
           variable.getInt("Marker_Stroke_Weight"),
           (int)Long.parseLong(variable.getString("Marker_Fill_Color"), 16));
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data]:m_s_c="+region_data.marker_stroke_color+",m_s_w="+region_data.marker_stroke_weight+",m_f_c="+region_data.marker_fill_color);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"m_s_c="+region_data.marker_stroke_color+",m_s_w="+region_data.marker_stroke_weight+",m_f_c="+region_data.marker_fill_color);
 
         regions_array[instance].add(region_data);
       }
@@ -278,6 +282,10 @@ class Regions {
     return regions_array[instance].get(region_index).priority;
   }
 
+  int get_region_relay_index(int instance, int region_index) {
+    return regions_array[instance].get(region_index).relay_index;
+  }
+
   color get_marker_stroke_color(int instance, int region_index) {
     return regions_array[instance].get(region_index).marker_stroke_color;
   }
@@ -295,6 +303,7 @@ class Regions {
 class Region_Data {
   String name;
   int priority;
+  int relay_index;
   Points_Data points_data;
   int rect_mi_x;
   int rect_mi_y;

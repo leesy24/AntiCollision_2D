@@ -40,6 +40,7 @@ void setup() {
   PS_Image_setup();
   ROI_Data_setup();
   Regions_setup();
+  Relay_Module_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
 
@@ -136,6 +137,8 @@ void draw() {
     PS_Data_handle.draw_params(i);
     ROI_Data_handle.draw_object_info(i);
   }
+
+  Relay_Module_output();
 
   UI_Buttons_draw();
   Bubble_Info_draw();
