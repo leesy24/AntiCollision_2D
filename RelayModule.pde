@@ -123,7 +123,7 @@ void Relay_Module_clear_relay()
 void Relay_Module_set_relay(int relay_index, boolean on)
 {
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SET_RELAY_DBG) println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
-  println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
+  //println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
 
   if (relay_index >= RELAY_MODULE_NUMBER_OF_RELAYS)
   {

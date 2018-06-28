@@ -254,20 +254,21 @@ class ROI_Data {
 
   void detect_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Enter");
-    if (points_array[instance].size() == 0) {
-      if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_ADD_OBJECTS_ERR) println("ROI_Data:detect_objects("+instance+"):"+"points size=0 error!");
-      return;
-    }
 
-    LinkedList<ROI_Object_Data> objects = new LinkedList<ROI_Object_Data>();
+    LinkedList<ROI_Object_Data> objects_new = new LinkedList<ROI_Object_Data>();
+    //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size="+objects_new.size());
+    //objects_new.clear();
 
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"objects_array["+instance+"]="+objects_array[instance]);
-    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"objects="+objects);
+    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"objects_new="+objects_new);
 
-    get_objects(objects, points_array[instance], angle_step[instance]);
+    // Get new objects.
+    get_objects(objects_new, points_array[instance], angle_step[instance]);
+    //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size="+objects_new.size());
 
-    for (ROI_Object_Data object_new:objects) {
-      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
+    // Check new objects is come from previous objects.
+    for (ROI_Object_Data object_new:objects_new) {
+      //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_new["+objects_new.indexOf(object_new)+"]:"+"scr_start_x="+object_new.scr_start_x+",scr_start_y="+object_new.scr_start_y+",scr_end_x="+object_new.scr_end_x+",scr_end_y="+object_new.scr_end_y);
       object_new.time_stamp_start = object_new.time_stamp_last = time_stamp_curr[instance];
       for (ROI_Object_Data object_prev:objects_array[instance]) {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_prev["+objects_array[instance].indexOf(object_prev)+"]:"+"scr_start_x="+object_prev.scr_start_x+",scr_start_y="+object_prev.scr_start_y+",scr_end_x="+object_prev.scr_end_x+",scr_end_y="+object_prev.scr_end_y);
@@ -278,16 +279,17 @@ class ROI_Data {
       }
     }
 
+    // Check disappeared object on previous object
     boolean found;
     for (ROI_Object_Data object_prev:objects_array[instance]) {
       found = false;
-      for (ROI_Object_Data object_new:objects) {
+      for (ROI_Object_Data object_new:objects_new) {
         if (check_objects_mi_overlapped(object_prev, object_new, ROI_OBJECT_DISTANCE_LIMIT)) {
           found = true;
           break;
         }
       }
-      if (!found) {
+      if (found == false) {
         int time_duration = get_int_diff(object_prev.time_stamp_last, object_prev.time_stamp_start);
         //int time_duration = int(object_prev.time_stamp_last - object_prev.time_stamp_start);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
@@ -307,14 +309,14 @@ class ROI_Data {
                 Regions_handle.get_marker_stroke_weight(instance, object_prev.region));
           }
           else {
-            object_prev.time_stamp_start -= get_int_diff(object_prev.time_stamp_last, time_stamp_curr[instance]);
+            object_prev.time_stamp_start += get_int_diff(time_stamp_curr[instance], object_prev.time_stamp_last);
           }
-          objects.add(object_prev);
+          objects_new.add(object_prev);
         }
       }
     }
 
-    objects_array[instance] = objects;
+    objects_array[instance] = objects_new;
 
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Exit");
   }
@@ -771,7 +773,7 @@ class ROI_Data {
   private void get_objects(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():Enter");
     if (points.size() == 0) {
-      if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_ADD_OBJECTS_ERR) println("ROI_Data:get_objects():"+"points size=0 error!");
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points size is 0. Nothing to do.");
       return;
     }
 
