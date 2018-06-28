@@ -41,6 +41,16 @@ void Const_setup()
       ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
       ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
+    else if (name.equals("Relay_Module_UART_port_name"))
+      Relay_Module_UART_port_name = variable.getString("Value");
+    else if (name.equals("Relay_Module_UART_baud_rate"))
+      Relay_Module_UART_baud_rate = variable.getInt("Value");
+    else if (name.equals("Relay_Module_UART_parity"))
+      Relay_Module_UART_parity = variable.getString("Value").charAt(0);
+    else if (name.equals("Relay_Module_UART_data_bits"))
+      Relay_Module_UART_data_bits = variable.getInt("Value");
+    else if (name.equals("Relay_Module_UART_stop_bits"))
+      Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
     else if(name.equals("SCREEN_BORDER_WIDTH"))
       SCREEN_BORDER_WIDTH = variable.getInt("Value");
     else if(name.equals("SCREEN_TITLE_HEIGHT"))
@@ -150,6 +160,31 @@ void Const_create()
   variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
   variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
   variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
+
+  variable = table.addRow();
+  variable.setString("Name", "Relay_Module_UART_port_name");
+  variable.setString("Value", Relay_Module_UART_port_name);
+  variable.setString("Comment", "UART port name of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "Relay_Module_UART_baud_rate");
+  variable.setInt("Value", Relay_Module_UART_baud_rate);
+  variable.setString("Comment", "UART baud rate of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "Relay_Module_UART_parity");
+  variable.setString("Value", Character.toString(Relay_Module_UART_parity));
+  variable.setString("Comment", "UART parity of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "Relay_Module_UART_data_bits");
+  variable.setInt("Value", Relay_Module_UART_data_bits);
+  variable.setString("Comment", "UART baud rate of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "Relay_Module_UART_stop_bits");
+  variable.setFloat("Value", Relay_Module_UART_stop_bits);
+  variable.setString("Comment", "UART stop bits of Relay module.");
 
   variable = table.addRow();
   variable.setString("Name", "SCREEN_BORDER_WIDTH");

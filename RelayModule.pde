@@ -37,7 +37,7 @@ final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false;
 
 Serial Relay_Module_UART_handle = null;  // The handle of UART(serial port)
 
-String Relay_Module_UART_port_name = "COM2"; // String: name of the port (COM1 is the default)
+String Relay_Module_UART_port_name = "COM1"; // String: name of the port (COM1 is the default)
 int Relay_Module_UART_baud_rate = 115200; // int: 9600 is the default
 char Relay_Module_UART_parity = 'N'; // char: 'N' for none, 'E' for even, 'O' for odd, 'M' for mark, 'S' for space ('N' is the default)
 int Relay_Module_UART_data_bits = 8; // int: 8 is the default

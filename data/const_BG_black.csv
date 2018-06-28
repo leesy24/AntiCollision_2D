@@ -3,6 +3,11 @@ FRAME_RATE,50,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20m
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
 ROI_OBJECT_TIME_LIMIT,500,Time limit of object to decide one object ROI.(unit is milli-seconds)
+Relay_Module_UART_port_name,COM1,UART port name of Relay module.
+Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
+Relay_Module_UART_parity,N,UART parity of Relay module.
+Relay_Module_UART_data_bits,8,UART baud rate of Relay module.
+Relay_Module_UART_stop_bits,1.0,UART stop bits of Relay module.
 SCREEN_BORDER_WIDTH,4,Border width of window of Windows. default = 8
 SCREEN_TITLE_HEIGHT,27,Title height of window of Windows. default = 31
 SCREEN_X_OFFSET,1,Adjuest X offset of window of Windows. default = 3
