@@ -35,9 +35,11 @@ final static boolean PRINT_RELAY_MODULE_LOAD_DBG = false;
 //final static boolean PRINT_RELAY_MODULE_LOAD_ERR = true; 
 final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false; 
 
+boolean Relay_Module_enabled = true;
+
 Serial Relay_Module_UART_handle = null;  // The handle of UART(serial port)
 
-String Relay_Module_UART_port_name = "COM1"; // String: name of the port (COM1 is the default)
+String Relay_Module_UART_port_name = "NA"; // String: name of the port (COM1 is the default)
 int Relay_Module_UART_baud_rate = 115200; // int: 9600 is the default
 char Relay_Module_UART_parity = 'N'; // char: 'N' for none, 'E' for even, 'O' for odd, 'M' for mark, 'S' for space ('N' is the default)
 int Relay_Module_UART_data_bits = 8; // int: 8 is the default
@@ -54,6 +56,12 @@ static int Relay_Module_output_timer;
 void Relay_Module_setup()
 {
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Enter");
+
+  if (Relay_Module_UART_port_name.equals("NA"))
+  {
+    Relay_Module_enabled = false;
+    return;
+  }
 
   boolean found = false;
 
@@ -125,6 +133,8 @@ void Relay_Module_set_relay(int relay_index, boolean on)
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SET_RELAY_DBG) println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
   //println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
 
+  if (!Relay_Module_enabled) return;
+
   if (relay_index >= RELAY_MODULE_NUMBER_OF_RELAYS)
   {
     return;
@@ -139,6 +149,8 @@ void Relay_Module_set_relay(int relay_index, boolean on)
 
 void Relay_Module_output()
 {
+  if (!Relay_Module_enabled) return;
+
   boolean updated = false;
 
   for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
