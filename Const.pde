@@ -161,7 +161,7 @@ void Const_create()
   variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_NO_MARK_DIAMETER_MIN");
   variable.setInt("Value", ROI_OBJECT_NO_MARK_DIAMETER_MIN);
-  variable.setString("Comment", "Minimum Diameter of object to no maker display.(30000=300cm=3meter)");
+  variable.setString("Comment", "Minimum Diameter of object to no maker display.(20000=200cm=2meter)");
 
   variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
