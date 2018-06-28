@@ -299,8 +299,8 @@ class Regions {
 
     if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("get_region_indexes_contains_point("+instance+"):point_mi_x=" + point_mi_x + ",point_mi_y=" + point_mi_y);
 
-    //for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
-    for (int priority = regions_priority_max[instance]; priority >= 0; priority --) {
+    for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
+    //for (int priority = regions_priority_max[instance]; priority >= 0; priority --) {
       for (int region_index = 0; region_index < regions_array[instance].size(); region_index ++) {
         Region_Data region_data = regions_array[instance].get(region_index);
         if (priority != region_data.priority) {

@@ -847,12 +847,7 @@ class ROI_Data {
     mi_x_max = mi_y_max = scr_x_max = scr_y_max = MIN_INT;
 
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():"+"points_group size="+points_group.size());
-    region_indexes = new LinkedList<Integer>();
     for (ROI_Point_Data point:points_group) {
-      for (int point_region_index:point.region_indexes) {
-        if (region_indexes.contains(point_region_index)) continue;
-        region_indexes.add(point_region_index);
-      }
       region_min = min(region_min, point.region_indexes.get(0));
       mi_x_min = min(mi_x_min, point.mi_x);
       mi_y_min = min(mi_y_min, point.mi_y);
@@ -862,6 +857,14 @@ class ROI_Data {
       scr_y_min = min(scr_y_min, point.scr_y);
       scr_x_max = max(scr_x_max, point.scr_x);
       scr_y_max = max(scr_y_max, point.scr_y);
+    }
+    region_indexes = new LinkedList<Integer>();
+    region_indexes.add(region_min); // Add first min region index.
+    for (ROI_Point_Data point:points_group) {
+      for (int point_region_index:point.region_indexes) {
+        if (region_indexes.contains(point_region_index)) continue;
+        region_indexes.add(point_region_index);
+      }
     }
 
     if (mi_x_min == mi_x_max && mi_y_min == mi_y_max) {
