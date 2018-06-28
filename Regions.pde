@@ -1,3 +1,5 @@
+import garciadelcastillo.dashedlines.*;
+
 //final static boolean PRINT_REGIONS_ALL_DBG = true; 
 final static boolean PRINT_REGIONS_ALL_DBG = false;
 
@@ -18,6 +20,7 @@ final static String REGIONS_FILE_NAME = "regions";
 final static String REGIONS_FILE_EXT = ".csv";
 
 Regions Regions_handle;
+DashedLines DashedLines_handle;
 
 void Regions_setup()
 {
@@ -25,6 +28,8 @@ void Regions_setup()
 
   Regions_handle = new Regions();
   Regions_handle.setup();
+
+  DashedLines_handle = new DashedLines(this);
 }
 
 void Regions_update()
@@ -79,7 +84,11 @@ class Regions {
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
 
         region_data.relay_index = variable.getInt("Relay_Num");
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+"relay_index="+region_data.relay_index);
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",relay_index="+region_data.relay_index);
+
+        region_data.no_mark_big = (variable.getString("No_Mark_Big").toLowerCase().equals("true"))?true:false; 
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
+        //println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
 
         color first_color, other_color;
         region_data.set_rect_data(
@@ -89,9 +98,11 @@ class Regions {
           variable.getInt("Rect_Height") * 100,
           (int)Long.parseLong(variable.getString("Rect_First_Color"), 16),
           (int)Long.parseLong(variable.getString("Rect_Color"), 16),
-          variable.getInt("Rect_Weight"));
+          variable.getInt("Rect_Weight"),
+          variable.getInt("Rect_Dashed"));
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
-        //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data["+i+"]:f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
+        //if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+"region_data:"+"f_c="+region_data.first_color+",c="+region_data.other_color+",w="+region_data.weight);
+        //println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",Rect_First_Color="+(int)Long.parseLong(variable.getString("Rect_First_Color"), 16));
 
         region_data.set_marker_data(
           (int)Long.parseLong(variable.getString("Marker_Stroke_Color"), 16),
@@ -220,6 +231,9 @@ class Regions {
         color c_prev;
         int i = 0;
 
+        if (region_data.rect_dashed_gap > 0) {
+          DashedLines_handle.pattern(region_data.rect_dashed_gap, region_data.rect_dashed_gap);
+        }
         x_prev = region_data.points_data.scr_x[i];
         y_prev = region_data.points_data.scr_y[i];
         w_prev = region_data.points_data.w[i];
@@ -237,7 +251,13 @@ class Regions {
           // Sets the color and weight used to draw lines and borders around shapes.
           stroke(c_prev);
           strokeWeight(w_prev);
-          line(x_prev, y_prev, x_curr, y_curr);
+          if (region_data.rect_dashed_gap > 0) {
+            DashedLines_handle.line(x_prev, y_prev, x_curr, y_curr);
+          }
+          else
+          {
+            line(x_prev, y_prev, x_curr, y_curr);
+          }
 
           // Save data for drawing line between previous and current points. 
           x_prev = x_curr;
@@ -363,6 +383,10 @@ class Regions {
     return regions_array[instance].get(region_index).relay_index;
   }
 
+  boolean get_region_no_mark_big(int instance, int region_index) {
+    return regions_array[instance].get(region_index).no_mark_big;
+  }
+
   color get_marker_stroke_color(int instance, int region_index) {
     return regions_array[instance].get(region_index).marker_stroke_color;
   }
@@ -395,6 +419,7 @@ class Region_Data {
   String name;
   int priority;
   int relay_index;
+  boolean no_mark_big;
   Points_Data points_data;
   int rect_mi_x;
   int rect_mi_y;
@@ -403,6 +428,7 @@ class Region_Data {
   color marker_stroke_color;
   int marker_stroke_weight;
   color marker_fill_color;
+  int rect_dashed_gap;
   boolean has_object;
 
   Region_Data(String name, int priority) {
@@ -414,11 +440,12 @@ class Region_Data {
     this.priority = priority;
   }
 
-  void set_rect_data(int x, int y, int width, int height, color first_color, color other_color, int weight) {
+  void set_rect_data(int x, int y, int width, int height, color first_color, color other_color, int weight, int dashed_gap) {
     this.rect_mi_x = x;
     this.rect_mi_y = y;
     this.rect_mi_width = width;
     this.rect_mi_height = height;
+    this.rect_dashed_gap = dashed_gap;
     points_data.set_point_mi(0, x, y, first_color, weight);
     points_data.set_point_mi(1, x + width, y, other_color, weight);
     points_data.set_point_mi(2, x + width, y + height, other_color, weight);

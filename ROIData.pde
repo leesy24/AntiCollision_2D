@@ -95,8 +95,10 @@ final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = false;
 
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
-//static int ROI_OBJECT_DISTANCE_LIMIT = 10000; // = 1 meter
-static int ROI_OBJECT_DISTANCE_LIMIT = 5000; // = 50 cm= 0.5 meter
+//static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 10000; // = 1 meter
+static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 5000; // = 50 cm= 0.5 meter
+
+static int ROI_OBJECT_NO_MARK_DISTANCE_MIN = 30000; // = 300 cm= 3meter
 
 static int ROI_OBJECT_TIME_LIMIT = 500; // unit is milli-second(ms)
 
@@ -272,7 +274,7 @@ class ROI_Data {
       object_new.time_stamp_start = object_new.time_stamp_last = time_stamp_curr[instance];
       for (ROI_Object_Data object_prev:objects_array[instance]) {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_prev["+objects_array[instance].indexOf(object_prev)+"]:"+"scr_start_x="+object_prev.scr_start_x+",scr_start_y="+object_prev.scr_start_y+",scr_end_x="+object_prev.scr_end_x+",scr_end_y="+object_prev.scr_end_y);
-        if (check_objects_mi_overlapped(object_new, object_prev, ROI_OBJECT_DISTANCE_LIMIT)) {
+        if (check_objects_mi_overlapped(object_new, object_prev, ROI_OBJECT_DETECT_DISTANCE_LIMIT)) {
           //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_prev["+objects_array[instance].indexOf(object_prev)+"]:"+"overlapped");
           object_new.time_stamp_start = object_prev.time_stamp_start;
         }
@@ -284,7 +286,7 @@ class ROI_Data {
     for (ROI_Object_Data object_prev:objects_array[instance]) {
       found = false;
       for (ROI_Object_Data object_new:objects_new) {
-        if (check_objects_mi_overlapped(object_prev, object_new, ROI_OBJECT_DISTANCE_LIMIT)) {
+        if (check_objects_mi_overlapped(object_prev, object_new, ROI_OBJECT_DETECT_DISTANCE_LIMIT)) {
           found = true;
           break;
         }
@@ -359,6 +361,22 @@ class ROI_Data {
 
         for (int region_index:object.region_indexes) {
           Regions_handle.set_region_has_object(instance, region_index);
+        }
+
+        boolean no_mark_big = false;
+        for (int region_index:object.region_indexes) {
+          if (Regions_handle.get_region_no_mark_big(instance, region_index))
+          {
+            no_mark_big = true;
+            break;
+          }
+        }
+
+        if (no_mark_big
+            &&
+            object.mi_diameter >= ROI_OBJECT_NO_MARK_DISTANCE_MIN) {
+          if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
+          continue;
         }
 
         weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
@@ -795,7 +813,7 @@ class ROI_Data {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
         distance = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_curr.mi_x, point_curr.mi_y);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"distance="+distance);
-        if (distance <= ROI_OBJECT_DISTANCE_LIMIT) {
+        if (distance <= ROI_OBJECT_DETECT_DISTANCE_LIMIT) {
           points_group.add(point_curr);
           points.remove(i);
           point_prev = point_curr;

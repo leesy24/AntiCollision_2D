@@ -49,7 +49,7 @@ void Config_setup()
         ROTATE_FACTOR[i] = variable.getFloat("Value"); 
       }
       else if (name.equals("MIRROR_ENABLE")) {
-        MIRROR_ENABLE[i] = (variable.getString("Value").equals("true"))?true:false; 
+        MIRROR_ENABLE[i] = (variable.getString("Value").toLowerCase().equals("true"))?true:false; 
       }
       else if (name.equals("ZOOM_FACTOR")) {
         ZOOM_FACTOR[i] = variable.getInt("Value"); 
@@ -254,7 +254,7 @@ void Config_save()
         }
       }
       else if(name.equals("MIRROR_ENABLE")) {
-        value_boolean = variable.getString("Value").equals("true")?true:false;
+        value_boolean = variable.getString("Value").toLowerCase().equals("true")?true:false;
         if(value_boolean != MIRROR_ENABLE[i]) {
           variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
           changed = true;

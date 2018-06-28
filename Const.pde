@@ -37,8 +37,8 @@ void Const_setup()
       FRAME_RATE = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_DISTANCE_LIMIT"))
-      ROI_OBJECT_DISTANCE_LIMIT = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_DISTANCE_LIMIT"))
+      ROI_OBJECT_DETECT_DISTANCE_LIMIT = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
       ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_port_name"))
@@ -152,8 +152,8 @@ void Const_create()
   variable.setString("Comment", "Margin of objects ROI marker.");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_DISTANCE_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_DISTANCE_LIMIT);
+  variable.setString("Name", "ROI_OBJECT_DETECT_DISTANCE_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_DETECT_DISTANCE_LIMIT);
   variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
 
   variable = table.addRow();
