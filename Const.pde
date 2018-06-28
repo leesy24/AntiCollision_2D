@@ -39,6 +39,8 @@ void Const_setup()
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_DETECT_DISTANCE_LIMIT"))
       ROI_OBJECT_DETECT_DISTANCE_LIMIT = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_NO_MARK_DIAMETER_MIN"))
+      ROI_OBJECT_NO_MARK_DIAMETER_MIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
       ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_port_name"))
@@ -155,6 +157,11 @@ void Const_create()
   variable.setString("Name", "ROI_OBJECT_DETECT_DISTANCE_LIMIT");
   variable.setInt("Value", ROI_OBJECT_DETECT_DISTANCE_LIMIT);
   variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
+
+  variable = table.addRow();
+  variable.setString("Name", "ROI_OBJECT_NO_MARK_DIAMETER_MIN");
+  variable.setInt("Value", ROI_OBJECT_NO_MARK_DIAMETER_MIN);
+  variable.setString("Comment", "Minimum Diameter of object to no maker display.(30000=300cm=3meter)");
 
   variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");

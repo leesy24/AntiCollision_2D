@@ -98,7 +98,7 @@ static int ROI_OBJECT_MARKER_MARGIN = 10;
 //static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 10000; // = 1 meter
 static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 5000; // = 50 cm= 0.5 meter
 
-static int ROI_OBJECT_NO_MARK_DISTANCE_MIN = 30000; // = 300 cm= 3meter
+static int ROI_OBJECT_NO_MARK_DIAMETER_MIN = 20000; // = 200cm= 2meter
 
 static int ROI_OBJECT_TIME_LIMIT = 500; // unit is milli-second(ms)
 
@@ -371,10 +371,13 @@ class ROI_Data {
             break;
           }
         }
+        //println("ROI_Data:draw_objects("+instance+"):"+"no_mark_big="+no_mark_big);
+        //println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
+        //println("ROI_Data:draw_objects("+instance+"):"+"ROI_OBJECT_NO_MARK_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_DIAMETER_MIN);
 
         if (no_mark_big
             &&
-            object.mi_diameter >= ROI_OBJECT_NO_MARK_DISTANCE_MIN) {
+            object.mi_diameter >= ROI_OBJECT_NO_MARK_DIAMETER_MIN) {
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
           continue;
         }

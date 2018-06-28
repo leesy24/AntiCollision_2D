@@ -2,7 +2,7 @@ Name,Value,Comment
 FRAME_RATE,50,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DETECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
-ROI_OBJECT_NO_MARK_DISTANCE_MIN,30000,Distance limit of object to decide one object ROI.(30000=300cm=3meter)
+ROI_OBJECT_NO_MARK_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(30000=300cm=3meter)
 ROI_OBJECT_TIME_LIMIT,500,Time limit of object to decide one object ROI.(unit is milli-seconds)
 Relay_Module_UART_port_name,COM1,UART port name of Relay module.
 Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
