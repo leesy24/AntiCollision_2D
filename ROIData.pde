@@ -335,8 +335,6 @@ class ROI_Data {
   void draw_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Enter");
 
-    Relay_Module_clear_relay();
-
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
       for (ROI_Object_Data object:objects_array[instance]) {
         if (Regions_handle.get_region_priority(instance, object.region) != priority) {
@@ -354,6 +352,8 @@ class ROI_Data {
         //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
 
         if (time_duration < ROI_OBJECT_TIME_LIMIT) {
+          Relay_Module_set_relay(Regions_handle.get_region_relay_index(instance, object.region), false);
+
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
           continue;
         }
