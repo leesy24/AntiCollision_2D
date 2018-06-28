@@ -252,11 +252,11 @@ class Regions {
   int point_is_over(int instance, int point_mi_x, int point_mi_y) {
     if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("point_is_over("+instance+"):point_mi_x=" + point_mi_x + ",point_mi_y=" + point_mi_y);
 
-    int i = -1;
+    int region_index = -1;
 
     for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
-      for (i = regions_array[instance].size() - 1; i >= 0; i --) {
-        Region_Data region_data = regions_array[instance].get(i);
+      for (region_index = regions_array[instance].size() - 1; region_index >= 0; region_index --) {
+        Region_Data region_data = regions_array[instance].get(region_index);
         if (priority == region_data.priority) {
           if (is_point_over_rect(
                 point_mi_x, point_mi_y,
@@ -266,14 +266,91 @@ class Regions {
           }
         }
       }
-      if (i != -1) break;
+      if (region_index != -1) break;
     }
 
-    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("point_is_over("+instance+"):index=" + i);
+    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("point_is_over("+instance+"):region_index=" + region_index);
 
-    return i;
+    return region_index;
   }
 
+  LinkedList<Integer> get_region_indexes_contains_point(int instance, int point_mi_x, int point_mi_y) {
+    LinkedList<Integer> region_indexes = new LinkedList<Integer>();
+
+    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("get_region_indexes_contains_point("+instance+"):point_mi_x=" + point_mi_x + ",point_mi_y=" + point_mi_y);
+
+    int region_index = -1;
+
+    for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
+      for (region_index = 0; region_index < regions_array[instance].size(); region_index ++) {
+        Region_Data region_data = regions_array[instance].get(region_index);
+        if (priority != region_data.priority) {
+          continue;
+        }
+        if (is_point_over_rect(
+              point_mi_x, point_mi_y,
+              region_data.rect_mi_x, region_data.rect_mi_y,
+              region_data.rect_mi_width, region_data.rect_mi_height)) {
+          region_indexes.add(region_index);
+        }
+      }
+    }
+
+    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("get_region_indexes_contains_point("+instance+"):region_indexes.size()=" + region_indexes.size());
+
+    return region_indexes;
+  }
+
+  boolean regions_are_over(int instance, int region_a_index, int region_b_index) {
+    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("regions_are_over("+instance+"):region_a_index=" + region_a_index + ",region_b_index=" + region_b_index);
+
+    boolean ret = false;
+
+    if (region_a_index == region_a_index) {
+      ret = true;
+    }
+    else {
+      Region_Data region_a_data = regions_array[instance].get(region_a_index);
+      Region_Data region_b_data = regions_array[instance].get(region_a_index);
+
+      if (
+        is_point_over_rect(
+          region_a_data.rect_mi_x, region_a_data.rect_mi_y,
+          region_b_data.rect_mi_x, region_b_data.rect_mi_y,
+          region_b_data.rect_mi_width, region_b_data.rect_mi_height)) {
+        ret = true;
+      }
+      else if (
+        is_point_over_rect(
+          region_a_data.rect_mi_x + region_a_data.rect_mi_width, region_a_data.rect_mi_y,
+          region_b_data.rect_mi_x, region_b_data.rect_mi_y,
+          region_b_data.rect_mi_width, region_b_data.rect_mi_height)) {
+        ret = true;
+      }
+      else if (
+        is_point_over_rect(
+          region_a_data.rect_mi_x, region_a_data.rect_mi_y + region_a_data.rect_mi_height,
+          region_b_data.rect_mi_x, region_b_data.rect_mi_y,
+          region_b_data.rect_mi_width, region_b_data.rect_mi_height)) {
+        ret = true;
+      }
+      else if (
+        is_point_over_rect(
+          region_a_data.rect_mi_x + region_a_data.rect_mi_width, region_a_data.rect_mi_y + region_a_data.rect_mi_height,
+          region_b_data.rect_mi_x, region_b_data.rect_mi_y,
+          region_b_data.rect_mi_width, region_b_data.rect_mi_height)) {
+        ret = true;
+      }
+    }
+
+    if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("regions_are_over("+instance+"):ret=" + ret);
+
+    return ret;
+  }
+
+  int get_regions_size_for_index(int instance) {
+    return regions_array[instance].size();
+  }
   String get_region_name(int instance, int region_index) {
     return regions_array[instance].get(region_index).name;
   }
@@ -298,6 +375,20 @@ class Regions {
     return regions_array[instance].get(region_index).marker_fill_color;
   }
 
+  void reset_regions_has_object(int instance) {
+    for (Region_Data region_data:regions_array[instance]) {
+      region_data.has_object = false;
+    }
+  }
+
+  void set_region_has_object(int instance, int region_index) {
+    regions_array[instance].get(region_index).has_object = true;
+  }
+
+  boolean get_region_has_object(int instance, int region_index) {
+    return regions_array[instance].get(region_index).has_object;
+  }
+
 }
 
 class Region_Data {
@@ -312,6 +403,7 @@ class Region_Data {
   color marker_stroke_color;
   int marker_stroke_weight;
   color marker_fill_color;
+  boolean has_object;
 
   Region_Data(String name, int priority) {
     points_data = new Points_Data(5);

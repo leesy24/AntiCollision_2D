@@ -139,7 +139,47 @@ void Relay_Module_set_relay(int relay_index, boolean on)
 
 void Relay_Module_output()
 {
-  if (get_millis_diff(Relay_Module_output_timer) < Relay_Module_output_interval) return;
+  boolean updated = false;
+
+  for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+  {
+    boolean output;
+    for (int region_index = 0; region_index < Regions_handle.get_regions_size_for_index(instance); region_index ++)
+    {
+      output = Regions_handle.get_region_has_object(instance, region_index);
+      if (output != Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_index)])
+      {
+        Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_index)] = output;
+        updated = true;
+      }
+    }
+
+    /*
+    // Check overlapped region.
+    for (int region_a_index = 0; region_a_index < Regions_handle.get_regions_size_for_index(instance); region_a_index ++)
+    {
+      output = Regions_handle.get_region_has_object(instance, region_a_index);
+      if (!output) continue;
+      for (int region_b_index = 0; region_b_index < Regions_handle.get_regions_size_for_index(instance); region_b_index ++)
+      {
+        if (!Regions_handle.regions_are_over(instance, region_a_index, region_b_index))
+          break;
+        if (output != Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_b_index)])
+        {
+          Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_b_index)] = output;
+          updated = true;
+        }
+      }
+    }
+    */
+  }
+
+  if (!updated
+      &&
+      get_millis_diff(Relay_Module_output_timer) < Relay_Module_output_interval)
+  {
+    return;
+  }
   Relay_Module_output_timer = millis();
   Relay_Module_output_interval = RELAY_MODULE_CHECK_INTERVAL_IDLE;
 

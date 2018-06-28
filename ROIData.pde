@@ -245,10 +245,10 @@ class ROI_Data {
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
   }
 
-  void add_point(int instance, int region, int mi_x, int mi_y, int scr_x, int scr_y) {
+  void add_point(int instance, LinkedList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):Enter");
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):"+"region="+region+",mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
-    points_array[instance].add(new ROI_Point_Data(region, mi_x, mi_y, scr_x, scr_y));
+    points_array[instance].add(new ROI_Point_Data(region_indexes, mi_x, mi_y, scr_x, scr_y));
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):Exit");
   }
 
@@ -300,13 +300,13 @@ class ROI_Data {
               >
               ( ROI_OBJECT_TIME_LIMIT
                 *
-                Regions_handle.get_marker_stroke_weight(instance, object_prev.region))) {
+                Regions_handle.get_marker_stroke_weight(instance, object_prev.region_indexes.get(0)))) {
             object_prev.time_stamp_start =
               object_prev.time_stamp_last
               -
               ( ROI_OBJECT_TIME_LIMIT
                 *
-                Regions_handle.get_marker_stroke_weight(instance, object_prev.region));
+                Regions_handle.get_marker_stroke_weight(instance, object_prev.region_indexes.get(0)));
           }
           else {
             object_prev.time_stamp_start += get_int_diff(time_stamp_curr[instance], object_prev.time_stamp_last);
@@ -335,9 +335,10 @@ class ROI_Data {
   void draw_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Enter");
 
+    Regions_handle.reset_regions_has_object(instance);
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
       for (ROI_Object_Data object:objects_array[instance]) {
-        if (Regions_handle.get_region_priority(instance, object.region) != priority) {
+        if (Regions_handle.get_region_priority(instance, object.region_indexes.get(0)) != priority) {
           continue;
         }
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"x="+object.scr_start_x+",y="+object.scr_start_y+",w="+object.scr_width+",h="+object.scr_height);
@@ -352,19 +353,19 @@ class ROI_Data {
         //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
 
         if (time_duration < ROI_OBJECT_TIME_LIMIT) {
-          Relay_Module_set_relay(Regions_handle.get_region_relay_index(instance, object.region), false);
-
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
           continue;
         }
 
-        Relay_Module_set_relay(Regions_handle.get_region_relay_index(instance, object.region), true);
+        for (int region_index:object.region_indexes) {
+          Regions_handle.set_region_has_object(instance, region_index);
+        }
 
         weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
-        weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region));
-        fill(Regions_handle.get_marker_fill_color(instance, object.region));
+        weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region_indexes.get(0)));
+        fill(Regions_handle.get_marker_fill_color(instance, object.region_indexes.get(0)));
         // Sets the color and weight used to draw lines and borders around shapes.
-        stroke(Regions_handle.get_marker_stroke_color(instance, object.region));
+        stroke(Regions_handle.get_marker_stroke_color(instance, object.region_indexes.get(0)));
         strokeWeight(weight);
         /*
         rect( object.scr_start_x - ROI_OBJECT_MARKER_MARGIN,
@@ -470,7 +471,7 @@ class ROI_Data {
 
     LinkedList<String> strings = new LinkedList<String>();
 
-    strings.add("Region:" + Regions_handle.get_region_name(instance, object.region));
+    strings.add("Region:" + Regions_handle.get_region_name(instance, object.region_indexes.get(0)));
     strings.add("Time dur.:" + ((get_int_diff(object.time_stamp_last, object.time_stamp_start))/1000) + "s");
     strings.add("Distance:" + ((object.mi_distance/10)/1000.0) + "m");
     strings.add("Center X:" + ((object.mi_center_x/10)/1000.0) + "m");
@@ -814,6 +815,7 @@ class ROI_Data {
   private void add_object(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points_group, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():Enter");
 
+    LinkedList<Integer> region_indexes;
     int region_min;
     int mi_x_min, mi_y_min, mi_x_max, mi_y_max;
     int scr_x_min, scr_y_min, scr_x_max, scr_y_max;
@@ -823,8 +825,13 @@ class ROI_Data {
     mi_x_max = mi_y_max = scr_x_max = scr_y_max = MIN_INT;
 
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():"+"points_group size="+points_group.size());
+    region_indexes = new LinkedList<Integer>();
     for (ROI_Point_Data point:points_group) {
-      region_min = min(region_min, point.region);
+      for (int point_region_index:point.region_indexes) {
+        if (region_indexes.contains(point_region_index)) continue;
+        region_indexes.add(point_region_index);
+      }
+      region_min = min(region_min, point.region_indexes.get(0));
       mi_x_min = min(mi_x_min, point.mi_x);
       mi_y_min = min(mi_y_min, point.mi_y);
       mi_x_max = max(mi_x_max, point.mi_x);
@@ -847,6 +854,7 @@ class ROI_Data {
 
     objects.add(
       new ROI_Object_Data(
+        region_indexes,
         region_min,
         mi_x_min, mi_y_min,
         mi_x_max, mi_y_max,
@@ -859,12 +867,12 @@ class ROI_Data {
 }
 
 class ROI_Point_Data {
-  public int region;
+  public LinkedList<Integer> region_indexes;
   public int mi_x, mi_y;
   public int scr_x, scr_y;
   
-  ROI_Point_Data(int region, int mi_x, int mi_y, int scr_x, int scr_y) {
-    this.region = region;
+  ROI_Point_Data(LinkedList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
+    this.region_indexes = region_indexes;
     this.mi_x = mi_x;
     this.mi_y = mi_y;
     this.scr_x = scr_x;
@@ -883,7 +891,8 @@ final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = false;
 final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = false;
 
 class ROI_Object_Data {
-  public int region;
+  public LinkedList<Integer> region_indexes;
+  public int region_index_min;
   public int mi_start_x, mi_start_y;
   public int mi_end_x, mi_end_y;
   public int mi_width, mi_height;
@@ -901,12 +910,13 @@ class ROI_Object_Data {
   //public long time_stamp_last;
   public int number_of_points;
   
-  ROI_Object_Data(int region, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y, int number_of_points) {
-    if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region="+region);
+  ROI_Object_Data(LinkedList<Integer> region_indexes,int region_index_min, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y, int number_of_points) {
+    if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region_indexes.size()="+region_indexes.size());
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"mi x="+mi_start_x+",y="+mi_start_y+",x="+mi_end_x+",y="+mi_end_y);
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"scr x="+scr_start_x+",y="+scr_start_y+",x="+scr_end_x+",y="+scr_end_y);
 
-    this.region = region;
+    this.region_indexes = region_indexes;
+    this.region_index_min = region_index_min;
     this.mi_start_x = mi_start_x;
     this.mi_start_y = mi_start_y;
     this.mi_end_x = mi_end_x;
