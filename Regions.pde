@@ -299,10 +299,9 @@ class Regions {
 
     if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("get_region_indexes_contains_point("+instance+"):point_mi_x=" + point_mi_x + ",point_mi_y=" + point_mi_y);
 
-    int region_index = -1;
-
-    for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
-      for (region_index = 0; region_index < regions_array[instance].size(); region_index ++) {
+    //for (int priority = 0; priority <= regions_priority_max[instance]; priority ++) {
+    for (int priority = regions_priority_max[instance]; priority >= 0; priority --) {
+      for (int region_index = 0; region_index < regions_array[instance].size(); region_index ++) {
         Region_Data region_data = regions_array[instance].get(region_index);
         if (priority != region_data.priority) {
           continue;
@@ -312,6 +311,7 @@ class Regions {
               region_data.rect_mi_x, region_data.rect_mi_y,
               region_data.rect_mi_width, region_data.rect_mi_height)) {
           region_indexes.add(region_index);
+          //println("get_region_indexes_contains_point("+instance+"):region_index=" + region_index);
         }
       }
     }

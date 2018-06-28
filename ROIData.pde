@@ -361,6 +361,7 @@ class ROI_Data {
 
         for (int region_index:object.region_indexes) {
           Regions_handle.set_region_has_object(instance, region_index);
+          //println("ROI_Data:draw_objects("+instance+"):"+"set_region_has_object("+region_index+");");
         }
 
         boolean no_mark_big = false;
