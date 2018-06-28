@@ -158,10 +158,17 @@ void Relay_Module_output()
     boolean output;
     for (int region_index = 0; region_index < Regions_handle.get_regions_size_for_index(instance); region_index ++)
     {
+      int relay_index;
       output = Regions_handle.get_region_has_object(instance, region_index);
-      if (output != Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_index)])
+      relay_index = Regions_handle.get_region_relay_index(instance, region_index);
+      //println("relay_index="+relay_index);
+      if (relay_index < 0 || relay_index >= RELAY_MODULE_NUMBER_OF_RELAYS)
       {
-        Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_index)] = output;
+        continue;
+      }
+      if (output != Relay_Module_output_val[relay_index])
+      {
+        Relay_Module_output_val[relay_index] = output;
         updated = true;
       }
     }
