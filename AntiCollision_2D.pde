@@ -117,9 +117,6 @@ void draw() {
     UI_Interfaces_update();
   }
 
-  // Move to mouseMoved() and mouseDragged().
-  //UI_Buttons_check_over();
-
   Grid_draw();
   BG_Image_draw();
   PS_Image_draw();

@@ -86,44 +86,7 @@ void mousePressed()
 
   UI_Message_Box_mouse_pressed();
   UI_NumPad_mouse_pressed();
-
-  buttons_zoom_minus_pressed = false;
-  buttons_zoom_pluse_pressed = false;
-  buttons_rotate_ccw_pressed = false;
-  buttons_rotate_cw_pressed = false;
-  buttons_mirror_ud_pressed = false;
-  buttons_mirror_lr_pressed = false;
-  buttons_reset_en_pressed = false;
-
-  if (buttons_zoom_minus_over)
-  {
-    buttons_zoom_minus_pressed = true;
-  }
-  if (buttons_zoom_pluse_over)
-  {
-    buttons_zoom_pluse_pressed = true;
-  }
-  if (buttons_rotate_ccw_over)
-  {
-    buttons_rotate_ccw_pressed = true;
-  }
-  if (buttons_rotate_cw_over)
-  {
-    buttons_rotate_cw_pressed = true;
-  }
-  if (buttons_mirror_ud_over)
-  {
-    buttons_mirror_ud_pressed = true;
-  }
-  if (buttons_mirror_lr_over)
-  {
-    buttons_mirror_lr_pressed = true;
-  }
-  if (buttons_reset_en_over)
-  {
-    buttons_reset_en_pressed = true;
-  }
-
+  UI_Buttons_mouse_presseed();
   PS_Image_mouse_pressed();
   ROI_Data_mouse_pressed();
 }
@@ -133,44 +96,8 @@ void mouseReleased()
   if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse released! ");
 
   UI_NumPad_mouse_released();
-
+  UI_Buttons_mouse_released();
   UI_Interfaces_mouseReleased();
-
-  if (buttons_zoom_minus_over && buttons_zoom_minus_pressed)
-  {
-    UI_Buttons_zoom_minus();
-  }
-  if (buttons_zoom_pluse_over && buttons_zoom_pluse_pressed)
-  {
-    UI_Buttons_zoom_pluse();
-  }
-
-  //println("old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
-  if (buttons_rotate_ccw_over && buttons_rotate_ccw_pressed)
-  {
-    UI_Buttons_rotate_ccw();
-  }
-  if (buttons_rotate_cw_over && buttons_rotate_cw_pressed)
-  {
-    UI_Buttons_rotate_cw();
-  }
-  //println("new DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
-
-  if (buttons_mirror_ud_over && buttons_mirror_ud_pressed)
-  {
-    UI_Buttons_mirror_ud();
-  }
-
-  if (buttons_mirror_lr_over && buttons_mirror_lr_pressed)
-  {
-    UI_Buttons_mirror_lr();
-  }
-
-  if (buttons_reset_en_over && buttons_reset_en_pressed)
-  {
-    UI_Buttons_reset_en();
-  }
-
   PS_Image_mouse_released();
   ROI_Data_mouse_released();
 }
@@ -181,7 +108,7 @@ void mouseMoved()
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
   UI_NumPad_mouse_moved();
-  UI_Buttons_check_over();
+  UI_Buttons_mouse_moved();
   PS_Image_mouse_moved();
   ROI_Data_mouse_moved();
 }
@@ -193,7 +120,7 @@ void mouseDragged()
   if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
 
   UI_NumPad_mouse_dragged();
-  UI_Buttons_check_over();
+  UI_Buttons_mouse_dragged();
   PS_Image_mouse_dragged();
   ROI_Data_mouse_dragged();
 
@@ -218,15 +145,17 @@ void mouseWheel(MouseEvent event)
   if (wheel_count > 0)
   {
     //for (; wheel_count > 0; wheel_count -= 1)
-    {  
-      UI_Buttons_zoom_minus();
+    {
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+        UI_Buttons_zoom_minus(i);
     }
   }
   else if (wheel_count < 0)
   {
     //for (; wheel_count < 0; wheel_count += 1)
     {  
-      UI_Buttons_zoom_pluse();
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+        UI_Buttons_zoom_pluse(i);
     }
   }
 
