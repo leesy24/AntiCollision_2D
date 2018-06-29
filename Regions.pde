@@ -93,14 +93,38 @@ class Regions {
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
         //println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",no_mark_big="+region_data.no_mark_big);
 
-        color first_color, other_color;
+        int rect_mi_x, rect_mi_y;
+        int rect_mi_w, rect_mi_h;
+        color first_color, last_color, other_color;
+        if ((ROTATE_FACTOR[instance] == 135 && MIRROR_ENABLE[instance] == true)
+            ||
+            (ROTATE_FACTOR[instance] == 135 && MIRROR_ENABLE[instance] == false)
+            ||
+            (ROTATE_FACTOR[instance] == 315 && MIRROR_ENABLE[instance] == true)
+            ||
+            (ROTATE_FACTOR[instance] == 315 && MIRROR_ENABLE[instance] == false))
+        {
+          rect_mi_x = variable.getInt("Rect_Field_Y") * 100;
+          rect_mi_y = variable.getInt("Rect_Field_X") * 100;
+          rect_mi_w = variable.getInt("Rect_Height") * 100;
+          rect_mi_h = variable.getInt("Rect_Width") * 100;
+          first_color = (int)Long.parseLong(variable.getString("Rect_First_Color"), 16);
+          last_color = (int)Long.parseLong(variable.getString("Rect_Color"), 16);
+          other_color = last_color;
+        }
+        else
+        {
+          rect_mi_x = variable.getInt("Rect_Field_X") * 100;
+          rect_mi_y = variable.getInt("Rect_Field_Y") * 100;
+          rect_mi_w = variable.getInt("Rect_Width") * 100;
+          rect_mi_h = variable.getInt("Rect_Height") * 100;
+          first_color = (int)Long.parseLong(variable.getString("Rect_Color"), 16);
+          last_color = (int)Long.parseLong(variable.getString("Rect_First_Color"), 16);
+          other_color = first_color;
+        }
         region_data.set_rect_data(
-          variable.getInt("Rect_X") * 100,
-          variable.getInt("Rect_Y") * 100,
-          variable.getInt("Rect_Width") * 100,
-          variable.getInt("Rect_Height") * 100,
-          (int)Long.parseLong(variable.getString("Rect_First_Color"), 16),
-          (int)Long.parseLong(variable.getString("Rect_Color"), 16),
+          rect_mi_x, rect_mi_y, rect_mi_w, rect_mi_h,
+          first_color, last_color, other_color,
           variable.getInt("Rect_Weight"),
           variable.getInt("Rect_Dashed"));
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"x="+region_data.rect_mi_x+",y="+region_data.rect_mi_y+",w="+region_data.rect_mi_width+",h="+region_data.rect_mi_height);
@@ -444,6 +468,7 @@ class Region_Data {
   int rect_scr_width;
   int rect_scr_height;
   color rect_stroke_first_color;
+  color rect_stroke_last_color;
   color rect_stroke_other_color;
   int rect_stroke_weight;
   color marker_stroke_color;
@@ -461,20 +486,21 @@ class Region_Data {
     this.priority = priority;
   }
 
-  void set_rect_data(int x, int y, int width, int height, color first_color, color other_color, int weight, int dashed_gap) {
+  void set_rect_data(int x, int y, int width, int height, color first_color, color last_color, color other_color, int weight, int dashed_gap) {
     this.rect_mi_x = x;
     this.rect_mi_y = y;
     this.rect_mi_width = width;
     this.rect_mi_height = height;
     this.rect_stroke_first_color = first_color;
+    this.rect_stroke_last_color = last_color;
     this.rect_stroke_other_color = other_color;
     this.rect_stroke_weight = weight;
     this.rect_dashed_gap = dashed_gap;
     points_data.set_point_mi(0, x, y, first_color, weight);
     points_data.set_point_mi(1, x + width, y, other_color, weight);
     points_data.set_point_mi(2, x + width, y + height, other_color, weight);
-    points_data.set_point_mi(3, x, y + height, other_color, weight);
-    points_data.set_point_mi(4, x, y, other_color, weight);
+    points_data.set_point_mi(3, x, y + height, last_color, weight);
+    points_data.set_point_mi(4, x, y, last_color, weight);
   }
 
   void set_marker_data(color stroke_color, int stroke_weight, color fill_color) {
