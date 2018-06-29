@@ -79,6 +79,9 @@ void setup() {
 
   // Set window title
   surface.setTitle(Title);
+
+  // Need to call gc() to free memory.
+  System.gc();
 }
 
 // Called directly after setup()
