@@ -75,23 +75,29 @@ void Relay_Module_setup()
     color off_fill_c;
     color on_stroke_c;
     color off_stroke_c;
-    String on_text = "Relay ON";
-    String off_text = "Relay OFF";
-    int text_width_max;
 
     Relay_Module_output_val[relay_index] = false;
-
-    textSize(FONT_HEIGHT * 1.5);
-    text_width_max = int(textWidth(on_text));
-    text_width_max = int(max(text_width_max, textWidth(off_text)));
 
     for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
     {
       int region_index;
       for (region_index = 0; region_index < Regions_handle.regions_array[instance].size(); region_index ++)
       {
+        String on_text = " ON";
+        String off_text = " OFF";
+        int text_width_max;
+
         Region_Data region_data = Regions_handle.regions_array[instance].get(region_index);
+
         if (region_data.relay_index != relay_index) continue;
+
+        on_text = region_data.relay_name + on_text;
+        off_text = region_data.relay_name + off_text;
+
+        textSize(FONT_HEIGHT * 1.5);
+        text_width_max = int(textWidth(on_text));
+        text_width_max = int(max(text_width_max, textWidth(off_text)));
+
         w = int(
               text_width_max
               +

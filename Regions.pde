@@ -83,6 +83,9 @@ class Regions {
 
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
 
+        region_data.relay_name = variable.getString("Relay_Name");
+        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",relay_name="+region_data.relay_name);
+
         region_data.relay_index = variable.getInt("Relay_Num");
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",relay_index="+region_data.relay_index);
 
@@ -428,6 +431,7 @@ class Regions {
 class Region_Data {
   String name;
   int priority;
+  String relay_name;
   int relay_index;
   boolean no_mark_big;
   Points_Data points_data;
