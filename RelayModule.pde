@@ -35,7 +35,10 @@ final static boolean PRINT_RELAY_MODULE_LOAD_DBG = false;
 //final static boolean PRINT_RELAY_MODULE_LOAD_ERR = true; 
 final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false; 
 
-boolean Relay_Module_enabled = true;
+static color C_RELAY_MODULE_INDICATOR_OFF_FILL = 0xFF000000; // Black
+static color C_RELAY_MODULE_INDICATOR_OFF_STROKE = 0xFF404040; // Dark gray
+
+boolean Relay_Module_UART_enabled = true;
 
 Serial Relay_Module_UART_handle = null;  // The handle of UART(serial port)
 
@@ -52,16 +55,11 @@ final static int RELAY_MODULE_CHECK_INTERVAL_IDLE = 1000;
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
+LinkedList<UI_Relay_Indicator> Relay_Module_indicators = new LinkedList();
 
 void Relay_Module_setup()
 {
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Enter");
-
-  if (Relay_Module_UART_port_name.equals("NA"))
-  {
-    Relay_Module_enabled = false;
-    return;
-  }
 
   boolean found = false;
 
@@ -69,9 +67,105 @@ void Relay_Module_setup()
 
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
-  for (int i = 0; i < RELAY_MODULE_NUMBER_OF_RELAYS; i ++)
+  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
   {
-    Relay_Module_output_val[i] = false;
+    int x, y, w, h, r;
+    int stroke_w;
+    color on_fill_c;
+    color off_fill_c;
+    color on_stroke_c;
+    color off_stroke_c;
+    String on_text = "Relay ON";
+    String off_text = "Relay OFF";
+    int text_width_max;
+
+    Relay_Module_output_val[relay_index] = false;
+
+    textSize(FONT_HEIGHT * 1.5);
+    text_width_max = int(textWidth(on_text));
+    text_width_max = int(max(text_width_max, textWidth(off_text)));
+
+    for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+    {
+      int region_index;
+      for (region_index = 0; region_index < Regions_handle.regions_array[instance].size(); region_index ++)
+      {
+        Region_Data region_data = Regions_handle.regions_array[instance].get(region_index);
+        if (region_data.relay_index != relay_index) continue;
+        w = int(
+              text_width_max
+              +
+              TEXT_MARGIN * 1.5 * 2);
+        h = int(FONT_HEIGHT * 1.5 + TEXT_MARGIN * 1.5 * 2);
+        x = int(
+              region_data.rect_scr_x
+              +
+              region_data.rect_scr_width / 2
+              -
+              ( text_width_max
+                +
+                TEXT_MARGIN * 1.5 * 2) / 2);
+        y = int(TEXT_MARGIN * 1.5 * 2);
+        r = int(TEXT_MARGIN * 1.5);
+        stroke_w = region_data.marker_stroke_weight;
+        on_fill_c = region_data.marker_fill_color;
+        off_fill_c = C_RELAY_MODULE_INDICATOR_OFF_FILL;
+        on_stroke_c = region_data.marker_stroke_color;
+        off_stroke_c = C_RELAY_MODULE_INDICATOR_OFF_STROKE;
+        // Check region is overlapped with other regions.
+        for (int region_o_index = 0; region_o_index < Regions_handle.regions_array[instance].size(); region_o_index ++)
+        {
+          Region_Data region_o_data = Regions_handle.regions_array[instance].get(region_o_index);
+          if (region_o_data.relay_index == relay_index
+              ||
+              region_o_data.relay_index < 0)
+          {
+            continue;
+          }
+          if (x >= region_o_data.rect_scr_x
+              &&
+              x + w <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
+          {
+            continue;
+          }
+          if (x >= region_o_data.rect_scr_x
+              &&
+              x <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
+          {
+            x = int(
+                  region_o_data.rect_scr_x + region_o_data.rect_scr_width
+                  +
+                  TEXT_MARGIN * 1.5 * 2);
+          }
+          if (x + w >= region_o_data.rect_scr_x
+              &&
+              x + w <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
+          {
+            x = int(
+                  x
+                  -
+                  (x + w - region_o_data.rect_scr_x)
+                  - TEXT_MARGIN * 1.5 * 2);
+          }
+        }
+        Relay_Module_indicators.add(
+          new UI_Relay_Indicator(
+            x, y, w, h, r,
+            stroke_w,
+            on_fill_c, off_fill_c,
+            on_stroke_c, off_stroke_c,
+            on_text, off_text));
+        break;
+      }
+      if (region_index != Regions_handle.regions_array[instance].size())
+        break;
+    }
+  }
+
+  if (Relay_Module_UART_port_name.equals("NA"))
+  {
+    Relay_Module_UART_enabled = false;
+    return;
   }
 
   // Check Relay_Module_UART_port_name with the available serial ports
@@ -114,43 +208,8 @@ void Relay_Module_reset()
   }
 }
 
-void Relay_Module_clear_relay()
-{
-  if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SET_RELAY_DBG) println("Relay_Module_clear_relay():Enter");
-
-  for (int i = 0; i < RELAY_MODULE_NUMBER_OF_RELAYS; i ++)
-  {
-    if (Relay_Module_output_val[i] != false)
-    {
-      Relay_Module_output_val[i] = false;
-      Relay_Module_output_interval = 0; // to set relay immidiatelly.
-    }
-  }
-}
-
-void Relay_Module_set_relay(int relay_index, boolean on)
-{
-  if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SET_RELAY_DBG) println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
-  //println("Relay_Module_set_relay("+relay_index+","+on+"):Enter");
-
-  if (!Relay_Module_enabled) return;
-
-  if (relay_index >= RELAY_MODULE_NUMBER_OF_RELAYS)
-  {
-    return;
-  }
-
-  if (Relay_Module_output_val[relay_index] != on)
-  {
-    Relay_Module_output_val[relay_index] = on;
-    Relay_Module_output_interval = 0; // to set relay immidiatelly.
-  }
-}
-
 void Relay_Module_output()
 {
-  if (!Relay_Module_enabled) return;
-
   boolean updated = false;
 
   for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
@@ -172,26 +231,9 @@ void Relay_Module_output()
         updated = true;
       }
     }
-
-    /*
-    // Check overlapped region.
-    for (int region_a_index = 0; region_a_index < Regions_handle.get_regions_size_for_index(instance); region_a_index ++)
-    {
-      output = Regions_handle.get_region_has_object(instance, region_a_index);
-      if (!output) continue;
-      for (int region_b_index = 0; region_b_index < Regions_handle.get_regions_size_for_index(instance); region_b_index ++)
-      {
-        if (!Regions_handle.regions_are_over(instance, region_a_index, region_b_index))
-          break;
-        if (output != Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_b_index)])
-        {
-          Relay_Module_output_val[Regions_handle.get_region_relay_index(instance, region_b_index)] = output;
-          updated = true;
-        }
-      }
-    }
-    */
   }
+
+  Relay_Module_draw_indicator();
 
   if (!updated
       &&
@@ -202,23 +244,39 @@ void Relay_Module_output()
   Relay_Module_output_timer = millis();
   Relay_Module_output_interval = RELAY_MODULE_CHECK_INTERVAL_IDLE;
 
+  Relay_Module_set_relay();
+}
+
+private void Relay_Module_set_relay()
+{
+  if (!Relay_Module_UART_enabled) return;
+
   byte[] buf = new byte[4 + 2];
   buf[0] = 'R';
   int cnt = 0;
-  for (int i = 0; i < RELAY_MODULE_NUMBER_OF_RELAYS; i ++)
+  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
   {
-    if (Relay_Module_output_val[i])
+    if (Relay_Module_output_val[relay_index])
     {
-      buf[i + 1] = '1';
+      buf[relay_index + 1] = '1';
       cnt ++;
     }
     else
     {
-      buf[i + 1] = '0';
+      buf[relay_index + 1] = '0';
     }
   }
   buf[5] = byte('0' + cnt);
   Relay_Module_UART_write(buf);
+}
+
+private void Relay_Module_draw_indicator()
+{
+  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
+  {
+    UI_Relay_Indicator indicator = Relay_Module_indicators.get(relay_index);
+    indicator.draw(Relay_Module_output_val[relay_index]);
+  }
 }
 
 void Relay_Module_UART_clear()
@@ -245,3 +303,57 @@ void Relay_Module_UART_prepare_read(int buf_size)
 void Relay_Module_UART_read(byte[] buf)
 {
 } 
+
+class UI_Relay_Indicator {
+  int x, y;
+  int w, h;
+  int r;
+  int stroke_w;
+  color on_fill_c;
+  color off_fill_c;
+  color on_stroke_c;
+  color off_stroke_c;
+  String on_text;
+  String off_text;
+
+  UI_Relay_Indicator(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color of_fill_c, color on_stroke_c, color off_stroke_c, String on_text, String off_text) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.r = r;
+    this.stroke_w = stroke_w;
+    this.on_fill_c = on_fill_c;
+    this.off_fill_c = off_fill_c;
+    this.on_stroke_c = on_stroke_c;
+    this.off_stroke_c = off_stroke_c;
+    this.on_text = on_text;
+    this.off_text = off_text;
+    //println("UI_Relay_Indicator():constructor():"+"x="+x+",y="+y+",w="+w+",h="+h);
+  }
+
+  void draw(boolean on) {
+    // Sets the color and weight used to draw lines and borders around shapes.
+    if (on) {
+      stroke(on_stroke_c);
+      fill(on_fill_c);
+    }
+    else {
+      stroke(off_stroke_c);
+      fill(off_fill_c);
+    }
+    strokeWeight(stroke_w);
+    rect(x, y, w, h, r, r, r, r);
+
+    textAlign(CENTER, TOP);
+    textSize(FONT_HEIGHT*1.5);
+    if (on) {
+      fill(on_stroke_c);
+      text(on_text, x, y, w, h);
+    }
+    else {
+      fill(off_stroke_c);
+      text(off_text, x, y, w, h);
+    }
+  }
+}

@@ -53,6 +53,10 @@ void Const_setup()
       Relay_Module_UART_data_bits = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_stop_bits"))
       Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
+    else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_FILL"))
+      C_RELAY_MODULE_INDICATOR_OFF_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_STROKE"))
+      C_RELAY_MODULE_INDICATOR_OFF_STROKE = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("SCREEN_BORDER_WIDTH"))
       SCREEN_BORDER_WIDTH = variable.getInt("Value");
     else if(name.equals("SCREEN_TITLE_HEIGHT"))
@@ -192,6 +196,16 @@ void Const_create()
   variable.setString("Name", "Relay_Module_UART_stop_bits");
   variable.setFloat("Value", Relay_Module_UART_stop_bits);
   variable.setString("Comment", "UART stop bits of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_FILL");
+  variable.setString("Value", String.format("%08X", C_RELAY_MODULE_INDICATOR_OFF_FILL));
+  variable.setString("Comment", "Color of fill of relay indicator box. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_STROKE");
+  variable.setString("Value", String.format("%08X", C_RELAY_MODULE_INDICATOR_OFF_STROKE));
+  variable.setString("Comment", "Color of stroke of relay indicator box and text. Color data format is AARRGGBB");
 
   variable = table.addRow();
   variable.setString("Name", "SCREEN_BORDER_WIDTH");

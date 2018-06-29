@@ -129,6 +129,8 @@ class Regions {
     for (Region_Data region_data:regions_array[instance]) {
       int mi_x, mi_y;
       int scr_x, scr_y;
+      int scr_x_min = MAX_INT, scr_y_min = MAX_INT;
+      int scr_x_max = MIN_INT, scr_y_max = MIN_INT;
       final int offset_x =
         (ROTATE_FACTOR[instance] == 315)
         ?
@@ -207,7 +209,15 @@ class Regions {
         // Save coordinate data for drawing line on screen. 
         region_data.points_data.scr_x[i] = scr_x;
         region_data.points_data.scr_y[i] = scr_y;
+        scr_x_min = min(scr_x_min, scr_x);
+        scr_y_min = min(scr_y_min, scr_y);
+        scr_x_max = max(scr_x_max, scr_x);
+        scr_y_max = max(scr_y_max, scr_y);
       }
+      region_data.rect_scr_x = scr_x_min;
+      region_data.rect_scr_y = scr_y_min;
+      region_data.rect_scr_width = scr_x_max - scr_x_min;
+      region_data.rect_scr_height = scr_y_max - scr_y_min;
     }
   }
 
@@ -425,6 +435,13 @@ class Region_Data {
   int rect_mi_y;
   int rect_mi_width;
   int rect_mi_height;
+  int rect_scr_x;
+  int rect_scr_y;
+  int rect_scr_width;
+  int rect_scr_height;
+  color rect_stroke_first_color;
+  color rect_stroke_other_color;
+  int rect_stroke_weight;
   color marker_stroke_color;
   int marker_stroke_weight;
   color marker_fill_color;
@@ -445,6 +462,9 @@ class Region_Data {
     this.rect_mi_y = y;
     this.rect_mi_width = width;
     this.rect_mi_height = height;
+    this.rect_stroke_first_color = first_color;
+    this.rect_stroke_other_color = other_color;
+    this.rect_stroke_weight = weight;
     this.rect_dashed_gap = dashed_gap;
     points_data.set_point_mi(0, x, y, first_color, weight);
     points_data.set_point_mi(1, x + width, y, other_color, weight);
