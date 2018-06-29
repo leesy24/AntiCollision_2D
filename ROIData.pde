@@ -336,6 +336,36 @@ class ROI_Data {
 
   void draw_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Enter");
+    boolean no_mark = false;
+
+    // Check no mark region has big object.
+    for (ROI_Object_Data object:objects_array[instance]) {
+      int time_duration = get_int_diff(object.time_stamp_last, object.time_stamp_start);
+      //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
+      boolean no_mark_big = false;
+
+      if (time_duration < ROI_OBJECT_TIME_LIMIT) {
+        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+        continue;
+      }
+
+      for (int region_index:object.region_indexes) {
+        if (Regions_handle.get_region_no_mark_big(instance, region_index))
+        {
+          no_mark_big = true;
+          break;
+        }
+      }
+
+      if (no_mark_big
+          &&
+          object.mi_diameter >= ROI_OBJECT_NO_MARK_DIAMETER_MIN) {
+        if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
+        // No mark for all object when no mark region has big object.
+        no_mark = true;
+        break;
+      }
+    }
 
     Regions_handle.reset_regions_has_object(instance);
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
@@ -364,22 +394,8 @@ class ROI_Data {
           //println("ROI_Data:draw_objects("+instance+"):"+"set_region_has_object("+region_index+");");
         }
 
-        boolean no_mark_big = false;
-        for (int region_index:object.region_indexes) {
-          if (Regions_handle.get_region_no_mark_big(instance, region_index))
-          {
-            no_mark_big = true;
-            break;
-          }
-        }
-        //println("ROI_Data:draw_objects("+instance+"):"+"no_mark_big="+no_mark_big);
-        //println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
-        //println("ROI_Data:draw_objects("+instance+"):"+"ROI_OBJECT_NO_MARK_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_DIAMETER_MIN);
-
-        if (no_mark_big
-            &&
-            object.mi_diameter >= ROI_OBJECT_NO_MARK_DIAMETER_MIN) {
-          if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
+        if (no_mark) {
+          // No mark for all object when no mark region has big object.
           continue;
         }
 
