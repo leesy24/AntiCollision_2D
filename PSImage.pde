@@ -1,16 +1,17 @@
-//final static boolean PRINT_PS_IMAGE_ALL_DBG = true; 
-final static boolean PRINT_PS_IMAGE_ALL_DBG = false; 
-final static boolean PRINT_PS_IMAGE_ALL_ERR = true; 
-//final static boolean PRINT_PS_IMAGE_ALL_ERR = false; 
+//final static boolean PRINT_PS_IMAGE_ALL_DBG = true;
+final static boolean PRINT_PS_IMAGE_ALL_DBG = false;
+final static boolean PRINT_PS_IMAGE_ALL_ERR = true;
+//final static boolean PRINT_PS_IMAGE_ALL_ERR = false;
 
-//final static boolean PRINT_PS_IMAGE_SETUP_DBG = true; 
-final static boolean PRINT_PS_IMAGE_SETUP_DBG = false; 
-//final static boolean PRINT_PS_IMAGE_SETUP_ERR = true; 
-final static boolean PRINT_PS_IMAGE_SETUP_ERR = false; 
+//final static boolean PRINT_PS_IMAGE_SETUP_DBG = true;
+final static boolean PRINT_PS_IMAGE_SETUP_DBG = false;
+//final static boolean PRINT_PS_IMAGE_SETUP_ERR = true;
+final static boolean PRINT_PS_IMAGE_SETUP_ERR = false;
 
-static PImage[] PS_Image = new PImage[PS_INSTANCE_MAX];;
-static boolean[] PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];;
-static boolean[] PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];;
+static PImage[] PS_Image = new PImage[PS_INSTANCE_MAX];
+static int[] PS_Image_y_offset = new int[PS_INSTANCE_MAX];
+static boolean[] PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];
+static boolean[] PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 
 void PS_Image_setup()
 {
@@ -18,6 +19,7 @@ void PS_Image_setup()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
+    PS_Image_y_offset[i] = 0;
     PS_Image_mouse_over[i] = false;
     PS_Image_mouse_pressed[i] = false;
   }
@@ -37,56 +39,47 @@ void PS_Image_draw()
         )
         &&
         (
-          Grid_zero_y[i] >= 0
+          Grid_zero_y[i] >= 0 + PS_Image_y_offset[i]
           &&
-          Grid_zero_y[i] < SCREEN_height
+          Grid_zero_y[i] < SCREEN_height + PS_Image_y_offset[i]
         )
       )
     {
       //println("image xy=" + Grid_zero_x[i] + "," + Grid_zero_y[i]);
       image(  PS_Image[i],
               Grid_zero_x[i] - PS_Image[i].width / 2,
-              Grid_zero_y[i]);
+              Grid_zero_y[i] + PS_Image_y_offset[i]);
     }
   }
 }
 
 void PS_Image_update()
 {
+  String file_name;
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    if (ROTATE_FACTOR[i] == 315) {
-      // Images must be in the "data" directory to load correctly
-      if (MIRROR_ENABLE[i]) {
-        PS_Image[i] = loadImage("PS_315_.png");
-      }
-      else {
-        PS_Image[i] = loadImage("PS_315.png");
-      }
-    } else if (ROTATE_FACTOR[i] == 45) {
-      // Images must be in the "data" directory to load correctly
-      if (MIRROR_ENABLE[i]) {
-        PS_Image[i] = loadImage("PS_45_.png");
-      }
-      else {
-        PS_Image[i] = loadImage("PS_45.png");
-      }
-    } else if (ROTATE_FACTOR[i] == 135) {
-      // Images must be in the "data" directory to load correctly
-      if (MIRROR_ENABLE[i]) {
-        PS_Image[i] = loadImage("PS_135_.png");
-      }
-      else {
-        PS_Image[i] = loadImage("PS_135.png");
-      }
-    } else /*if (ROTATE_FACTOR[i] == 225)*/ {
-      // Images must be in the "data" directory to load correctly
-      if (MIRROR_ENABLE[i]) {
-        PS_Image[i] = loadImage("PS_225_.png");
-      }
-      else {
-        PS_Image[i] = loadImage("PS_225.png");
-      }
+    file_name = "PS_"+int(ROTATE_FACTOR[i]);
+    if (MIRROR_ENABLE[i])
+      file_name = file_name+"_";
+    file_name = file_name+".png";
+    // Images must be in the "data" directory to load correctly
+    PS_Image[i] = loadImage(file_name);
+    if (PS_Image[i] == null) continue;
+    // Check PS image located on top.
+    if ((ROTATE_FACTOR[i] == 45 && MIRROR_ENABLE[i] == true)
+        ||
+        (ROTATE_FACTOR[i] == 45 && MIRROR_ENABLE[i] == false)
+        ||
+        (ROTATE_FACTOR[i] == 135 && MIRROR_ENABLE[i] == false)
+        ||
+        (ROTATE_FACTOR[i] == 315 && MIRROR_ENABLE[i] == true))
+    {
+      PS_Image_y_offset[i] = -PS_Image[i].height;
+    }
+    else
+    {
+      PS_Image_y_offset[i] = 0;
     }
   }
 }
@@ -132,7 +125,7 @@ void PS_Image_mouse_moved()
   {
     if( mouse_is_over(
           Grid_zero_x[i] - PS_Image[i].width / 2,
-          Grid_zero_y[i],
+          Grid_zero_y[i] + PS_Image_y_offset[i],
           PS_Image[i].width,
           PS_Image[i].height) )
     {
