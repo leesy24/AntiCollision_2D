@@ -32,8 +32,8 @@ void setup() {
 
   Const_setup();
   Config_setup();
-  Update_Data_Files_setup();
   Screen_setup();
+  Update_Data_Files_setup();
   BG_Image_setup();
   Grid_setup();
   PS_Data_setup();

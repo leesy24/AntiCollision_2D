@@ -44,6 +44,10 @@ float[] ROTATE_FACTOR = new float[PS_INSTANCE_MAX];
 // Define mirror variables.
 boolean[] MIRROR_ENABLE = new boolean[PS_INSTANCE_MAX];
 
+// Define offset of screen to draw.
+int[] SCREEN_OFFSET_X = new int[PS_INSTANCE_MAX];
+int[] SCREEN_OFFSET_Y = new int[PS_INSTANCE_MAX];
+
 // Define offset of misc. draw.
 int[] DRAW_OFFSET_X = new int[PS_INSTANCE_MAX];
 int[] DRAW_OFFSET_Y = new int[PS_INSTANCE_MAX];
@@ -92,20 +96,8 @@ void Screen_setup()
     SCREEN_surface_set = true;
   }
 */
-  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-/*
-    // Define zoom factor variables.
-    ZOOM_FACTOR[i] = 100;
-    // Define rotate factor variables.
-    ROTATE_FACTOR[i] = 315;
-    // Define mirror variables.
-    MIRROR_ENABLE[i] = false;
-    // Define offset of misc. draw.
-    DRAW_OFFSET_X[i] = 0;
-    DRAW_OFFSET_Y[i] = 0;
-*/
-  }
+
+  Screen_update_offsets();
 
   // Set text margin to follow min(Width, Height) of screen.
   TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 200) : (SCREEN_height / 200);
@@ -119,6 +111,65 @@ void Screen_setup()
   if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
   //println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
   textSize(FONT_HEIGHT);
+}
+
+void Screen_update_offsets()
+{
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (ROTATE_FACTOR[i] == 315)
+    {
+      if (MIRROR_ENABLE[i])
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 546;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 250;
+      }
+      else
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 546;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 250;
+      }
+    }
+    else if (ROTATE_FACTOR[i] == 45)
+    {
+      if (MIRROR_ENABLE[i])
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 44;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 40;
+      }
+      else
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 44;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 40;
+      }
+    }
+    else if (ROTATE_FACTOR[i] == 135)
+    {
+      if (MIRROR_ENABLE[i])
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 546;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 250;
+      }
+      else
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 546;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 250;
+      }
+    }
+    else /*if (ROTATE_FACTOR[i] == 225)*/
+    {
+      if (MIRROR_ENABLE[i])
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 44;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 40;
+      }
+      else
+      {
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 44;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 40;
+      }
+    }
+  }
 }
 
 /*
@@ -239,6 +290,7 @@ boolean Screen_check_update()
 void Screen_update_variable()
 {
   if(PRINT_SCREENFUNC_ALL_DBG) println("Screen_update_variable():");
+  //Screen_update_offsets();
   Grid_update();
   PS_Image_update();
   Regions_update();

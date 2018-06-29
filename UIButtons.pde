@@ -362,54 +362,18 @@ void UI_Buttons_zoom_pluse()
 
 void UI_Buttons_rotate_ccw()
 {
-  float save_ox, save_oy;
   ROTATE_FACTOR[0] -= 90;
   if (ROTATE_FACTOR[0] < 0) ROTATE_FACTOR[0] += 360;
-  save_ox = float(DRAW_OFFSET_X[0]);
-  save_oy = float(DRAW_OFFSET_Y[0]);
-  if (ROTATE_FACTOR[0] == 315) { // OK
-    DRAW_OFFSET_X[0] =  int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
-    DRAW_OFFSET_Y[0] = -int(save_ox);
-  }
-  else if (ROTATE_FACTOR[0] == 45) { // OK
-    DRAW_OFFSET_Y[0] = -int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
-    DRAW_OFFSET_X[0] =  int(save_oy);
-  }
-  else if (ROTATE_FACTOR[0] == 135) { // OK
-    DRAW_OFFSET_X[0] =  int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
-    DRAW_OFFSET_Y[0] = -int(save_ox);
-  }
-  else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
-    DRAW_OFFSET_Y[0] = -int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
-    DRAW_OFFSET_X[0] =  int(save_oy);
-  }
+  Screen_update_offsets();
   Screen_update_variable();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
 
 void UI_Buttons_rotate_cw()
 {
-  float save_ox, save_oy;
   ROTATE_FACTOR[0] += 90;
   if (ROTATE_FACTOR[0] > 360) ROTATE_FACTOR[0] -= 360;
-  save_ox = float(DRAW_OFFSET_X[0]);
-  save_oy = float(DRAW_OFFSET_Y[0]);
-  if (ROTATE_FACTOR[0] == 315) { // OK
-    DRAW_OFFSET_X[0] = -int(save_oy + (float(SCREEN_height) / 2.0) - (float(SCREEN_width)  / 2.0));
-    DRAW_OFFSET_Y[0] =  int(save_ox);
-  }
-  else if (ROTATE_FACTOR[0] == 45) { // OK
-    DRAW_OFFSET_Y[0] =  int(save_ox - (float(SCREEN_width)  / 2.0) + (float(SCREEN_height) / 2.0));
-    DRAW_OFFSET_X[0] = -int(save_oy);
-  }
-  else if (ROTATE_FACTOR[0] == 135) { // OK
-    DRAW_OFFSET_X[0] = -int(save_oy - (float(SCREEN_height) / 2.0) + (float(SCREEN_width)  / 2.0));
-    DRAW_OFFSET_Y[0] =  int(save_ox);
-  }
-  else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
-    DRAW_OFFSET_Y[0] =  int(save_ox + (float(SCREEN_width)  / 2.0) - (float(SCREEN_height) / 2.0));
-    DRAW_OFFSET_X[0] = -int(save_oy);
-  }
+  Screen_update_offsets();
   Screen_update_variable();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -419,19 +383,14 @@ void UI_Buttons_mirror_ud()
   MIRROR_ENABLE[0] = !MIRROR_ENABLE[0];
   if (ROTATE_FACTOR[0] == 45 || ROTATE_FACTOR[0] == 225)
   {
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
     if (ROTATE_FACTOR[0] == 45) { // OK
       ROTATE_FACTOR[0] = 225;
-      DRAW_OFFSET_X[0] = DRAW_OFFSET_X[0];
-      DRAW_OFFSET_Y[0] += -(SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT));
     }
     else /*if (ROTATE_FACTOR[0] == 225)*/ { // OK
       ROTATE_FACTOR[0] = 45;
-      DRAW_OFFSET_X[0] = DRAW_OFFSET_X[0];
-      DRAW_OFFSET_Y[0] += SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT);
     }
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
+  Screen_update_offsets();
   Screen_update_variable();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }
@@ -441,19 +400,14 @@ void UI_Buttons_mirror_lr()
   MIRROR_ENABLE[0] = !MIRROR_ENABLE[0];
   if (ROTATE_FACTOR[0] == 315 || ROTATE_FACTOR[0] == 135)
   {
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("Old DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
     if (ROTATE_FACTOR[0] == 315) { // OK
       ROTATE_FACTOR[0] = 135;
-      DRAW_OFFSET_X[0] += -(SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT));
-      DRAW_OFFSET_Y[0] = DRAW_OFFSET_Y[0];
     }
     else /*if (ROTATE_FACTOR[0] == 135)*/ { // OK
       ROTATE_FACTOR[0] = 315;
-      DRAW_OFFSET_X[0] += SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT);
-      DRAW_OFFSET_Y[0] = DRAW_OFFSET_Y[0];
     }
-    if(PRINT_UI_BUTTONS_MIRROR_DBG) println("New DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
   }
+  Screen_update_offsets();
   Screen_update_variable();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[0]=" + MIRROR_ENABLE[0] + ", ROTATE_FACTOR[0]=" + ROTATE_FACTOR[0]);
 }

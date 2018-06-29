@@ -45,20 +45,20 @@ void Config_setup()
             PS_Interface[i] = j;
         }
       }
+      else if (name.equals("ZOOM_FACTOR")) {
+        ZOOM_FACTOR[i] = variable.getInt("Value"); 
+      }
       else if (name.equals("ROTATE_FACTOR")) {
         ROTATE_FACTOR[i] = variable.getFloat("Value"); 
       }
       else if (name.equals("MIRROR_ENABLE")) {
         MIRROR_ENABLE[i] = (variable.getString("Value").toLowerCase().equals("true"))?true:false; 
       }
-      else if (name.equals("ZOOM_FACTOR")) {
-        ZOOM_FACTOR[i] = variable.getInt("Value"); 
+      else if (name.equals("SCREEN_OFFSET_X")) {
+        SCREEN_OFFSET_X[i] = variable.getInt("Value");
       }
-      else if (name.equals("DRAW_OFFSET_X")) {
-        DRAW_OFFSET_X[i] = variable.getInt("Value");
-      }
-      else if (name.equals("DRAW_OFFSET_Y")) {
-        DRAW_OFFSET_Y[i] = variable.getInt("Value");
+      else if (name.equals("SCREEN_OFFSET_Y")) {
+        SCREEN_OFFSET_Y[i] = variable.getInt("Value");
       }
       else if (name.equals("FILE_name")) {
         FILE_name[i] = variable.getString("Value");
@@ -130,6 +130,12 @@ void Config_create()
     variable.setString("Comment", "PS Interface via File or COM or UDP or SN.");
 
     variable = table.addRow();
+    variable.setString("Name", "ZOOM_FACTOR");
+    //variable.setFloat("Value", ZOOM_FACTOR);
+    variable.setInt("Value", ZOOM_FACTOR[i]);
+    variable.setString("Comment", "Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)");
+
+    variable = table.addRow();
     variable.setString("Name", "ROTATE_FACTOR");
     variable.setFloat("Value", ROTATE_FACTOR[i]);
     variable.setString("Comment", "Rotate factor of draws for 45 or 135 or 225 or 315");
@@ -140,20 +146,14 @@ void Config_create()
     variable.setString("Comment", "Mirroring or not.(true or false)");
 
     variable = table.addRow();
-    variable.setString("Name", "ZOOM_FACTOR");
-    //variable.setFloat("Value", ZOOM_FACTOR);
-    variable.setInt("Value", ZOOM_FACTOR[i]);
-    variable.setString("Comment", "Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)");
+    variable.setString("Name", "SCREEN_OFFSET_X");
+    variable.setInt("Value", SCREEN_OFFSET_X[i]);
+    variable.setString("Comment", "X Offset of screen to draw.");
 
     variable = table.addRow();
-    variable.setString("Name", "DRAW_OFFSET_X");
-    variable.setInt("Value", DRAW_OFFSET_X[i]);
-    variable.setString("Comment", "X Offset of draws.");
-
-    variable = table.addRow();
-    variable.setString("Name", "DRAW_OFFSET_Y");
-    variable.setInt("Value", DRAW_OFFSET_Y[i]);
-    variable.setString("Comment", "Y Offset of draws.");
+    variable.setString("Name", "SCREEN_OFFSET_Y");
+    variable.setInt("Value", SCREEN_OFFSET_Y[i]);
+    variable.setString("Comment", "Y Offset of screen to draw.");
 
     variable = table.addRow();
     variable.setString("Name", "FILE_name");
@@ -246,6 +246,14 @@ void Config_save()
           changed = true;
         }
       }
+      else if(name.equals("ZOOM_FACTOR")) {
+        value_float = variable.getFloat("Value");
+        if(value_float != ZOOM_FACTOR[i]) {
+          //variable.setFloat("Value", ZOOM_FACTOR);
+          variable.setInt("Value", ZOOM_FACTOR[i]);
+          changed = true;
+        }
+      }
       else if(name.equals("ROTATE_FACTOR")) {
         value_float = variable.getFloat("Value");
         if(value_float != ROTATE_FACTOR[i]) {
@@ -257,14 +265,6 @@ void Config_save()
         value_boolean = variable.getString("Value").toLowerCase().equals("true")?true:false;
         if(value_boolean != MIRROR_ENABLE[i]) {
           variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
-          changed = true;
-        }
-      }
-      else if(name.equals("ZOOM_FACTOR")) {
-        value_float = variable.getFloat("Value");
-        if(value_float != ZOOM_FACTOR[i]) {
-          //variable.setFloat("Value", ZOOM_FACTOR);
-          variable.setInt("Value", ZOOM_FACTOR[i]);
           changed = true;
         }
       }
