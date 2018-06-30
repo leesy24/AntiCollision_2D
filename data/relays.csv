@@ -1,0 +1,5 @@
+Relay_Name,Relay_Index,Indicator_Screen_Center_X,Indicator_Screen_Top_Y,Idicator_Text_Height
+Fault L,0,382,8,18
+Alert L,1,202,8,18
+Fault R,2,642,8,18
+Alert R,3,822,8,18

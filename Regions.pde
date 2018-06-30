@@ -70,7 +70,7 @@ class Regions {
       }
 
       for (TableRow variable:table.rows()) {
-        String name = variable.getString("Name");
+        String name = variable.getString("Region_Name");
         // If name start with # than skip it.
         if (name.charAt(0) == '#') {
           continue;
@@ -78,15 +78,12 @@ class Regions {
         Region_Data region_data =
           new Region_Data(
             name,
-            variable.getInt("Priority"));
+            variable.getInt("Region_Priority"));
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",priority="+region_data.priority);
 
         regions_priority_max[instance] = max(regions_priority_max[instance], region_data.priority);
 
-        region_data.relay_name = variable.getString("Relay_Name");
-        if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",relay_name="+region_data.relay_name);
-
-        region_data.relay_index = variable.getInt("Relay_Num");
+        region_data.relay_index = variable.getInt("Relay_Index");
         if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_SETUP_DBG) println("Regions:settings():"+instance+":region_data:"+"name="+region_data.name+",relay_index="+region_data.relay_index);
 
         region_data.no_mark_big = (variable.getString("No_Mark_Big").toLowerCase().equals("true"))?true:false; 
@@ -455,7 +452,6 @@ class Regions {
 class Region_Data {
   String name;
   int priority;
-  String relay_name;
   int relay_index;
   boolean no_mark_big;
   Points_Data points_data;

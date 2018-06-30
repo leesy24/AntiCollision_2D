@@ -52,6 +52,10 @@ final static int RELAY_MODULE_NUMBER_OF_RELAYS = 4;
 
 final static int RELAY_MODULE_CHECK_INTERVAL_IDLE = 1000;
 
+// Define default table filename and ext.
+final static String RELAY_MODULE_RELAYS_FILE_NAME = "relays";
+final static String RELAY_MODULE_RELAYS_FILE_EXT = ".csv";
+
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
@@ -67,100 +71,83 @@ void Relay_Module_setup()
 
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
+
   for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
   {
-    int x, y, w, h, r;
-    int stroke_w;
-    color on_fill_c;
-    color off_fill_c;
-    color on_stroke_c;
-    color off_stroke_c;
-
     Relay_Module_output_val[relay_index] = false;
+    Relay_Module_indicators.add(new UI_Relay_Indicator());
+  }
+
+  String file_full_name;
+  Table table;
+
+  file_full_name = RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT;
+
+  // Load lines file(CSV type) into a Table object
+  // "header" option indicates the file has a header row
+  table = loadTable(file_full_name, "header");
+  // Check loadTable failed.
+  if(table == null) {
+    return;
+  }
+
+  for (TableRow variable:table.rows()) {
+    String relay_name = variable.getString("Relay_Name");
+    // If name start with # than skip it.
+    if (relay_name.charAt(0) == '#') {
+      continue;
+    }
+
+    int relay_index = variable.getInt("Relay_Index");
+    int indicator_scr_center_x = variable.getInt("Indicator_Screen_Center_X");
+    int indicator_scr_top_y = variable.getInt("Indicator_Screen_Top_Y");
+    int indicator_text_height = variable.getInt("Idicator_Text_Height");
 
     for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
     {
       int region_index;
       for (region_index = 0; region_index < Regions_handle.regions_array[instance].size(); region_index ++)
       {
-        String on_text = " ON";
-        String off_text = " OFF";
-        int text_width_max;
-
         Region_Data region_data = Regions_handle.regions_array[instance].get(region_index);
 
         if (region_data.relay_index != relay_index) continue;
 
-        on_text = region_data.relay_name + on_text;
-        off_text = region_data.relay_name + off_text;
+        int x, y, w, h, r;
+        int stroke_w;
+        color on_fill_c;
+        color off_fill_c;
+        color on_stroke_c;
+        color off_stroke_c;
+        String on_text = " ON";
+        String off_text = " OFF";
+        float text_width_max;
 
-        textSize(FONT_HEIGHT * 1.5);
-        text_width_max = int(textWidth(on_text));
-        text_width_max = int(max(text_width_max, textWidth(off_text)));
+        on_text = relay_name + on_text;
+        off_text = relay_name + off_text;
 
-        w = int(
-              text_width_max
-              +
-              TEXT_MARGIN * 1.5 * 2);
-        h = int(FONT_HEIGHT * 1.5 + TEXT_MARGIN * 1.5 * 2);
-        x = int(
-              region_data.rect_scr_x
-              +
-              region_data.rect_scr_width / 2
-              -
-              ( text_width_max
-                +
-                TEXT_MARGIN * 1.5 * 2) / 2);
-        y = int(TEXT_MARGIN * 1.5 * 2);
-        r = int(TEXT_MARGIN * 1.5);
+        textSize(indicator_text_height);
+        text_width_max = textWidth(on_text);
+        text_width_max = max(text_width_max, textWidth(off_text));
+
+        w = int(text_width_max + indicator_text_height / 4.0 * 2.0);
+        h = int(indicator_text_height + indicator_text_height / 4.0 * 2.0);
+        x = int(indicator_scr_center_x - w / 2.0);
+        y = indicator_scr_top_y;
+        r = int(indicator_text_height / 4.0);
         stroke_w = region_data.marker_stroke_weight;
         on_fill_c = region_data.marker_fill_color;
         off_fill_c = C_RELAY_MODULE_INDICATOR_OFF_FILL;
         on_stroke_c = region_data.marker_stroke_color;
         off_stroke_c = C_RELAY_MODULE_INDICATOR_OFF_STROKE;
-        // Check region is overlapped with other regions.
-        for (int region_o_index = 0; region_o_index < Regions_handle.regions_array[instance].size(); region_o_index ++)
-        {
-          Region_Data region_o_data = Regions_handle.regions_array[instance].get(region_o_index);
-          if (region_o_data.relay_index == relay_index
-              ||
-              region_o_data.relay_index < 0)
-          {
-            continue;
-          }
-          if (x >= region_o_data.rect_scr_x
-              &&
-              x + w <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
-          {
-            continue;
-          }
-          if (x >= region_o_data.rect_scr_x
-              &&
-              x <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
-          {
-            x = int(
-                  region_o_data.rect_scr_x + region_o_data.rect_scr_width
-                  +
-                  TEXT_MARGIN * 1.5 * 2);
-          }
-          if (x + w >= region_o_data.rect_scr_x
-              &&
-              x + w <= region_o_data.rect_scr_x + region_o_data.rect_scr_width)
-          {
-            x = int(
-                  x
-                  -
-                  (x + w - region_o_data.rect_scr_x)
-                  - TEXT_MARGIN * 1.5 * 2);
-          }
-        }
-        Relay_Module_indicators.add(
-          new UI_Relay_Indicator(
-            x, y, w, h, r,
-            stroke_w,
-            on_fill_c, off_fill_c,
-            on_stroke_c, off_stroke_c,
-            on_text, off_text));
+        Relay_Module_indicators
+          .get(relay_index)
+            .set(
+              x, y, w, h, r,
+              stroke_w,
+              on_fill_c, off_fill_c,
+              on_stroke_c, off_stroke_c,
+              indicator_text_height,
+              on_text, off_text);
         break;
       }
       if (region_index != Regions_handle.regions_array[instance].size())
@@ -319,10 +306,14 @@ class UI_Relay_Indicator {
   color off_fill_c;
   color on_stroke_c;
   color off_stroke_c;
+  int text_height;
   String on_text;
   String off_text;
 
-  UI_Relay_Indicator(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color of_fill_c, color on_stroke_c, color off_stroke_c, String on_text, String off_text) {
+  UI_Relay_Indicator() {
+  }
+
+  void set(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color of_fill_c, color on_stroke_c, color off_stroke_c, int text_height, String on_text, String off_text) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -333,6 +324,7 @@ class UI_Relay_Indicator {
     this.off_fill_c = off_fill_c;
     this.on_stroke_c = on_stroke_c;
     this.off_stroke_c = off_stroke_c;
+    this.text_height = text_height;
     this.on_text = on_text;
     this.off_text = off_text;
     //println("UI_Relay_Indicator():constructor():"+"x="+x+",y="+y+",w="+w+",h="+h);
@@ -352,7 +344,7 @@ class UI_Relay_Indicator {
     rect(x, y, w, h, r, r, r, r);
 
     textAlign(CENTER, TOP);
-    textSize(FONT_HEIGHT*1.5);
+    textSize(text_height);
     if (on) {
       fill(on_stroke_c);
       text(on_text, x, y, w, h);
