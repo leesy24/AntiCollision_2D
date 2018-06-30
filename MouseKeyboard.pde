@@ -24,6 +24,8 @@ final static boolean PRINT_MOUSEFUNC_Wheel = false;
 int mousePressedX;
 int mousePressedY;
 
+static boolean mouse_dragging_enabled = false;
+
 /**/
 void keyPressed()
 {
@@ -53,6 +55,10 @@ void keyPressed()
     }
     else if(keyCode == KeyEvent.VK_F5)
     {
+      mouse_dragging_enabled = !mouse_dragging_enabled;
+    }
+    else if(keyCode == KeyEvent.VK_F4)
+    {
       PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
     }
   }
@@ -78,7 +84,7 @@ void mousePressed()
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
-  if (UI_Buttons_enabled)
+  if (mouse_dragging_enabled)
   {
     mousePressedX = mouseX - DRAW_OFFSET_X[0];
     mousePressedY = mouseY - DRAW_OFFSET_Y[0];
@@ -124,7 +130,7 @@ void mouseDragged()
   PS_Image_mouse_dragged();
   ROI_Data_mouse_dragged();
 
-  if (UI_Buttons_enabled)
+  if (mouse_dragging_enabled)
   {
     DRAW_OFFSET_X[0] = mouseX - mousePressedX;
     DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
