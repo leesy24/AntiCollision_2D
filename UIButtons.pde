@@ -26,12 +26,12 @@ static String UI_Buttons_zoom_minus_str = "-";           // button string zoom m
 static String UI_Buttons_zoom_pluse_str = "+";           // button string zoom pluse
 static String UI_Buttons_zoom_caption_str = "Zoom";      // button string zoom pluse
 
-static String UI_Buttons_rotate_ccw_str = "↺";           // button string rotate counter clock-wise
+//static String UI_Buttons_rotate_ccw_str = "↺";           // button string rotate counter clock-wise
 static String UI_Buttons_rotate_cw_str = "↻";            // button string rotate clock-wise
 static String UI_Buttons_rotate_caption_str = "Rotate";  // button string rotate clock-wise
 
 static String UI_Buttons_mirror_ud_str = "⇅";            // button string mirror enable
-static String UI_Buttons_mirror_lr_str = "⇄";            // button string mirror enable
+//static String UI_Buttons_mirror_lr_str = "⇄";            // button string mirror enable
 static String UI_Buttons_mirror_caption_str = "Mirror";  // button string mirror enable
 
 static String UI_Buttons_reset_en_str = "0";             // button string reset enable
@@ -93,26 +93,31 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_rotate_caption_str, center_x_start + center_x_adv, top_y,
+        UI_Buttons_rotate_caption_str, center_x_start + center_x_adv, top_y + w_h,
         C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.ROTATE_CW, UI_Buttons_rotate_cw_str,
       0, offset_top_y_start, w_h, w_h);
+    /*
     buttons_group.add_button(
       UI_Buttons_action_enum.ROTATE_CCW, UI_Buttons_rotate_ccw_str,
       0, offset_top_y_start + FONT_HEIGHT * 2, w_h, w_h);
+    */
     UI_Buttons_groups_array[i].add(buttons_group);
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_mirror_caption_str, center_x_start + center_x_adv * 2, top_y,
+        UI_Buttons_mirror_caption_str, center_x_start + center_x_adv * 2, top_y + w_h,
         C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
+    /*
     buttons_group.add_button(
       UI_Buttons_action_enum.MIRROR_LR, UI_Buttons_mirror_lr_str,
       0, offset_top_y_start, w_h, w_h);
+    */
     buttons_group.add_button(
       UI_Buttons_action_enum.MIRROR_UD, UI_Buttons_mirror_ud_str,
-      0, offset_top_y_start + FONT_HEIGHT * 2, w_h, w_h);
+      //0, offset_top_y_start + FONT_HEIGHT * 2, w_h, w_h);
+      0, offset_top_y_start, w_h, w_h);
     UI_Buttons_groups_array[i].add(buttons_group);
 
     buttons_group =
@@ -237,8 +242,51 @@ void UI_Buttons_rotate_ccw(int i)
 
 void UI_Buttons_rotate_cw(int i)
 {
+  if (ROTATE_FACTOR[i] == 135 && MIRROR_ENABLE[i] == true)
+  {
+    ROTATE_FACTOR[i] = 225;
+    MIRROR_ENABLE[i] = false;
+  }
+  else if (ROTATE_FACTOR[i] == 225 && MIRROR_ENABLE[i] == false)
+  {
+    ROTATE_FACTOR[i] = 135;
+    MIRROR_ENABLE[i] = true;
+  }
+  else if (ROTATE_FACTOR[i] == 45 && MIRROR_ENABLE[i] == true)
+  {
+    ROTATE_FACTOR[i] = 135;
+    MIRROR_ENABLE[i] = false;
+  }
+  else if(ROTATE_FACTOR[i] == 135 && MIRROR_ENABLE[i] == false)
+  {
+    ROTATE_FACTOR[i] = 45;
+    MIRROR_ENABLE[i] = true;
+  }
+  else if (ROTATE_FACTOR[i] == 315 && MIRROR_ENABLE[i] == false)
+  {
+    ROTATE_FACTOR[i] = 225;
+    MIRROR_ENABLE[i] = true;
+  }
+  else if (ROTATE_FACTOR[i] == 225 && MIRROR_ENABLE[i] == true)
+  {
+    ROTATE_FACTOR[i] = 315;
+    MIRROR_ENABLE[i] = false;
+  }
+  else if (ROTATE_FACTOR[i] == 45 && MIRROR_ENABLE[i] == false)
+  {
+    ROTATE_FACTOR[i] = 315;
+    MIRROR_ENABLE[i] = true;
+  }
+  else if(ROTATE_FACTOR[i] == 315 && MIRROR_ENABLE[i] == true)
+  {
+    ROTATE_FACTOR[i] = 45;
+    MIRROR_ENABLE[i] = false;
+  }
+
+/*
   ROTATE_FACTOR[i] += 90;
   if (ROTATE_FACTOR[i] > 360) ROTATE_FACTOR[i] -= 360;
+*/
   Screen_update_offsets();
   Screen_update_variable();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[i]=" + ROTATE_FACTOR[i]);
