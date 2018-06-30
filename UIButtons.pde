@@ -34,8 +34,8 @@ static String UI_Buttons_mirror_ud_str = "⇅";            // button string mirr
 //static String UI_Buttons_mirror_lr_str = "⇄";            // button string mirror enable
 static String UI_Buttons_mirror_caption_str = "Mirror";  // button string mirror enable
 
-static String UI_Buttons_reset_en_str = "0";             // button string reset enable
-static String UI_Buttons_reset_en_caption_str = "Reset"; // button string reset enable
+//static String UI_Buttons_reset_en_str = "0";             // button string reset enable
+//static String UI_Buttons_reset_en_caption_str = "Reset"; // button string reset enable
 
 static boolean UI_Buttons_enabled;
 static Buttons_Group UI_Buttons_group_zoom;
@@ -54,7 +54,7 @@ void UI_Buttons_setup()
   UI_Buttons_groups_array = new LinkedList[PS_INSTANCE_MAX];
 
   //int top_y = SCREEN_height - FONT_HEIGHT - FONT_HEIGHT * 2 * 2 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
-  int top_y = SCREEN_height / 2 - FONT_HEIGHT - FONT_HEIGHT * 2 * 3 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
+  int top_y = SCREEN_height / 2 - FONT_HEIGHT - FONT_HEIGHT * 2 * 2 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
   int offset_top_y_start = FONT_HEIGHT + TEXT_MARGIN + TEXT_MARGIN;
   int w_h = FONT_HEIGHT * 2;
   int center_x_adv = 0;
@@ -126,6 +126,7 @@ void UI_Buttons_setup()
       0, offset_top_y_start, w_h, w_h);
     UI_Buttons_groups_array[i].add(buttons_group);
 
+    /*
     buttons_group =
       new Buttons_Group(
         UI_Buttons_reset_en_caption_str, center_x_start + center_x_adv * 3, top_y + top_y_adv * 3 + w_h,
@@ -134,6 +135,7 @@ void UI_Buttons_setup()
       UI_Buttons_action_enum.RESET, UI_Buttons_reset_en_str,
       0, offset_top_y_start, w_h, w_h);
     UI_Buttons_groups_array[i].add(buttons_group);
+    */
   }
 }
 
@@ -344,6 +346,7 @@ void UI_Buttons_reset_en(int i)
   MIRROR_ENABLE[i] = false;
   ZOOM_FACTOR[i] = 100;
 
+  Screen_update_offsets();
   Screen_update_variable();
 }
 
