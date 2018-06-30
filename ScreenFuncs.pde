@@ -100,13 +100,13 @@ void Screen_setup()
   Screen_update_offsets();
 
   // Set text margin to follow min(Width, Height) of screen.
-  TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 200) : (SCREEN_height / 200);
+  TEXT_MARGIN = (SCREEN_width < SCREEN_height) ? ((SCREEN_width / 200) + 1) / 2 * 2 : ((SCREEN_height / 200) + 1) / 2 * 2;
   if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():TEXT_MARGIN=" + TEXT_MARGIN);
   //println("Screen_setup():TEXT_MARGIN=" + TEXT_MARGIN);
 
   // Set font height of text to follow min(Width, Height) of screen.
-  FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? (SCREEN_width / 30) : (SCREEN_height / 30);
-  if (FONT_HEIGHT > 15) FONT_HEIGHT = 15;
+  FONT_HEIGHT = (SCREEN_width < SCREEN_height) ? ((SCREEN_width / 30) + 1) / 2 * 2 : ((SCREEN_height / 30) + 1) / 2 * 2;
+  if (FONT_HEIGHT > 16) FONT_HEIGHT = 16;
   if (FONT_HEIGHT < 10) FONT_HEIGHT = 10;
   if (PRINT_SCREENFUNC_ALL_DBG) println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
   //println("Screen_setup():FONT_HEIGHT=" + FONT_HEIGHT);
@@ -121,12 +121,12 @@ void Screen_update_offsets()
     {
       if (MIRROR_ENABLE[i])
       {
-        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 546;
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 544;
         DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 250;
       }
       else
       {
-        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 546;
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 544;
         DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 250;
       }
     }
@@ -135,24 +135,24 @@ void Screen_update_offsets()
       if (MIRROR_ENABLE[i])
       {
         DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 44;
-        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 40;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 38;
       }
       else
       {
         DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 44;
-        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 40;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 38;
       }
     }
     else if (ROTATE_FACTOR[i] == 135)
     {
       if (MIRROR_ENABLE[i])
       {
-        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 546;
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 544;
         DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] + 250;
       }
       else
       {
-        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 546;
+        DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 544;
         DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 250;
       }
     }
@@ -161,12 +161,12 @@ void Screen_update_offsets()
       if (MIRROR_ENABLE[i])
       {
         DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] + 44;
-        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 40;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 38;
       }
       else
       {
         DRAW_OFFSET_X[i] = SCREEN_OFFSET_X[i] - 44;
-        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 40;
+        DRAW_OFFSET_Y[i] = SCREEN_OFFSET_Y[i] - 38;
       }
     }
   }

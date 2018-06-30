@@ -115,6 +115,8 @@ void Grid_update_rotate_225(int instance)
     }
   }
 
+  textSize(FONT_HEIGHT);
+
   y = const_str_base_ix_y;
   //if (y < const_screen_y_start) y = const_screen_y_start;
   //if (y > const_screen_y_end) y = const_screen_y_end;

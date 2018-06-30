@@ -27,22 +27,10 @@ void settings() {
 //  and it shouldn't be called again after its initial execution.
 void setup() {
   if (PRINT_DBG) println("setup():Enter");
-  // Title set to default.
-  Title = TITLE;
 
-  Const_setup();
-  Config_setup();
-  Screen_setup();
-  Update_Data_Files_setup();
-  BG_Image_setup();
-  Grid_setup();
-  PS_Data_setup();
-  PS_Image_setup();
-  ROI_Data_setup();
-  Regions_setup();
-  Relay_Module_setup();
-  UI_Buttons_setup();
-  UI_Interfaces_setup();
+  // Must very first initialize font.
+  SCREEN_PFront = createFont("SansSerif", 32);
+  textFont(SCREEN_PFront);
 
   frameRate(FRAME_RATE);
 
@@ -55,8 +43,6 @@ void setup() {
   surface.setLocation(SCREEN_x, SCREEN_y);
 */
 
-  SCREEN_PFront = createFont("SansSerif", 32);
-  textFont(SCREEN_PFront);
   //Config_settings();
 /*
   // fullScreen() opens a sketch using the full size of the computer's display.
@@ -76,6 +62,23 @@ void setup() {
   // The default rate is 60 frames per second.
   //frameRate(1);
   //frameRate(30);
+
+  // Title set to default.
+  Title = TITLE;
+
+  Const_setup();
+  Config_setup();
+  Screen_setup();
+  Update_Data_Files_setup();
+  BG_Image_setup();
+  Grid_setup();
+  PS_Data_setup();
+  PS_Image_setup();
+  ROI_Data_setup();
+  Regions_setup();
+  Relay_Module_setup();
+  UI_Buttons_setup();
+  UI_Interfaces_setup();
 
   // Set window title
   surface.setTitle(Title);

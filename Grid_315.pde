@@ -8,7 +8,7 @@ void Grid_update_rotate_315(int instance)
   final int const_font_height_d_2 = FONT_HEIGHT / 2;
   //final float const_zoom_factor_d_100 = ZOOM_FACTOR[instance] / 100.0;
   final int const_grid_offset_x = const_screen_x_start + const_font_height_d_2 + (DRAW_OFFSET_X[instance] % 100);
-  final int const_grid_offset_y = ((SCREEN_height % 100) / 2) + (DRAW_OFFSET_Y[instance] % 100) + ((((SCREEN_height / 100) % 2) == 0)?0:50);
+  final int const_grid_offset_y = ((SCREEN_height % 100) / 2) + ((((SCREEN_height / 100) % 2) == 0)?0:50) + (DRAW_OFFSET_Y[instance] % 100);
   final int const_str_offset_ix = DRAW_OFFSET_X[instance] / 100 * 100;
   final int const_str_offset_iy = SCREEN_height / 100 / 2 * 100 + DRAW_OFFSET_Y[instance] / 100 * 100;
   //final int const_str_base_ix_y = (SCREEN_height / 2) + const_font_height_d_2 + DRAW_OFFSET_Y[instance];
@@ -79,11 +79,12 @@ void Grid_update_rotate_315(int instance)
     else
       //distance = const_zoom_factor_d_100 * float(const_str_offset_iy - iy) / 100.0;
       distance = (ZOOM_FACTOR[instance] * (const_str_offset_iy - iy)) / 100.0 / 100.0;
+    //println("["+instance+"]:"+"iy="+iy+":distance="+distance);
     y = iy + const_grid_offset_y;
     if (distance >= 0.0 && y >= 0 && y <= SCREEN_height) {
       Grid_Lines_array[instance].add(new Grid_Line_Data(x_zero, y, SCREEN_width, y));
       //println("iy="+iy+":offset_y="+const_grid_offset_y+",y="+(iy + const_grid_offset_y));
-      //println("iy="+iy+":y="+y);
+      //println("["+instance+"]:"+"iy="+iy+":y="+y);
       Grid_scr_y_min[instance] = min(Grid_scr_y_min[instance], y);
       Grid_scr_y_max[instance] = max(Grid_scr_y_max[instance], y);
     }
@@ -117,6 +118,8 @@ void Grid_update_rotate_315(int instance)
     }
   }
 
+  textSize(FONT_HEIGHT);
+
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(iy - const_str_offset_iy) / 100.0;
@@ -135,7 +138,7 @@ void Grid_update_rotate_315(int instance)
       if(distance == 0.0)
         Grid_zero_y[instance] = y;
       Grid_Texts_array[instance].add(new Grid_Text_Data(string, x, y + const_font_height_d_2));
-      //println("iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
+      //println("Grid_update_rotate_315("+instance+"):"+"iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
     }
   }
 
@@ -151,7 +154,7 @@ void Grid_update_rotate_315(int instance)
       if(distance == 0.0)
         Grid_zero_x[instance] = x;
       Grid_Texts_array[instance].add(new Grid_Text_Data(string, x - int(textWidth(string) / 2.0), y));
-      //println("ix=" + ix + ":x=" + x + ",y=" + y + ",const_zoom_factor_d_100=" + const_zoom_factor_d_100 + ",const_str_offset_ix=" + const_str_offset_ix + "," + string);
+      //println("Grid_update_rotate_315("+instance+"):"+"ix=" + ix + ":x=" + x + ",y=" + y + "," + string);
     }
   }
 }

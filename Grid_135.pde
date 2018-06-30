@@ -117,6 +117,8 @@ void Grid_update_rotate_135(int instance)
     }
   }
 
+  textSize(FONT_HEIGHT);
+
   for (iy = -100; iy <= SCREEN_height + 100; iy += 100) {
     if (MIRROR_ENABLE[instance])
       //distance = const_zoom_factor_d_100 * float(const_str_offset_iy - iy) / 100.0;
