@@ -53,10 +53,12 @@ void UI_Buttons_setup()
 
   UI_Buttons_groups_array = new LinkedList[PS_INSTANCE_MAX];
 
-  int top_y = SCREEN_height - FONT_HEIGHT - FONT_HEIGHT * 2 * 2 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
+  //int top_y = SCREEN_height - FONT_HEIGHT - FONT_HEIGHT * 2 * 2 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
+  int top_y = SCREEN_height / 2 - FONT_HEIGHT - FONT_HEIGHT * 2 * 3 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
   int offset_top_y_start = FONT_HEIGHT + TEXT_MARGIN + TEXT_MARGIN;
   int w_h = FONT_HEIGHT * 2;
-  int center_x_adv;
+  int center_x_adv = 0;
+  int top_y_adv = FONT_HEIGHT * 4;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -68,12 +70,16 @@ void UI_Buttons_setup()
     switch (i)
     {
       case 0:
-        center_x_start = TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT;
-        center_x_adv = FONT_HEIGHT * 3;
+        //center_x_start = TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT;
+        center_x_start = TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT / 2;
+        //center_x_adv = FONT_HEIGHT * 3;
+        //top_y_adv = 0;
         break;
       case 1:
-        center_x_start = SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT);
-        center_x_adv = -(FONT_HEIGHT * 3);
+        //center_x_start = SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT);
+        center_x_start = SCREEN_width - (TEXT_MARGIN + FONT_HEIGHT + FONT_HEIGHT / 2);
+        //center_x_adv = -(FONT_HEIGHT * 3);
+        //top_y_adv = 0;
         break;
       default:
         continue;
@@ -93,7 +99,7 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_rotate_caption_str, center_x_start + center_x_adv, top_y + w_h,
+        UI_Buttons_rotate_caption_str, center_x_start + center_x_adv, top_y + top_y_adv + w_h,
         C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.ROTATE_CW, UI_Buttons_rotate_cw_str,
@@ -107,7 +113,7 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_mirror_caption_str, center_x_start + center_x_adv * 2, top_y + w_h,
+        UI_Buttons_mirror_caption_str, center_x_start + center_x_adv * 2, top_y + top_y_adv * 2 + w_h,
         C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
     /*
     buttons_group.add_button(
@@ -122,7 +128,7 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_reset_en_caption_str, center_x_start + center_x_adv * 3, top_y + w_h,
+        UI_Buttons_reset_en_caption_str, center_x_start + center_x_adv * 3, top_y + top_y_adv * 3 + w_h,
         C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.RESET, UI_Buttons_reset_en_str,
