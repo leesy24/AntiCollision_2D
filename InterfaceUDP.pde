@@ -47,7 +47,6 @@ final static boolean PRINT_INTERFACES_UDP_GET_ERR = false;
 
 static boolean UDP_get_take_time_enable = true;
 
-final int INTERFACES_UDP_INSTANCE_MAX = 2;
 static Interfaces_UDP Interfaces_UDP_handle = null;
 
 void Interfaces_UDP_setup(int local_port)
@@ -111,30 +110,32 @@ class Interfaces_UDP {
 
   int local_port;
 
-  int[] PS_CMD_state = new int[INTERFACES_UDP_INSTANCE_MAX];
+  int[] PS_CMD_state = new int[PS_INSTANCE_MAX];
 
-  boolean[] PS_CMD_SCAN_DONE = new boolean[INTERFACES_UDP_INSTANCE_MAX];
+  boolean[] PS_CMD_SCAN_DONE = new boolean[PS_INSTANCE_MAX];
 
-  byte[][] recv_in_buf = new byte[INTERFACES_UDP_INSTANCE_MAX][];
-  int[] recv_live_total = new int[INTERFACES_UDP_INSTANCE_MAX]; // Init. live total received data bytes.
-  boolean[] recv_length_received = new boolean[INTERFACES_UDP_INSTANCE_MAX]; // Init. state machine for getting length data of UDP data format.
-  int[] recv_length = new int[INTERFACES_UDP_INSTANCE_MAX]; // 12 = 4bytes Function code + 4bytes length + 4bytes CRC on UDP data format.
-  int[] recv_in_length = new int[INTERFACES_UDP_INSTANCE_MAX];
-  int[] comm_timeout = new int[INTERFACES_UDP_INSTANCE_MAX];
-  int[] comm_start_time = new int[INTERFACES_UDP_INSTANCE_MAX];
-  int[] comm_take_time = new int[INTERFACES_UDP_INSTANCE_MAX];
+  byte[][] recv_in_buf = new byte[PS_INSTANCE_MAX][];
+  int[] recv_live_total = new int[PS_INSTANCE_MAX]; // Init. live total received data bytes.
+  boolean[] recv_length_received = new boolean[PS_INSTANCE_MAX]; // Init. state machine for getting length data of UDP data format.
+  int[] recv_length = new int[PS_INSTANCE_MAX]; // 12 = 4bytes Function code + 4bytes length + 4bytes CRC on UDP data format.
+  int[] recv_in_length = new int[PS_INSTANCE_MAX];
+  int[] comm_timeout = new int[PS_INSTANCE_MAX];
+  int[] comm_timeout_retry = new int[PS_INSTANCE_MAX];
+  int[] comm_retry_count = new int[PS_INSTANCE_MAX];
+  int[] comm_start_time = new int[PS_INSTANCE_MAX];
+  int[] comm_take_time = new int[PS_INSTANCE_MAX];
 
-  String[] str_err_last = new String[INTERFACES_UDP_INSTANCE_MAX];
+  String[] str_err_last = new String[PS_INSTANCE_MAX];
 
-  String[] ip = new String[INTERFACES_UDP_INSTANCE_MAX];
-  int[] port = new int[INTERFACES_UDP_INSTANCE_MAX];
+  String[] ip = new String[PS_INSTANCE_MAX];
+  int[] port = new int[PS_INSTANCE_MAX];
 
-  boolean[] instance_opened = new boolean[INTERFACES_UDP_INSTANCE_MAX];
+  boolean[] instance_opened = new boolean[PS_INSTANCE_MAX];
 
   Interfaces_UDP()
   {
     // Init. handle_opened arrary.
-    for (int i = 0; i < INTERFACES_UDP_INSTANCE_MAX; i++)
+    for (int i = 0; i < PS_INSTANCE_MAX; i++)
     {
       PS_CMD_state[i] = PS_CMD_STATE_NONE;
 
@@ -167,7 +168,7 @@ class Interfaces_UDP {
       if(PRINT_INTERFACES_UDP_OPEN_ERR) println("Interfaces_UDP:open("+instance+"):Comm_UDP_handle=null");
       return -1;
     }
-    if(instance >= INTERFACES_UDP_INSTANCE_MAX)
+    if(instance >= PS_INSTANCE_MAX)
     {
       println("Interfaces_UDP:open("+instance+"):instance exceed MAX.");
       return -1;
@@ -197,7 +198,7 @@ class Interfaces_UDP {
       if(PRINT_INTERFACES_UDP_CLOSE_ERR) println("Interfaces_UDP:close("+instance+"):UDP_handle=null");
       return -1;
     }
-    if(instance >= INTERFACES_UDP_INSTANCE_MAX)
+    if(instance >= PS_INSTANCE_MAX)
     {
       println("Interfaces_UDP:close("+instance+"):instance exceed MAX.");
       return -1;
@@ -295,7 +296,15 @@ class Interfaces_UDP {
   public void set_comm_timeout(int instance, int msec)
   {
     comm_timeout[instance] = msec;
+    comm_timeout_retry[instance] = 0;
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SET_DBG) println("Interfaces_UDP:set_comm_timeout("+instance+"):comm_timeout = " + comm_timeout[instance] + " msec(s)");
+  }
+
+  public void set_comm_timeout(int instance, int msec, int retry)
+  {
+    comm_timeout[instance] = msec;
+    comm_timeout_retry[instance] = retry;
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SET_DBG) println("Interfaces_UDP:set_comm_timeout("+instance+"):"+"comm_timeout = " + comm_timeout[instance] + "msec" + ",retry = " + comm_timeout_retry[instance]);
   }
 
   public void send(int instance, byte[] buf)
@@ -307,11 +316,6 @@ class Interfaces_UDP {
       return;
     }
 
-    // Init & Save CMD start end time
-    comm_take_time[instance] = -1;
-    comm_start_time[instance] = millis();
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
-    println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
     Comm_UDP_handle.send(instance, buf);
   }
 
@@ -422,6 +426,12 @@ class Interfaces_UDP {
       prepare_recv(instance, 16);
       // Prepare UDP CMD state
       PS_CMD_state[instance] = PS_CMD_STATE_SENT;
+      // Init & Save CMD start end time
+      comm_take_time[instance] = -1;
+      comm_start_time[instance] = millis();
+      comm_retry_count[instance] = comm_timeout_retry[instance];
+
+      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
       // Write buffer
       send(instance, outBuffer);
       return PS_CMD_state[instance];
@@ -482,12 +492,28 @@ class Interfaces_UDP {
       // Flush buffer
       // Prepare UDP CMD state
       PS_CMD_state[instance] = PS_CMD_STATE_SENT;
+      // Init & Save CMD start end time
+      comm_take_time[instance] = -1;
+      comm_start_time[instance] = millis();
+      comm_retry_count[instance] = comm_timeout_retry[instance];
+
+      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
       // Write buffer
       send(instance, outBuffer);
       return PS_CMD_state[instance];
     }
     else if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
-      if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance]) {
+      if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance] * (comm_timeout_retry[instance] + 1 - comm_retry_count[instance])) {
+        if (comm_retry_count[instance] > 0) {
+          comm_retry_count[instance] --;
+          // Make command buffer
+          outBuffer = PS_CMD_make_cmd("GSCN", scan_number);
+          // Prepare read
+          prepare_recv(instance, PS_CMD_BUFFER_MAX);
+          // Write buffer
+          send(instance, outBuffer);
+          return PS_CMD_state[instance];
+        }
         str_err_last[instance] = "Error: UDP GSCN timeout! " + comm_timeout[instance] + "," + get_millis_diff(comm_start_time[instance]);
         if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;

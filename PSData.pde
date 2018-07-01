@@ -57,7 +57,8 @@ static String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
 
 static String[] FILE_name = new String[PS_INSTANCE_MAX];
 
-final static int UDP_TIME_OUT = 1000; // timeout 1secs for UDP
+final static int UDP_TIMEOUT_VAL = 500; // timeout 500ms for UDP
+final static int UDP_TIMEOUT_RETRY = 3; // retry count when timeout for UDP
 
 static int[] UDP_local_port = new int[PS_INSTANCE_MAX];
 static String[] UDP_remote_ip = new String[PS_INSTANCE_MAX];
@@ -144,7 +145,7 @@ void PS_Data_setup()
     else if(PS_Interface[i] == PS_Interface_UDP) {
       Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
-      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIME_OUT); // timeout 1secs for UDP
+      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIMEOUT_VAL, UDP_TIMEOUT_RETRY);
       PS_Data_handle.remote_ip[i] = UDP_remote_ip[i];
       PS_Data_handle.remote_port[i] = UDP_remote_port[i];
     }
@@ -154,7 +155,7 @@ void PS_Data_setup()
 
       Interfaces_UDP_setup(UDP_local_port[i]);
       Interfaces_UDP_handle.open(i, remote_ip, remote_port);
-      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIME_OUT); // timeout 1secs for UDP
+      Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIMEOUT_VAL, UDP_TIMEOUT_RETRY);
       PS_Data_handle.serial_number[i] = SN_serial_number[i];
       PS_Data_handle.remote_ip[i] = remote_ip;
       PS_Data_handle.remote_port[i] = remote_port;
@@ -414,7 +415,7 @@ class PS_Data {
         //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
-        if ( time_stamp_diff < 0 && time_stamp_diff > UDP_TIME_OUT * 2) {
+        if ( time_stamp_diff < 0 && time_stamp_diff > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
           // time_stamp is big different. PS rebooted!
           time_stamp_reseted[instance] = true;
