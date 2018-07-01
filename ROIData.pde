@@ -108,7 +108,7 @@ static int ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = 2000; // unit is ms.
 static int ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = 30000; // unit is ms.
 
 final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MIN = 1000; // 1 second
-final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MAX = 60*1000; // 1 minute
+final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MAX = 60*1000; // 60 seconds = 1 minute
 
 static ROI_Data ROI_Data_handle = null;
 
@@ -127,6 +127,7 @@ void ROI_Data_setup() {
     ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
   if (ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT < ROI_OBJECT_SAVE_EVENTS_DURATION_MIN)
     ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
+  //println("ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT="+ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT);
 
   if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT > ROI_OBJECT_SAVE_EVENTS_DURATION_MAX)
     ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
@@ -134,6 +135,7 @@ void ROI_Data_setup() {
     ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
   if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT < ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT)
     ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+  //println("ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT="+ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT);
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -145,9 +147,9 @@ void ROI_Data_setup() {
   }
 
   ROI_Data_handle = new ROI_Data();
-  if(ROI_Data_handle == null)
+  if (ROI_Data_handle == null)
   {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETUP_ERR) println("ROI_Data_setup():ROI_Data_handle=null");
+    if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETUP_ERR) println("ROI_Data_setup():ROI_Data_handle=null");
     return;
   }
 }
@@ -225,8 +227,9 @@ class ROI_Data {
   float[] angle_step = new float[PS_INSTANCE_MAX];
   boolean[] has_objects = new boolean[PS_INSTANCE_MAX];
   boolean[] save_events_started = new boolean[PS_INSTANCE_MAX];
-  int[] save_events_start_time = new int[PS_INSTANCE_MAX];
-  int[] save_events_duration = new int[PS_INSTANCE_MAX];
+  int[] save_events_start_time_millis = new int[PS_INSTANCE_MAX];
+  long[] save_events_start_time_stamp = new long[PS_INSTANCE_MAX];
+  int[] save_events_duration_millis = new int[PS_INSTANCE_MAX];
   String[] save_events_dir_full_name = new String[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
@@ -468,22 +471,23 @@ class ROI_Data {
     }
 
     if (!save_events_started[instance]) {
-      save_events_start_time[instance] = millis();
-      save_events_duration[instance] = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+      save_events_start_time_millis[instance] = millis();
+      save_events_start_time_stamp[instance] = new Date().getTime();
+      save_events_duration_millis[instance] = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
       save_events_started[instance] = true;
       save_events_dir_full_name[instance] = sketchPath("events\\")+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+"_"+instance+"\\";
     }
     
-    int save_events_start_time_millis_diff = get_millis_diff(save_events_start_time[instance]);
+    int save_events_start_time_millis_diff = get_millis_diff(save_events_start_time_millis[instance]);
     if (!has_objects[instance]) {
-      if (save_events_start_time_millis_diff > save_events_duration[instance]) {
+      if (save_events_start_time_millis_diff > save_events_duration_millis[instance]) {
         save_events_started[instance] = false;
         return;
       }
     }
     else {
       // Extend save events duration.
-      save_events_duration[instance] = save_events_start_time_millis_diff + ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+      save_events_duration_millis[instance] = save_events_start_time_millis_diff + ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
     }
 
     // If ROI Data has objects than keep save events until limit time.
@@ -515,6 +519,15 @@ class ROI_Data {
       // Check file is for this instance.
       //println("always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
       if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
+      long always_file_time_stamp;
+      try {
+        always_file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
+      }
+      catch (NumberFormatException e) {
+        always_file_time_stamp = save_events_start_time_stamp[instance] - ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT; // to skip file.
+      }
+      // Check file time stamp is older than expected time stamp to skip.
+      if (always_file_time_stamp <= save_events_start_time_stamp[instance] - ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT) continue;
       // Check file already exist.
       if (new File(save_events_dir_full_name[instance] + always_file_name).isFile()) continue;
       // Copy data files only not exist.
