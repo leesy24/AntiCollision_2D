@@ -41,6 +41,8 @@ final static int PS_DATA_POINT_WEIGHT = 3;
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
 
+final static long PS_DATA_FREE_SPACE_LIMIT = 1L*1024L*1024L*1024L;
+
 final static int PS_Interface_FILE = 0;
 final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
@@ -198,13 +200,11 @@ class PS_Data {
   //long[] time_stamp_offset = new long[PS_INSTANCE_MAX];
 
   // Create the PS_Data
-  PS_Data()
-  {
+  PS_Data() {
     if (PRINT_PS_DATA_ALL_DBG) println("PS_Data:constructor():");
     // Init. class variables.
     //println("PS_Data_buf[0]="+PS_Data_buf[0]+",PS_Data_buf[1]="+PS_Data_buf[1]);
-    for (int i = 0; i < PS_INSTANCE_MAX; i++)
-    {
+    for (int i = 0; i < PS_INSTANCE_MAX; i++) {
       scan_number[i] = 0;
       time_stamp[i] = -1;
       scan_angle_start[i] = 0;
@@ -231,8 +231,7 @@ class PS_Data {
   }
 
   // Load PS_Data_buf
-  boolean load(int instance)
-  {
+  boolean load(int instance) {
     String interfaces_err_str;
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):");
@@ -293,17 +292,30 @@ class PS_Data {
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
 
-    if (PS_Data_save_enabled) {
-      // Save bytes to file.
-      saveBytes("log\\"+instance+"_"+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+nf(millis()%1000,3)+".dat", PS_Data_buf[instance]);
-    }
-
     return true;
   }
 
+  void save(int instance) {
+    if (PS_Data_save_enabled) {
+      // Save bytes to file.
+      saveBytes("always\\"+nf(year(),4)+nf(month(),2)+nf(day(),2)+"\\"+nf(year(),4)+nf(month(),2)+nf(day(),2)+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+nf(millis()%1000,3)+"_"+instance+".dat", PS_Data_buf[instance]);
+
+      File always_dir_handle;
+      always_dir_handle = new File(sketchPath("always\\"));
+      long free_space = always_dir_handle.getFreeSpace();
+      //println("Free disk space at "+sketchPath()+" is "+free_space);
+
+      //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
+
+      // get old files.
+      String[] directories = always_dir_handle.list();
+      println(Arrays.toString(directories));
+
+    }
+  }
+
   // Parsing Data buffer
-  boolean parse(int instance)
-  {
+  boolean parse(int instance) {
     String func;
     int i = 0; // index for navigating Data bufffer.
     int crc_c; // calculated CRC

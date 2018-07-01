@@ -128,6 +128,7 @@ void draw() {
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if (PS_Data_handle.load(i) == true) {
+      PS_Data_handle.save(i);
       if (PS_Data_handle.parse(i) == false) {
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
           ROI_Data_setup();
