@@ -9,6 +9,7 @@ Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
 Relay_Module_UART_parity,N,UART parity of Relay module.
 Relay_Module_UART_data_bits,8,UART baud rate of Relay module.
 Relay_Module_UART_stop_bits,1.0,UART stop bits of Relay module.
+PS_DATA_SAVE_KEEP_DURATION,2000,Duration of PS data keep time in milli-seconds to save on disk.
 C_RELAY_MODULE_INDICATOR_OFF_FILL,FF000000,Color of fill of relay indicator box. Color data format is AARRGGBB
 C_RELAY_MODULE_INDICATOR_OFF_STROKE,FF404040,Color of stroke of relay indicator box and text. Color data format is AARRGGBB
 SCREEN_BORDER_WIDTH,4,Border width of window of Windows. default = 8

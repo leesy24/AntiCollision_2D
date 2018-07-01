@@ -53,6 +53,8 @@ void Const_setup()
       Relay_Module_UART_data_bits = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_stop_bits"))
       Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
+    else if (name.equals("PS_DATA_SAVE_KEEP_DURATION"))
+      PS_DATA_SAVE_KEEP_DURATION = variable.getInt("Value");
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_FILL"))
       C_RELAY_MODULE_INDICATOR_OFF_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_STROKE"))
@@ -196,6 +198,11 @@ void Const_create()
   variable.setString("Name", "Relay_Module_UART_stop_bits");
   variable.setFloat("Value", Relay_Module_UART_stop_bits);
   variable.setString("Comment", "UART stop bits of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "PS_DATA_SAVE_KEEP_DURATION");
+  variable.setInt("Value", PS_DATA_SAVE_KEEP_DURATION);
+  variable.setString("Comment", "Duration of PS data keep time in milli-seconds to save on disk.");
 
   variable = table.addRow();
   variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_FILL");
