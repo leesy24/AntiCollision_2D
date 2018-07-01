@@ -310,6 +310,8 @@ class Interfaces_UDP {
     // Init & Save CMD start end time
     comm_take_time[instance] = -1;
     comm_start_time[instance] = millis();
+    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
+    println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
     Comm_UDP_handle.send(instance, buf);
   }
 
@@ -427,7 +429,7 @@ class Interfaces_UDP {
     else if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
       if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance]) {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
-        str_err_last[instance] = "Error: UDP SCAN timeout! " + recv_in_length[instance] + "," + recv_live_total[instance];
+        str_err_last[instance] = "Error: UDP SCAN timeout! " + get_millis_diff(comm_start_time[instance]) + "," + comm_timeout[instance];
         if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
         return -1;
       }
@@ -486,7 +488,7 @@ class Interfaces_UDP {
     }
     else if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
       if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance]) {
-        str_err_last[instance] = "Error: UDP GSCN timeout! " + recv_in_length[instance] + "," + recv_live_total[instance];
+        str_err_last[instance] = "Error: UDP GSCN timeout! " + comm_timeout[instance] + "," + get_millis_diff(comm_start_time[instance]);
         if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         return -1;
