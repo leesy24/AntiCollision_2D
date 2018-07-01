@@ -104,6 +104,12 @@ static int ROI_OBJECT_TIME_LIMIT = 500; // unit is milli-second(ms)
 
 static int ROI_OBJECT_DRAW_INFO_TIMEOUT = 10000; // 10 seconds
 
+static int ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = 2000; // unit is ms.
+static int ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = 30000; // unit is ms.
+
+final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MIN = 1000; // 1 second
+final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MAX = 60*1000; // 1 minute
+
 static ROI_Data ROI_Data_handle = null;
 
 static boolean[] ROI_Data_draw_info_enabled = new boolean[PS_INSTANCE_MAX];
@@ -116,6 +122,18 @@ static boolean[] ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 
 void ROI_Data_setup() {
   if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():Enter");
+
+  if (ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT > ROI_OBJECT_SAVE_EVENTS_DURATION_MAX)
+    ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
+  if (ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT < ROI_OBJECT_SAVE_EVENTS_DURATION_MIN)
+    ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
+
+  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT > ROI_OBJECT_SAVE_EVENTS_DURATION_MAX)
+    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
+  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT < ROI_OBJECT_SAVE_EVENTS_DURATION_MIN)
+    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
+  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT < ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT)
+    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -205,6 +223,11 @@ class ROI_Data {
   int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
   float[] angle_step = new float[PS_INSTANCE_MAX];
+  boolean[] has_objects = new boolean[PS_INSTANCE_MAX];
+  boolean[] save_events_started = new boolean[PS_INSTANCE_MAX];
+  int[] save_events_start_time = new int[PS_INSTANCE_MAX];
+  int[] save_events_duration = new int[PS_INSTANCE_MAX];
+  String[] save_events_dir_full_name = new String[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
   ROI_Data() {
@@ -213,6 +236,8 @@ class ROI_Data {
     {
       points_array[i] = new LinkedList<ROI_Point_Data>();
       objects_array[i] = new LinkedList<ROI_Object_Data>();
+      has_objects[i] = false;
+      save_events_started[i] = false;
     }
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():Exit");
   }
@@ -244,6 +269,7 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Enter");
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):"+"objects length="+objects_array[instance].size());
     objects_array[instance].clear();
+    has_objects[instance] = false;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
   }
 
@@ -367,6 +393,7 @@ class ROI_Data {
       }
     }
 
+    has_objects[instance] = false;
     Regions_handle.reset_regions_has_object(instance);
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
       for (ROI_Object_Data object:objects_array[instance]) {
@@ -389,6 +416,7 @@ class ROI_Data {
           continue;
         }
 
+        has_objects[instance] = true;
         for (int region_index:object.region_indexes) {
           Regions_handle.set_region_has_object(instance, region_index);
           //println("ROI_Data:draw_objects("+instance+"):"+"set_region_has_object("+region_index+");");
@@ -428,6 +456,76 @@ class ROI_Data {
       }
     }
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Exit");
+  }
+
+  void save_events(int instance) {
+    if (!PS_Data_save_enabled) {
+      return;
+    }
+
+    if (!has_objects[instance] && !save_events_started[instance]) {
+      return;
+    }
+
+    if (!save_events_started[instance]) {
+      save_events_start_time[instance] = millis();
+      save_events_duration[instance] = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+      save_events_started[instance] = true;
+      save_events_dir_full_name[instance] = sketchPath("events\\")+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+"_"+instance+"\\";
+    }
+    
+    int save_events_start_time_millis_diff = get_millis_diff(save_events_start_time[instance]);
+    if (!has_objects[instance]) {
+      if (save_events_start_time_millis_diff > save_events_duration[instance]) {
+        save_events_started[instance] = false;
+        return;
+      }
+    }
+    else {
+      // Extend save events duration.
+      save_events_duration[instance] = save_events_start_time_millis_diff + ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+    }
+
+    // If ROI Data has objects than keep save events until limit time.
+    if (save_events_start_time_millis_diff > ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT) {
+      return;
+    }
+
+    File save_events_dir_handle;
+    //File target_file_handle;
+    save_events_dir_handle = new File(save_events_dir_full_name[instance]);
+    if (!save_events_dir_handle.isDirectory()) {
+      if (!save_events_dir_handle.mkdirs()) {
+        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():mkdirs() error! "+save_events_dir_full_name[instance]);
+        return;
+      }
+    }
+
+    String always_dir_full_name = sketchPath("always\\");
+    File always_dir_handle;
+    always_dir_handle = new File(always_dir_full_name);
+    // get files list.
+    String[] always_files_list = always_dir_handle.list();
+    if (always_files_list == null) {
+      if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():always_files_list = null! "+always_dir_full_name);
+      return;
+    }
+
+    for (String always_file_name:always_files_list) {
+      // Check file is for this instance.
+      //println("always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
+      if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
+      // Check file already exist.
+      if (new File(save_events_dir_full_name[instance] + always_file_name).isFile()) continue;
+      // Copy data files only not exist.
+      if (!copy_file(
+            always_dir_full_name + always_file_name,
+            save_events_dir_full_name[instance] + always_file_name,
+            new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES})) {
+        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():copy_file() error! "+always_dir_full_name+always_file_name+"->"+save_events_dir_full_name[instance]+always_file_name);
+        return;
+      }
+    }
   }
 
   void draw_object_info(int instance) {

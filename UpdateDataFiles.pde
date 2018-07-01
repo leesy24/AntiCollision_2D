@@ -314,7 +314,8 @@ boolean Update_Data_Files_perform_update()
       UPDATE_DATA_FILES_ZIP_FILE_EXT);
   if (!copy_file(
     Update_Data_Files_zip_file_full_name,
-    target_file_full_name))
+    target_file_full_name,
+    new CopyOption[] {StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES}))
   {
     Update_Data_Files_error = Update_Data_Files_error+"\n"+"copy_file:\n"+copy_file_error;
     //Update_Data_Files_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;

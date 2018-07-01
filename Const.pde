@@ -53,8 +53,12 @@ void Const_setup()
       Relay_Module_UART_data_bits = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_stop_bits"))
       Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
-    else if (name.equals("PS_DATA_SAVE_KEEP_DURATION"))
-      PS_DATA_SAVE_KEEP_DURATION = variable.getInt("Value");
+    else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
+      PS_DATA_SAVE_ALWAYS_DURATION = variable.getInt("Value");
+    else if (name.equals("ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT"))
+      ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = variable.getInt("Value");
+    else if (name.equals("ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT"))
+      ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = variable.getInt("Value");
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_FILL"))
       C_RELAY_MODULE_INDICATOR_OFF_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_STROKE"))
@@ -200,9 +204,19 @@ void Const_create()
   variable.setString("Comment", "UART stop bits of Relay module.");
 
   variable = table.addRow();
-  variable.setString("Name", "PS_DATA_SAVE_KEEP_DURATION");
-  variable.setInt("Value", PS_DATA_SAVE_KEEP_DURATION);
+  variable.setString("Name", "PS_DATA_SAVE_ALWAYS_DURATION");
+  variable.setInt("Value", PS_DATA_SAVE_ALWAYS_DURATION);
   variable.setString("Comment", "Duration of PS data keep time in milli-seconds to save on disk.");
+
+  variable = table.addRow();
+  variable.setString("Name", "ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT");
+  variable.setInt("Value", ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT);
+  variable.setString("Comment", "Default duration of ROI data keep time in milli-seconds to save on disk.");
+
+  variable = table.addRow();
+  variable.setString("Name", "ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT");
+  variable.setInt("Value", ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT);
+  variable.setString("Comment", "Duration limit of ROI data keep time in milli-seconds to save on disk.");
 
   variable = table.addRow();
   variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_FILL");

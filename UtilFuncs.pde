@@ -171,7 +171,7 @@ import java.io.IOException;
 
 String copy_file_error;
 /**/
-boolean copy_file(String source_file, String target_file)
+boolean copy_file(String source_file, String target_file, CopyOption[] options)
 {
   //println("copy_file():"+"from "+source_file);
   //println("copy_file():"+"to   "+target_file);
@@ -180,7 +180,7 @@ boolean copy_file(String source_file, String target_file)
     Files.copy(
       Paths.get(source_file),
       Paths.get(target_file),
-      StandardCopyOption.REPLACE_EXISTING);
+      options);
   }
   catch (IOException e)
   {
@@ -219,7 +219,28 @@ boolean copy_file(String source_file, String target_file)
   return true;
 }
 */
+/*
+boolean copy_file(String source_file, String target_file)
+{
+  //println("copy_file():"+"from "+source_file);
+  //println("copy_file():"+"to   "+target_file);
+  try
+  {
+    Files.copy(
+      Paths.get(source_file),
+      Paths.get(target_file),
+      StandardCopyOption.REPLACE_EXISTING);
+  }
+  catch (IOException e)
+  {
+    copy_file_error = e.toString();
+    //e.printStackTrace();
+    return false;
+  }
 
+  return true;
+}
+*/
 
 String move_file_error;
 boolean move_file(String source_file, String target_file)

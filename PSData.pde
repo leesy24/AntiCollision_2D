@@ -35,10 +35,10 @@ static color C_PS_DATA_RECT_STROKE = #000000; // Black
 static int W_PS_DATA_RECT_STROKE = 1;
 static color C_PS_DATA_RECT_TEXT = #404040; // Black + 0x40
 
-static int PS_DATA_SAVE_KEEP_DURATION = 2000; // unit is ms.
+static int PS_DATA_SAVE_ALWAYS_DURATION = 2000; // unit is ms.
 
-final static int PS_DATA_SAVE_KEEP_DURATION_MIN = 1000; // 1 second
-final static int PS_DATA_SAVE_KEEP_DURATION_MAX = 24*60*60*1000; // 1 day
+final static int PS_DATA_SAVE_ALWAYS_DURATION_MIN = 1000; // 1 second
+final static int PS_DATA_SAVE_ALWAYS_DURATION_MAX = 24*60*60*1000; // 1 day
 
 final static int PS_DATA_POINTS_MAX = 1000;
 final static int PS_DATA_POINT_WEIGHT = 3;
@@ -94,13 +94,15 @@ void PS_Data_setup()
 
   //PS_Data_draw_points_with_line = true;
   PS_Data_draw_points_with_line = false;
-  //PS_Data_save_enabled = true;
-  PS_Data_save_enabled = false;
+
+  PS_Data_save_enabled = true;
+  //PS_Data_save_enabled = false;
+
   //PS_Data_draw_points_all_enabled = true;
   PS_Data_draw_points_all_enabled = false;
 
-  if (PS_DATA_SAVE_KEEP_DURATION > PS_DATA_SAVE_KEEP_DURATION_MAX) PS_DATA_SAVE_KEEP_DURATION = PS_DATA_SAVE_KEEP_DURATION_MAX;
-  if (PS_DATA_SAVE_KEEP_DURATION < PS_DATA_SAVE_KEEP_DURATION_MIN) PS_DATA_SAVE_KEEP_DURATION = PS_DATA_SAVE_KEEP_DURATION_MIN;
+  if (PS_DATA_SAVE_ALWAYS_DURATION > PS_DATA_SAVE_ALWAYS_DURATION_MAX) PS_DATA_SAVE_ALWAYS_DURATION = PS_DATA_SAVE_ALWAYS_DURATION_MAX;
+  if (PS_DATA_SAVE_ALWAYS_DURATION < PS_DATA_SAVE_ALWAYS_DURATION_MIN) PS_DATA_SAVE_ALWAYS_DURATION = PS_DATA_SAVE_ALWAYS_DURATION_MIN;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -304,35 +306,37 @@ class PS_Data {
     return true;
   }
 
-  void save(int instance) {
-    if (PS_Data_save_enabled) {
-      long time_stamp = new Date().getTime();
-      //println("time_stamp="+time_stamp+",millis()="+millis());
-      saveBytes("always\\"+instance+"_"+time_stamp+".dat", PS_Data_buf[instance]);
+  void save_always(int instance) {
+    if (!PS_Data_save_enabled) {
+      return;
+    }
 
-      //long free_space = always_dir_handle.getFreeSpace();
-      //println("Free disk space at "+sketchPath()+" is "+free_space);
-      //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
+    long time_stamp = new Date().getTime();
+    //println("time_stamp="+time_stamp+",millis()="+millis());
+    saveBytes("always\\"+instance+"_"+time_stamp+".dat", PS_Data_buf[instance]);
 
-      File always_file_handle;
-      always_file_handle = new File(sketchPath("always\\"));
+    //long free_space = always_dir_handle.getFreeSpace();
+    //println("Free disk space at "+sketchPath()+" is "+free_space);
+    //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
 
-      // get files list.
-      String[] always_files_list = always_file_handle.list();
-      if (always_files_list != null) {
-        for (String always_file_name:always_files_list) {
-          long file_time_stamp;
-          try {
-            file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
-          }
-          catch (NumberFormatException e) {
-            file_time_stamp = time_stamp - PS_DATA_SAVE_KEEP_DURATION; // to delete file.
-          }
-          if (file_time_stamp > time_stamp - PS_DATA_SAVE_KEEP_DURATION) continue;
-          //println(always_file_name+","+file_time_stamp);
-          always_file_handle = new File(sketchPath("always\\")+always_file_name);
-          always_file_handle.delete();
+    File always_file_handle;
+    always_file_handle = new File(sketchPath("always\\"));
+
+    // get files list.
+    String[] always_files_list = always_file_handle.list();
+    if (always_files_list != null) {
+      for (String always_file_name:always_files_list) {
+        long file_time_stamp;
+        try {
+          file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
         }
+        catch (NumberFormatException e) {
+          file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION; // to delete file.
+        }
+        if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION) continue;
+        //println(always_file_name+","+file_time_stamp);
+        always_file_handle = new File(sketchPath("always\\")+always_file_name);
+        always_file_handle.delete();
       }
     }
   }

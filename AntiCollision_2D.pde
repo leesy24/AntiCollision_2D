@@ -128,7 +128,7 @@ void draw() {
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if (PS_Data_handle.load(i) == true) {
-      PS_Data_handle.save(i);
+      PS_Data_handle.save_always(i);
       if (PS_Data_handle.parse(i) == false) {
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
           ROI_Data_setup();
@@ -138,6 +138,7 @@ void draw() {
     }
     PS_Data_handle.draw_points(i);
     ROI_Data_handle.draw_objects(i);
+    ROI_Data_handle.save_events(i);
     PS_Data_handle.draw_params(i);
     ROI_Data_handle.draw_object_info(i);
   }
@@ -156,10 +157,12 @@ void Notice_Messages_draw()
 {
   LinkedList<String> strings = new LinkedList<String>();
 
+  /*
   if (PS_Data_save_enabled)
   {
     strings.add("Saving PS data ...");
   }
+  */
   if (Bubble_Info_enabled)
   {
     strings.add("Bubble Info enabled.");
