@@ -137,7 +137,11 @@ void Grid_update_rotate_315(int instance)
       y = iy + const_grid_offset_y;
       if(distance == 0.0)
         Grid_zero_y[instance] = y;
-      Grid_Texts_array[instance].add(new Grid_Text_Data(string, x, y + const_font_height_d_2));
+      y = y + const_font_height_d_2;
+      if (x > 0 && x < SCREEN_width
+          &&
+          y > 0 && y < SCREEN_height)
+        Grid_Texts_array[instance].add(new Grid_Text_Data(string, x, y));
       //println("Grid_update_rotate_315("+instance+"):"+"iy=" + iy + ":x=" + x + ",y=" + y + "," + string);
     }
   }
@@ -153,7 +157,11 @@ void Grid_update_rotate_315(int instance)
       x = ix + const_grid_offset_x;
       if(distance == 0.0)
         Grid_zero_x[instance] = x;
-      Grid_Texts_array[instance].add(new Grid_Text_Data(string, x - int(textWidth(string) / 2.0), y));
+      x = x - int(textWidth(string) / 2.0);
+      if (x > 0 && x < SCREEN_width
+          &&
+          y > 0 && y < SCREEN_height)
+        Grid_Texts_array[instance].add(new Grid_Text_Data(string, x, y));
       //println("Grid_update_rotate_315("+instance+"):"+"ix=" + ix + ":x=" + x + ",y=" + y + "," + string);
     }
   }
