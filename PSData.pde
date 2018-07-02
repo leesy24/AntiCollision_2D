@@ -318,8 +318,19 @@ class PS_Data {
     long time_stamp = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
     String always_dir_full_name = sketchPath("always\\");
+    File always_dir_handle = new File(always_dir_full_name);
     //println("time_stamp="+time_stamp+",millis()="+millis());
-    write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+time_stamp+".dat");
+    if (!always_dir_handle.isDirectory()) {
+      if (!always_dir_handle.mkdir()) {
+        if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):mkdir() error! "+always_dir_full_name);
+        return;
+      }
+      Dbg_Time_logs_handle.add("PS_Data:mkdir():");
+    }
+    if (!write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+time_stamp+".dat")) {
+      if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+time_stamp+".dat");
+      return;
+    }
 //    println("PS_Data:save_always("+instance+"):"+"save_bytes_take_time="+get_millis_diff(save_always_start_millis));
     Dbg_Time_logs_handle.add("PS_Data:write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
     write_time_sum += Dbg_Time_logs_handle.get_add_diff();
@@ -330,7 +341,7 @@ class PS_Data {
     //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
 
     // get files list.
-    String[] always_files_list = new File(always_dir_full_name).list();
+    String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) return;
     for (String always_file_name:always_files_list) {
       long file_time_stamp;
