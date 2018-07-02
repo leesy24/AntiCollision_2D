@@ -104,16 +104,19 @@ void Grid_draw()
     {
       line(line_data.x_start, line_data.y_start, line_data.x_end, line_data.y_end);
     }
+    //Dbg_Time_logs_handle.add("Grid_draw():line["+i+"]:"+Grid_Lines_array[i].size());
 
     // Sets the color used to draw text and borders around shapes.
     fill(C_GRID_TEXT);
     stroke(C_GRID_TEXT);
     textSize(FONT_HEIGHT);
     textAlign(LEFT, BASELINE);
+    //textAlign(CENTER, TOP);
     for (Grid_Text_Data text_data:Grid_Texts_array[i])
     {
       text(text_data.string, text_data.x, text_data.y);
     }
+    //Dbg_Time_logs_handle.add("Grid_draw():text["+i+"]:"+Grid_Texts_array[i].size());
   }
 }
 

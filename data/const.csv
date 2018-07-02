@@ -1,5 +1,5 @@
 Name,Value,Comment
-FRAME_RATE,50,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
+FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DETECT_DISTANCE_LIMIT,5000,Distance limit of object to decide one object ROI.(5000=50cm=0.5meter)
 ROI_OBJECT_NO_MARK_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)

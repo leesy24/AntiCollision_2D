@@ -277,6 +277,7 @@ class Regions {
           w_prev = w_curr;
           c_prev = c_curr;
         }
+        //Dbg_Time_logs_handle.add("Regions:draw_instance("+instance+"):"+priority+":"+region_data.points_data.length);
       }
     }
   }

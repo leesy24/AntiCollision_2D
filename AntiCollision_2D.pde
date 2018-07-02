@@ -33,9 +33,6 @@ void setup() {
   SCREEN_PFront = createFont("SansSerif", 32);
   textFont(SCREEN_PFront);
 
-  frameRate(FRAME_RATE);
-  FRAME_TIME = int(1000. / FRAME_RATE);
-
   //noStroke();
 /*
   // This is only pertains to the desktop version of Processing (not JavaScript or Android),
@@ -82,6 +79,9 @@ void setup() {
   UI_Buttons_setup();
   UI_Interfaces_setup();
 
+  frameRate(FRAME_RATE);
+  FRAME_TIME = int(1000. / FRAME_RATE);
+
   // Set window title
   surface.setTitle(Title);
 
@@ -95,12 +95,8 @@ void setup() {
 //  and should never be called explicitly.
 // All Processing programs update the screen at the end of draw(), never earlier.
 void draw() {
-/*
-  int draw_start_millis = millis();
-  int draw_millis_diff;
-  int take_time_count = 0;
-  boolean take_time_print = true;
-*/
+  Dbg_Time_logs_handle.start("Main:draw():", 500, true);
+  //Dbg_Time_logs_handle.start("Main:draw():", FRAME_TIME);
 
   // Ready to draw from here!
   // To clear the display window at the beginning of each frame,
@@ -128,43 +124,41 @@ void draw() {
     UI_Buttons_setup();
     UI_Interfaces_update();
   }
+  Dbg_Time_logs_handle.add("Screen_check_update()");
 
   Grid_draw();
+  Dbg_Time_logs_handle.add("Grid_draw()");
   BG_Image_draw();
+  Dbg_Time_logs_handle.add("BG_Image_draw()");
   PS_Image_draw();
+  Dbg_Time_logs_handle.add("PS_Image_draw()");
   Regions_draw();
-
-/*
-  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
-    take_time_print = false;
-    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
-  }
-  take_time_count++;
-*/
+  Dbg_Time_logs_handle.add("Regions_draw()");
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if (PS_Data_handle.load(i) == true) {
+      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+")");
       PS_Data_handle.save_always(i);
+      Dbg_Time_logs_handle.add("PS_Data_handle.save_always("+i+")");
       if (PS_Data_handle.parse(i) == false) {
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
           ROI_Data_setup();
           PS_Data_setup();
         }
       }
+      Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+")");
     }
     PS_Data_handle.draw_points(i);
+    Dbg_Time_logs_handle.add("PS_Data_handle.draw_points("+i+")");
     ROI_Data_handle.draw_objects(i);
+    Dbg_Time_logs_handle.add("ROI_Data_handle.draw_objects("+i+")");
     ROI_Data_handle.save_events(i);
+    Dbg_Time_logs_handle.add("ROI_Data_handle.save_events("+i+")");
     PS_Data_handle.draw_params(i);
+    Dbg_Time_logs_handle.add("PS_Data_handle.draw_params("+i+")");
     ROI_Data_handle.draw_object_info(i);
-/*
-    if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
-      take_time_print = false;
-      println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
-    }
-    take_time_count++;
-*/
+    Dbg_Time_logs_handle.add("ROI_Data_handle.draw_object_info("+i+")");
   }
 
   Relay_Module_output();
@@ -174,23 +168,11 @@ void draw() {
   UI_Interfaces_draw();
   Notice_Messages_draw();
 
-/*
-  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
-    take_time_print = false;
-    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
-  }
-  take_time_count++;
-*/
+  Dbg_Time_logs_handle.add("Notice_Messages_draw()");
 
   Update_Data_Files_check();
 
-/*
-  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
-    take_time_print = false;
-    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
-  }
-  take_time_count++;
-*/
+  Dbg_Time_logs_handle.add("Update_Data_Files_check()");
 } 
 
 void Notice_Messages_draw()

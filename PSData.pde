@@ -306,39 +306,50 @@ class PS_Data {
     return true;
   }
 
+  int write_count = 0;
+  int write_time_sum = 0;
+  int delete_count = 0;
+  int delete_time_sum = 0;
   void save_always(int instance) {
     if (!PS_Data_save_enabled) {
       return;
     }
 
     long time_stamp = new Date().getTime();
+    //Dbg_Time_logs_handle.add("Date().getTime()");
+    String always_dir_full_name = sketchPath("always\\");
     //println("time_stamp="+time_stamp+",millis()="+millis());
-    saveBytes("always\\"+instance+"_"+time_stamp+".dat", PS_Data_buf[instance]);
+    write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+time_stamp+".dat");
+//    println("PS_Data:save_always("+instance+"):"+"save_bytes_take_time="+get_millis_diff(save_always_start_millis));
+    Dbg_Time_logs_handle.add("PS_Data:write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
+    write_time_sum += Dbg_Time_logs_handle.get_add_diff();
+    write_count ++;
 
     //long free_space = always_dir_handle.getFreeSpace();
     //println("Free disk space at "+sketchPath()+" is "+free_space);
     //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
 
-    File always_file_handle;
-    always_file_handle = new File(sketchPath("always\\"));
-
     // get files list.
-    String[] always_files_list = always_file_handle.list();
-    if (always_files_list != null) {
-      for (String always_file_name:always_files_list) {
-        long file_time_stamp;
-        try {
-          file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
-        }
-        catch (NumberFormatException e) {
-          file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION; // to delete file.
-        }
-        if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION) continue;
-        //println(always_file_name+","+file_time_stamp);
-        always_file_handle = new File(sketchPath("always\\")+always_file_name);
-        always_file_handle.delete();
+    String[] always_files_list = new File(always_dir_full_name).list();
+    if (always_files_list == null) return;
+    for (String always_file_name:always_files_list) {
+      long file_time_stamp;
+      try {
+        file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
       }
+      catch (NumberFormatException e) {
+        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION; // to delete file.
+      }
+      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION) continue;
+      //println(always_file_name+","+file_time_stamp);
+      File always_file_handle;
+      always_file_handle = new File(always_dir_full_name+always_file_name);
+      always_file_handle.delete();
+      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
+      delete_time_sum += Dbg_Time_logs_handle.get_add_diff();
+      delete_count ++;
     }
+//    println("PS_Data:save_always("+instance+"):"+"delete_file_take_time="+get_millis_diff(save_always_start_millis));
   }
 
   // Parsing Data buffer

@@ -168,6 +168,65 @@ import java.nio.file.CopyOption;
 import java.nio.file.StandardCopyOption;
 //import java.nio.file.AtomicMoveNotSupportedException;
 import java.io.IOException;
+import java.io.FileOutputStream;
+
+String write_file_error;
+/*
+boolean write_file(byte[] buff, String target_file)
+{
+  //println("write_file():"+"to   "+target_file);
+  boolean ret = true;
+  FileOutputStream fop = null;
+
+  try {
+    fop = new FileOutputStream(target_file);
+    fop.write(buff);
+    //fop.flush();
+    fop.close();
+  } catch (IOException e) {
+    write_file_error = e.toString();
+    //e.printStackTrace();
+    ret = false;
+  } finally {
+    try {
+      if (fop != null) {
+        fop.close();
+      }
+    } catch (IOException e) {
+      write_file_error = e.toString();
+      ret = false;
+    }
+  }
+
+  return ret;
+}
+*/
+/**/
+boolean write_file(byte[] buff, String target_file)
+{
+  //println("write_file():"+"to   "+target_file);
+  try {
+      Files.write(
+        Paths.get(target_file),
+        buff);
+  } catch (IOException e) {
+    write_file_error = e.toString();
+    //e.printStackTrace();
+    return false;
+  }
+
+  return true;
+}
+/**/
+/*
+boolean write_file(byte[] buff, String target_file)
+{
+  //println("write_file():"+"to   "+target_file);
+  saveBytes(target_file, buff);
+
+  return true;
+}
+*/
 
 String copy_file_error;
 /**/
