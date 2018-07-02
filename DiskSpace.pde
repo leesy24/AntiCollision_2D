@@ -7,7 +7,7 @@ void Disk_Space_free()
 
 	long free_space = events_dir_handle.getFreeSpace();
 	//println("Disk free space is "+free_space+" at "+events_dir_full_name);
-	//if (free_space > DISK_SPACE_FREE_LIMIT) return;
+	if (free_space > DISK_SPACE_FREE_LIMIT) return;
 
 	// get files list.
 	String[] events_dirs_list = events_dir_handle.list();
