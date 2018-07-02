@@ -145,6 +145,7 @@ void PS_Data_setup()
   {
     if(PS_Interface[i] == PS_Interface_FILE) {
       Interfaces_File_setup();
+      Interfaces_File_handle.open(i, FILE_name[i]);
       PS_Data_handle.file_name[i] = FILE_name[i];
     }
     else if(PS_Interface[i] == PS_Interface_UART) {
@@ -247,8 +248,8 @@ class PS_Data {
     //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println(""PS_Data:load("+instance+"):PS_Data_buf["+instance+"]="+PS_Data_buf[instance]);
 
     if(PS_Interface[instance] == PS_Interface_FILE) {
-      if(Interfaces_File_load(instance) != true) {
-        interfaces_err_str = Interfaces_File_get_error(instance);
+      if(Interfaces_File_handle.load(instance) != true) {
+        interfaces_err_str = Interfaces_File_handle.get_error(instance);
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
