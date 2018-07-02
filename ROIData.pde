@@ -475,7 +475,15 @@ class ROI_Data {
       save_events_start_time_stamp[instance] = new Date().getTime();
       save_events_duration_millis[instance] = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
       save_events_started[instance] = true;
-      save_events_dir_full_name[instance] = sketchPath("events\\")+nf(year(),4)+nf(month(),2)+nf(day(),2)+"_"+nf(hour(),2)+nf(minute(),2)+nf(second(),2)+"_"+instance+"\\";
+      save_events_dir_full_name[instance] =
+        sketchPath("events\\")
+        +nf(year(),4)+nf(month(),2)+nf(day(),2)
+        +"_"
+        +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
+        +"_"
+        +nf(int(save_events_start_time_stamp[instance]%1000),3)
+        +"_"
+        +instance+"\\";
     }
     
     int save_events_start_time_millis_diff = get_millis_diff(save_events_start_time_millis[instance]);
@@ -492,6 +500,7 @@ class ROI_Data {
 
     // If ROI Data has objects than keep save events until limit time.
     if (save_events_start_time_millis_diff > ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT) {
+      save_events_started[instance] = false;
       return;
     }
 
@@ -500,7 +509,7 @@ class ROI_Data {
     save_events_dir_handle = new File(save_events_dir_full_name[instance]);
     if (!save_events_dir_handle.isDirectory()) {
       if (!save_events_dir_handle.mkdirs()) {
-        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():mkdirs() error! "+save_events_dir_full_name[instance]);
+        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):mkdirs() error! "+save_events_dir_full_name[instance]);
         return;
       }
     }
@@ -511,13 +520,15 @@ class ROI_Data {
     // get files list.
     String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) {
-      if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():always_files_list = null! "+always_dir_full_name);
+      if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):always_files_list = null! "+always_dir_full_name);
       return;
     }
 
+    //int copy_count = 0;
+    int copy_start_millis = millis();
     for (String always_file_name:always_files_list) {
       // Check file is for this instance.
-      //println("always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
+      //println("ROI_Data:save_events("+instance+"):always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
       if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
       long always_file_time_stamp;
       try {
@@ -535,10 +546,14 @@ class ROI_Data {
             always_dir_full_name + always_file_name,
             save_events_dir_full_name[instance] + always_file_name,
             new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES})) {
-        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events():copy_file() error! "+always_dir_full_name+always_file_name+"->"+save_events_dir_full_name[instance]+always_file_name);
+        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):copy_file() error! "+always_dir_full_name+always_file_name+"->"+save_events_dir_full_name[instance]+always_file_name);
         return;
       }
+      //copy_count ++;
+      // Check save events operation is too late by frame time.
+      if (get_millis_diff(copy_start_millis) >= (FRAME_TIME / 2)) break;
     }
+    //if (PRINT_ROI_DATA_ALL_DBG) println("ROI_Data:save_events("+instance+"):"+"copy_count="+copy_count+",copy_take_time="+get_millis_diff(copy_start_millis));
   }
 
   void draw_object_info(int instance) {

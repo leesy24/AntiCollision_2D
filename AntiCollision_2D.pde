@@ -12,7 +12,8 @@ final static int PS_INSTANCE_MAX = 2;
 final String TITLE = "DASAN-InfoTEK - 2D Anti-Collision System";
 String Title;
 
-int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
+static int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
+static int FRAME_TIME; // Frame time will calculated from frame rate.
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
@@ -33,6 +34,7 @@ void setup() {
   textFont(SCREEN_PFront);
 
   frameRate(FRAME_RATE);
+  FRAME_TIME = int(1000. / FRAME_RATE);
 
   //noStroke();
 /*
@@ -93,6 +95,13 @@ void setup() {
 //  and should never be called explicitly.
 // All Processing programs update the screen at the end of draw(), never earlier.
 void draw() {
+/*
+  int draw_start_millis = millis();
+  int draw_millis_diff;
+  int take_time_count = 0;
+  boolean take_time_print = true;
+*/
+
   // Ready to draw from here!
   // To clear the display window at the beginning of each frame,
   background(C_BG);
@@ -125,6 +134,14 @@ void draw() {
   PS_Image_draw();
   Regions_draw();
 
+/*
+  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
+    take_time_print = false;
+    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
+  }
+  take_time_count++;
+*/
+
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if (PS_Data_handle.load(i) == true) {
@@ -141,6 +158,13 @@ void draw() {
     ROI_Data_handle.save_events(i);
     PS_Data_handle.draw_params(i);
     ROI_Data_handle.draw_object_info(i);
+/*
+    if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
+      take_time_print = false;
+      println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
+    }
+    take_time_count++;
+*/
   }
 
   Relay_Module_output();
@@ -150,7 +174,23 @@ void draw() {
   UI_Interfaces_draw();
   Notice_Messages_draw();
 
+/*
+  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
+    take_time_print = false;
+    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
+  }
+  take_time_count++;
+*/
+
   Update_Data_Files_check();
+
+/*
+  if (take_time_print && (draw_millis_diff = get_millis_diff(draw_start_millis)) >= FRAME_TIME) {
+    take_time_print = false;
+    println("Main:draw():"+"draw take time @"+take_time_count+"="+draw_millis_diff);
+  }
+  take_time_count++;
+*/
 } 
 
 void Notice_Messages_draw()
