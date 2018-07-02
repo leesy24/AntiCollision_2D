@@ -309,9 +309,10 @@ class PS_Data {
   int delete_count = 0;
   int delete_time_sum = 0;
   void save_always(int instance) {
-    if (!PS_Data_save_enabled) {
-      return;
-    }
+    // Save always feature will not run when PS Interface is FILE.
+    if (PS_Interface[instance] == PS_Interface_FILE) return;
+    
+    if (!PS_Data_save_enabled) return;
 
     long time_stamp = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");

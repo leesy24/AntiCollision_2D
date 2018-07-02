@@ -462,13 +462,12 @@ class ROI_Data {
   }
 
   void save_events(int instance) {
-    if (!PS_Data_save_enabled) {
-      return;
-    }
+    // Save always feature will not run when PS Interface is FILE.
+    if (PS_Interface[instance] == PS_Interface_FILE) return;
 
-    if (!has_objects[instance] && !save_events_started[instance]) {
-      return;
-    }
+    if (!PS_Data_save_enabled) return;
+
+    if (!has_objects[instance] && !save_events_started[instance]) return;
 
     if (!save_events_started[instance]) {
       save_events_start_time_millis[instance] = millis();
