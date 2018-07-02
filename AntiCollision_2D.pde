@@ -95,7 +95,7 @@ void setup() {
 //  and should never be called explicitly.
 // All Processing programs update the screen at the end of draw(), never earlier.
 void draw() {
-  Dbg_Time_logs_handle.start("Main:draw():", 500, true);
+  Dbg_Time_logs_handle.start("Main:draw():", 1000, true);
   //Dbg_Time_logs_handle.start("Main:draw():", FRAME_TIME);
 
   // Ready to draw from here!
@@ -173,6 +173,10 @@ void draw() {
   Update_Data_Files_check();
 
   Dbg_Time_logs_handle.add("Update_Data_Files_check()");
+
+  Disk_Space_free();
+
+  Dbg_Time_logs_handle.add("Disk_Space_free()");
 } 
 
 void Notice_Messages_draw()

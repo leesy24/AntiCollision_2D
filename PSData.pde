@@ -46,8 +46,6 @@ final static int PS_DATA_POINT_WEIGHT = 3;
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
 
-//final static long PS_DATA_FREE_SPACE_LIMIT = 1L*1024L*1024L*1024L;
-
 final static int PS_Interface_FILE = 0;
 final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
@@ -335,10 +333,6 @@ class PS_Data {
     Dbg_Time_logs_handle.add("PS_Data:write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
     write_time_sum += Dbg_Time_logs_handle.get_add_diff();
     write_count ++;
-
-    //long free_space = always_dir_handle.getFreeSpace();
-    //println("Free disk space at "+sketchPath()+" is "+free_space);
-    //if (free_space > PS_DATA_FREE_SPACE_LIMIT) return;
 
     // get files list.
     String[] always_files_list = always_dir_handle.list();
