@@ -315,6 +315,8 @@ class PS_Data {
     
     if (!PS_Data_save_enabled) return;
 
+    int save_always_start_millis = millis();
+
     long time_stamp = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
     String always_dir_full_name = sketchPath("always\\");
@@ -336,9 +338,13 @@ class PS_Data {
     write_time_sum += Dbg_Time_logs_handle.get_add_diff();
     write_count ++;
 
-    // get files list.
+    // Check save always operation is too late by frame time.
+    if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) return;
+
+    // get files list to decide delete file.
     String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) return;
+    int cnt = 0;
     for (String always_file_name:always_files_list) {
       long file_time_stamp;
       try {
@@ -352,9 +358,12 @@ class PS_Data {
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);
       always_file_handle.delete();
-      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
+      cnt ++;
+      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":cnt="+cnt+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
       delete_time_sum += Dbg_Time_logs_handle.get_add_diff();
       delete_count ++;
+      // Check save always operation is too late by frame time.
+      if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) break;
     }
 //    println("PS_Data:save_always("+instance+"):"+"delete_file_take_time="+get_millis_diff(save_always_start_millis));
   }
