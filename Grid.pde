@@ -92,7 +92,7 @@ void Grid_update()
   if (PRINT_GRID_ALL_DBG || PRINT_GRID_UPDATE_DBG) println("Grid_update():Exit");
 }
 
-void Grid_draw()
+void Grid_draw_lines()
 {
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -105,7 +105,13 @@ void Grid_draw()
       line(line_data.x_start, line_data.y_start, line_data.x_end, line_data.y_end);
     }
     //Dbg_Time_logs_handle.add("Grid_draw():line["+i+"]:"+Grid_Lines_array[i].size());
+  }
+}
 
+void Grid_draw_texts()
+{
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
     // Sets the color used to draw text and borders around shapes.
     fill(C_GRID_TEXT);
     stroke(C_GRID_TEXT);

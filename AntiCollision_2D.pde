@@ -127,14 +127,16 @@ void draw() {
   }
   Dbg_Time_logs_handle.add("Screen_check_update()");
 
-  Grid_draw();
-  Dbg_Time_logs_handle.add("Grid_draw()");
+  Grid_draw_lines();
+  Dbg_Time_logs_handle.add("Grid_draw_lines()");
   BG_Image_draw();
   Dbg_Time_logs_handle.add("BG_Image_draw()");
-  PS_Image_draw();
-  Dbg_Time_logs_handle.add("PS_Image_draw()");
   Regions_draw();
   Dbg_Time_logs_handle.add("Regions_draw()");
+  Grid_draw_texts();
+  Dbg_Time_logs_handle.add("Grid_draw_texts()");
+  PS_Image_draw();
+  Dbg_Time_logs_handle.add("PS_Image_draw()");
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
