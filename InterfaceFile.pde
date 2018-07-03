@@ -80,6 +80,8 @@ class Interfaces_File {
   String[] dir_name = new String[PS_INSTANCE_MAX];
   long[] file_time_stamp = new long[PS_INSTANCE_MAX];
   long[] base_time_stamp = new long[PS_INSTANCE_MAX];
+  boolean[] reached_eofl = new boolean[PS_INSTANCE_MAX];
+  int[] eofl_reset_count = new int[PS_INSTANCE_MAX];
 
   Interfaces_File()
   {
@@ -88,20 +90,22 @@ class Interfaces_File {
     {
       str_err_last[i] = null;
       instance_opened[i] = false;
+      eofl_reset_count[i] = -1;
+      reached_eofl[i] = false;
     }
   }
 
   public int open(int instance, String target_name)
   {
-    if(PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+"):target_name="+target_name);
-    if(instance >= PS_INSTANCE_MAX)
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+"):target_name="+target_name);
+    if (instance >= PS_INSTANCE_MAX)
     {
-      println("Interfaces_File:open("+instance+"):instance exceed MAX.");
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:open("+instance+"):instance exceed MAX.");
       return -1;
     }
-    if(instance_opened[instance] != false)
+    if (instance_opened[instance] != false)
     {
-      println("Interfaces_File:open("+instance+"):instance already opended.");
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:open("+instance+"):instance already opended.");
       return -1;
     }
 
@@ -131,6 +135,8 @@ class Interfaces_File {
         this.file_name_list[instance] = target_files_list;
         this.file_name_index[instance] = 0;
         this.dir_name[instance] = sketchPath(target_name);
+        if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+"):file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
+        //println("Interfaces_File:open("+instance+"):first file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
       }
       else {
         this.file_time_stamp[instance] = -1;
@@ -149,6 +155,8 @@ class Interfaces_File {
     }
     //println("dir_name["+instance+"]="+dir_name[instance]);
     //println("this.file_name_list["+instance+"][0]="+this.file_name_list[instance][0]);
+    this.eofl_reset_count[instance] = -1;
+    this.reached_eofl[instance] = false;
 
     this.instance_opened[instance] = true;
 
@@ -165,12 +173,12 @@ class Interfaces_File {
     }
     if(instance >= PS_INSTANCE_MAX)
     {
-      println("Interfaces_File:close("+instance+"):instance exceed MAX.");
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:close("+instance+"):instance exceed MAX.");
       return -1;
     }
     if(instance_opened[instance] != true)
     {
-      println("Interfaces_File:close("+instance+"):instance already closed.");
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:close("+instance+"):instance already closed.");
       return -1;
     }
 
@@ -195,12 +203,14 @@ class Interfaces_File {
   {
     int err;
 
-    if(PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):");
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):Enter");
 
     if (file_time_stamp[instance] != -1
         &&
         file_time_stamp[instance] > base_time_stamp[instance] + millis())
       return false;
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
+    //println("Interfaces_File:load("+instance+"):current file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
 
     // Check file name exists to avoid exception error on loadBytes().
     File file_handle = new File(dir_name[instance]+"\\"+file_name_list[instance][file_name_index[instance]]);
@@ -230,11 +240,14 @@ class Interfaces_File {
     //FILE_last_modified_time[instance] = file_handle.lastModified();
     str_err_last[instance] = null;
 
+    // Find next file.
     int i;
     for (i = file_name_index[instance] + 1; i < file_name_list[instance].length; i ++) {
       try {
         file_time_stamp[instance] = Long.parseLong(file_name_list[instance][i].substring(2, file_name_list[instance][i].length() - 4));
         file_name_index[instance] = i;
+        if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):next file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
+        //println("Interfaces_File:load("+instance+"):next file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
         //println("i="+i+":file_time_stamp["+instance+"]="+file_time_stamp[instance]);
         break;
       }
@@ -244,24 +257,43 @@ class Interfaces_File {
       }
     }
     //println("i="+i+":file_name_list["+instance+"].length="+file_name_list[instance].length);
-    if (i >= file_name_list[instance].length) {
-      for (String file_name:file_name_list[instance]) {
-        //println("file_name="+file_name);
-        try {
-          file_time_stamp[instance] = Long.parseLong(file_name.substring(2, file_name.length() - 4));
-          //println("file_time_stamp["+instance+"]="+file_time_stamp[instance]);
-          break;
-        }
-        catch (NumberFormatException e) {
-          file_time_stamp[instance] = -1;
-          //println("i="+i+":file_time_stamp["+instance+"]="+file_time_stamp[instance]);
-        }
+    // If can't find next file.
+    if (i >= file_name_list[instance].length && file_name_list[instance].length > 1) {
+      if (!reached_eofl[instance]) {
+        reached_eofl[instance] = true;
       }
-      file_name_index[instance] = 0;
-      base_time_stamp[instance] = file_time_stamp[instance] - millis();
-   }
+      else {
+        str_err_last[instance] = "Notice: Reached end of file list. "+file_name_list[instance].length;
+        if (eofl_reset_count[instance] == -1) {
+          eofl_reset_count[instance] = FRAME_RATE; // It means 1 second.
+        }
+        else if (eofl_reset_count[instance] == 0) {
+          eofl_reset_count[instance] = -1;
+          // Start from first file.
+          for (String file_name:file_name_list[instance]) {
+            //println("file_name="+file_name);
+            try {
+              file_time_stamp[instance] = Long.parseLong(file_name.substring(2, file_name.length() - 4));
+              if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):wraped file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
+              //println("Interfaces_File:load("+instance+"):wraped file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
+              //println("file_time_stamp["+instance+"]="+file_time_stamp[instance]);
+              break;
+            }
+            catch (NumberFormatException e) {
+              file_time_stamp[instance] = -1;
+              //println("i="+i+":file_time_stamp["+instance+"]="+file_time_stamp[instance]);
+            }
+          }
+          file_name_index[instance] = 0;
+          base_time_stamp[instance] = file_time_stamp[instance] - millis();
+        }
+        else {
+          eofl_reset_count[instance] --;
+        }
 
+        return false;
+      }
+    }
     return true;
   }
-
 }
