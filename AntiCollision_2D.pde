@@ -79,6 +79,7 @@ void setup() {
   Relay_Module_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
+  Disk_Space_setup();
 
   frameRate(FRAME_RATE);
   FRAME_TIME = int(1000. / FRAME_RATE);
