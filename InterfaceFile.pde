@@ -268,6 +268,7 @@ class Interfaces_File {
           eofl_reset_count[instance] = FRAME_RATE; // It means 1 second.
         }
         else if (eofl_reset_count[instance] == 0) {
+          reached_eofl[instance] = false;
           eofl_reset_count[instance] = -1;
           // Start from first file.
           for (String file_name:file_name_list[instance]) {
