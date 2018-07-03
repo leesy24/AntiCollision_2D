@@ -338,11 +338,13 @@ class PS_Data {
     write_time_sum += Dbg_Time_logs_handle.get_add_diff();
     write_count ++;
 
+/*
     // Check save always operation is too late by frame time.
     if (Dbg_Time_logs_handle.get_diff() >= FRAME_TIME) return;
 
     // Check save always operation is too late by frame time.
     if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) return;
+*/
 
     // get files list to decide delete file.
     String[] always_files_list = always_dir_handle.list();
