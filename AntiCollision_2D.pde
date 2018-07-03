@@ -103,7 +103,7 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (UI_Interfaces_changed) {
+  if (UI_Interfaces_changed_any) {
     // Title set to default.
     Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
     Config_setup();

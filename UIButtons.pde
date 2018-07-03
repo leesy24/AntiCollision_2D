@@ -152,7 +152,7 @@ void UI_Buttons_draw()
   }
 }
 
-void UI_Buttons_mouse_presseed()
+void UI_Buttons_mouse_pressed()
 {
   if (!UI_Buttons_enabled) return;
 

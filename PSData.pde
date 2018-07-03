@@ -347,7 +347,7 @@ class PS_Data {
     // get files list to decide delete file.
     String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) return;
-    int cnt = 0;
+    int count = 0;
     for (String always_file_name:always_files_list) {
       if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
       long file_time_stamp;
@@ -362,10 +362,12 @@ class PS_Data {
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);
       always_file_handle.delete();
-      cnt ++;
-      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":cnt="+cnt+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
+      count ++;
+      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":count="+count+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
       delete_time_sum += Dbg_Time_logs_handle.get_add_diff();
       delete_count ++;
+      // Check delete operation of save always is too much.
+      if (delete_count >= 5) break;
       // Check save always operation is too late by frame time.
       if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) break;
     }
@@ -898,9 +900,9 @@ class PS_Data {
     textAlign(LEFT, BASELINE);
     final int str_x = rect_x + TEXT_MARGIN;
     final int str_y = rect_y + TEXT_MARGIN - 1;
-    int cnt = 0;
-    for( String string:strings) {
-      text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt++));
+    for( int i = 0; i < strings.size(); i ++) {
+      String string = strings.get(i);
+      text(string, str_x, str_y + FONT_HEIGHT * (1 + i));
     }
   } // End of draw_params()
   
