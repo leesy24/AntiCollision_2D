@@ -349,6 +349,7 @@ class PS_Data {
     if (always_files_list == null) return;
     int cnt = 0;
     for (String always_file_name:always_files_list) {
+      if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
       long file_time_stamp;
       try {
         file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
