@@ -73,6 +73,8 @@ void Const_setup()
       SCREEN_Y_OFFSET = variable.getInt("Value");
     else if(name.equals("C_BG"))
       C_BG = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_VERSION_DATE_TEXT"))
+      C_VERSION_DATE_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_PS_DATA_ERR_TEXT"))
       C_PS_DATA_ERR_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_NUM_PAD_NORMAL"))
@@ -252,6 +254,11 @@ void Const_create()
   variable.setString("Name", "C_BG");
   variable.setString("Value", String.format("%08X", C_BG));
   variable.setString("Comment", "Background color. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_VERSION_DATE_TEXT");
+  variable.setString("Value", String.format("%08X", C_VERSION_DATE_TEXT));
+  variable.setString("Comment", "Color of version and date text. Color data format is AARRGGBB");
 
   variable = table.addRow();
   variable.setString("Name", "C_PS_DATA_ERR_TEXT");

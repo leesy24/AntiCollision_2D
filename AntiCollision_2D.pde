@@ -9,7 +9,8 @@ static color C_BG = #F8F8F8; // White - 0x8
 final static int PS_INSTANCE_MAX = 2;
 
 // Define window title string.
-final String TITLE = "DASAN-InfoTEK - 2D Anti-Collision System";
+final static String TITLE_COMPANY = "DASAN InfoTek";
+final static String TITLE_PRODUCT = "2D Anti-Collision System";
 String Title;
 
 static int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
@@ -63,7 +64,7 @@ void setup() {
   //frameRate(30);
 
   // Title set to default.
-  Title = TITLE;
+  Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
 
   Const_setup();
   Config_setup();
@@ -104,7 +105,7 @@ void draw() {
 
   if (UI_Interfaces_changed) {
     // Title set to default.
-    Title = TITLE;
+    Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
     Config_setup();
     ROI_Data_setup();
     PS_Data_setup();
@@ -177,6 +178,10 @@ void draw() {
   Disk_Space_free();
 
   Dbg_Time_logs_handle.add("Disk_Space_free()");
+
+  Version_Date_draw();
+
+  Dbg_Time_logs_handle.add("Version_Date_draw()");
 } 
 
 void Notice_Messages_draw()
