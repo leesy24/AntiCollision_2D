@@ -47,8 +47,8 @@ void UI_Interfaces_setup()
 {
   if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_SETUP_DBG) println("UI_Interfaces_setup():Enter");
 
-  UI_Interfaces_enabled = true;
-  //UI_Interfaces_enabled = false;
+  //UI_Interfaces_enabled = true;
+  UI_Interfaces_enabled = false;
 
   cf1 = null;
 
