@@ -30,7 +30,11 @@ static boolean mouse_dragging_enabled = false;
 void keyPressed()
 {
   //println("keyPressed " + int(key) + " " + keyCode);
-  if(key == CODED)
+  if (key == ESC)
+  {
+    key = 0;  // Prevents the ESC key from being used.
+  }
+  else if(key == CODED)
   {
     if(keyCode == KeyEvent.VK_F10)
     {
