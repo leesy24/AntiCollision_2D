@@ -327,14 +327,14 @@ class PS_Data {
         if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):mkdir() error! "+always_dir_full_name);
         return;
       }
-      Dbg_Time_logs_handle.add("PS_Data:mkdir():");
+      Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):mkdir():");
     }
     if (!write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+time_stamp+".dat")) {
       if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+time_stamp+".dat");
       return;
     }
 //    println("PS_Data:save_always("+instance+"):"+"save_bytes_take_time="+get_millis_diff(save_always_start_millis));
-    Dbg_Time_logs_handle.add("PS_Data:write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
+    Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
     write_time_sum += Dbg_Time_logs_handle.get_add_diff();
     write_count ++;
 
@@ -345,7 +345,8 @@ class PS_Data {
     // Check save always operation is too late by frame time.
     if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) return;
 */
-
+// Delete save files will run at Disk Space Free threads.
+/*
     // get files list to decide delete file.
     String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) return;
@@ -365,7 +366,7 @@ class PS_Data {
       always_file_handle = new File(always_dir_full_name+always_file_name);
       always_file_handle.delete();
       count ++;
-      Dbg_Time_logs_handle.add("PS_Data:delete_file():"+always_file_name+":count="+count+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
+      Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):delete_file():"+always_file_name+":count="+count+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
       delete_time_sum += Dbg_Time_logs_handle.get_add_diff();
       delete_count ++;
       // Check delete operation of save always is too much.
@@ -373,7 +374,8 @@ class PS_Data {
       // Check save always operation is too late by frame time.
       if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) break;
     }
-//    println("PS_Data:save_always("+instance+"):"+"delete_file_take_time="+get_millis_diff(save_always_start_millis));
+    //println("PS_Data:save_always("+instance+"):"+"delete_file_take_time="+get_millis_diff(save_always_start_millis));
+*/
   }
 
   // Parsing Data buffer

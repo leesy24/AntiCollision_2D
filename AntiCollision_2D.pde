@@ -97,7 +97,7 @@ void setup() {
 //  and should never be called explicitly.
 // All Processing programs update the screen at the end of draw(), never earlier.
 void draw() {
-  Dbg_Time_logs_handle.start("Main:draw():", 1000, true);
+  Dbg_Time_logs_handle.start("Main:draw():", 500, true);
   //Dbg_Time_logs_handle.start("Main:draw():", FRAME_TIME);
 
   // Ready to draw from here!
@@ -178,9 +178,12 @@ void draw() {
 
   Dbg_Time_logs_handle.add("Update_Data_Files_check()");
 
+// Disk Space free will run as threads on Disk Space feature.
+/*
   Disk_Space_free();
 
   Dbg_Time_logs_handle.add("Disk_Space_free()");
+*/
 
   Version_Date_draw();
 

@@ -461,6 +461,8 @@ class ROI_Data {
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Exit");
   }
 
+  int copy_count = 0;
+  int copy_time_sum = 0;
   void save_events(int instance) {
     // Save always feature will not run when PS Interface is FILE.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
@@ -513,6 +515,9 @@ class ROI_Data {
       }
     }
 
+    // Set pause state of Disk Space thread to save events files.
+    Disk_Space_threads_pause = true;
+
     String always_dir_full_name = sketchPath("always\\");
     File always_dir_handle;
     always_dir_handle = new File(always_dir_full_name);
@@ -520,11 +525,13 @@ class ROI_Data {
     String[] always_files_list = always_dir_handle.list();
     if (always_files_list == null) {
       if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):always_files_list = null! "+always_dir_full_name);
+      // Reset pause state of Disk Space thread to save events files.
+      Disk_Space_threads_pause = false;
       return;
     }
 
-    //int copy_count = 0;
-    int copy_start_millis = millis();
+    //int count = 0;
+    //int start_millis = millis();
     for (String always_file_name:always_files_list) {
       // Check file is for this instance.
       //println("ROI_Data:save_events("+instance+"):always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
@@ -538,7 +545,7 @@ class ROI_Data {
       }
       // Check file time stamp is older than expected time stamp to skip.
       if (always_file_time_stamp <= save_events_start_time_stamp[instance] - ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT) continue;
-      // Check file already exist.
+      // Check target file already exist to skip copy file.
       if (new File(save_events_dir_full_name[instance] + always_file_name).isFile()) continue;
       // Copy data files only not exist.
       if (!copy_file(
@@ -548,11 +555,16 @@ class ROI_Data {
         if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):copy_file() error! "+always_dir_full_name+always_file_name+"->"+save_events_dir_full_name[instance]+always_file_name);
         return;
       }
-      //copy_count ++;
+      Dbg_Time_logs_handle.add("ROI_Data:save_events("+instance+"):copy_file():avg="+((copy_count!=0)?(copy_time_sum/copy_count):0));
+      copy_time_sum += Dbg_Time_logs_handle.get_add_diff();
+      copy_count ++;
+      //count ++;
       // Check save events operation is too late by frame time.
-      if (get_millis_diff(copy_start_millis) >= (FRAME_TIME / 2)) break;
+      //if (get_millis_diff(start_millis) >= (FRAME_TIME / 2)) break;
     }
-    //if (PRINT_ROI_DATA_ALL_DBG) println("ROI_Data:save_events("+instance+"):"+"copy_count="+copy_count+",copy_take_time="+get_millis_diff(copy_start_millis));
+    // Reset pause state of Disk Space thread to save events files.
+    Disk_Space_threads_pause = false;
+    //if (PRINT_ROI_DATA_ALL_DBG) println("ROI_Data:save_events("+instance+"):"+"copy count="+count+",take time="+get_millis_diff(start_millis));
   }
 
   void draw_object_info(int instance) {
