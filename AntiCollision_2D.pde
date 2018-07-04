@@ -142,16 +142,22 @@ void draw() {
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     if (PS_Data_handle.load(i) == true) {
-      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+")");
+      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):true");
       PS_Data_handle.save_always(i);
       Dbg_Time_logs_handle.add("PS_Data_handle.save_always("+i+")");
       if (PS_Data_handle.parse(i) == false) {
+        Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+"):false");
         if (PS_Data_handle.parse_err_cnt[i] > 10) {
           ROI_Data_setup();
           PS_Data_setup();
         }
       }
-      Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+")");
+      else {
+        Dbg_Time_logs_handle.add("PS_Data_handle.parse("+i+"):true");
+      }
+    }
+    else {
+      Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):false");
     }
     PS_Data_handle.draw_points(i);
     Dbg_Time_logs_handle.add("PS_Data_handle.draw_points("+i+")");
@@ -166,16 +172,18 @@ void draw() {
   }
 
   Relay_Module_output();
+  Dbg_Time_logs_handle.add("Relay_Module_output()");
 
   UI_Buttons_draw();
+  Dbg_Time_logs_handle.add("UI_Buttons_draw()");
   Bubble_Info_draw();
+  Dbg_Time_logs_handle.add("Bubble_Info_draw()");
   UI_Interfaces_draw();
+  Dbg_Time_logs_handle.add("UI_Interfaces_draw()");
   Notice_Messages_draw();
-
   Dbg_Time_logs_handle.add("Notice_Messages_draw()");
 
   Update_Data_Files_check();
-
   Dbg_Time_logs_handle.add("Update_Data_Files_check()");
 
 // Disk Space free will run as threads on Disk Space feature.
