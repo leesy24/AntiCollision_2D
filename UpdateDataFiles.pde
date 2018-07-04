@@ -52,15 +52,15 @@ void Update_Data_Files_check()
       {
         break;
       }
+      Update_Data_Files_check_interval = 0;
       if (!unzip_check_password_protected(Update_Data_Files_zip_file_full_name))
       {
-        UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.", 5000);
+        UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.\nAnd, Check Zip file is password protected.\nOr, Check the Zip file currupted.", 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
-      Update_Data_Files_check_interval = 0;
       break;
     case ZIP_READY:
       UI_Num_Pad_setup("Input Password");
@@ -91,7 +91,7 @@ void Update_Data_Files_check()
       if (!Update_Data_Files_check_updates())
       {
         // Noting to update...
-        UI_Message_Box_setup("Update already done.", "Already updated.\nPlease check Zip file has new configurations !", 5000);
+        UI_Message_Box_setup("Update already applied !", "Zip file has same configuration files with current.\nPlease check the Zip file has new configuration files.", 5000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -106,13 +106,13 @@ void Update_Data_Files_check()
       if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Error !", "Somthing wrong.\nPlease check HW and contact engineers !"+"\n"+Update_Data_Files_error, 0);
+        UI_Message_Box_setup("Error !", "Uhmmm. Somthing wrong.\nPlease check the system and contact engineers !"+"\n"+Update_Data_Files_error, 0);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       // Update done! Indicate updated.
-      UI_Message_Box_setup("Update done.", "New configuration applied right now .", 3000);
+      UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3000);
       Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
       Update_Data_Files_state_next = Update_Data_Files_state_enum.RESET;
       break;
@@ -124,6 +124,7 @@ void Update_Data_Files_check()
       Update_Data_Files_state = Update_Data_Files_state_next;
       break;
     case RESET:
+      // To restart program set frameCount to -1, this wiil call setup() of main.
       frameCount = -1;
       break;
   }
