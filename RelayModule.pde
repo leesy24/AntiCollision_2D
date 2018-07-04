@@ -161,6 +161,13 @@ void Relay_Module_setup()
     return;
   }
 
+  // Reset Serial. 
+  if (Relay_Module_UART_handle != null)
+  {
+    Relay_Module_UART_handle.stop();
+    Relay_Module_UART_handle = null;
+  }
+
   // Check Relay_Module_UART_port_name with the available serial ports
   for (String port:Serial.list())
   {
