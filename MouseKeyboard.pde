@@ -65,6 +65,11 @@ void keyPressed()
     {
       PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
     }
+    else if(keyCode == KeyEvent.VK_F3)
+    {
+      // To restart program set frameCount to -1, this wiil call setup() of main.
+      frameCount = -1;
+    }
   }
 }
 /**/

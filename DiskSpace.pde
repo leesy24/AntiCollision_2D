@@ -1,3 +1,8 @@
+//final static boolean PRINT_DISK_SPACE_ALL_DBG = true;
+final static boolean PRINT_DISK_SPACE_ALL_DBG = false;
+final static boolean PRINT_DISK_SPACE_ALL_ERR = true;
+//final static boolean PRINT_DISK_SPACE_ALL_ERR = false;
+
 final static long DISK_SPACE_FREE_LIMIT = 1L*1024L*1024L*1024L; // 1GB
 
 static boolean Disk_Space_setup_done = false;
@@ -8,10 +13,7 @@ void Disk_Space_setup()
   //Disk_Space_free_always();
   //Disk_Space_free_events();
 
-  if (Disk_Space_setup_done)
-  {
-    return;
-  }
+  if (Disk_Space_setup_done) return;
 
   Disk_Space_threads_pause = false;
   thread("Disk_Space_free_always");
@@ -37,8 +39,12 @@ void Disk_Space_free_events()
     delay(FRAME_TIME);
     if (Disk_Space_threads_pause) continue;
 
+    if (PRINT_DISK_SPACE_ALL_DBG) println("Disk_Space_free_events():Run"+millis());
+    //println("Disk_Space_free_events():Run"+millis());
+
     long free_space = events_dir_handle.getFreeSpace();
-    //println("Disk free space is "+free_space+" at "+events_dir_full_name);
+    if (PRINT_DISK_SPACE_ALL_DBG) println("Disk_Space_free_events():Disk free space is "+free_space+" at "+events_dir_full_name);
+    //println("Disk_Space_free_events():Disk free space is "+free_space+" at "+events_dir_full_name);
     if (free_space > DISK_SPACE_FREE_LIMIT) continue;
 
     // get files list.
@@ -77,6 +83,9 @@ void Disk_Space_free_always()
   {
     delay(FRAME_TIME);
     if (Disk_Space_threads_pause) continue;
+
+    if (PRINT_DISK_SPACE_ALL_DBG) println("Disk_Space_free_always():Run"+millis());
+    //println("Disk_Space_free_always():Run"+millis());
 
     long time_stamp = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
