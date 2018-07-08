@@ -4,6 +4,11 @@ static color C_VERSION_DATE_TEXT = 0xFF000000; // White
 final static String VERSION_DATE_VERSION_STR = "1.00.02";
 final static String VERSION_DATE_DATE_STR = "2018-07-04";
 
+void Version_Date_setup()
+{
+  println("Version:"+VERSION_DATE_VERSION_STR+" Date:"+VERSION_DATE_DATE_STR);
+}
+
 void Version_Date_draw()
 {
   // Sets the color used to draw text and borders around shapes.
