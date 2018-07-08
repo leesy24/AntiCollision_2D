@@ -459,3 +459,38 @@ int get_int_diff(int new_val, int old_val)
 
   return diff;
 }
+
+import java.awt.datatransfer.*;
+import java.awt.Toolkit;
+
+String get_clipboard_string()
+{
+  String result;
+  Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+  //odd: the Object param of getContents is not currently used
+  Transferable contents = clipboard.getContents(null);
+  boolean hasTransferableText =
+    (contents != null) &&
+    contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+
+  if (!hasTransferableText) return null;
+
+  try
+  {
+    result = (String)contents.getTransferData(DataFlavor.stringFlavor);
+  }
+  catch (UnsupportedFlavorException e)
+  {
+    println(e);
+    e.printStackTrace();
+    return null;
+  }
+  catch (IOException e)
+  {
+    println(e);
+    e.printStackTrace();
+    return null;
+  }
+
+  return result;
+}

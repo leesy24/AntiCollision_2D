@@ -591,6 +591,38 @@ void UI_Interfaces_mouse_pressed()
     UI_Interfaces_reset();
     return;
   }
+
+  if (mouseButton == RIGHT)
+  {
+    UI_Interfaces_mouse_right_pressed();
+  }
+}
+
+private void UI_Interfaces_mouse_right_pressed()
+{
+  if (!UI_Interfaces_enabled)
+  {
+    UI_Interfaces_reset();
+    return;
+  }
+
+  for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+  {
+    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_filename"));
+    if (tf == null) continue;
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_mouse_right_pressed():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (tf.getId() != instance
+        ||
+        !tf.isFocus())
+    {
+      continue;
+    }
+
+    String cb_str = get_clipboard_string();
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_mouse_right_pressed():instance="+instance+":cb_str="+cb_str);
+    if (cb_str == null) continue;
+    tf.setText(tf.getText() + cb_str);
+  }
 }
 
 void UI_Interfaces_mouse_released()
@@ -751,7 +783,7 @@ void UI_Interfaces_ddmenu(int n)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     ScrollableList sl_ddmenu = (ScrollableList)(cp5[instance].get("UI_Interfaces_ddmenu"));
-    //println("instance="+instance+":id="+sl_ddmenu.getId()+",isOpen="+sl_ddmenu.isOpen());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu():instance="+instance+":id="+sl_ddmenu.getId()+",isOpen="+sl_ddmenu.isOpen());
     if (sl_ddmenu.getId() == instance
         &&
         sl_ddmenu.isOpen())
@@ -806,7 +838,7 @@ void UI_Interfaces_filename(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_filename"));
-    //println("instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_filename():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -837,7 +869,7 @@ void UI_Interfaces_UARTport(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTport"));
-    //println("instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -868,7 +900,7 @@ void UI_Interfaces_UARTbaud(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTbaud"));
-    //println("instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTbaud():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -900,7 +932,7 @@ void UI_Interfaces_UARTdps(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTdps"));
-    //println("instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTdps():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -938,7 +970,7 @@ void UI_Interfaces_UDPremoteip(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPremoteip"));
-    //println("instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteip():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -969,7 +1001,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPremoteport"));
-    //println("instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteport():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -1001,7 +1033,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPlocalport"));
-    //println("instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPlocalport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
@@ -1033,7 +1065,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_SNserialnumber"));
-    //println("instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_SNserialnumber():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
         tf.isFocus())
