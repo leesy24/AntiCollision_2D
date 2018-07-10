@@ -25,6 +25,7 @@ int mousePressedX;
 int mousePressedY;
 
 static boolean mouse_dragging_enabled = false;
+static boolean mouse_wheel_enabled = false;
 
 /**/
 void keyPressed()
@@ -60,6 +61,7 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F5)
     {
       mouse_dragging_enabled = !mouse_dragging_enabled;
+      mouse_wheel_enabled = !mouse_wheel_enabled;
     }
     else if(keyCode == KeyEvent.VK_F4)
     {
@@ -158,8 +160,10 @@ void mouseDragged()
 
 void mouseWheel(MouseEvent event)
 {
+  if (!mouse_wheel_enabled) return;
+
   int wheel_count = event.getCount();
-  int zoom_factor_save = ZOOM_FACTOR[0];
+  //int zoom_factor_save = ZOOM_FACTOR[0];
 
   if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);
 
