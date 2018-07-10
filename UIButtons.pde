@@ -351,7 +351,7 @@ void UI_Buttons_reset_en(int i)
 }
 
 class Buttons_Group {
-  private LinkedList<Button> buttons = new LinkedList<Button>();
+  private LinkedList<Button_Instance> buttons = new LinkedList<Button_Instance>();
   private int center_x, top_y;
   private String text;
   private color stroke_c;
@@ -380,7 +380,7 @@ class Buttons_Group {
     int left_x, top_y;
     left_x = int(this.center_x + offset_center_x - w / 2.0 );
     top_y = this.top_y + offset_top_y;
-    this.buttons.add(new Button(action, text, left_x, top_y, w, h));
+    this.buttons.add(new Button_Instance(action, text, left_x, top_y, w, h));
   }
 
   public void draw() {
@@ -391,7 +391,7 @@ class Buttons_Group {
     // Sets the color and weight used to draw lines and borders around shapes.
     stroke(stroke_c);
     strokeWeight(stroke_w);
-    for (Button button:buttons) {
+    for (Button_Instance button:buttons) {
       button.draw(fill_c_normal, fill_c_highlight, fill_c_text);
     }
     textAlign(CENTER, TOP);
@@ -403,7 +403,7 @@ class Buttons_Group {
   }
 
   public boolean mouse_pressed() {
-    for (Button button:buttons) {
+    for (Button_Instance button:buttons) {
       if (button.mouse_pressed()) {
         this.action = button.get_action();
         return true;
@@ -413,13 +413,13 @@ class Buttons_Group {
   }
 
   public void mouse_moved() {
-    for (Button button:buttons) {
+    for (Button_Instance button:buttons) {
       button.mouse_moved();
     }
   }
 }
 
-class Button {
+class Button_Instance {
   private UI_Buttons_action_enum action;
   private int left_x, top_y;
   private int w, h;
@@ -427,7 +427,7 @@ class Button {
   private boolean focused;
   private boolean pressed;
 
-  Button(UI_Buttons_action_enum action, String text, int left_x, int top_y, int w, int h) {
+  Button_Instance(UI_Buttons_action_enum action, String text, int left_x, int top_y, int w, int h) {
     this.action = action;
     this.text = text;
     this.left_x = left_x;
