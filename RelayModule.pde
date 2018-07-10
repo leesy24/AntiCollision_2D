@@ -60,6 +60,15 @@ static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RE
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
 LinkedList<UI_Relay_Indicator> Relay_Module_indicators = new LinkedList();
+LinkedList<Relay_CSV> Relay_Module_relays_csv = new LinkedList();
+
+class Relay_CSV {
+  String relay_name;
+  int relay_index;
+  int indicator_scr_center_x;
+  int indicator_scr_top_y;
+  int indicator_text_height;
+}
 
 void Relay_Module_setup()
 {
@@ -92,16 +101,25 @@ void Relay_Module_setup()
   }
 
   for (TableRow variable:table.rows()) {
-    String relay_name = variable.getString("Relay_Name");
-    // If name start with # than skip it.
-    if (relay_name.charAt(0) == '#') {
-      continue;
-    }
+    Relay_CSV relay_csv = new Relay_CSV();
 
     int relay_index = variable.getInt("Relay_Index");
     int indicator_scr_center_x = variable.getInt("Indicator_Screen_Center_X");
     int indicator_scr_top_y = variable.getInt("Indicator_Screen_Top_Y");
     int indicator_text_height = variable.getInt("Idicator_Text_Height");
+
+    String relay_name = variable.getString("Relay_Name");
+    relay_csv.relay_name = relay_name;
+    relay_csv.relay_index = relay_index;
+    relay_csv.indicator_scr_center_x = indicator_scr_center_x;
+    relay_csv.indicator_scr_top_y = indicator_scr_top_y;
+    relay_csv.indicator_text_height = indicator_text_height;
+    Relay_Module_relays_csv.add(relay_csv);
+
+    // If name start with # than skip it.
+    if (relay_name.charAt(0) == '#') {
+      continue;
+    }
 
     for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
     {
@@ -277,6 +295,32 @@ private void Relay_Module_draw_indicator()
     UI_Relay_Indicator indicator = Relay_Module_indicators.get(relay_index);
     indicator.draw(Relay_Module_output_val[relay_index]);
   }
+}
+
+String Relay_Module_get_relay_name(int relay_index)
+{
+  if (relay_index < 0) return null;
+  for (Relay_CSV relay_csv:Relay_Module_relays_csv)
+  {
+    if (relay_csv.relay_index != relay_index) continue;
+    return relay_csv.relay_name;
+  }
+  return null;
+}
+
+void Relay_Module_set_relay_name(int relay_index, String relay_name)
+{
+  if (relay_index < 0) return;
+  for (Relay_CSV relay_csv:Relay_Module_relays_csv)
+  {
+    if (relay_csv.relay_index != relay_index) continue;
+    relay_csv.relay_name = relay_name;
+  }
+}
+
+void Relay_Module_update_relays_csv_file()
+{
+  
 }
 
 void Relay_Module_UART_clear()

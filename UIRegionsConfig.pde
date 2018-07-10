@@ -41,6 +41,9 @@ static int[] UI_Regions_Config_x_base = new int[PS_INSTANCE_MAX];
 static int[] UI_Regions_Config_y_base = new int[PS_INSTANCE_MAX];
 UI_Regions_Config_BT_ControlListener UI_Regions_Config_bt_control_listener;
 //UI_Regions_Config_TF_ControlListener UI_Regions_Config_tf_control_listener;
+static enum UI_Regions_Config_tf_enum {
+  REGION_NAME, REGION_PRIORITY, RELAY_INDEX, RELAY_NAME, NO_MARK_BIG, RECT_FIELD_X, RECT_FIELD_Y, RECT_FIELD_WIDTH, RECT_FIELD_HEIGHT
+}
 
 void UI_Regions_Config_setup()
 {
@@ -246,10 +249,8 @@ void UI_Regions_Config_update_instance(int instance)
   for (int region_csv_index = 0; region_csv_index < Regions_handle.get_regions_csv_size_for_index(instance); region_csv_index ++)
   {
     int w_max;
-    int id_index;
 
     w_max = MIN_INT;
-    id_index = 0;
 
     // Region name
     x = UI_Regions_Config_x_base[instance] + FONT_HEIGHT;
@@ -257,7 +258,7 @@ void UI_Regions_Config_update_instance(int instance)
     y += (FONT_HEIGHT + TEXT_MARGIN*2 + TEXT_MARGIN + TEXT_MARGIN) * 4 * region_csv_index;
     str = "Region name";
     w = int(textWidth(str));
-    w_max = max(w_max, w + FONT_HEIGHT);
+    w_max = max(w_max, w - FONT_HEIGHT);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_region_name_"+region_csv_index);
     tl_handle
@@ -338,7 +339,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_region_name_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.REGION_NAME.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -374,7 +375,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_priority_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.REGION_PRIORITY.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -410,7 +411,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_relay_index_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RELAY_INDEX.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -437,6 +438,47 @@ void UI_Regions_Config_update_instance(int instance)
         .getStyle()
           .marginLeft = 1;
 
+    // Relay index input
+    //y += h + TEXT_MARGIN;
+    str = Relay_Module_get_relay_name(Regions_handle.get_region_csv_relay_index(instance, region_csv_index));
+    if (str != null)
+    {
+      int save_x = x;
+      x += w + TEXT_MARGIN;
+      w = int(textWidth(str) + TEXT_MARGIN*2);
+      w_max = max(w_max, w);
+      h = FONT_HEIGHT + TEXT_MARGIN*2;
+      tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_relay_name_input_"+region_csv_index);
+      tf_handle
+        .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RELAY_NAME.ordinal())
+        //.addListener(UI_Regions_Config_tf_control_listener)
+        .setPosition(x, y)
+        .setSize(w, h)
+        //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+        .setAutoClear(false)
+        .setColorBackground( C_UI_REGIONS_CONFIG_FILL_NORMAL )
+        .setColorForeground( C_UI_REGIONS_CONFIG_BORDER_NORMAL )
+        .setColorActive( C_UI_REGIONS_CONFIG_BORDER_ACTIVE )
+        .setColorValueLabel( C_UI_REGIONS_CONFIG_TEXT )
+        .setColorCursor( C_UI_REGIONS_CONFIG_CURSOR )
+        .setCaptionLabel("")
+        .setText(str)
+        ;
+      //println("tf.getText() = ", tf.getText());
+      tf_handle.getValueLabel()
+          //.setFont(UI_Regions_Config_cf)
+          .setSize(FONT_HEIGHT)
+          //.toUpperCase(false)
+          ;
+      tf_handle.getValueLabel()
+          .getStyle()
+            .marginTop = -1;
+      tf_handle.getValueLabel()
+          .getStyle()
+            .marginLeft = 1;
+      x = save_x;
+    }
+
     // No mark big input
     y += h + TEXT_MARGIN;
     str = Regions_handle.get_region_csv_no_mark_big(instance, region_csv_index)?"true":"false";
@@ -445,7 +487,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_no_mark_bit_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.NO_MARK_BIG.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -557,12 +599,12 @@ void UI_Regions_Config_update_instance(int instance)
     // Coord. x input
     //y += h + TEXT_MARGIN;
     str = String.valueOf(Regions_handle.get_region_csv_field_x(instance, region_csv_index)/100.);
-    w = int(textWidth(str) * 2 + TEXT_MARGIN*2);
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_coord_x_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RECT_FIELD_X.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -593,12 +635,12 @@ void UI_Regions_Config_update_instance(int instance)
     // Coord. y input
     y += h + TEXT_MARGIN;
     str = String.valueOf(Regions_handle.get_region_csv_field_y(instance, region_csv_index)/100.);
-    w = int(textWidth(str) * 2 + TEXT_MARGIN*2);
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_coord_y_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RECT_FIELD_Y.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -629,12 +671,12 @@ void UI_Regions_Config_update_instance(int instance)
     // Coord. w input
     y += h + TEXT_MARGIN;
     str = String.valueOf(Regions_handle.get_region_csv_field_width(instance, region_csv_index)/100.);
-    w = int(textWidth(str) * 2 + TEXT_MARGIN*2);
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_coord_w_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RECT_FIELD_WIDTH.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -665,12 +707,12 @@ void UI_Regions_Config_update_instance(int instance)
     // Coord. h input
     y += h + TEXT_MARGIN;
     str = String.valueOf(Regions_handle.get_region_csv_field_height(instance, region_csv_index)/100.);
-    w = int(textWidth(str) * 2 + TEXT_MARGIN*2);
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_coord_h_input_"+region_csv_index);
     tf_handle
-      .setId(instance*100+region_csv_index*10+id_index++)
+      .setId(instance*100+region_csv_index*10+UI_Regions_Config_tf_enum.RECT_FIELD_HEIGHT.ordinal())
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -802,6 +844,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
     }
 
     boolean updated = false;
+    boolean updated_relay = false;
 
     for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
       List<Textfield> cp5_tf_list = UI_Regions_Config_cp5_local[i].getAll(Textfield.class);
@@ -814,8 +857,8 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
         int instance = tf_handle.getId() / 100;
         if (i != instance) continue;
         int region_csv_index = tf_handle.getId() % 100 / 10;
-        int tf_index = tf_handle.getId() % 10;
-        //println("instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+        UI_Regions_Config_tf_enum tf_enum = UI_Regions_Config_tf_enum.values()[tf_handle.getId() % 10];
+        //println("instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
         Region_CSV region_csv = Regions_handle.get_region_csv_element(instance, region_csv_index);
 
         String str;
@@ -823,15 +866,15 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
         boolean bool;
 
         str = tf_handle.getText();
-        switch (tf_index) {
-          case 0: // Region name
+        switch (tf_enum) {
+          case REGION_NAME: // Region name
             if (!region_csv.name.equals(str)) {
               region_csv.name = str;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 1: // Region priority
+          case REGION_PRIORITY: // Region priority
             try {
               val = Integer.parseInt(str.trim());
             }
@@ -841,10 +884,10 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.priority != val) {
               region_csv.priority = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 2: // Relay index
+          case RELAY_INDEX: // Relay index
             try {
               val = Integer.parseInt(str.trim());
             }
@@ -854,18 +897,25 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.relay_index != val) {
               region_csv.relay_index = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 3: // No mark big
+          case RELAY_NAME: // Relay name
+            if (!Relay_Module_get_relay_name(region_csv.relay_index).equals(str)) {
+              Relay_Module_set_relay_name(region_csv.relay_index, str);
+              updated_relay = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            }
+            break;
+          case NO_MARK_BIG: // No mark big
             bool = str.toLowerCase().equals("true")?true:false;
             if (region_csv.no_mark_big != bool) {
               region_csv.no_mark_big = bool;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 4: // Rect field x
+          case RECT_FIELD_X: // Rect field x
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
@@ -875,10 +925,10 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_x != val) {
               region_csv.rect_field_x = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 5: // Rect field y
+          case RECT_FIELD_Y: // Rect field y
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
@@ -888,10 +938,10 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_y != val) {
               region_csv.rect_field_y = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 6: // Rect field width
+          case RECT_FIELD_WIDTH: // Rect field width
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
@@ -901,10 +951,10 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_width != val) {
               region_csv.rect_field_width = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
-          case 7: // Rect field height
+          case RECT_FIELD_HEIGHT: // Rect field height
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
@@ -914,13 +964,13 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_height != val) {
               region_csv.rect_field_height = val;
               updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             }
             break;
           default:
-            if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index+" error!");
+            if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum+" error!");
             break;
-        } // End of switch (tf_index)
+        } // End of switch (tf_enum)
       } // End of for (Textfield tf_handle:cp5_tf_list)
       if (updated_instance) {
         Regions_handle.update_regions_csv_file(i);
@@ -928,8 +978,12 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
         if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+i);
       }
     } // End of for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+    if (updated_relay) {
+      Relay_Module_update_relays_csv_file();
+      updated = true;
+      if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated relay");
+    }
     if (updated) {
-      // To restart program set frameCount to -1, this wiil call setup() of main.
       if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated");
       UI_Regions_Config_changed_any = true;
     }
