@@ -1,15 +1,4 @@
-/**
- * ControlP5 ScrollableList
- *
- * replaces DropdownList and and ListBox. 
- * List can be scrolled by dragging the list or using the scroll-wheel. 
- *
- * by Andreas Schlegel, 2014
- * www.sojamo.de/libraries/controlp5
- *
- */
 import controlP5.*;
-import java.util.*;
 
 //final static boolean PRINT_UI_INTERFACES_ALL_DBG = true;
 final static boolean PRINT_UI_INTERFACES_ALL_DBG = false;
@@ -22,6 +11,9 @@ final static boolean PRINT_UI_INTERFACES_SETUP_DBG = false;
 //final static boolean PRINT_UI_INTERFACES_UPDATE_DBG = true;
 final static boolean PRINT_UI_INTERFACES_UPDATE_DBG = false;
 
+//final static boolean PRINT_UI_INTERFACES_RESET_DBG = true;
+final static boolean PRINT_UI_INTERFACES_RESET_DBG = false;
+
 static color C_UI_INTERFACES_TEXT = #000000; // Black
 static color C_UI_INTERFACES_FILL_NORMAL = #FFFFFF; // White
 static color C_UI_INTERFACES_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
@@ -31,8 +23,8 @@ static color C_UI_INTERFACES_CURSOR = #0000FF; // Blue
 
 static boolean UI_Interfaces_enabled;
 
-static ControlFont cf1;
-static ControlP5[] cp5 = new ControlP5[PS_INSTANCE_MAX];
+static ControlFont UI_Interfaces_cf = null;
+static ControlP5[] UI_Interfaces_cp5 = new ControlP5[PS_INSTANCE_MAX];
 
 static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN"};
 
@@ -50,15 +42,17 @@ void UI_Interfaces_setup()
   //UI_Interfaces_enabled = true;
   UI_Interfaces_enabled = false;
 
-  cf1 = null;
-
   UI_Interfaces_changed_any = false;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     //UI_Interfaces_changed[i] = true;
     UI_Interfaces_changed[i] = false;
-    cp5[i] = null;
+    if (UI_Interfaces_cp5[i] != null)
+    {
+      UI_Interfaces_reset_instance(i);
+    }
+    UI_Interfaces_cp5[i] = null;
     switch (i)
     {
       case 0:
@@ -114,13 +108,13 @@ void UI_Interfaces_update_instance(int instance)
   int w, h;
   String str;
 
-  if(cf1 == null) {
-    cf1 = new ControlFont(SCREEN_PFront,12);
+  if(UI_Interfaces_cf == null) {
+    UI_Interfaces_cf = new ControlFont(SCREEN_PFront,12);
   }
 
-  if(cp5[instance] == null) {
-    cp5[instance] = new ControlP5(this, cf1);
-    cp5[instance].setBackground(C_UI_INTERFACES_FILL_NORMAL);
+  if(UI_Interfaces_cp5[instance] == null) {
+    UI_Interfaces_cp5[instance] = new ControlP5(this, UI_Interfaces_cf);
+    UI_Interfaces_cp5[instance].setBackground(C_UI_INTERFACES_FILL_NORMAL);
   }
   else {
     UI_Interfaces_reset_instance(instance);
@@ -140,7 +134,7 @@ void UI_Interfaces_update_instance(int instance)
   y = UI_Interfaces_y_base[instance];
 
   Textfield tf_ddborder;
-  tf_ddborder = cp5[instance].addTextfield("UI_Interfaces_ddborder");
+  tf_ddborder = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_ddborder");
   tf_ddborder.setId(instance)
     .setPosition(x+1, y)
     .setSize(w - 2, h)
@@ -153,7 +147,7 @@ void UI_Interfaces_update_instance(int instance)
 
   /* add a ScrollableList, by default it behaves like a DropdownList */
   ScrollableList sl_ddmenu;
-  sl_ddmenu = cp5[instance].addScrollableList("UI_Interfaces_ddmenu"/*l.get(0).toString()*/);
+  sl_ddmenu = UI_Interfaces_cp5[instance].addScrollableList("UI_Interfaces_ddmenu"/*l.get(0).toString()*/);
   sl_ddmenu.setId(instance)
     .setBackgroundColor( C_UI_INTERFACES_BORDER_ACTIVE /*color(255,0,255)*/ /*color( 255 , 128 )*/ )
     .setColorBackground( C_UI_INTERFACES_FILL_NORMAL /*color(255,255,0)*/ /*color(200)*/ )
@@ -176,7 +170,7 @@ void UI_Interfaces_update_instance(int instance)
     ;
   //y += h;
   sl_ddmenu.getCaptionLabel()
-      //.setFont(cf1)
+      //.setFont(UI_Interfaces_cf)
       .setSize(FONT_HEIGHT)
       .toUpperCase(false)
       ;
@@ -187,7 +181,7 @@ void UI_Interfaces_update_instance(int instance)
         //.padding(10,10,10,10)
         .marginTop = int(float(FONT_HEIGHT)/2.0-float(FONT_HEIGHT)/6.0);
   sl_ddmenu.getValueLabel()
-      //.setFont(cf1)
+      //.setFont(UI_Interfaces_cf)
       .setSize(FONT_HEIGHT)
       .toUpperCase(false)
       ;
@@ -212,7 +206,7 @@ void UI_Interfaces_update_instance(int instance)
   x -= w + TEXT_MARGIN;
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   Textlabel tl_ddlabel;
-  tl_ddlabel = cp5[instance].addTextlabel("UI_Interfaces_ddlabel");
+  tl_ddlabel = UI_Interfaces_cp5[instance].addTextlabel("UI_Interfaces_ddlabel");
   tl_ddlabel.setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_INTERFACES_TEXT)
@@ -235,7 +229,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param1 = cp5[instance].addTextfield("UI_Interfaces_filename");
+    tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_filename");
     tf_param1.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -251,7 +245,7 @@ void UI_Interfaces_update_instance(int instance)
       ;
     //println("tf.getText() = ", tf.getText());
     tf_param1.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -272,7 +266,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param1 = cp5[instance].addTextfield("UI_Interfaces_UARTport");
+    tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTport");
     tf_param1.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -287,7 +281,7 @@ void UI_Interfaces_update_instance(int instance)
       .setText(str)
       ;
     tf_param1.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -307,7 +301,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param2 = cp5[instance].addTextfield("UI_Interfaces_UARTbaud");
+    tf_param2 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTbaud");
     tf_param2.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -323,7 +317,7 @@ void UI_Interfaces_update_instance(int instance)
       ;
     //println("tf.getText() = ", tf.getText());
     tf_param2.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -348,7 +342,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param3 = cp5[instance].addTextfield("UI_Interfaces_UARTdps");
+    tf_param3 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTdps");
     tf_param3.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -364,7 +358,7 @@ void UI_Interfaces_update_instance(int instance)
       ;
     //println("tf.getText() = ", tf.getText());
     tf_param3.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -385,7 +379,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param1 = cp5[instance].addTextfield("UI_Interfaces_UDPremoteip");
+    tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPremoteip");
     tf_param1.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -403,7 +397,7 @@ void UI_Interfaces_update_instance(int instance)
     //controlP5.Textfield.cursorWidth = 10;
     //println("tf.getText() = ", tf.getText());
     tf_param1.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -424,7 +418,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param2 = cp5[instance].addTextfield("UI_Interfaces_UDPremoteport");
+    tf_param2 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPremoteport");
     tf_param2.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -440,7 +434,7 @@ void UI_Interfaces_update_instance(int instance)
       ;
     //println("tf.getText() = ", tf.getText());
     tf_param2.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -461,7 +455,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param3 = cp5[instance].addTextfield("UI_Interfaces_UDPlocalport");
+    tf_param3 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPlocalport");
     tf_param3.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -477,7 +471,7 @@ void UI_Interfaces_update_instance(int instance)
       ;
     //println("tf.getText() = ", tf.getText());
     tf_param3.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -498,7 +492,7 @@ void UI_Interfaces_update_instance(int instance)
     else
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
-    tf_param1 = cp5[instance].addTextfield("UI_Interfaces_SNserialnumber");
+    tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_SNserialnumber");
     tf_param1.setId(instance)
       .setPosition(x, y)
       .setSize(w, h)
@@ -516,7 +510,7 @@ void UI_Interfaces_update_instance(int instance)
     //controlP5.Textfield.cursorWidth = 10;
     //println("tf.getText() = ", tf.getText());
     tf_param1.getValueLabel()
-        //.setFont(cf1)
+        //.setFont(UI_Interfaces_cf)
         .setSize(FONT_HEIGHT)
         //.toUpperCase(false)
         ;
@@ -539,6 +533,8 @@ void UI_Interfaces_update_instance(int instance)
 
 void UI_Interfaces_reset()
 {
+  if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_RESET_DBG) println("UI_Interfaces_reset():Enter");
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     UI_Interfaces_reset_instance(i);
@@ -547,41 +543,28 @@ void UI_Interfaces_reset()
 
 void UI_Interfaces_reset_instance(int instance)
 {
-  if(cp5[instance] == null) {
+  if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_RESET_DBG) println("UI_Interfaces_reset_instance"+instance+"):Enter");
+
+  if(UI_Interfaces_cp5[instance] == null) {
     return;
   }
 
-  cp5[instance].remove("UI_Interfaces_ddmenu");
-  cp5[instance].remove("UI_Interfaces_ddborder");
-  cp5[instance].remove("UI_Interfaces_ddlabel");
-  cp5[instance].remove("UI_Interfaces_filename");
-  cp5[instance].remove("UI_Interfaces_UARTport");
-  cp5[instance].remove("UI_Interfaces_UARTbaud");
-  cp5[instance].remove("UI_Interfaces_UARTdps");
-  cp5[instance].remove("UI_Interfaces_UDPremoteip");
-  cp5[instance].remove("UI_Interfaces_UDPremoteport");
-  cp5[instance].remove("UI_Interfaces_UDPlocalport");
-  cp5[instance].remove("UI_Interfaces_SNserialnumber");
+  List<ControllerInterface<?>> cp5_list = UI_Interfaces_cp5[instance].getAll();
 
-  cp5[instance].setGraphics(this,0,0);
+  for (ControllerInterface controller:cp5_list)
+  {
+    //println("name:"+controller.getName());
+    UI_Interfaces_cp5[instance].remove(controller.getName());
+  }
+
+  UI_Interfaces_cp5[instance].setGraphics(this,0,0);
+
+  UI_Interfaces_cp5[instance] = null;
 }
 
 void UI_Interfaces_draw()
 {
-/*
-  String string;
-
-  // Sets the color used to draw lines and borders around shapes.
-  stroke(C_UI_INTERFACES_TEXT);
-  fill(C_UI_INTERFACES_TEXT);
-  //stroke(#FF0000);
-  //fill(#ff0000);
-  textSize(FONT_HEIGHT);
-  textAlign(LEFT, BASELINE);
-  
-  string = "Interface";
-  text(string, SCREEN_width - TEXT_MARGIN - FONT_HEIGHT * 3 - int(textWidth(string)), TEXT_MARGIN + FONT_HEIGHT * 2);
-*/
+  // Nothing to do.
 }
 
 void UI_Interfaces_mouse_pressed()
@@ -608,7 +591,7 @@ private void UI_Interfaces_mouse_right_pressed()
 
   for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_filename"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
     if (tf == null) continue;
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_mouse_right_pressed():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() != instance
@@ -636,7 +619,7 @@ void UI_Interfaces_mouse_released()
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     try {
-      Controller controller = (Controller)cp5[i].getWindow().getMouseOverList().get(0);
+      Controller controller = (Controller)UI_Interfaces_cp5[i].getWindow().getMouseOverList().get(0);
       if(controller.getName().equals("UI_Interfaces_ddmenu") == true) {
         ScrollableList sl_ddmenu = (ScrollableList)controller;
         Textfield tf_ddborder;
@@ -662,7 +645,7 @@ void UI_Interfaces_mouse_released()
           c = C_UI_INTERFACES_BORDER_NORMAL;
         }
         y = UI_Interfaces_y_base[i];
-        tf_ddborder = (Textfield)cp5[i].getController("UI_Interfaces_ddborder");
+        tf_ddborder = (Textfield)UI_Interfaces_cp5[i].getController("UI_Interfaces_ddborder");
         tf_ddborder
           .setPosition(x+1, y)
           .setSize(w - 2, h)
@@ -683,7 +666,7 @@ void UI_Interfaces_mouse_released()
     Textfield tf_param;
     String str;
 
-    sl_ddmenu = (ScrollableList)cp5[i].get("UI_Interfaces_ddmenu");
+    sl_ddmenu = (ScrollableList)UI_Interfaces_cp5[i].get("UI_Interfaces_ddmenu");
     if( sl_ddmenu != null && sl_ddmenu.isOpen()) {
       Textfield tf_ddborder;
       int x, y, w, h;
@@ -701,7 +684,7 @@ void UI_Interfaces_mouse_released()
       h = FONT_HEIGHT + TEXT_MARGIN*2;
       c = C_UI_INTERFACES_BORDER_NORMAL;
       y = UI_Interfaces_y_base[i];
-      tf_ddborder = (Textfield)cp5[i].getController("UI_Interfaces_ddborder");
+      tf_ddborder = (Textfield)UI_Interfaces_cp5[i].getController("UI_Interfaces_ddborder");
       tf_ddborder
         .setPosition(x+1, y)
         .setSize(w - 2, h)
@@ -710,24 +693,24 @@ void UI_Interfaces_mouse_released()
       sl_ddmenu.close();
     }
     if(PS_Interface[i] == PS_Interface_FILE) {
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_filename");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_filename");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = FILE_name[i];
         tf_param.setText(str);
       }
     }
     else if(PS_Interface[i] == PS_Interface_UART) {
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UARTport");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTport");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = UART_port_name;
         tf_param.setText(str);
       }
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UARTbaud");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTbaud");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = Integer.toString(UART_baud_rate);
         tf_param.setText(str);
       }
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UARTdps");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTdps");
        if( tf_param != null && tf_param.isFocus() == false) {
        str = Integer.toString(UART_data_bits) + UART_parity;
         if(int(UART_stop_bits*10.0)%10 == 0)
@@ -738,24 +721,24 @@ void UI_Interfaces_mouse_released()
       }
     }
     else if(PS_Interface[i] == PS_Interface_UDP) {
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UDPremoteip");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPremoteip");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = UDP_remote_ip[i];
         tf_param.setText(str);
       }
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UDPremoteport");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPremoteport");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = Integer.toString(UDP_remote_port[i]);
         tf_param.setText(str);
       }
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_UDPlocalport");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPlocalport");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = Integer.toString(UDP_local_port[i]);
         tf_param.setText(str);
       }
     }
     else /*if(PS_Interface[i] == PS_Interface_SN)*/ {
-      tf_param = (Textfield)cp5[i].get("UI_Interfaces_SNserialnumber");
+      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_SNserialnumber");
       if( tf_param != null && tf_param.isFocus() == false) {
         str = Integer.toString(SN_serial_number[i]);
         tf_param.setText(str);
@@ -782,7 +765,7 @@ void UI_Interfaces_ddmenu(int n)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    ScrollableList sl_ddmenu = (ScrollableList)(cp5[instance].get("UI_Interfaces_ddmenu"));
+    ScrollableList sl_ddmenu = (ScrollableList)(UI_Interfaces_cp5[instance].get("UI_Interfaces_ddmenu"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu():instance="+instance+":id="+sl_ddmenu.getId()+",isOpen="+sl_ddmenu.isOpen());
     if (sl_ddmenu.getId() == instance
         &&
@@ -799,11 +782,11 @@ void UI_Interfaces_ddmenu(int n)
 
 /*
   //int interface = ((sl_ddmenu.getItem(n)).getValue();
-  Map m = cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n);
+  Map m = UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n);
   int interface = m.get("value");
 */
   /* request the selected item based on index n */
-  //println("dropdown=", n, ",", cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n));
+  //println("dropdown=", n, ",", UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n));
   
   /* here an item is stored as a Map  with the following key-value pairs:
    * name, the given name of the item
@@ -819,7 +802,7 @@ void UI_Interfaces_ddmenu(int n)
       c.setBackground(color(255,0,0));
     else
       c.setBackground(color(255,255,0));
-    cp5[instance].get(ScrollableList.class, "dropdown").getItem(i).put("color", c);
+    UI_Interfaces_cp5[instance].get(ScrollableList.class, "dropdown").getItem(i).put("color", c);
   }
 */
   if( n >= PS_Interface[instance] ) n ++;
@@ -837,7 +820,7 @@ void UI_Interfaces_filename(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_filename"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_filename():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -868,7 +851,7 @@ void UI_Interfaces_UARTport(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTport"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTport"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -899,7 +882,7 @@ void UI_Interfaces_UARTbaud(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTbaud"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTbaud"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTbaud():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -931,7 +914,7 @@ void UI_Interfaces_UARTdps(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UARTdps"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTdps"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTdps():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -969,7 +952,7 @@ void UI_Interfaces_UDPremoteip(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPremoteip"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteip"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteip():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1000,7 +983,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPremoteport"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteport"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteport():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1032,7 +1015,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_UDPlocalport"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPlocalport"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPlocalport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1064,7 +1047,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(cp5[instance].get("UI_Interfaces_SNserialnumber"));
+    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber"));
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_SNserialnumber():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1090,208 +1073,3 @@ void UI_Interfaces_SNserialnumber(String theText)
     UI_Interfaces_changed_any = true;
   }
 }
-
-/*
-void keyPressed() {
-  switch(key) {
-    case('1'):
-    // make the ScrollableList behave like a ListBox
-    cp5[instance].get(ScrollableList.class, "dropdown").setType(ControlP5.LIST);
-    break;
-    case('2'):
-    // make the ScrollableList behave like a DropdownList
-    cp5[instance].get(ScrollableList.class, "dropdown").setType(ControlP5.DROPDOWN);
-    break;
-    case('3'):
-    // change content of the ScrollableList
-    List l = Arrays.asList("a-1", "b-1", "c-1", "d-1", "e-1", "f-1", "g-1", "h-1", "i-1", "j-1", "k-1");
-    cp5[instance].get(ScrollableList.class, "dropdown").setItems(l);
-    break;
-    case('4'):
-    // remove an item from the ScrollableList
-    cp5[instance].get(ScrollableList.class, "dropdown").removeItem("k-1");
-    break;
-    case('5'):
-    // clear the ScrollableList
-    cp5[instance].get(ScrollableList.class, "dropdown").clear();
-    break;
-  }
-}
-*/
-/*
-a list of all methods available for the ScrollableList Controller
-use ControlP5.printPublicMethodsFor(ScrollableList.class);
-to print the following list into the console.
-
-You can find further details about class ScrollableList in the javadoc.
-
-Format:
-ClassName : returnType methodName(parameter type)
-
-
-controlP5.Controller : CColor getColor() 
-controlP5.Controller : ControlBehavior getBehavior() 
-controlP5.Controller : ControlWindow getControlWindow() 
-controlP5.Controller : ControlWindow getWindow() 
-controlP5.Controller : ControllerProperty getProperty(String) 
-controlP5.Controller : ControllerProperty getProperty(String, String) 
-controlP5.Controller : ControllerView getView() 
-controlP5.Controller : Label getCaptionLabel() 
-controlP5.Controller : Label getValueLabel() 
-controlP5.Controller : List getControllerPlugList() 
-controlP5.Controller : Pointer getPointer() 
-controlP5.Controller : ScrollableList addCallback(CallbackListener) 
-controlP5.Controller : ScrollableList addListener(ControlListener) 
-controlP5.Controller : ScrollableList addListenerFor(int, CallbackListener) 
-controlP5.Controller : ScrollableList align(int, int, int, int) 
-controlP5.Controller : ScrollableList bringToFront() 
-controlP5.Controller : ScrollableList bringToFront(ControllerInterface) 
-controlP5.Controller : ScrollableList 1() 
-controlP5.Controller : ScrollableList linebreak() 
-controlP5.Controller : ScrollableList listen(boolean) 
-controlP5.Controller : ScrollableList lock() 
-controlP5.Controller : ScrollableList onChange(CallbackListener) 
-controlP5.Controller : ScrollableList onClick(CallbackListener) 
-controlP5.Controller : ScrollableList onDoublePress(CallbackListener) 
-controlP5.Controller : ScrollableList onDrag(CallbackListener) 
-controlP5.Controller : ScrollableList onDraw(ControllerView) 
-controlP5.Controller : ScrollableList onEndDrag(CallbackListener) 
-controlP5.Controller : ScrollableList onEnter(CallbackListener) 
-controlP5.Controller : ScrollableList onLeave(CallbackListener) 
-controlP5.Controller : ScrollableList onMove(CallbackListener) 
-controlP5.Controller : ScrollableList onPress(CallbackListener) 
-controlP5.Controller : ScrollableList onRelease(CallbackListener) 
-controlP5.Controller : ScrollableList onReleaseOutside(CallbackListener) 
-controlP5.Controller : ScrollableList onStartDrag(CallbackListener) 
-controlP5.Controller : ScrollableList onWheel(CallbackListener) 
-controlP5.Controller : ScrollableList plugTo(Object) 
-controlP5.Controller : ScrollableList plugTo(Object, String) 
-controlP5.Controller : ScrollableList plugTo(Object[]) 
-controlP5.Controller : ScrollableList plugTo(Object[], String) 
-controlP5.Controller : ScrollableList registerProperty(String) 
-controlP5.Controller : ScrollableList registerProperty(String, String) 
-controlP5.Controller : ScrollableList registerTooltip(String) 
-controlP5.Controller : ScrollableList removeBehavior() 
-controlP5.Controller : ScrollableList removeCallback() 
-controlP5.Controller : ScrollableList removeCallback(CallbackListener) 
-controlP5.Controller : ScrollableList removeListener(ControlListener) 
-controlP5.Controller : ScrollableList removeListenerFor(int, CallbackListener) 
-controlP5.Controller : ScrollableList removeListenersFor(int) 
-controlP5.Controller : ScrollableList removeProperty(String) 
-controlP5.Controller : ScrollableList removeProperty(String, String) 
-controlP5.Controller : ScrollableList setArrayValue(float[]) 
-controlP5.Controller : ScrollableList setArrayValue(int, float) 
-controlP5.Controller : ScrollableList setBehavior(ControlBehavior) 
-controlP5.Controller : ScrollableList setBroadcast(boolean) 
-controlP5.Controller : ScrollableList setCaptionLabel(String) 
-controlP5.Controller : ScrollableList setColor(CColor) 
-controlP5.Controller : ScrollableList setColorActive(int) 
-controlP5.Controller : ScrollableList setColorBackground(int) 
-controlP5.Controller : ScrollableList setColorCaptionLabel(int) 
-controlP5.Controller : ScrollableList setColorForeground(int) 
-controlP5.Controller : ScrollableList setColorLabel(int) 
-controlP5.Controller : ScrollableList setColorValue(int) 
-controlP5.Controller : ScrollableList setColorValueLabel(int) 
-controlP5.Controller : ScrollableList setDecimalPrecision(int) 
-controlP5.Controller : ScrollableList setDefaultValue(float) 
-controlP5.Controller : ScrollableList setHeight(int) 
-controlP5.Controller : ScrollableList setId(int) 
-controlP5.Controller : ScrollableList setImage(PImage) 
-controlP5.Controller : ScrollableList setImage(PImage, int) 
-controlP5.Controller : ScrollableList setImages(PImage, PImage, PImage) 
-controlP5.Controller : ScrollableList setImages(PImage, PImage, PImage, PImage) 
-controlP5.Controller : ScrollableList setLabel(String) 
-controlP5.Controller : ScrollableList setLabelVisible(boolean) 
-controlP5.Controller : ScrollableList setLock(boolean) 
-controlP5.Controller : ScrollableList setMax(float) 
-controlP5.Controller : ScrollableList setMin(float) 
-controlP5.Controller : ScrollableList setMouseOver(boolean) 
-controlP5.Controller : ScrollableList setMoveable(boolean) 
-controlP5.Controller : ScrollableList setPosition(float, float) 
-controlP5.Controller : ScrollableList setPosition(float[]) 
-controlP5.Controller : ScrollableList setSize(PImage) 
-controlP5.Controller : ScrollableList setSize(int, int) 
-controlP5.Controller : ScrollableList setStringValue(String) 
-controlP5.Controller : ScrollableList setUpdate(boolean) 
-controlP5.Controller : ScrollableList setValue(float) 
-controlP5.Controller : ScrollableList setValueLabel(String) 
-controlP5.Controller : ScrollableList setValueSelf(float) 
-controlP5.Controller : ScrollableList setView(ControllerView) 
-controlP5.Controller : ScrollableList setVisible(boolean) 
-controlP5.Controller : ScrollableList setWidth(int) 
-controlP5.Controller : ScrollableList show() 
-controlP5.Controller : ScrollableList unlock() 
-controlP5.Controller : ScrollableList unplugFrom(Object) 
-controlP5.Controller : ScrollableList unplugFrom(Object[]) 
-controlP5.Controller : ScrollableList unregisterTooltip() 
-controlP5.Controller : ScrollableList update() 
-controlP5.Controller : ScrollableList updateSize() 
-controlP5.Controller : String getAddress() 
-controlP5.Controller : String getInfo() 
-controlP5.Controller : String getName() 
-controlP5.Controller : String getStringValue() 
-controlP5.Controller : String toString() 
-controlP5.Controller : Tab getTab() 
-controlP5.Controller : boolean isActive() 
-controlP5.Controller : boolean isBroadcast() 
-controlP5.Controller : boolean isInside() 
-controlP5.Controller : boolean isLabelVisible() 
-controlP5.Controller : boolean isListening() 
-controlP5.Controller : boolean isLock() 
-controlP5.Controller : boolean isMouseOver() 
-controlP5.Controller : boolean isMousePressed() 
-controlP5.Controller : boolean isMoveable() 
-controlP5.Controller : boolean isUpdate() 
-controlP5.Controller : boolean isVisible() 
-controlP5.Controller : float getArrayValue(int) 
-controlP5.Controller : float getDefaultValue() 
-controlP5.Controller : float getMax() 
-controlP5.Controller : float getMin() 
-controlP5.Controller : float getValue() 
-controlP5.Controller : float[] getAbsolutePosition() 
-controlP5.Controller : float[] getArrayValue() 
-controlP5.Controller : float[] getPosition() 
-controlP5.Controller : int getDecimalPrecision() 
-controlP5.Controller : int getHeight() 
-controlP5.Controller : int getId() 
-controlP5.Controller : int getWidth() 
-controlP5.Controller : int listenerSize() 
-controlP5.Controller : void remove() 
-controlP5.Controller : void setView(ControllerView, int) 
-controlP5.ScrollableList : List getItems() 
-controlP5.ScrollableList : Map getItem(String) 
-controlP5.ScrollableList : Map getItem(int) 
-controlP5.ScrollableList : ScrollableList addItem(String, Object) 
-controlP5.ScrollableList : ScrollableList addItems(List) 
-controlP5.ScrollableList : ScrollableList addItems(Map) 
-controlP5.ScrollableList : ScrollableList addItems(String[]) 
-controlP5.ScrollableList : ScrollableList clear() 
-controlP5.ScrollableList : ScrollableList close() 
-controlP5.ScrollableList : ScrollableList open() 
-controlP5.ScrollableList : ScrollableList removeItem(String) 
-controlP5.ScrollableList : ScrollableList removeItems(List) 
-controlP5.ScrollableList : ScrollableList setBackgroundColor(int) 
-controlP5.ScrollableList : ScrollableList setBarHeight(int) 
-controlP5.ScrollableList : ScrollableList setBarVisible(boolean) 
-controlP5.ScrollableList : ScrollableList setItemHeight(int) 
-controlP5.ScrollableList : ScrollableList setItems(List) 
-controlP5.ScrollableList : ScrollableList setItems(Map) 
-controlP5.ScrollableList : ScrollableList setItems(String[]) 
-controlP5.ScrollableList : ScrollableList setOpen(boolean) 
-controlP5.ScrollableList : ScrollableList setScrollSensitivity(float) 
-controlP5.ScrollableList : ScrollableList setType(int) 
-controlP5.ScrollableList : boolean isBarVisible() 
-controlP5.ScrollableList : boolean isOpen() 
-controlP5.ScrollableList : int getBackgroundColor() 
-controlP5.ScrollableList : int getBarHeight() 
-controlP5.ScrollableList : int getHeight() 
-controlP5.ScrollableList : void controlEvent(ControlEvent) 
-controlP5.ScrollableList : void keyEvent(KeyEvent) 
-controlP5.ScrollableList : void setDirection(int) 
-controlP5.ScrollableList : void updateItemIndexOffset() 
-java.lang.Object : String toString() 
-java.lang.Object : boolean equals(Object) 
-
-created: 2015/03/24 12:21:22
-
-*/

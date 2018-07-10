@@ -466,38 +466,105 @@ class Regions {
     return regions_csv_array[instance].size();
   }
 
-  String get_region_csv_name(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).name;
+  Region_CSV get_region_csv_element(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index);
   }
 
-  int get_region_csv_priority(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).priority;
+  String get_region_csv_name(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).name;
   }
 
-  int get_region_csv_relay_index(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).relay_index;
+  int get_region_csv_priority(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).priority;
   }
 
-  boolean get_region_csv_no_mark_big(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).no_mark_big;
+  int get_region_csv_relay_index(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).relay_index;
   }
 
-  int get_region_csv_field_x(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).rect_field_x;
+  boolean get_region_csv_no_mark_big(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).no_mark_big;
   }
 
-  int get_region_csv_field_y(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).rect_field_y;
+  int get_region_csv_field_x(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).rect_field_x;
   }
 
-  int get_region_csv_field_width(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).rect_field_width;
+  int get_region_csv_field_y(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).rect_field_y;
   }
 
-  int get_region_csv_field_height(int instance, int region_index) {
-    return regions_csv_array[instance].get(region_index).rect_field_height;
+  int get_region_csv_field_width(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).rect_field_width;
   }
 
+  int get_region_csv_field_height(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).rect_field_height;
+  }
+
+  void update_regions_csv_file(int instance) {
+    // A Table object
+    Table table;
+
+    table = new Table();
+    table.addColumn("Region_Name");
+    table.addColumn("Region_Priority");
+    table.addColumn("Relay_Index");
+    table.addColumn("No_Mark_Big");
+    table.addColumn("Rect_Field_X");
+    table.addColumn("Rect_Field_Y");
+    table.addColumn("Rect_Width");
+    table.addColumn("Rect_Height");
+    table.addColumn("Rect_First_Color");
+    table.addColumn("Rect_Color");
+    table.addColumn("Rect_Weight");
+    table.addColumn("Rect_Dashed");
+    table.addColumn("Marker_Stroke_Color");
+    table.addColumn("Marker_Stroke_Weight");
+    table.addColumn("Marker_Fill_Color");
+    table.addColumn(":Priority 0 is most high priority");
+    table.addColumn("X/Y/Width/Height unit is cm. 100cm = 1meter");
+    table.addColumn("Color format is AARRGGBB(ex. FF000000 = opaque Black)");
+
+    for (Region_CSV region_csv:regions_csv_array[instance]) {
+      TableRow variable = table.addRow();
+      variable.setString( "Region_Name",
+                          region_csv.name);
+      variable.setInt(    "Region_Priority",
+                          region_csv.priority);
+      variable.setInt(    "Relay_Index",
+                          region_csv.relay_index);
+      variable.setString( "No_Mark_Big",
+                          region_csv.no_mark_big?"TRUE":"FALSE");
+      variable.setInt(    "Rect_Field_X",
+                          region_csv.rect_field_x);
+      variable.setInt(    "Rect_Field_Y",
+                          region_csv.rect_field_y);
+      variable.setInt(    "Rect_Width",
+                          region_csv.rect_field_width);
+      variable.setInt(    "Rect_Height",
+                          region_csv.rect_field_height);
+      variable.setString( "Rect_First_Color",
+                          String.format("%08X", region_csv.rect_stroke_first_color));
+      variable.setString( "Rect_Color",
+                          String.format("%08X", region_csv.rect_stroke_other_color));
+      variable.setInt(    "Rect_Weight",
+                          region_csv.rect_stroke_weight);
+      variable.setInt(    "Rect_Dashed",
+                          region_csv.rect_dashed_gap);
+      variable.setString( "Marker_Stroke_Color",
+                          String.format("%08X", region_csv.marker_stroke_color));
+      variable.setInt(    "Marker_Stroke_Weight",
+                          region_csv.marker_stroke_weight);
+      variable.setString( "Marker_Fill_Color",
+                          String.format("%08X", region_csv.marker_fill_color));
+    }
+
+    String file_full_name;
+
+    file_full_name = REGIONS_FILE_NAME + "_" + instance + REGIONS_FILE_EXT;
+    saveTable(table, "data/" + file_full_name);
+  }
 }
 
 class Region_Data {

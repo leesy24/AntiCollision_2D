@@ -70,6 +70,11 @@ void keyPressed()
       // To restart program set frameCount to -1, this wiil call setup() of main.
       frameCount = -1;
     }
+    else if(keyCode == KeyEvent.VK_F2)
+    {
+      UI_Regions_Config_enabled = !UI_Regions_Config_enabled;
+      UI_Regions_Config_update();
+    }
   }
 }
 /**/

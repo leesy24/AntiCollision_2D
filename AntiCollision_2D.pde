@@ -1,3 +1,4 @@
+import java.util.*;
 
 // Define to enable or disable the log print in console.
 //final static boolean PRINT_DBG = true; 
@@ -106,19 +107,11 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (UI_Interfaces_changed_any) {
-    // Title set to default.
-    Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
-    Config_setup();
-    ROI_Data_setup();
-    PS_Data_setup();
-    Screen_setup();
-    Regions_setup();
-    Grid_setup();
-    UI_Buttons_setup();
-    UI_Interfaces_update();
-    // Set window title
-    surface.setTitle(Title);
+  if (UI_Interfaces_changed_any
+      ||
+      UI_Regions_Config_changed_any) {
+      // To restart program set frameCount to -1, this wiil call setup() of main.
+      frameCount = -1;
   }
   if (Screen_check_update()) {
     //PS_Data_setup();
@@ -127,6 +120,7 @@ void draw() {
     Grid_setup();
     UI_Buttons_setup();
     UI_Interfaces_update();
+    UI_Regions_Config_update();
   }
   Dbg_Time_logs_handle.add("Screen_check_update()");
 
@@ -182,6 +176,8 @@ void draw() {
   Dbg_Time_logs_handle.add("Bubble_Info_draw()");
   UI_Interfaces_draw();
   Dbg_Time_logs_handle.add("UI_Interfaces_draw()");
+  UI_Regions_Config_draw();
+  Dbg_Time_logs_handle.add("UI_Regions_Config_draw()");
   Notice_Messages_draw();
   Dbg_Time_logs_handle.add("Notice_Messages_draw()");
 
