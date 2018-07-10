@@ -14,6 +14,14 @@ final static boolean PRINT_UI_REGIONS_CONFIG_UPDATE_DBG = false;
 //final static boolean PRINT_UI_REGIONS_CONFIG_RESET_DBG = true;
 final static boolean PRINT_UI_REGIONS_CONFIG_RESET_DBG = false;
 
+//final static boolean PRINT_UI_REGIONS_CONFIG_DRAW_DBG = true;
+final static boolean PRINT_UI_REGIONS_CONFIG_DRAW_DBG = false;
+
+//final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_DBG = true;
+final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_DBG = false;
+//final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_ERR = true;
+final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_ERR = false;
+
 static color C_UI_REGIONS_CONFIG_TEXT = #000000; // Black
 static color C_UI_REGIONS_CONFIG_FILL_NORMAL = #FFFFFF; // White
 static color C_UI_REGIONS_CONFIG_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
@@ -742,6 +750,8 @@ void UI_Regions_Config_reset_instance(int instance)
 
 void UI_Regions_Config_draw()
 {
+  if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_DRAW_DBG) println("UI_Regions_Config_draw():Enter");
+
   if (UI_Regions_Config_enabled) return;
 
   if (UI_Regions_Config_cp5_global == null)
@@ -778,12 +788,12 @@ class UI_Regions_Config_TF_ControlListener implements ControlListener {
 class UI_Regions_Config_BT_ControlListener implements ControlListener {
   int col;
   public void controlEvent(ControlEvent theEvent) {
-    println("UI_Regions_Config_BT_ControlListener:controlEvent():Enter");
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Enter");
 
     Button bt_handle = (Button)theEvent.getController();
     int button_index = bt_handle.getId();
 
-    println("UI_Regions_Config_BT_ControlListener:controlEvent():button_index="+button_index);
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():button_index="+button_index);
 
     if (button_index != 0) // Button is no OK.
     {
@@ -805,7 +815,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
         if (i != instance) continue;
         int region_csv_index = tf_handle.getId() % 100 / 10;
         int tf_index = tf_handle.getId() % 10;
-        //println("indtance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+        //println("instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
         Region_CSV region_csv = Regions_handle.get_region_csv_element(instance, region_csv_index);
 
         String str;
@@ -818,6 +828,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (!region_csv.name.equals(str)) {
               region_csv.name = str;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 1: // Region priority
@@ -830,6 +841,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.priority != val) {
               region_csv.priority = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 2: // Relay index
@@ -842,6 +854,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.relay_index != val) {
               region_csv.relay_index = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 3: // No mark big
@@ -849,6 +862,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.no_mark_big != bool) {
               region_csv.no_mark_big = bool;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 4: // Rect field x
@@ -861,6 +875,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_x != val) {
               region_csv.rect_field_x = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 5: // Rect field y
@@ -873,6 +888,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_y != val) {
               region_csv.rect_field_y = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 6: // Rect field width
@@ -885,6 +901,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_width != val) {
               region_csv.rect_field_width = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           case 7: // Rect field height
@@ -897,24 +914,27 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (region_csv.rect_field_height != val) {
               region_csv.rect_field_height = val;
               updated_instance = true;
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
             }
             break;
           default:
-            println("indtance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index);
+            if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region csv index="+region_csv_index+",tf index="+tf_index+" error!");
             break;
         } // End of switch (tf_index)
       } // End of for (Textfield tf_handle:cp5_tf_list)
       if (updated_instance) {
         Regions_handle.update_regions_csv_file(i);
         updated = true;
+        if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+i);
       }
     } // End of for (int i = 0; i < PS_INSTANCE_MAX; i ++)
     if (updated) {
       // To restart program set frameCount to -1, this wiil call setup() of main.
-      frameCount = -1;
+      if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated");
+      UI_Regions_Config_changed_any = true;
     }
     else {
-      UI_Regions_Config_changed_any = true;
+      UI_Regions_Config_enabled = false;
     }
   }
 
