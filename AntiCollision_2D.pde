@@ -79,6 +79,7 @@ void setup() {
   Relay_Module_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
+  UI_Regions_Config_setup();
   Disk_Space_setup();
   Version_Date_setup();
 
