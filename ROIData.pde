@@ -95,20 +95,20 @@ final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = false;
 
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
-//static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 10000; // = 1 meter
-static int ROI_OBJECT_DETECT_DISTANCE_LIMIT = 5000; // = 50 cm= 0.5 meter
+//static int ROI_OBJECT_DETECT_DISTANCE_MIN = 10000; // = 1 meter
+static int ROI_OBJECT_DETECT_DISTANCE_MIN = 5000; // = 50 cm= 0.5 meter
 
-static int ROI_OBJECT_NO_MARK_DIAMETER_MIN = 20000; // = 200cm= 2meter
+static int ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = 20000; // = 200cm= 2meter
 
-static int ROI_OBJECT_TIME_LIMIT = 500; // unit is milli-second(ms)
+static int ROI_OBJECT_DETECT_TIME_MIN = 500; // unit is milli-second(ms)
 
 static int ROI_OBJECT_DRAW_INFO_TIMEOUT = 10000; // 10 seconds
 
-static int ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = 2000; // unit is ms.
-static int ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = 30000; // unit is ms.
+static int PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = 2000; // unit is ms.
+static int PS_DATA_SAVE_EVENTS_DURATION_LIMIT = 30000; // unit is ms.
 
-final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MIN = 1000; // 1 second
-final static int ROI_OBJECT_SAVE_EVENTS_DURATION_MAX = 60*1000; // 60 seconds = 1 minute
+final static int PS_DATA_SAVE_EVENTS_DURATION_MIN = 1000; // 1 second
+final static int PS_DATA_SAVE_EVENTS_DURATION_MAX = 60*1000; // 60 seconds = 1 minute
 
 static ROI_Data ROI_Data_handle = null;
 
@@ -123,19 +123,19 @@ static boolean[] ROI_Data_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 void ROI_Data_setup() {
   if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SETUP_DBG) println("ROI_Data_setup():Enter");
 
-  if (ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT > ROI_OBJECT_SAVE_EVENTS_DURATION_MAX)
-    ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
-  if (ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT < ROI_OBJECT_SAVE_EVENTS_DURATION_MIN)
-    ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
-  //println("ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT="+ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT);
+  if (PS_DATA_SAVE_EVENTS_DURATION_DEFAULT > PS_DATA_SAVE_EVENTS_DURATION_MAX)
+    PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = PS_DATA_SAVE_EVENTS_DURATION_MAX;
+  if (PS_DATA_SAVE_EVENTS_DURATION_DEFAULT < PS_DATA_SAVE_EVENTS_DURATION_MIN)
+    PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = PS_DATA_SAVE_EVENTS_DURATION_MIN;
+  //println("PS_DATA_SAVE_EVENTS_DURATION_DEFAULT="+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT);
 
-  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT > ROI_OBJECT_SAVE_EVENTS_DURATION_MAX)
-    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MAX;
-  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT < ROI_OBJECT_SAVE_EVENTS_DURATION_MIN)
-    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_MIN;
-  if (ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT < ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT)
-    ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
-  //println("ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT="+ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT);
+  if (PS_DATA_SAVE_EVENTS_DURATION_LIMIT > PS_DATA_SAVE_EVENTS_DURATION_MAX)
+    PS_DATA_SAVE_EVENTS_DURATION_LIMIT = PS_DATA_SAVE_EVENTS_DURATION_MAX;
+  if (PS_DATA_SAVE_EVENTS_DURATION_LIMIT < PS_DATA_SAVE_EVENTS_DURATION_MIN)
+    PS_DATA_SAVE_EVENTS_DURATION_LIMIT = PS_DATA_SAVE_EVENTS_DURATION_MIN;
+  if (PS_DATA_SAVE_EVENTS_DURATION_LIMIT < PS_DATA_SAVE_EVENTS_DURATION_DEFAULT)
+    PS_DATA_SAVE_EVENTS_DURATION_LIMIT = PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+  //println("PS_DATA_SAVE_EVENTS_DURATION_LIMIT="+PS_DATA_SAVE_EVENTS_DURATION_LIMIT);
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
@@ -303,7 +303,7 @@ class ROI_Data {
       object_new.time_stamp_start = object_new.time_stamp_last = time_stamp_curr[instance];
       for (ROI_Object_Data object_prev:objects_array[instance]) {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_prev["+objects_array[instance].indexOf(object_prev)+"]:"+"scr_start_x="+object_prev.scr_start_x+",scr_start_y="+object_prev.scr_start_y+",scr_end_x="+object_prev.scr_end_x+",scr_end_y="+object_prev.scr_end_y);
-        if (check_objects_mi_overlapped(object_new, object_prev, ROI_OBJECT_DETECT_DISTANCE_LIMIT)) {
+        if (check_objects_mi_overlapped(object_new, object_prev, ROI_OBJECT_DETECT_DISTANCE_MIN)) {
           //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"object_prev["+objects_array[instance].indexOf(object_prev)+"]:"+"overlapped");
           object_new.time_stamp_start = object_prev.time_stamp_start;
         }
@@ -315,7 +315,7 @@ class ROI_Data {
     for (ROI_Object_Data object_prev:objects_array[instance]) {
       found = false;
       for (ROI_Object_Data object_new:objects_new) {
-        if (check_objects_mi_overlapped(object_prev, object_new, ROI_OBJECT_DETECT_DISTANCE_LIMIT)) {
+        if (check_objects_mi_overlapped(object_prev, object_new, ROI_OBJECT_DETECT_DISTANCE_MIN)) {
           found = true;
           break;
         }
@@ -325,17 +325,17 @@ class ROI_Data {
         //int time_duration = int(object_prev.time_stamp_last - object_prev.time_stamp_start);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
         //println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
-        if (time_duration >= ROI_OBJECT_TIME_LIMIT) {
-        //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_TIME_LIMIT*2L) {
+        if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
+        //if (object_prev.time_stamp_last - object_prev.time_stamp_start >= ROI_OBJECT_DETECT_TIME_MIN*2L) {
           if (time_duration
               >
-              ( ROI_OBJECT_TIME_LIMIT
+              ( ROI_OBJECT_DETECT_TIME_MIN
                 *
                 Regions_handle.get_marker_stroke_weight(instance, object_prev.region_indexes.get(0)))) {
             object_prev.time_stamp_start =
               object_prev.time_stamp_last
               -
-              ( ROI_OBJECT_TIME_LIMIT
+              ( ROI_OBJECT_DETECT_TIME_MIN
                 *
                 Regions_handle.get_marker_stroke_weight(instance, object_prev.region_indexes.get(0)));
           }
@@ -373,7 +373,7 @@ class ROI_Data {
       //int time_duration = int(object.time_stamp_last - object.time_stamp_start);
       boolean no_mark_big = false;
 
-      if (time_duration < ROI_OBJECT_TIME_LIMIT) {
+      if (time_duration < ROI_OBJECT_DETECT_TIME_MIN) {
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
         continue;
       }
@@ -388,7 +388,7 @@ class ROI_Data {
 
       if (no_mark_big
           &&
-          object.mi_diameter >= ROI_OBJECT_NO_MARK_DIAMETER_MIN) {
+          object.mi_diameter >= ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN) {
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
         // No mark for all object when no mark region has big object.
         no_mark = true;
@@ -414,7 +414,7 @@ class ROI_Data {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
         //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
 
-        if (time_duration < ROI_OBJECT_TIME_LIMIT) {
+        if (time_duration < ROI_OBJECT_DETECT_TIME_MIN) {
           if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
           continue;
         }
@@ -430,7 +430,7 @@ class ROI_Data {
           continue;
         }
 
-        weight = 1 * time_duration / ROI_OBJECT_TIME_LIMIT;
+        weight = 1 * time_duration / ROI_OBJECT_DETECT_TIME_MIN;
         weight = min(weight, Regions_handle.get_marker_stroke_weight(instance, object.region_indexes.get(0)));
         fill(Regions_handle.get_marker_fill_color(instance, object.region_indexes.get(0)));
         // Sets the color and weight used to draw lines and borders around shapes.
@@ -474,7 +474,7 @@ class ROI_Data {
     if (!save_events_started[instance]) {
       save_events_start_time_millis[instance] = millis();
       save_events_start_time_stamp[instance] = new Date().getTime();
-      save_events_duration_millis[instance] = ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+      save_events_duration_millis[instance] = PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       save_events_started[instance] = true;
       save_events_dir_full_name[instance] =
         sketchPath("events\\")
@@ -496,11 +496,11 @@ class ROI_Data {
     }
     else {
       // Extend save events duration.
-      save_events_duration_millis[instance] = save_events_start_time_millis_diff + ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT;
+      save_events_duration_millis[instance] = save_events_start_time_millis_diff + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
     }
 
     // If ROI Data has objects than keep save events until limit time.
-    if (save_events_start_time_millis_diff > ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT) {
+    if (save_events_start_time_millis_diff > PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
       save_events_started[instance] = false;
       return;
     }
@@ -541,10 +541,10 @@ class ROI_Data {
         always_file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
       }
       catch (NumberFormatException e) {
-        always_file_time_stamp = save_events_start_time_stamp[instance] - ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT; // to skip file.
+        always_file_time_stamp = save_events_start_time_stamp[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT; // to skip file.
       }
       // Check file time stamp is older than expected time stamp to skip.
-      if (always_file_time_stamp <= save_events_start_time_stamp[instance] - ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT) continue;
+      if (always_file_time_stamp <= save_events_start_time_stamp[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT) continue;
       // Check target file already exist to skip copy file.
       if (new File(save_events_dir_full_name[instance] + always_file_name).isFile()) continue;
       // Copy data files only not exist.
@@ -970,7 +970,7 @@ class ROI_Data {
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"point_curr["+i+"]:"+"region="+point_curr.region+",mi_x="+point_curr.mi_x+",mi_y="+point_curr.mi_y+",scr_x="+point_curr.scr_x+",scr_y="+point_curr.scr_y);
         distance = get_points_distance(point_prev.mi_x, point_prev.mi_y, point_curr.mi_x, point_curr.mi_y);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:detect_objects():"+"distance="+distance);
-        if (distance <= ROI_OBJECT_DETECT_DISTANCE_LIMIT) {
+        if (distance <= ROI_OBJECT_DETECT_DISTANCE_MIN) {
           points_group.add(point_curr);
           points.remove(i);
           point_prev = point_curr;

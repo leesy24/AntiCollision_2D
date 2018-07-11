@@ -35,14 +35,20 @@ void Const_setup()
     String name = variable.getString("Name");
     if(name.equals("FRAME_RATE"))
       FRAME_RATE = variable.getInt("Value");
+    else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
+      PS_DATA_SAVE_ALWAYS_DURATION = variable.getInt("Value");
+    else if (name.equals("PS_DATA_SAVE_EVENTS_DURATION_DEFAULT"))
+      PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = variable.getInt("Value");
+    else if (name.equals("PS_DATA_SAVE_EVENTS_DURATION_LIMIT"))
+      PS_DATA_SAVE_EVENTS_DURATION_LIMIT = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_DETECT_DISTANCE_LIMIT"))
-      ROI_OBJECT_DETECT_DISTANCE_LIMIT = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_NO_MARK_DIAMETER_MIN"))
-      ROI_OBJECT_NO_MARK_DIAMETER_MIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_TIME_LIMIT"))
-      ROI_OBJECT_TIME_LIMIT = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_DISTANCE_MIN"))
+      ROI_OBJECT_DETECT_DISTANCE_MIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN"))
+      ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_TIME_MIN"))
+      ROI_OBJECT_DETECT_TIME_MIN = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_port_name"))
       Relay_Module_UART_port_name = variable.getString("Value");
     else if (name.equals("Relay_Module_UART_baud_rate"))
@@ -53,12 +59,6 @@ void Const_setup()
       Relay_Module_UART_data_bits = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_stop_bits"))
       Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
-    else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
-      PS_DATA_SAVE_ALWAYS_DURATION = variable.getInt("Value");
-    else if (name.equals("ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT"))
-      ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT = variable.getInt("Value");
-    else if (name.equals("ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT"))
-      ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT = variable.getInt("Value");
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_FILL"))
       C_RELAY_MODULE_INDICATOR_OFF_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_STROKE"))
@@ -161,24 +161,39 @@ void Const_create()
   variable.setString("Comment", "Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec");
 
   variable = table.addRow();
+  variable.setString("Name", "PS_DATA_SAVE_ALWAYS_DURATION");
+  variable.setInt("Value", PS_DATA_SAVE_ALWAYS_DURATION);
+  variable.setString("Comment", "Time duration of received PS data keep in milli-seconds to save on disk.");
+
+  variable = table.addRow();
+  variable.setString("Name", "PS_DATA_SAVE_EVENTS_DURATION_DEFAULT");
+  variable.setInt("Value", PS_DATA_SAVE_EVENTS_DURATION_DEFAULT);
+  variable.setString("Comment", "Default time duration of event PS data keep in milli-seconds to save on disk.");
+
+  variable = table.addRow();
+  variable.setString("Name", "PS_DATA_SAVE_EVENTS_DURATION_LIMIT");
+  variable.setInt("Value", PS_DATA_SAVE_EVENTS_DURATION_LIMIT);
+  variable.setString("Comment", "Limit time duration of event PS data keep in milli-seconds to save on disk.");
+
+  variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_MARKER_MARGIN");
   variable.setInt("Value", ROI_OBJECT_MARKER_MARGIN);
   variable.setString("Comment", "Margin of objects ROI marker.");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_DETECT_DISTANCE_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_DETECT_DISTANCE_LIMIT);
-  variable.setString("Comment", "Distance limit of object to decide one object ROI.(5000=50cm=0.5 meter)");
+  variable.setString("Name", "ROI_OBJECT_DETECT_DISTANCE_MIN");
+  variable.setInt("Value", ROI_OBJECT_DETECT_DISTANCE_MIN);
+  variable.setString("Comment", "Minimum distance of object to detect one object ROI.(5000=50cm=0.5meter)");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_NO_MARK_DIAMETER_MIN");
-  variable.setInt("Value", ROI_OBJECT_NO_MARK_DIAMETER_MIN);
+  variable.setString("Name", "ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN");
+  variable.setInt("Value", ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN);
   variable.setString("Comment", "Minimum Diameter of object to no maker display.(20000=200cm=2meter)");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_TIME_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_TIME_LIMIT);
-  variable.setString("Comment", "Time limit of object to decide one object ROI.(unit is milli-seconds)");
+  variable.setString("Name", "ROI_OBJECT_DETECT_TIME_MIN");
+  variable.setInt("Value", ROI_OBJECT_DETECT_TIME_MIN);
+  variable.setString("Comment", "Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)");
 
   variable = table.addRow();
   variable.setString("Name", "Relay_Module_UART_port_name");
@@ -204,21 +219,6 @@ void Const_create()
   variable.setString("Name", "Relay_Module_UART_stop_bits");
   variable.setFloat("Value", Relay_Module_UART_stop_bits);
   variable.setString("Comment", "UART stop bits of Relay module.");
-
-  variable = table.addRow();
-  variable.setString("Name", "PS_DATA_SAVE_ALWAYS_DURATION");
-  variable.setInt("Value", PS_DATA_SAVE_ALWAYS_DURATION);
-  variable.setString("Comment", "Duration of PS data keep time in milli-seconds to save on disk.");
-
-  variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT");
-  variable.setInt("Value", ROI_OBJECT_SAVE_EVENTS_DURATION_DEFAULT);
-  variable.setString("Comment", "Default duration of ROI data keep time in milli-seconds to save on disk.");
-
-  variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT");
-  variable.setInt("Value", ROI_OBJECT_SAVE_EVENTS_DURATION_LIMIT);
-  variable.setString("Comment", "Duration limit of ROI data keep time in milli-seconds to save on disk.");
 
   variable = table.addRow();
   variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_FILL");
