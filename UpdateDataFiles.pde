@@ -63,13 +63,20 @@ void Update_Data_Files_check()
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
       break;
     case ZIP_READY:
-      UI_Num_Pad_setup("Input Password");
+      UI_Num_Pad_setup("Input\nZIP file\npassword");
       Update_Data_Files_state = Update_Data_Files_state_enum.PASSWORD_REQ;
       break;
     case PASSWORD_REQ:
       UI_Num_Pad_handle.draw();
       if (!UI_Num_Pad_handle.input_done())
       {
+        break;
+      }
+      if (UI_Num_Pad_handle.input_string == null)
+      {
+        UI_Message_Box_setup("Escape !", "Please remove the USB drive.\nIf you don't want update.", 3000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       Update_Data_Files_zip_file_password = UI_Num_Pad_handle.input_string;
