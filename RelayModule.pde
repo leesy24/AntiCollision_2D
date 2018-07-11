@@ -59,8 +59,8 @@ final static String RELAY_MODULE_RELAYS_FILE_EXT = ".csv";
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
-LinkedList<UI_Relay_Indicator> Relay_Module_indicators = new LinkedList();
-LinkedList<Relay_CSV> Relay_Module_relays_csv = new LinkedList();
+LinkedList<UI_Relay_Indicator> Relay_Module_indicators = null;
+LinkedList<Relay_CSV> Relay_Module_relays_csv = null;
 
 class Relay_CSV {
   String relay_name;
@@ -81,6 +81,14 @@ void Relay_Module_setup()
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
 
+  if (Relay_Module_indicators == null)
+  {
+    Relay_Module_indicators = new LinkedList();
+  }
+  else
+  {
+    Relay_Module_indicators.clear();
+  }
   for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
   {
     Relay_Module_output_val[relay_index] = false;
@@ -97,7 +105,32 @@ void Relay_Module_setup()
   table = loadTable(file_full_name, "header");
   // Check loadTable failed.
   if(table == null) {
+    if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_SETUP_ERR) println("Relay_Module_setup():loadTable("+file_full_name+") Error!");
     return;
+  }
+
+  if (Relay_Module_indicators == null)
+  {
+    Relay_Module_indicators = new LinkedList();
+  }
+  else
+  {
+    Relay_Module_indicators.clear();
+  }
+
+  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
+  {
+    Relay_Module_output_val[relay_index] = false;
+    Relay_Module_indicators.add(new UI_Relay_Indicator());
+  }
+
+  if (Relay_Module_relays_csv == null)
+  {
+    Relay_Module_relays_csv = new LinkedList();
+  }
+  else
+  {
+    Relay_Module_relays_csv.clear();
   }
 
   for (TableRow variable:table.rows()) {
@@ -320,7 +353,34 @@ void Relay_Module_set_relay_name(int relay_index, String relay_name)
 
 void Relay_Module_update_relays_csv_file()
 {
-  
+  // A Table object
+  Table table;
+
+  table = new Table();
+  table.addColumn("Relay_Name");
+  table.addColumn("Relay_Index");
+  table.addColumn("Indicator_Screen_Center_X");
+  table.addColumn("Indicator_Screen_Top_Y");
+  table.addColumn("Idicator_Text_Height");
+
+  for (Relay_CSV relay_csv:Relay_Module_relays_csv) {
+    TableRow variable = table.addRow();
+    variable.setString( "Relay_Name",
+                        relay_csv.relay_name);
+    variable.setInt(    "Relay_Index",
+                        relay_csv.relay_index);
+    variable.setInt(    "Indicator_Screen_Center_X",
+                        relay_csv.indicator_scr_center_x);
+    variable.setInt(    "Indicator_Screen_Top_Y",
+                        relay_csv.indicator_scr_top_y);
+    variable.setInt(    "Idicator_Text_Height",
+                        relay_csv.indicator_text_height);
+  }
+
+  String file_full_name;
+
+  file_full_name = RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT;
+  saveTable(table, "data/" + file_full_name);
 }
 
 void Relay_Module_UART_clear()
