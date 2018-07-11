@@ -41,8 +41,18 @@ static boolean UI_Buttons_enabled;
 static Buttons_Group UI_Buttons_group_zoom;
 static LinkedList<Buttons_Group>[] UI_Buttons_groups_array;
 static enum UI_Buttons_action_enum {
-  ZOOM_PLUSE, ZOOM_MINUS, ROTATE_CW, ROTATE_CCW, MIRROR_LR, MIRROR_UD, RESET
+  ZOOM_PLUSE, ZOOM_MINUS, ROTATE_CW, ROTATE_CCW, MIRROR_LR, MIRROR_UD, RESET, MAX
 }
+
+static enum UI_Buttons_state_enum {
+  IDLE,
+  PASSWORD_REQ,
+  DRAW_BUTTONS,
+  DISPLAY_MESSAGE,
+  MAX
+}
+static UI_Buttons_state_enum UI_Buttons_state;
+static UI_Buttons_state_enum UI_Buttons_state_next;
 
 void UI_Buttons_setup()
 {
@@ -59,6 +69,8 @@ void UI_Buttons_setup()
   int w_h = FONT_HEIGHT * 2;
   int center_x_adv = 0;
   int top_y_adv = FONT_HEIGHT * 4;
+
+  UI_Buttons_state = UI_Buttons_state_enum.IDLE;
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -141,14 +153,71 @@ void UI_Buttons_setup()
 
 void UI_Buttons_draw()
 {
-  if (!UI_Buttons_enabled) return;
-
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  //println("UI_Buttons_state=", UI_Buttons_state);
+  switch (UI_Buttons_state)
   {
-    for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
-    {
-      buttons_group.draw();
-    }
+    case IDLE:
+      if (!UI_Buttons_enabled)
+      {
+        break;
+      }
+
+      UI_Num_Pad_setup("Input\nSYSTEM\npassword");
+      UI_Buttons_state = UI_Buttons_state_enum.PASSWORD_REQ;
+      break;
+    case PASSWORD_REQ:
+      if (!UI_Buttons_enabled)
+      {
+        UI_Buttons_state = UI_Buttons_state_enum.IDLE;
+        break;
+      }
+
+      UI_Num_Pad_handle.draw();
+      if (!UI_Num_Pad_handle.input_done())
+      {
+        break;
+      }
+
+      if (UI_Num_Pad_handle.input_string == null)
+      {
+        UI_Buttons_enabled = false;
+        UI_Buttons_state = UI_Buttons_state_enum.IDLE;
+        break;
+      }
+
+      // Input done, check password.
+      if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
+      {
+        // Password fail...
+        UI_Message_Box_setup("Error !", "Wrong password input!", 5000);
+        UI_Buttons_state = UI_Buttons_state_enum.DISPLAY_MESSAGE;
+        UI_Buttons_state_next = UI_Buttons_state_enum.IDLE;
+        UI_Buttons_enabled = false;
+        break;
+      }
+      UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
+      break;
+    case DRAW_BUTTONS:
+      if (!UI_Buttons_enabled)
+      {
+        UI_Buttons_state = UI_Buttons_state_enum.IDLE;
+        break;
+      }
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+      {
+        for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
+        {
+          buttons_group.draw();
+        }
+      }
+      break;
+    case DISPLAY_MESSAGE:
+      if (UI_Message_Box_handle.draw())
+      {
+        break;
+      }
+      UI_Buttons_state = UI_Buttons_state_next;
+      break;
   }
 }
 
