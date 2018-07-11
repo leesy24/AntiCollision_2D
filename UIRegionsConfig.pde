@@ -832,7 +832,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
 
     if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():button_index="+button_index);
 
-    if (button_index != 0) // Button is no OK.
+    if (button_index != 0) // Button is not OK.
     {
       UI_Regions_Config_enabled = false;
       return;
