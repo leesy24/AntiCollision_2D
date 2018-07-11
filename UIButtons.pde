@@ -162,6 +162,13 @@ void UI_Buttons_draw()
         break;
       }
 
+      // Check password not required.
+      if (SYSTEM_PASSWORD.equals(""))
+      {
+        UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
+        break;
+      }
+
       UI_Num_Pad_setup("Input\nSYSTEM\npassword");
       UI_Buttons_state = UI_Buttons_state_enum.PASSWORD_REQ;
       break;
@@ -189,7 +196,7 @@ void UI_Buttons_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_Message_Box_setup("Error !", "Wrong password input!", 5000);
+        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5000);
         UI_Buttons_state = UI_Buttons_state_enum.DISPLAY_MESSAGE;
         UI_Buttons_state_next = UI_Buttons_state_enum.IDLE;
         UI_Buttons_enabled = false;

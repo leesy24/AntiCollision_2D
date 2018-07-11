@@ -58,7 +58,8 @@ static enum UI_System_Config_state_enum {
   PASSWORD_REQ,
   WAIT_CONFIG_INPUT,
   DISPLAY_MESSAGE,
-  RESET
+  RESET,
+  MAX
 }
 static UI_System_Config_state_enum UI_System_Config_state;
 static UI_System_Config_state_enum UI_System_Config_state_next;
@@ -770,6 +771,14 @@ void UI_System_Config_draw()
         break;
       }
 
+      // Check password not required.
+      if (SYSTEM_PASSWORD.equals(""))
+      {
+        UI_System_Config_state = UI_System_Config_state_enum.WAIT_CONFIG_INPUT;
+        UI_System_Config_update();
+        break;
+      }
+
       UI_Num_Pad_setup("Input\nSYSTEM\npassword");
       UI_System_Config_state = UI_System_Config_state_enum.PASSWORD_REQ;
       break;
@@ -798,8 +807,8 @@ void UI_System_Config_draw()
       // Input done, check password.
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
-        // unzip fail...
-        UI_Message_Box_setup("Error !", "Wrong password input!", 5000);
+        // Password fail...
+        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5000);
         UI_System_Config_state = UI_System_Config_state_enum.DISPLAY_MESSAGE;
         UI_System_Config_state_next = UI_System_Config_state_enum.IDLE;
         UI_System_Config_enabled = false;
