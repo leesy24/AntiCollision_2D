@@ -1,4 +1,5 @@
 Name,Value,Comment
+SYSTEM_PASSWORD,0000,4-Digits system password to configure settings
 FRAME_RATE,20,Frame rate per second of screen update in Hz. 20Hz=50msec 50Hz=20msec
 PS_DATA_SAVE_ALWAYS_DURATION,2000,Time duration of received PS data keep in milli-seconds to save on disk.
 PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,2000,Default time duration of event PS data keep in milli-seconds to save on disk.
@@ -19,7 +20,7 @@ SCREEN_TITLE_HEIGHT,27,Title height of window of Windows. default = 31
 SCREEN_X_OFFSET,1,Adjuest X offset of window of Windows. default = 3
 SCREEN_Y_OFFSET,1,Adjuest Y offset of window of Windows. default = 5
 C_BG,FF080808,Background color. Color data format is AARRGGBB
-C_VERSION_DATE_TEXT,FFFFFFFF, Color of version and date text. Color data format is AARRGGBB
+C_VERSION_DATE_TEXT,FFFFFFFF,Color of version and date text. Color data format is AARRGGBB
 C_PS_DATA_ERR_TEXT,FFFFFFFF,Error text color. Color data format is AARRGGBB
 C_UI_NUM_PAD_NORMAL,A0000000,Color of normal button of number pad. Color data format is AARRGGBB
 C_UI_NUM_PAD_HIGHLIGHT,A0404040,Color of highlighted button of number pad. Color data format is AARRGGBB

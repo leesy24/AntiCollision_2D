@@ -30,6 +30,8 @@ static boolean mouse_wheel_enabled = false;
 /**/
 void keyPressed()
 {
+  UI_NumPad_key_pressed();
+
   //println("keyPressed " + int(key) + " " + keyCode);
   if (key == ESC)
   {
@@ -39,19 +41,19 @@ void keyPressed()
   {
     if(keyCode == KeyEvent.VK_F10)
     {
-      PS_Data_save_enabled = !PS_Data_save_enabled;
+      mouse_dragging_enabled = !mouse_dragging_enabled;
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
-      Bubble_Info_enabled = !Bubble_Info_enabled;
-    } 
+      PS_Data_save_enabled = !PS_Data_save_enabled;
+    }
     else if(keyCode == KeyEvent.VK_F8)
     {
-      PS_Data_draw_points_all_enabled = !PS_Data_draw_points_all_enabled;
+      Bubble_Info_enabled = !Bubble_Info_enabled;
     } 
     else if(keyCode == KeyEvent.VK_F7)
     {
-      UI_Buttons_enabled = !UI_Buttons_enabled;
+      PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
     } 
     else if(keyCode == KeyEvent.VK_F6)
     {
@@ -60,22 +62,27 @@ void keyPressed()
     }
     else if(keyCode == KeyEvent.VK_F5)
     {
-      mouse_dragging_enabled = !mouse_dragging_enabled;
-      mouse_wheel_enabled = !mouse_wheel_enabled;
-    }
-    else if(keyCode == KeyEvent.VK_F4)
-    {
-      PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
-    }
-    else if(keyCode == KeyEvent.VK_F3)
-    {
       // To restart program set frameCount to -1, this wiil call setup() of main.
       frameCount = -1;
     }
-    else if(keyCode == KeyEvent.VK_F2)
+    else if(keyCode == KeyEvent.VK_F4)
+    {
+      PS_Data_draw_points_all_enabled = !PS_Data_draw_points_all_enabled;
+    }
+    else if(keyCode == KeyEvent.VK_F3)
     {
       UI_Regions_Config_enabled = !UI_Regions_Config_enabled;
       UI_Regions_Config_update();
+    }
+    else if(keyCode == KeyEvent.VK_F2)
+    {
+      UI_Buttons_enabled = !UI_Buttons_enabled;
+      mouse_wheel_enabled = !mouse_wheel_enabled;
+    } 
+    else if(keyCode == KeyEvent.VK_F1)
+    {
+      UI_System_Config_enabled = !UI_System_Config_enabled;
+      //UI_System_Config_update();
     }
   }
 }

@@ -7,6 +7,8 @@ final static boolean PRINT_DBG = false;
 //static color C_BG = #FFFFFF; // White
 static color C_BG = #F8F8F8; // White - 0x8
 
+static String SYSTEM_PASSWORD = "0000"; // 4-digits, Default SYSTEM_PASSWORD
+
 final static int PS_INSTANCE_MAX = 2;
 
 // Define window title string.
@@ -80,6 +82,7 @@ void setup() {
   Relay_Module_setup();
   UI_Buttons_setup();
   UI_Interfaces_setup();
+  UI_System_Config_setup();
   UI_Regions_Config_setup();
   Disk_Space_setup();
   Version_Date_setup();
@@ -176,6 +179,8 @@ void draw() {
   Dbg_Time_logs_handle.add("Bubble_Info_draw()");
   UI_Interfaces_draw();
   Dbg_Time_logs_handle.add("UI_Interfaces_draw()");
+  UI_System_Config_draw();
+  Dbg_Time_logs_handle.add("UI_System_Config_draw()");
   UI_Regions_Config_draw();
   Dbg_Time_logs_handle.add("UI_Regions_Config_draw()");
   Notice_Messages_draw();

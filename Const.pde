@@ -33,7 +33,9 @@ void Const_setup()
   {
     // You can access the fields via their column name (or index)
     String name = variable.getString("Name");
-    if(name.equals("FRAME_RATE"))
+    if (name.equals("SYSTEM_PASSWORD"))
+      SYSTEM_PASSWORD = variable.getString("Value");
+    else if(name.equals("FRAME_RATE"))
       FRAME_RATE = variable.getInt("Value");
     else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
       PS_DATA_SAVE_ALWAYS_DURATION = variable.getInt("Value");
@@ -123,6 +125,14 @@ void Const_setup()
       W_GRID_LINE = variable.getInt("Value");
     else if(name.equals("C_GRID_TEXT"))
       C_GRID_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_MESSAGE_BOX_FILL"))
+      C_UI_MESSAGE_BOX_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_MESSAGE_BOX_TEXT"))
+      C_UI_MESSAGE_BOX_RECT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_MESSAGE_BOX_RECT"))
+      C_UI_MESSAGE_BOX_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_UI_MESSAGE_BOX_RECT"))
+      W_UI_MESSAGE_BOX_RECT = variable.getInt("Value");
     else if(name.equals("C_UI_INTERFACES_TEXT"))
       C_UI_INTERFACES_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_FILL_NORMAL"))
@@ -154,6 +164,11 @@ void Const_create()
   table.addColumn("Name");
   table.addColumn("Value");
   table.addColumn("Comment");
+
+  variable = table.addRow();
+  variable.setString("Name", "SYSTEM_PASSWORD");
+  variable.setString("Value", SYSTEM_PASSWORD);
+  variable.setString("Comment", "4-Digits system password to configure settings");
 
   variable = table.addRow();
   variable.setString("Name", "FRAME_RATE");
@@ -379,6 +394,26 @@ void Const_create()
   variable.setString("Name", "C_GRID_TEXT");
   variable.setString("Value", String.format("%08X", C_GRID_TEXT));
   variable.setString("Comment", "Grid text color. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_UI_MESSAGE_BOX_FILL");
+  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_FILL));
+  variable.setString("Comment", "Color of fill of message box. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_UI_MESSAGE_BOX_TEXT");
+  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_TEXT));
+  variable.setString("Comment", "Color of text of message box. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "C_UI_MESSAGE_BOX_RECT");
+  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_RECT));
+  variable.setString("Comment", "Color of text of message box. Color data format is AARRGGBB");
+
+  variable = table.addRow();
+  variable.setString("Name", "W_UI_MESSAGE_BOX_RECT");
+  variable.setInt("Value", W_UI_MESSAGE_BOX_RECT);
+  variable.setString("Comment", "Weight of rect lines of message box.");
 
   variable = table.addRow();
   variable.setString("Name", "C_UI_INTERFACES_TEXT");
