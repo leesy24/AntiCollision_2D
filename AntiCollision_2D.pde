@@ -9,6 +9,8 @@ static color C_BG = #F8F8F8; // White - 0x8
 
 static String SYSTEM_PASSWORD = "0000"; // 4-digits, Default SYSTEM_PASSWORD
 
+static int SYSTEM_UI_TIMEOUT = 60; // in seconds.
+
 final static int PS_INSTANCE_MAX = 2;
 
 // Define window title string.
