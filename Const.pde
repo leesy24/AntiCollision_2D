@@ -35,6 +35,8 @@ void Const_setup()
     String name = variable.getString("Name");
     if (name.equals("SYSTEM_PASSWORD"))
       SYSTEM_PASSWORD = variable.getString("Value");
+    else if(name.equals("SYSTEM_UI_TIMEOUT"))
+      SYSTEM_UI_TIMEOUT = variable.getInt("Value");
     else if(name.equals("FRAME_RATE"))
       FRAME_RATE = variable.getInt("Value");
     else if (name.equals("PS_DATA_SAVE_ALWAYS_DURATION"))
@@ -169,6 +171,11 @@ void Const_create()
   variable.setString("Name", "SYSTEM_PASSWORD");
   variable.setString("Value", SYSTEM_PASSWORD);
   variable.setString("Comment", "4-Digits system password to configure settings");
+
+  variable = table.addRow();
+  variable.setString("Name", "SYSTEM_UI_TIMEOUT");
+  variable.setInt("Value", SYSTEM_UI_TIMEOUT);
+  variable.setString("Comment", "Timeout value for UI displaying in seconds");
 
   variable = table.addRow();
   variable.setString("Name", "FRAME_RATE");

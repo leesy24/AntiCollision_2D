@@ -53,6 +53,7 @@ static enum UI_Buttons_state_enum {
 }
 static UI_Buttons_state_enum UI_Buttons_state;
 static UI_Buttons_state_enum UI_Buttons_state_next;
+static int UI_Buttons_timeout_start;
 
 void UI_Buttons_setup()
 {
@@ -203,6 +204,7 @@ void UI_Buttons_draw()
         break;
       }
       UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
+      UI_Buttons_timeout_start = millis();
       break;
     case DRAW_BUTTONS:
       if (!UI_Buttons_enabled)
@@ -210,6 +212,14 @@ void UI_Buttons_draw()
         UI_Buttons_state = UI_Buttons_state_enum.IDLE;
         break;
       }
+
+      if (get_millis_diff(UI_Buttons_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Buttons_enabled = false;
+        UI_Buttons_state = UI_Buttons_state_enum.IDLE;
+        break;
+      }
+
       for (int i = 0; i < PS_INSTANCE_MAX; i ++)
       {
         for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
@@ -237,6 +247,7 @@ void UI_Buttons_mouse_pressed()
     for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
     {
       if (buttons_group.mouse_pressed()) {
+        UI_Buttons_timeout_start = millis();
         switch (buttons_group.get_action())
         {
           case ZOOM_PLUSE:
