@@ -28,6 +28,7 @@ static String Update_Data_Files_zip_file_full_name;
 static String Update_Data_Files_error;
 static int Update_Data_Files_check_interval;
 static int Update_Data_Files_check_timer;
+static int Update_Data_Files_timeout_start;
 
 void Update_Data_Files_setup()
 {
@@ -64,21 +65,32 @@ void Update_Data_Files_check()
       break;
     case ZIP_READY:
       UI_Num_Pad_setup("Input\nZIP file\npassword");
+      Update_Data_Files_timeout_start = millis();
       Update_Data_Files_state = Update_Data_Files_state_enum.PASSWORD_REQ;
       break;
     case PASSWORD_REQ:
+      if (get_millis_diff(Update_Data_Files_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Message_Box_setup("Time out !", "Please remove the USB drive.\nIf you don't want update.", 3000);
+        Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
+        Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
+        break;
+      }
+
       UI_Num_Pad_handle.draw();
       if (!UI_Num_Pad_handle.input_done())
       {
         break;
       }
+
       if (UI_Num_Pad_handle.input_string == null)
       {
-        UI_Message_Box_setup("Escape !", "Please remove the USB drive.\nIf you don't want update.", 3000);
+        UI_Message_Box_setup("Escape !", "Please remove the USB drive.\nIf you don't want update.", 10000);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
+
       Update_Data_Files_zip_file_password = UI_Num_Pad_handle.input_string;
       Update_Data_Files_state = Update_Data_Files_state_enum.UNZIP;
       break;
