@@ -110,9 +110,7 @@ void draw() {
   // To clear the display window at the beginning of each frame,
   background(C_BG);
 
-  if (UI_Interfaces_changed_any
-      ||
-      UI_Regions_Config_changed_any) {
+  if (UI_Interfaces_changed_any) {
       // To restart program set frameCount to -1, this wiil call setup() of main.
       frameCount = -1;
   }

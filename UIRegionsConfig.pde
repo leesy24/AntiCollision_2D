@@ -41,8 +41,27 @@ static int[] UI_Regions_Config_y_base = new int[PS_INSTANCE_MAX];
 UI_Regions_Config_BT_ControlListener UI_Regions_Config_bt_control_listener;
 //UI_Regions_Config_TF_ControlListener UI_Regions_Config_tf_control_listener;
 static enum UI_Regions_Config_tf_enum {
-  REGION_NAME, REGION_PRIORITY, RELAY_INDEX, RELAY_NAME, NO_MARK_BIG, RECT_FIELD_X, RECT_FIELD_Y, RECT_FIELD_WIDTH, RECT_FIELD_HEIGHT
+  REGION_NAME,
+  REGION_PRIORITY,
+  RELAY_INDEX,
+  RELAY_NAME,
+  NO_MARK_BIG,
+  RECT_FIELD_X,
+  RECT_FIELD_Y,
+  RECT_FIELD_WIDTH,
+  RECT_FIELD_HEIGHT,
+  MAX
 }
+
+static enum UI_Regions_Config_state_enum {
+  IDLE,
+  PASSWORD_REQ,
+  WAIT_CONFIG_INPUT,
+  DISPLAY_MESSAGE,
+  RESET
+}
+static UI_Regions_Config_state_enum UI_Regions_Config_state;
+static UI_Regions_Config_state_enum UI_Regions_Config_state_next;
 
 void UI_Regions_Config_setup()
 {
@@ -52,6 +71,8 @@ void UI_Regions_Config_setup()
   UI_Regions_Config_enabled = false;
 
   UI_Regions_Config_changed_any = false;
+
+  UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
 
   if (UI_Regions_Config_cp5_global != null)
   {
@@ -77,10 +98,6 @@ void UI_Regions_Config_setup()
         UI_Regions_Config_y_base[i] = TEXT_MARGIN;
         break;
     }
-  }
-  if (UI_Regions_Config_enabled)
-  {
-    UI_Regions_Config_update();
   }
 }
 
@@ -789,22 +806,82 @@ void UI_Regions_Config_draw()
 {
   if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_DRAW_DBG) println("UI_Regions_Config_draw():Enter");
 
-  if (UI_Regions_Config_enabled) return;
-
-  if (UI_Regions_Config_cp5_global == null)
+  //println("UI_Regions_Config_state=", UI_Regions_Config_state);
+  switch (UI_Regions_Config_state)
   {
-    int i;
-    for (i = 0; i < PS_INSTANCE_MAX; i ++)
-    {
-      if (UI_Regions_Config_cp5_local[i] != null)
+    case IDLE:
+      if (!UI_Regions_Config_enabled)
       {
         break;
       }
-    }
-    if (i == PS_INSTANCE_MAX) return;
-  }
 
-  UI_Regions_Config_update();
+      UI_Num_Pad_setup("Input\nSYSTEM\npassword");
+      UI_Regions_Config_state = UI_Regions_Config_state_enum.PASSWORD_REQ;
+      break;
+    case PASSWORD_REQ:
+      if (!UI_Regions_Config_enabled)
+      {
+        //UI_Regions_Config_reset();
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
+        break;
+      }
+
+      UI_Num_Pad_handle.draw();
+      if (!UI_Num_Pad_handle.input_done())
+      {
+        break;
+      }
+
+      if (UI_Num_Pad_handle.input_string == null)
+      {
+        //UI_Regions_Config_reset();
+        UI_Regions_Config_enabled = false;
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
+        break;
+      }
+
+      // Input done, check password.
+      if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
+      {
+        // unzip fail...
+        UI_Message_Box_setup("Error !", "Wrong password input!", 5000);
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.DISPLAY_MESSAGE;
+        UI_Regions_Config_state_next = UI_Regions_Config_state_enum.IDLE;
+        UI_Regions_Config_enabled = false;
+        break;
+      }
+      UI_Regions_Config_state = UI_Regions_Config_state_enum.WAIT_CONFIG_INPUT;
+      UI_Regions_Config_update();
+      break;
+    case WAIT_CONFIG_INPUT:
+      if (!UI_Regions_Config_enabled)
+      {
+        UI_Regions_Config_reset();
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
+        break;
+      }
+      if (UI_Regions_Config_changed_any)
+      {
+        UI_Regions_Config_reset();
+        // Update done! Indicate updated.
+        UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3000);
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.DISPLAY_MESSAGE;
+        UI_Regions_Config_state_next = UI_Regions_Config_state_enum.RESET;
+        break;
+      }
+      break;
+    case DISPLAY_MESSAGE:
+      if (UI_Message_Box_handle.draw())
+      {
+        break;
+      }
+      UI_Regions_Config_state = UI_Regions_Config_state_next;
+      break;
+    case RESET:
+      // To restart program set frameCount to -1, this wiil call setup() of main.
+      frameCount = -1;
+      break;
+  }
 }
 
 

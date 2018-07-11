@@ -72,7 +72,6 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F3)
     {
       UI_Regions_Config_enabled = !UI_Regions_Config_enabled;
-      UI_Regions_Config_update();
     }
     else if(keyCode == KeyEvent.VK_F2)
     {
@@ -82,7 +81,6 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F1)
     {
       UI_System_Config_enabled = !UI_System_Config_enabled;
-      //UI_System_Config_update();
     }
   }
 }
