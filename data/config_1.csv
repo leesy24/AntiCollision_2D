@@ -20,7 +20,7 @@ MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #,,
 SCREEN_OFFSET_X,0,X Offset of screen to draw.
 SCREEN_OFFSET_Y,0,Y Offset of screen to draw.
-FILE_name,events\20180708_111541_867_1,File name of PS Interface File.
+FILE_name,events\20180703_153215_066_1,File name of PS Interface File.
 UART_port_name,COM1,UART port name of PS Interface UART.
 UART_baud_rate,115200,UART baud rate of PS Interface UART.
 UART_parity,N,UART parity of PS Interface UART.
