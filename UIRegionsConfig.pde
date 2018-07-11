@@ -63,6 +63,7 @@ static enum UI_Regions_Config_state_enum {
 }
 static UI_Regions_Config_state_enum UI_Regions_Config_state;
 static UI_Regions_Config_state_enum UI_Regions_Config_state_next;
+static int UI_Regions_Config_timeout_start;
 
 void UI_Regions_Config_setup()
 {
@@ -826,11 +827,19 @@ void UI_Regions_Config_draw()
 
       UI_Num_Pad_setup("Input\nSYSTEM\npassword");
       UI_Regions_Config_state = UI_Regions_Config_state_enum.PASSWORD_REQ;
+      UI_Regions_Config_timeout_start = millis();
       break;
     case PASSWORD_REQ:
       if (!UI_Regions_Config_enabled)
       {
         //UI_Regions_Config_reset();
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
+        break;
+      }
+
+      if (get_millis_diff(UI_Regions_Config_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Regions_Config_enabled = false;
         UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
         break;
       }
@@ -861,6 +870,7 @@ void UI_Regions_Config_draw()
       }
       UI_Regions_Config_state = UI_Regions_Config_state_enum.WAIT_CONFIG_INPUT;
       UI_Regions_Config_update();
+      UI_Regions_Config_timeout_start = millis();
       break;
     case WAIT_CONFIG_INPUT:
       if (!UI_Regions_Config_enabled)
@@ -869,6 +879,15 @@ void UI_Regions_Config_draw()
         UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
         break;
       }
+
+      if (get_millis_diff(UI_Regions_Config_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Regions_Config_reset();
+        UI_Regions_Config_enabled = false;
+        UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
+        break;
+      }
+
       if (UI_Regions_Config_changed_any)
       {
         UI_Regions_Config_reset();
@@ -892,7 +911,6 @@ void UI_Regions_Config_draw()
       break;
   }
 }
-
 
 /*
 class UI_Regions_Config_TF_ControlListener implements ControlListener {
