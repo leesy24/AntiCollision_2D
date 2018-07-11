@@ -35,7 +35,6 @@ static ControlFont UI_Regions_Config_cf = null;
 static ControlP5 UI_Regions_Config_cp5_global = null;
 static ControlP5[] UI_Regions_Config_cp5_local = new ControlP5[PS_INSTANCE_MAX];
 
-static boolean[] UI_Regions_Config_changed = new boolean[PS_INSTANCE_MAX];
 static boolean UI_Regions_Config_changed_any = false;
 static int[] UI_Regions_Config_x_base = new int[PS_INSTANCE_MAX];
 static int[] UI_Regions_Config_y_base = new int[PS_INSTANCE_MAX];
@@ -62,8 +61,6 @@ void UI_Regions_Config_setup()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    //UI_Regions_Config_changed[i] = true;
-    UI_Regions_Config_changed[i] = false;
     if (UI_Regions_Config_cp5_local[i] != null)
     {
       UI_Regions_Config_reset_instance(i);
@@ -98,6 +95,10 @@ void UI_Regions_Config_update()
   }
 
   UI_Regions_Config_changed_any = false;
+
+  if(UI_Regions_Config_cf == null) {
+    UI_Regions_Config_cf = new ControlFont(SCREEN_PFront,FONT_HEIGHT);
+  }
 
   UI_Regions_Config_bt_control_listener = new UI_Regions_Config_BT_ControlListener();
   //UI_Regions_Config_tf_control_listener = new UI_Regions_Config_TF_ControlListener();
@@ -188,15 +189,9 @@ void UI_Regions_Config_update_instance(int instance)
     return;
   }
 
-  UI_Regions_Config_changed[instance] = false;
-
   int x, y;
   int w, h;
   String str;
-
-  if(UI_Regions_Config_cf == null) {
-    UI_Regions_Config_cf = new ControlFont(SCREEN_PFront,FONT_HEIGHT);
-  }
 
   if(UI_Regions_Config_cp5_local[instance] == null) {
     UI_Regions_Config_cp5_local[instance] = new ControlP5(this, UI_Regions_Config_cf);
