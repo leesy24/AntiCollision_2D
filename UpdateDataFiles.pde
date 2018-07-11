@@ -64,7 +64,7 @@ void Update_Data_Files_check()
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
       break;
     case ZIP_READY:
-      UI_Num_Pad_setup("Input\nZIP file\npassword");
+      UI_Num_Pad_setup("Input ZIP file password");
       Update_Data_Files_timeout_start = millis();
       Update_Data_Files_state = Update_Data_Files_state_enum.PASSWORD_REQ;
       break;

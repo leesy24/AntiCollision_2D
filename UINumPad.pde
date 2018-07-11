@@ -144,7 +144,7 @@ class UI_Num_Pad {
     this.border_y = this.title_y - button_margin;
     //println("x="+title_x+"y="+title_y+"w="+title_w+"h="+title_h);
 
-    int offset_x = this.title_x;
+    int offset_x = center_x - (button_w * 3 + button_margin * 2) / 2;
     int offset_y = this.border_y + this.title_h + button_margin * 2;
 
     buttons.add(

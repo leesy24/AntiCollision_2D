@@ -170,7 +170,7 @@ void UI_Buttons_draw()
         break;
       }
 
-      UI_Num_Pad_setup("Input\nSYSTEM\npassword");
+      UI_Num_Pad_setup("Input system password");
       UI_Buttons_state = UI_Buttons_state_enum.PASSWORD_REQ;
       break;
     case PASSWORD_REQ:

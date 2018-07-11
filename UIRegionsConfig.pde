@@ -845,7 +845,7 @@ void UI_Regions_Config_draw()
         break;
       }
 
-      UI_Num_Pad_setup("Input\nSYSTEM\npassword");
+      UI_Num_Pad_setup("Input system password");
       UI_Regions_Config_state = UI_Regions_Config_state_enum.PASSWORD_REQ;
       UI_Regions_Config_timeout_start = millis();
       break;
