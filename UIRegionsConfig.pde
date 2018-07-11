@@ -389,7 +389,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
@@ -426,7 +425,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
@@ -663,7 +661,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
@@ -700,7 +697,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
@@ -737,7 +733,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
@@ -774,7 +769,6 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle.getValueLabel()
         .getStyle()
           .marginTop = -1;
-    
     tf_handle.getValueLabel()
         .getStyle()
           .marginLeft = 1;
