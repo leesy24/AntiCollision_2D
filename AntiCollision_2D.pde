@@ -8,7 +8,7 @@ final static boolean PRINT_DBG = false;
 static color C_BG = #F8F8F8; // White - 0x8
 
 static String SYSTEM_PASSWORD = "0000"; // 4-digits, Default system password
-static boolean SYSTEM_PASSWORD_disabled = false;
+static boolean SYSTEM_PASSWORD_disabled;
 
 static int SYSTEM_UI_TIMEOUT = 60; // in seconds.
 
@@ -102,6 +102,7 @@ void setup() {
     SYSTEM_PASSWORD = "0000";
   }
   SYSTEM_PASSWORD_disabled = false;
+  //SYSTEM_PASSWORD_disabled = true;
 
   // Need to call gc() to free memory.
   System.gc();
