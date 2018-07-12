@@ -130,9 +130,9 @@ void Const_setup()
     else if(name.equals("C_UI_MESSAGE_BOX_FILL"))
       C_UI_MESSAGE_BOX_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_MESSAGE_BOX_TEXT"))
-      C_UI_MESSAGE_BOX_RECT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_UI_MESSAGE_BOX_RECT"))
       C_UI_MESSAGE_BOX_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_UI_MESSAGE_BOX_RECT"))
+      C_UI_MESSAGE_BOX_RECT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("W_UI_MESSAGE_BOX_RECT"))
       W_UI_MESSAGE_BOX_RECT = variable.getInt("Value");
     else if(name.equals("C_UI_INTERFACES_TEXT"))
