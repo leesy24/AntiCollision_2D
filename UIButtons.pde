@@ -167,6 +167,7 @@ void UI_Buttons_draw()
       if (SYSTEM_PASSWORD.equals(""))
       {
         UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
+        UI_Buttons_timeout_start = millis();
         break;
       }
 
@@ -203,6 +204,7 @@ void UI_Buttons_draw()
         UI_Buttons_enabled = false;
         break;
       }
+
       UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
       UI_Buttons_timeout_start = millis();
       break;
