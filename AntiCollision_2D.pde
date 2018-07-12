@@ -101,8 +101,8 @@ void setup() {
     // Set to default system password.
     SYSTEM_PASSWORD = "0000";
   }
-  SYSTEM_PASSWORD_disabled = false;
-  //SYSTEM_PASSWORD_disabled = true;
+  //SYSTEM_PASSWORD_disabled = false;
+  SYSTEM_PASSWORD_disabled = true;
 
   // Need to call gc() to free memory.
   System.gc();
