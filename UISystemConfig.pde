@@ -974,122 +974,139 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
       str = tf_handle.getText();
       switch (tf_enum) {
         case SYSTEM_PASSWORD:
-          if (!SYSTEM_PASSWORD.equals(str)) {
+          if (str.length() == 0) {
             SYSTEM_PASSWORD = str;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated SYSTEM_PASSWORD="+SYSTEM_PASSWORD+",tf_enum="+tf_enum);
+            break;
           }
+          if (!str.matches("[0-9]+") || str.length() != 4) {
+            break;
+          }
+          if (str.equals(SYSTEM_PASSWORD)) {
+            break;
+          }
+          SYSTEM_PASSWORD = str;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated SYSTEM_PASSWORD="+SYSTEM_PASSWORD+",tf_enum="+tf_enum);
           break;
         case FRAME_RATE:
           try {
             val = Integer.parseInt(str.trim());
           }
           catch (NumberFormatException e) {
-            val = FRAME_RATE;
+            break;
           }
-          if (FRAME_RATE != val) {
-            FRAME_RATE = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated FRAME_RATE="+FRAME_RATE+",tf_enum="+tf_enum);
+          if (val == FRAME_RATE) {
+            break;
           }
+          FRAME_RATE = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated FRAME_RATE="+FRAME_RATE+",tf_enum="+tf_enum);
           break;
         case PS_DATA_SAVE_ALWAYS_DURATION:
           try {
             val = int(Float.parseFloat(str.trim()) * 1000.0);
           }
           catch (NumberFormatException e) {
-            val = PS_DATA_SAVE_ALWAYS_DURATION;
+            break;
           }
-          if (PS_DATA_SAVE_ALWAYS_DURATION != val) {
-            PS_DATA_SAVE_ALWAYS_DURATION = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_ALWAYS_DURATION="+PS_DATA_SAVE_ALWAYS_DURATION+",tf_enum="+tf_enum);
+          if (val == PS_DATA_SAVE_ALWAYS_DURATION) {
+            break;
           }
+          PS_DATA_SAVE_ALWAYS_DURATION = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_ALWAYS_DURATION="+PS_DATA_SAVE_ALWAYS_DURATION+",tf_enum="+tf_enum);
           break;
         case PS_DATA_SAVE_EVENTS_DURATION_DEFAULT:
           try {
             val = int(Float.parseFloat(str.trim()) * 1000.0);
           }
           catch (NumberFormatException e) {
-            val = PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+            break;
           }
-          if (PS_DATA_SAVE_EVENTS_DURATION_DEFAULT != val) {
-            PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_DEFAULT="+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT+",tf_enum="+tf_enum);
+          if (val == PS_DATA_SAVE_EVENTS_DURATION_DEFAULT) {
+            break;
           }
+          PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_DEFAULT="+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT+",tf_enum="+tf_enum);
           break;
         case PS_DATA_SAVE_EVENTS_DURATION_LIMIT:
           try {
             val = int(Float.parseFloat(str.trim()) * 1000.0);
           }
           catch (NumberFormatException e) {
-            val = PS_DATA_SAVE_EVENTS_DURATION_LIMIT;
+            break;
           }
-          if (PS_DATA_SAVE_EVENTS_DURATION_LIMIT != val) {
-            PS_DATA_SAVE_EVENTS_DURATION_LIMIT = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_LIMIT="+PS_DATA_SAVE_EVENTS_DURATION_LIMIT+",tf_enum="+tf_enum);
+          if (val == PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
+            break;
           }
+          PS_DATA_SAVE_EVENTS_DURATION_LIMIT = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_LIMIT="+PS_DATA_SAVE_EVENTS_DURATION_LIMIT+",tf_enum="+tf_enum);
           break;
         case Relay_Module_UART_port_name:
-          if (!Relay_Module_UART_port_name.equals(str)) {
-            Relay_Module_UART_port_name = str;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
+          if (str.equals(Relay_Module_UART_port_name)) {
+            break;
           }
+          Relay_Module_UART_port_name = str;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_DETECT_DISTANCE_MIN:
           try {
             val = int(Float.parseFloat(str.trim()) * 10000.0);
           }
           catch (NumberFormatException e) {
-            val = ROI_OBJECT_DETECT_DISTANCE_MIN;
+            break;
           }
-          if (ROI_OBJECT_DETECT_DISTANCE_MIN != val) {
-            ROI_OBJECT_DETECT_DISTANCE_MIN = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DISTANCE_MIN="+ROI_OBJECT_DETECT_DISTANCE_MIN+",tf_enum="+tf_enum);
+          if (val == ROI_OBJECT_DETECT_DISTANCE_MIN) {
+            break;
           }
+          ROI_OBJECT_DETECT_DISTANCE_MIN = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DISTANCE_MIN="+ROI_OBJECT_DETECT_DISTANCE_MIN+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_DETECT_TIME_MIN:
           try {
             val = int(Float.parseFloat(str.trim()) * 1000.0);
           }
           catch (NumberFormatException e) {
-            val = ROI_OBJECT_DETECT_TIME_MIN;
+            break;
           }
-          if (ROI_OBJECT_DETECT_TIME_MIN != val) {
-            ROI_OBJECT_DETECT_TIME_MIN = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_TIME_MIN="+ROI_OBJECT_DETECT_TIME_MIN+",tf_enum="+tf_enum);
+          if (val == ROI_OBJECT_DETECT_TIME_MIN) {
+            break;
           }
+          ROI_OBJECT_DETECT_TIME_MIN = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_TIME_MIN="+ROI_OBJECT_DETECT_TIME_MIN+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN:
           try {
             val = int(Float.parseFloat(str.trim()) * 10000.0);
           }
           catch (NumberFormatException e) {
-            val = ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN;
+            break;
           }
-          if (ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN != val) {
-            ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN+",tf_enum="+tf_enum);
+          if (val == ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN) {
+            break;
           }
+          ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_MARKER_MARGIN:
           try {
             val = Integer.parseInt(str.trim());
           }
           catch (NumberFormatException e) {
-            val = ROI_OBJECT_MARKER_MARGIN;
+            break;
           }
-          if (ROI_OBJECT_MARKER_MARGIN != val) {
-            ROI_OBJECT_MARKER_MARGIN = val;
-            updated = true;
-            if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_MARKER_MARGIN="+ROI_OBJECT_MARKER_MARGIN+",tf_enum="+tf_enum);
+          if (val == ROI_OBJECT_MARKER_MARGIN) {
+            break;
           }
+          ROI_OBJECT_MARKER_MARGIN = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_MARKER_MARGIN="+ROI_OBJECT_MARKER_MARGIN+",tf_enum="+tf_enum);
           break;
         default:
           if (PRINT_UI_SYSTEM_CONFIG_ALL_ERR || PRINT_UI_SYSTEM_CONFIG_LISTENER_ERR) println("UI_System_Config_BT_ControlListener:controlEvent():tf_enum="+tf_enum+" error!");

@@ -1018,104 +1018,113 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
         str = tf_handle.getText();
         switch (tf_enum) {
           case REGION_NAME: // Region name
-            if (!region_csv.name.equals(str)) {
-              region_csv.name = str;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (str.equals(region_csv.name)) {
+              break;
             }
+            region_csv.name = str;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case REGION_PRIORITY: // Region priority
             try {
               val = Integer.parseInt(str.trim());
             }
             catch (NumberFormatException e) {
-              val = region_csv.priority;
+              break;
             }
-            if (region_csv.priority != val) {
-              region_csv.priority = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.priority) {
+              break;
             }
+            region_csv.priority = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RELAY_INDEX: // Relay index
             try {
               val = Integer.parseInt(str.trim());
             }
             catch (NumberFormatException e) {
-              val = region_csv.relay_index;
+              break;
             }
-            if (region_csv.relay_index != val) {
-              region_csv.relay_index = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.relay_index) {
+              break;
             }
+            region_csv.relay_index = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RELAY_NAME: // Relay name
-            if (!Relay_Module_get_relay_name(region_csv.relay_index).equals(str)) {
-              Relay_Module_set_relay_name(region_csv.relay_index, str);
-              updated_relay = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (str.equals(Relay_Module_get_relay_name(region_csv.relay_index))) {
+              break;
             }
+            Relay_Module_set_relay_name(region_csv.relay_index, str);
+            updated_relay = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case NO_MARK_BIG: // No mark big
             bool = str.toLowerCase().equals("true")?true:false;
-            if (region_csv.no_mark_big != bool) {
-              region_csv.no_mark_big = bool;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (bool == region_csv.no_mark_big) {
+              break;
             }
+            region_csv.no_mark_big = bool;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RECT_FIELD_X: // Rect field x
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
             catch (NumberFormatException e) {
-              val = region_csv.rect_field_x;
+              break;
             }
-            if (region_csv.rect_field_x != val) {
-              region_csv.rect_field_x = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.rect_field_x) {
+              break;
             }
+            region_csv.rect_field_x = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RECT_FIELD_Y: // Rect field y
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
             catch (NumberFormatException e) {
-              val = region_csv.rect_field_y;
+              break;
             }
-            if (region_csv.rect_field_y != val) {
-              region_csv.rect_field_y = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.rect_field_y) {
+              break;
             }
+            region_csv.rect_field_y = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RECT_FIELD_WIDTH: // Rect field width
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
             catch (NumberFormatException e) {
-              val = region_csv.rect_field_width;
+              break;
             }
-            if (region_csv.rect_field_width != val) {
-              region_csv.rect_field_width = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.rect_field_width) {
+              break;
             }
+            region_csv.rect_field_width = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           case RECT_FIELD_HEIGHT: // Rect field height
             try {
               val = int(Float.parseFloat(str.trim()) * 100.0);
             }
             catch (NumberFormatException e) {
-              val = region_csv.rect_field_height;
+              break;
             }
-            if (region_csv.rect_field_height != val) {
-              region_csv.rect_field_height = val;
-              updated_instance = true;
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
+            if (val == region_csv.rect_field_height) {
+              break;
             }
+            region_csv.rect_field_height = val;
+            updated_instance = true;
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum);
             break;
           default:
             if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region csv index="+region_csv_index+",tf enum="+tf_enum+" error!");
