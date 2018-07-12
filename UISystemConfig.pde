@@ -811,7 +811,7 @@ void UI_System_Config_draw()
       /**/
 
       // Check password not required.
-      if (SYSTEM_PASSWORD.equals(""))
+      if (SYSTEM_PASSWORD_disabled)
       {
         UI_System_Config_state = UI_System_Config_state_enum.WAIT_CONFIG_INPUT;
         UI_System_Config_update();
@@ -975,7 +975,7 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
       switch (tf_enum) {
         case SYSTEM_PASSWORD:
           if (str.length() == 0) {
-            SYSTEM_PASSWORD = str;
+            SYSTEM_PASSWORD_disabled = true;
             break;
           }
           if (!str.matches("[0-9]+") || str.length() != 4) {

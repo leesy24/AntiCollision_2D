@@ -849,7 +849,7 @@ void UI_Regions_Config_draw()
       /**/
 
       // Check password not required.
-      if (SYSTEM_PASSWORD.equals(""))
+      if (SYSTEM_PASSWORD_disabled)
       {
         UI_Regions_Config_state = UI_Regions_Config_state_enum.WAIT_CONFIG_INPUT;
         UI_Regions_Config_update();

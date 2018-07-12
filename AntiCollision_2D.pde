@@ -7,7 +7,8 @@ final static boolean PRINT_DBG = false;
 //static color C_BG = #FFFFFF; // White
 static color C_BG = #F8F8F8; // White - 0x8
 
-static String SYSTEM_PASSWORD = "0000"; // 4-digits, Default SYSTEM_PASSWORD
+static String SYSTEM_PASSWORD = "0000"; // 4-digits, Default system password
+static boolean SYSTEM_PASSWORD_disabled = false;
 
 static int SYSTEM_UI_TIMEOUT = 60; // in seconds.
 
@@ -94,6 +95,13 @@ void setup() {
 
   // Set window title
   surface.setTitle(Title);
+
+  // Check validation the system password.
+  if (!SYSTEM_PASSWORD.matches("[0-9]+") || SYSTEM_PASSWORD.length() != 4) {
+    // Set to default system password.
+    SYSTEM_PASSWORD = "0000";
+  }
+  SYSTEM_PASSWORD_disabled = false;
 
   // Need to call gc() to free memory.
   System.gc();

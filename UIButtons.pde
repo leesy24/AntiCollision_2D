@@ -164,7 +164,7 @@ void UI_Buttons_draw()
       }
 
       // Check password not required.
-      if (SYSTEM_PASSWORD.equals(""))
+      if (SYSTEM_PASSWORD_disabled)
       {
         UI_Buttons_state = UI_Buttons_state_enum.DRAW_BUTTONS;
         UI_Buttons_timeout_start = millis();
