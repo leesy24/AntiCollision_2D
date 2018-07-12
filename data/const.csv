@@ -9,7 +9,7 @@ ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
 ROI_OBJECT_DETECT_DISTANCE_MIN,5000,Minimum distance of object to detect one object ROI.(5000=50cm=0.5meter)
 ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
 ROI_OBJECT_DETECT_TIME_MIN,500,Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)
-Relay_Module_UART_port_name,COM1,UART port name of Relay module.
+Relay_Module_UART_port_name,COM2,UART port name of Relay module.
 Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
 Relay_Module_UART_parity,N,UART parity of Relay module.
 Relay_Module_UART_data_bits,8,UART baud rate of Relay module.

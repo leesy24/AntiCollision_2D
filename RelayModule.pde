@@ -137,11 +137,11 @@ void Relay_Module_setup()
     Relay_CSV relay_csv = new Relay_CSV();
 
     int relay_index = variable.getInt("Relay_Index");
+    String relay_name = variable.getString("Relay_Name");
     int indicator_scr_center_x = variable.getInt("Indicator_Screen_Center_X");
     int indicator_scr_top_y = variable.getInt("Indicator_Screen_Top_Y");
     int indicator_text_height = variable.getInt("Idicator_Text_Height");
 
-    String relay_name = variable.getString("Relay_Name");
     relay_csv.relay_name = relay_name;
     relay_csv.relay_index = relay_index;
     relay_csv.indicator_scr_center_x = indicator_scr_center_x;
@@ -334,6 +334,17 @@ private void Relay_Module_draw_indicator()
   }
 }
 
+boolean Relay_Module_check_relay_index(int relay_index)
+{
+  if (relay_index < 0) return false;
+  for (Relay_CSV relay_csv:Relay_Module_relays_csv)
+  {
+    if (relay_csv.relay_index != relay_index) continue;
+    return true;
+  }
+  return false;
+}
+
 String Relay_Module_get_relay_name(int relay_index)
 {
   if (relay_index < 0) return null;
@@ -361,18 +372,18 @@ void Relay_Module_update_relays_csv_file()
   Table table;
 
   table = new Table();
-  table.addColumn("Relay_Name");
   table.addColumn("Relay_Index");
+  table.addColumn("Relay_Name");
   table.addColumn("Indicator_Screen_Center_X");
   table.addColumn("Indicator_Screen_Top_Y");
   table.addColumn("Idicator_Text_Height");
 
   for (Relay_CSV relay_csv:Relay_Module_relays_csv) {
     TableRow variable = table.addRow();
-    variable.setString( "Relay_Name",
-                        relay_csv.relay_name);
     variable.setInt(    "Relay_Index",
                         relay_csv.relay_index);
+    variable.setString( "Relay_Name",
+                        relay_csv.relay_name);
     variable.setInt(    "Indicator_Screen_Center_X",
                         relay_csv.indicator_scr_center_x);
     variable.setInt(    "Indicator_Screen_Top_Y",

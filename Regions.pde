@@ -486,20 +486,24 @@ class Regions {
     return regions_csv_array[instance].get(region_csv_index).no_mark_big;
   }
 
-  int get_region_csv_field_x(int instance, int region_csv_index) {
+  int get_region_csv_rect_field_x(int instance, int region_csv_index) {
     return regions_csv_array[instance].get(region_csv_index).rect_field_x;
   }
 
-  int get_region_csv_field_y(int instance, int region_csv_index) {
+  int get_region_csv_rect_field_y(int instance, int region_csv_index) {
     return regions_csv_array[instance].get(region_csv_index).rect_field_y;
   }
 
-  int get_region_csv_field_width(int instance, int region_csv_index) {
+  int get_region_csv_rect_field_width(int instance, int region_csv_index) {
     return regions_csv_array[instance].get(region_csv_index).rect_field_width;
   }
 
-  int get_region_csv_field_height(int instance, int region_csv_index) {
+  int get_region_csv_rect_field_height(int instance, int region_csv_index) {
     return regions_csv_array[instance].get(region_csv_index).rect_field_height;
+  }
+
+  int get_region_csv_rect_dashed_gap(int instance, int region_csv_index) {
+    return regions_csv_array[instance].get(region_csv_index).rect_dashed_gap;
   }
 
   void update_regions_csv_file(int instance) {
@@ -687,7 +691,4 @@ class Region_CSV {
   color marker_stroke_color;
   int marker_stroke_weight;
   color marker_fill_color;
-
-  Region_CSV() {
-  }
 }
