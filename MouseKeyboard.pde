@@ -165,30 +165,14 @@ void mouseDragged()
 
 void mouseWheel(MouseEvent event)
 {
-  //if (!mouse_wheel_enabled) return;
-  if (!UI_Buttons_enabled) return;
-
   int wheel_count = event.getCount();
   //int zoom_factor_save = ZOOM_FACTOR[0];
 
   if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);
 
-  if (wheel_count > 0)
-  {
-    //for (; wheel_count > 0; wheel_count -= 1)
-    {
-      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-        UI_Buttons_zoom_minus(i);
-    }
-  }
-  else if (wheel_count < 0)
-  {
-    //for (; wheel_count < 0; wheel_count += 1)
-    {  
-      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-        UI_Buttons_zoom_pluse(i);
-    }
-  }
+  //if (!mouse_wheel_enabled) return;
+
+  UI_Buttons_mouse_wheel(wheel_count);
 
 // Disable mouse x y changing by wheel zoom feature.
 /*

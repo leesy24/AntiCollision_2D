@@ -302,6 +302,30 @@ void UI_Buttons_mouse_dragged()
   UI_Buttons_mouse_moved();
 }
 
+void UI_Buttons_mouse_wheel(int wheel_count)
+{
+  if (!UI_Buttons_enabled) return;
+
+  UI_Buttons_timeout_start = millis();
+
+  if (wheel_count > 0)
+  {
+    //for (; wheel_count > 0; wheel_count -= 1)
+    {
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+        UI_Buttons_zoom_minus(i);
+    }
+  }
+  else if (wheel_count < 0)
+  {
+    //for (; wheel_count < 0; wheel_count += 1)
+    {  
+      for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+        UI_Buttons_zoom_pluse(i);
+    }
+  }
+}
+
 void UI_Buttons_zoom_minus(int i)
 {
   if (ZOOM_FACTOR[i] < 5000)
