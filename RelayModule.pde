@@ -150,7 +150,7 @@ void Relay_Module_setup()
     Relay_Module_relays_csv.add(relay_csv);
 
     // If name start with # than skip it.
-    if (relay_name.charAt(0) == '#') {
+    if (relay_name.length() > 0 && relay_name.charAt(0) == '#') {
       continue;
     }
 
@@ -169,12 +169,12 @@ void Relay_Module_setup()
         color off_fill_c;
         color on_stroke_c;
         color off_stroke_c;
-        String on_text = " ON";
-        String off_text = " OFF";
+        String on_text = "ON";
+        String off_text = "OFF";
         float text_width_max;
 
-        on_text = relay_name + on_text;
-        off_text = relay_name + off_text;
+        on_text = relay_name + (relay_name.length() == 0?"":" ") + on_text;
+        off_text = relay_name + (relay_name.length() == 0?"":" ") + off_text;
 
         textSize(indicator_text_height);
         text_width_max = textWidth(on_text);
@@ -206,12 +206,6 @@ void Relay_Module_setup()
     }
   }
 
-  if (Relay_Module_UART_port_name.equals("NA"))
-  {
-    Relay_Module_UART_enabled = false;
-    return;
-  }
-
   // Reset Serial. 
   if (Relay_Module_UART_handle != null)
   {
@@ -219,10 +213,20 @@ void Relay_Module_setup()
     Relay_Module_UART_handle = null;
   }
 
+  if (Relay_Module_UART_port_name.equals("")
+      ||
+      Relay_Module_UART_port_name.equals("NA"))
+  {
+    Relay_Module_UART_enabled = false;
+    return;
+  }
+
   // Check Relay_Module_UART_port_name with the available serial ports
   for (String port:Serial.list())
   {
-    if (port.equals(Relay_Module_UART_port_name))
+    if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Serial port name="+port);
+    println("Relay_Module_setup():Serial port name="+port);
+    if (port.equals(Relay_Module_UART_port_name.toUpperCase()))
     {
       found = true;
       break;
@@ -230,7 +234,7 @@ void Relay_Module_setup()
   }
   if (!found)
   {
-    if(PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_SETUP_ERR) println("Relay_Module_setup():Can not find com port error! " + Relay_Module_UART_port_name);
+    if(PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_SETUP_ERR) println("Relay_Module_setup():Can not find com port error! \""+Relay_Module_UART_port_name+"\"");
     return;
   }
 
