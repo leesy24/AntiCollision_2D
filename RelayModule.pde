@@ -436,6 +436,8 @@ class UI_Relay_Indicator {
   String on_text;
   String off_text;
 
+  private boolean init = false;
+
   UI_Relay_Indicator() {
   }
 
@@ -453,10 +455,12 @@ class UI_Relay_Indicator {
     this.text_height = text_height;
     this.on_text = on_text;
     this.off_text = off_text;
+    init = true;
     //println("UI_Relay_Indicator():constructor():"+"x="+x+",y="+y+",w="+w+",h="+h);
   }
 
   void draw(boolean on) {
+    if (!init) return;
     // Sets the color and weight used to draw lines and borders around shapes.
     if (on) {
       stroke(on_stroke_c);
