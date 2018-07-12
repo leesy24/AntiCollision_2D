@@ -91,7 +91,7 @@ class Regions {
         regions_csv_array[instance].add(region_csv);
 
         // If name start with # than skip it.
-        if (region_csv.name.charAt(0) == '#') {
+        if (region_csv.name.length() > 0 && region_csv.name.charAt(0) == '#') {
           continue;
         }
         Region_Data region_data =
