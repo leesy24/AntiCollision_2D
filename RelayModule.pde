@@ -225,7 +225,7 @@ void Relay_Module_setup()
   for (String port:Serial.list())
   {
     if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Serial port name="+port);
-    println("Relay_Module_setup():Serial port name="+port);
+    //println("Relay_Module_setup():Serial port name="+port);
     if (port.equals(Relay_Module_UART_port_name.toUpperCase()))
     {
       found = true;
