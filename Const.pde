@@ -415,7 +415,7 @@ void Const_create()
   variable = table.addRow();
   variable.setString("Name", "C_UI_MESSAGE_BOX_RECT");
   variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_RECT));
-  variable.setString("Comment", "Color of text of message box. Color data format is AARRGGBB");
+  variable.setString("Comment", "Color of rect of message box. Color data format is AARRGGBB");
 
   variable = table.addRow();
   variable.setString("Name", "W_UI_MESSAGE_BOX_RECT");
