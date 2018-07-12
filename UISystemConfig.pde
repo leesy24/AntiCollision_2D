@@ -99,8 +99,6 @@ void UI_System_Config_update()
     return;
   }
 
-  UI_System_Config_changed_any = false;
-
   if(UI_System_Config_cf == null) {
     UI_System_Config_cf = new ControlFont(SCREEN_PFront,FONT_HEIGHT);
   }
@@ -798,11 +796,20 @@ void UI_System_Config_draw()
         break;
       }
 
+      /**/
+      // Disable other config UI if enabled.
+      if (UI_Regions_Config_enabled)
+      {
+        UI_Regions_Config_enabled = false;
+      }
+      /**/
+
       // Check password not required.
       if (SYSTEM_PASSWORD.equals(""))
       {
         UI_System_Config_state = UI_System_Config_state_enum.WAIT_CONFIG_INPUT;
         UI_System_Config_update();
+        UI_System_Config_changed_any = false;
         UI_System_Config_timeout_start = millis();
         break;
       }
@@ -818,6 +825,16 @@ void UI_System_Config_draw()
         UI_System_Config_state = UI_System_Config_state_enum.IDLE;
         break;
       }
+
+      /*
+      // Disable this config UI if other config UI enabled.
+      if (UI_Regions_Config_enabled)
+      {
+        UI_System_Config_enabled = false;
+        UI_System_Config_state = UI_System_Config_state_enum.IDLE;
+        break;
+      }
+      */
 
       if (get_millis_diff(UI_System_Config_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
       {
@@ -852,6 +869,7 @@ void UI_System_Config_draw()
       }
       UI_System_Config_state = UI_System_Config_state_enum.WAIT_CONFIG_INPUT;
       UI_System_Config_update();
+      UI_System_Config_changed_any = false;
       UI_System_Config_timeout_start = millis();
       break;
     case WAIT_CONFIG_INPUT:
@@ -869,6 +887,14 @@ void UI_System_Config_draw()
         UI_System_Config_state = UI_System_Config_state_enum.IDLE;
         break;
       }
+
+      /*
+      // Skip this config UI if other config UI enabled.
+      if (UI_Regions_Config_enabled)
+      {
+        break;
+      }
+      */
 
       if (UI_System_Config_changed_any)
       {

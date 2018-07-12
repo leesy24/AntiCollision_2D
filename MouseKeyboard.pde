@@ -50,11 +50,11 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F8)
     {
       Bubble_Info_enabled = !Bubble_Info_enabled;
-    } 
+    }
     else if(keyCode == KeyEvent.VK_F7)
     {
       PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
-    } 
+    }
     else if(keyCode == KeyEvent.VK_F6)
     {
       UI_Interfaces_enabled = !UI_Interfaces_enabled;
@@ -77,7 +77,7 @@ void keyPressed()
     {
       UI_Buttons_enabled = !UI_Buttons_enabled;
       mouse_wheel_enabled = !mouse_wheel_enabled;
-    } 
+    }
     else if(keyCode == KeyEvent.VK_F1)
     {
       UI_System_Config_enabled = !UI_System_Config_enabled;
