@@ -1132,7 +1132,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             updated_instance = true;
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
             break;
-          case RELAY_INDEX: // Relay index
+          case RELAY_INDEX: {
             try {
               val = Integer.parseInt(str.trim());
             }
@@ -1145,11 +1145,49 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             if (val == region_csv.relay_index) {
               break;
             }
+            // Check other relay_index text field has same with this.
+            int i_;
+            for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
+              int region_csv_index_;
+              for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
+              {
+                if (region_csv_index_ == region_csv_index) continue;
+                int relay_index_;
+                try {
+                  relay_index_ =
+                    Integer.parseInt(
+                      UI_Regions_Config_cp5_local[i_]
+                        .get(
+                          Textfield.class,
+                          "UI_Regions_Config_relay_index_input_"+region_csv_index_)
+                            .getText());
+                }
+                catch (NumberFormatException e) {
+                  continue;
+                }
+                catch (NullPointerException e) {
+                  continue;
+                }
+                if (relay_index_ != -1 && relay_index_ == val) {
+                  // Found same relay_index.
+                  break;
+                }
+              }
+              if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
+                // Found same relay_index.
+                break;
+              }
+            }
+            if (i_ != PS_INSTANCE_MAX) {
+              // Found same relay_index.
+              break;
+            }
             region_csv.relay_index = val;
             updated_instance = true;
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
             break;
-          case RELAY_NAME: // Relay name
+          }
+          case RELAY_NAME: {
             // Get relay_index input value from text field of this region.
             try {
               val =
@@ -1163,7 +1201,48 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             catch (NumberFormatException e) {
               break;
             }
+            catch (NullPointerException e) {
+              break;
+            }
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":input relay_index="+val);
+            // Check other relay_index text field has same with this.
+            int i_;
+            for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
+              int region_csv_index_;
+              for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
+              {
+                if (region_csv_index_ == region_csv_index) continue;
+                int relay_index_;
+                try {
+                  relay_index_ =
+                    Integer.parseInt(
+                      UI_Regions_Config_cp5_local[i_]
+                        .get(
+                          Textfield.class,
+                          "UI_Regions_Config_relay_index_input_"+region_csv_index_)
+                            .getText());
+                }
+                catch (NumberFormatException e) {
+                  continue;
+                }
+                catch (NullPointerException e) {
+                  continue;
+                }
+                if (relay_index_ != -1 && relay_index_ == val) {
+                  // Found same relay_index.
+                  break;
+                }
+              }
+              if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
+                // Found same relay_index.
+                break;
+              }
+            }
+            if (i_ != PS_INSTANCE_MAX) {
+              // Found same relay_index.
+              break;
+            }
+            // Check relay_index is valid.
             if (!Relay_Module_check_relay_index(val)) {
               if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_index is not valid. "+val);
               break;
@@ -1176,6 +1255,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             updated_relay = true;
             if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
             break;
+          }
           case NO_MARK_BIG: // No mark big
             bool = str.toLowerCase().equals("true")?true:false;
             if (bool == region_csv.no_mark_big) {
