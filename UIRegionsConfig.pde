@@ -1163,11 +1163,13 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             catch (NumberFormatException e) {
               break;
             }
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+":input relay_index="+val);
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":input relay_index="+val);
             if (!Relay_Module_check_relay_index(val)) {
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_index is not valid. "+val);
               break;
             }
             if (str.equals(Relay_Module_get_relay_name(val))) {
+              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_name is same. "+str+","+Relay_Module_get_relay_name(val));
               break;
             }
             Relay_Module_set_relay_name(region_csv.relay_index, str);
