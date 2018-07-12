@@ -25,7 +25,7 @@ int mousePressedX;
 int mousePressedY;
 
 static boolean mouse_dragging_enabled = false;
-static boolean mouse_wheel_enabled = false;
+//static boolean mouse_wheel_enabled = false;
 
 /**/
 void keyPressed()
@@ -76,7 +76,7 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F2)
     {
       UI_Buttons_enabled = !UI_Buttons_enabled;
-      mouse_wheel_enabled = !mouse_wheel_enabled;
+      //mouse_wheel_enabled = !mouse_wheel_enabled;
     }
     else if(keyCode == KeyEvent.VK_F1)
     {
@@ -165,7 +165,8 @@ void mouseDragged()
 
 void mouseWheel(MouseEvent event)
 {
-  if (!mouse_wheel_enabled) return;
+  //if (!mouse_wheel_enabled) return;
+  if (!UI_Buttons_enabled) return;
 
   int wheel_count = event.getCount();
   //int zoom_factor_save = ZOOM_FACTOR[0];
