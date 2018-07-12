@@ -356,7 +356,10 @@ void UI_System_Config_update()
   // SYSTEM_PASSWORD input
   //y += h + TEXT_MARGIN;
   str = SYSTEM_PASSWORD;
-  w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  if (str.equals(""))
+    w = int(FONT_HEIGHT * 1.5 * 5 / 2 + TEXT_MARGIN * 2);
+  else
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_SYSTEM_PASSWORD_input");
@@ -531,7 +534,10 @@ void UI_System_Config_update()
   // Relay_Module_UART_port_name input
   y += h + TEXT_MARGIN;
   str = Relay_Module_UART_port_name;
-  w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  if (str.equals(""))
+    w = int(FONT_HEIGHT * 1.5 * 5 / 2 + TEXT_MARGIN * 2);
+  else
+    w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_Relay_Module_UART_port_name_input");

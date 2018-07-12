@@ -358,7 +358,10 @@ void UI_Regions_Config_update_instance(int instance)
     // Region name input
     //y += h + TEXT_MARGIN;
     str = Regions_handle.get_region_csv_name(instance, region_csv_index);
-    w = int(textWidth(str) + TEXT_MARGIN*2);
+    if (str.equals(""))
+      w = int(FONT_HEIGHT * 5 / 2 + TEXT_MARGIN * 2);
+    else
+      w = int(textWidth(str) + TEXT_MARGIN*2);
     w_max = max(w_max, w);
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_region_name_input_"+region_csv_index);
@@ -470,7 +473,10 @@ void UI_Regions_Config_update_instance(int instance)
     {
       int save_x = x;
       x += w + TEXT_MARGIN;
-      w = int(textWidth(str) + TEXT_MARGIN*2);
+      if (str.equals(""))
+        w = int(FONT_HEIGHT * 5 / 2 + TEXT_MARGIN * 2);
+      else
+        w = int(textWidth(str) + TEXT_MARGIN*2);
       w_max = max(w_max, w);
       h = FONT_HEIGHT + TEXT_MARGIN*2;
       tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_relay_name_input_"+region_csv_index);
