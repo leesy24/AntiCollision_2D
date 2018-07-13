@@ -53,6 +53,8 @@ void Const_setup()
       ROI_OBJECT_DETECT_DIAMETER_MIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_DETECT_TIME_MIN"))
       ROI_OBJECT_DETECT_TIME_MIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_KEEP_TIME"))
+      ROI_OBJECT_DETECT_KEEP_TIME = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN"))
       ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_port_name"))
@@ -218,6 +220,11 @@ void Const_create()
   variable.setString("Name", "ROI_OBJECT_DETECT_TIME_MIN");
   variable.setInt("Value", ROI_OBJECT_DETECT_TIME_MIN);
   variable.setString("Comment", "Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)");
+
+  variable = table.addRow();
+  variable.setString("Name", "ROI_OBJECT_DETECT_KEEP_TIME");
+  variable.setInt("Value", ROI_OBJECT_DETECT_KEEP_TIME);
+  variable.setString("Comment", "Keeping time for disappearance object to detect object ROI later.(unit is milli-seconds)");
 
   variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN");

@@ -51,6 +51,7 @@ static enum UI_System_Config_tf_enum {
   ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX,
   ROI_OBJECT_DETECT_DIAMETER_MIN,
   ROI_OBJECT_DETECT_TIME_MIN,
+  ROI_OBJECT_DETECT_KEEP_TIME,
   ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,
   ROI_OBJECT_MARKER_MARGIN,
   MAX
@@ -319,6 +320,24 @@ void UI_System_Config_update()
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_TIME_MIN");
+  tl_handle
+    .addCallback(UI_System_Config_cp5_callback_listener)
+    .setText(str)
+    .setPosition(x, y)
+    .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
+    .setHeight(h)
+    ;
+  tl_handle.get()
+      .setSize(FONT_HEIGHT)
+      ;
+
+  // ROI_OBJECT_DETECT_KEEP_TIME
+  y += h + TEXT_MARGIN;
+  str = "ROI_OBJECT_DETECT_KEEP_TIME(sec.)";
+  w = int(textWidth(str));
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_KEEP_TIME");
   tl_handle
     .addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
@@ -667,6 +686,41 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_TIME_MIN_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_TIME_MIN.ordinal())
+    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addListener(UI_System_Config_tf_control_listener)
+    .setPosition(x, y).setSize(w, h)
+    //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+    .setAutoClear(false)
+    .setColorBackground( C_UI_SYSTEM_CONFIG_FILL_NORMAL )
+    .setColorForeground( C_UI_SYSTEM_CONFIG_BORDER_NORMAL )
+    .setColorActive( C_UI_SYSTEM_CONFIG_BORDER_ACTIVE )
+    .setColorValueLabel( C_UI_SYSTEM_CONFIG_TEXT )
+    .setColorCursor( C_UI_SYSTEM_CONFIG_CURSOR )
+    .setCaptionLabel("")
+    .setText(str)
+    ;
+  //println("tf.getText() = ", tf.getText());
+  tf_handle.getValueLabel()
+      //.setFont(UI_System_Config_cf)
+      .setSize(FONT_HEIGHT)
+      //.toUpperCase(false)
+      ;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginTop = -1;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginLeft = 1;
+
+  // ROI_OBJECT_DETECT_KEEP_TIME input
+  y += h + TEXT_MARGIN;
+  str = String.valueOf(ROI_OBJECT_DETECT_KEEP_TIME / 1000.);
+  w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_KEEP_TIME_input");
+  tf_handle
+    .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_KEEP_TIME.ordinal())
     .addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
@@ -1154,6 +1208,20 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
           ROI_OBJECT_DETECT_TIME_MIN = val;
           updated = true;
           if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_TIME_MIN="+ROI_OBJECT_DETECT_TIME_MIN+",tf_enum="+tf_enum);
+          break;
+        case ROI_OBJECT_DETECT_KEEP_TIME:
+          try {
+            val = int(Float.parseFloat(str.trim()) * 1000.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == ROI_OBJECT_DETECT_KEEP_TIME) {
+            break;
+          }
+          ROI_OBJECT_DETECT_KEEP_TIME = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_KEEP_TIME="+ROI_OBJECT_DETECT_KEEP_TIME+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN:
           try {
