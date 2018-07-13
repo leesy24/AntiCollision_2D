@@ -1038,6 +1038,7 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
             SYSTEM_PASSWORD_disabled = true;
             break;
           }
+          SYSTEM_PASSWORD_disabled = false;
           if (!str.matches("[0-9]+") || str.length() != 4) {
             break;
           }
