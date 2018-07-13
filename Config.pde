@@ -1,8 +1,12 @@
 //final static boolean PRINT_CONFIG_ALL_DBG = true;
 final static boolean PRINT_CONFIG_ALL_DBG = false;
+final static boolean PRINT_CONFIG_ALL_ERR = true;
+//final static boolean PRINT_CONFIG_ALL_ERR = false;
 
 //final static boolean PRINT_CONFIG_SETUP_DBG = true;
 final static boolean PRINT_CONFIG_SETUP_DBG = false;
+//final static boolean PRINT_CONFIG_SETUP_ERR = true;
+final static boolean PRINT_CONFIG_SETUP_ERR = false;
 
 // Define default binary buf filename and path 
 final static String CONFIG_FILE_NAME = "config";
