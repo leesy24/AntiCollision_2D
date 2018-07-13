@@ -38,7 +38,7 @@ static color C_PS_DATA_RECT_TEXT = #404040; // Black + 0x40
 static int PS_DATA_SAVE_ALWAYS_DURATION = 1; // unit is hours. 1 hour
 
 final static int PS_DATA_SAVE_ALWAYS_DURATION_MIN = 1; // 1 hour
-final static int PS_DATA_SAVE_ALWAYS_DURATION_MAX = 24; // 24 hours
+final static int PS_DATA_SAVE_ALWAYS_DURATION_MAX = 24; // 24 hours, It will 7 GBytes disk space.
 
 final static int PS_DATA_POINTS_MAX = 1000;
 final static int PS_DATA_POINT_WEIGHT = 3;
