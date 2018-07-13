@@ -35,10 +35,10 @@ static color C_PS_DATA_RECT_STROKE = #000000; // Black
 static int W_PS_DATA_RECT_STROKE = 1;
 static color C_PS_DATA_RECT_TEXT = #404040; // Black + 0x40
 
-static int PS_DATA_SAVE_ALWAYS_DURATION = 2000; // unit is ms.
+static int PS_DATA_SAVE_ALWAYS_DURATION = 1; // unit is hours. 1 hour
 
-final static int PS_DATA_SAVE_ALWAYS_DURATION_MIN = 1000; // 1 second
-final static int PS_DATA_SAVE_ALWAYS_DURATION_MAX = 24*60*60*1000; // 1 day
+final static int PS_DATA_SAVE_ALWAYS_DURATION_MIN = 1; // 1 hour
+final static int PS_DATA_SAVE_ALWAYS_DURATION_MAX = 24; // 24 hours
 
 final static int PS_DATA_POINTS_MAX = 1000;
 final static int PS_DATA_POINT_WEIGHT = 3;
@@ -358,9 +358,9 @@ class PS_Data {
         file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
       }
       catch (NumberFormatException e) {
-        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION; // to delete file.
+        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L; // to delete file.
       }
-      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION) continue;
+      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L) continue;
       //println(always_file_name+","+file_time_stamp);
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);

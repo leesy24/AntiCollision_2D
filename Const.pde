@@ -189,7 +189,7 @@ void Const_create()
   variable = table.addRow();
   variable.setString("Name", "PS_DATA_SAVE_ALWAYS_DURATION");
   variable.setInt("Value", PS_DATA_SAVE_ALWAYS_DURATION);
-  variable.setString("Comment", "Time duration of received PS data keep in milli-seconds to save on disk.");
+  variable.setString("Comment", "Time duration of received PS data keep in hours to save on disk.");
 
   variable = table.addRow();
   variable.setString("Name", "PS_DATA_SAVE_EVENTS_DURATION_DEFAULT");

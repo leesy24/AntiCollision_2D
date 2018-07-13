@@ -127,9 +127,9 @@ void Disk_Space_free_always()
         file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
       }
       catch (NumberFormatException e) {
-        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION; // to delete file.
+        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L; // to delete file.
       }
-      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION) continue;
+      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L) continue;
       //println(always_file_name+","+file_time_stamp);
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);

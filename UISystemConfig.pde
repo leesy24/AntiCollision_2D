@@ -207,7 +207,7 @@ void UI_System_Config_update()
 
   // PS_DATA_SAVE_ALWAYS_DURATION
   y += h + TEXT_MARGIN;
-  str = "PS_DATA_SAVE_ALWAYS_DURATION(sec.)";
+  str = "PS_DATA_SAVE_ALWAYS_DURATION(hour,max."+PS_DATA_SAVE_ALWAYS_DURATION_MAX+")";
   w = int(textWidth(str));
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -225,7 +225,7 @@ void UI_System_Config_update()
 
   // PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
   y += h + TEXT_MARGIN;
-  str = "PS_DATA_SAVE_EVENTS_DURATION_DEFAULT(sec.)";
+  str = "PS_DATA_SAVE_EVENTS_DURATION_DEFAULT(sec.,max."+PS_DATA_SAVE_EVENTS_DURATION_MAX/1000+")";
   w = int(textWidth(str));
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -243,7 +243,7 @@ void UI_System_Config_update()
 
   // PS_DATA_SAVE_EVENTS_DURATION_LIMIT
   y += h + TEXT_MARGIN;
-  str = "PS_DATA_SAVE_EVENTS_DURATION_LIMIT(sec.)";
+  str = "PS_DATA_SAVE_EVENTS_DURATION_LIMIT(sec.,max."+PS_DATA_SAVE_EVENTS_DURATION_MAX/1000+")";
   w = int(textWidth(str));
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -466,7 +466,7 @@ void UI_System_Config_update()
 
   // PS_DATA_SAVE_ALWAYS_DURATION input
   y += h + TEXT_MARGIN;
-  str = String.valueOf(PS_DATA_SAVE_ALWAYS_DURATION / 1000.);
+  str = String.valueOf(PS_DATA_SAVE_ALWAYS_DURATION);
   w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
@@ -1119,7 +1119,7 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
           break;
         case PS_DATA_SAVE_ALWAYS_DURATION:
           try {
-            val = int(Float.parseFloat(str.trim()) * 1000.0);
+            val = int(Float.parseFloat(str.trim()));
           }
           catch (NumberFormatException e) {
             break;
