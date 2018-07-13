@@ -229,6 +229,11 @@ void Notice_Messages_draw()
     strings.add("Bubble Info enabled!");
   }
 
+  if (PS_Data_draw_points_with_line)
+  {
+    strings.add("Draw line of points enabled!");
+  }
+
   float gray = (millis()/10)%255;
   // Sets the color used to draw lines and borders around shapes.
   fill(gray);
