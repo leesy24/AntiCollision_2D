@@ -214,15 +214,19 @@ void Notice_Messages_draw()
 {
   LinkedList<String> strings = new LinkedList<String>();
 
-  /*
-  if (PS_Data_save_enabled)
+  if (mouse_dragging_enabled)
   {
-    strings.add("Saving PS data ...");
+    strings.add("Mouse dragging enabled!");
   }
-  */
+
+  if (!PS_Data_save_enabled)
+  {
+    strings.add("PS data saving disabled!");
+  }
+  
   if (Bubble_Info_enabled)
   {
-    strings.add("Bubble Info enabled.");
+    strings.add("Bubble Info enabled!");
   }
 
   float gray = (millis()/10)%255;
