@@ -58,7 +58,6 @@ void keyPressed()
     else if(keyCode == KeyEvent.VK_F6)
     {
       UI_Interfaces_enabled = !UI_Interfaces_enabled;
-      UI_Interfaces_update();
     }
     else if(keyCode == KeyEvent.VK_F5)
     {
@@ -114,7 +113,6 @@ void mousePressed()
   UI_Message_Box_mouse_pressed();
   UI_NumPad_mouse_pressed();
   UI_Buttons_mouse_pressed();
-  UI_Interfaces_mouse_pressed();
   PS_Image_mouse_pressed();
   ROI_Data_mouse_pressed();
 }
@@ -125,7 +123,6 @@ void mouseReleased()
 
   UI_NumPad_mouse_released();
   UI_Buttons_mouse_released();
-  UI_Interfaces_mouse_released();
   PS_Image_mouse_released();
   ROI_Data_mouse_released();
 }

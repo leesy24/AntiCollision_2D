@@ -861,6 +861,12 @@ void UI_System_Config_draw()
       if (UI_Regions_Config_enabled)
       {
         UI_Regions_Config_enabled = false;
+        break;
+      }
+      if (UI_Interfaces_enabled)
+      {
+        UI_Interfaces_enabled = false;
+        break;
       }
       /**/
 

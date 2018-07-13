@@ -122,9 +122,19 @@ void draw() {
   background(C_BG);
 
   if (UI_Interfaces_changed_any) {
-      // To restart program set frameCount to -1, this wiil call setup() of main.
-      frameCount = -1;
+    // Title set to default.
+    Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
+    Config_setup();
+    ROI_Data_setup();
+    PS_Data_setup();
+    // Set window title
+    surface.setTitle(Title);
+    // Need to call gc() to free memory.
+    System.gc();
+
+    UI_Interfaces_update();
   }
+
   if (Screen_check_update()) {
     //PS_Data_setup();
     Screen_setup();

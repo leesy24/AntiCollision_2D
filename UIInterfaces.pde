@@ -14,6 +14,9 @@ final static boolean PRINT_UI_INTERFACES_UPDATE_DBG = false;
 //final static boolean PRINT_UI_INTERFACES_RESET_DBG = true;
 final static boolean PRINT_UI_INTERFACES_RESET_DBG = false;
 
+//final static boolean PRINT_UI_INTERFACES_DRAW_DBG = true;
+final static boolean PRINT_UI_INTERFACES_DRAW_DBG = false;
+
 static color C_UI_INTERFACES_TEXT = #000000; // Black
 static color C_UI_INTERFACES_FILL_NORMAL = #FFFFFF; // White
 static color C_UI_INTERFACES_FILL_HIGHLIGHT = #C0C0C0; // White - 0x40
@@ -34,6 +37,21 @@ static boolean UI_Interfaces_changed_any = false;
 static int[] UI_Interfaces_x_base = new int[PS_INSTANCE_MAX];
 static int[] UI_Interfaces_y_base = new int[PS_INSTANCE_MAX];
 static boolean[] UI_Interfaces_align_right = new boolean[PS_INSTANCE_MAX];
+UI_Interfaces_DDMenu_CallbackListener UI_Interfaces_ddmenu_callback_listener;
+UI_Interfaces_TF_FileName_CallbackListener UI_Interfaces_tf_file_name_callback_listener;
+UI_Interfaces_CP5_CallbackListener UI_Interfaces_cp5_callback_listener;
+
+static enum UI_Interfaces_state_enum {
+  IDLE,
+  PASSWORD_REQ,
+  WAIT_CONFIG_INPUT,
+  DISPLAY_MESSAGE,
+  RESET,
+  MAX
+}
+static UI_Interfaces_state_enum UI_Interfaces_state;
+static UI_Interfaces_state_enum UI_Interfaces_state_next;
+static int UI_Interfaces_timeout_start;
 
 void UI_Interfaces_setup()
 {
@@ -43,6 +61,13 @@ void UI_Interfaces_setup()
   UI_Interfaces_enabled = false;
 
   UI_Interfaces_changed_any = false;
+
+  UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+
+  UI_Interfaces_ddmenu_callback_listener = new UI_Interfaces_DDMenu_CallbackListener();
+  UI_Interfaces_tf_file_name_callback_listener = new UI_Interfaces_TF_FileName_CallbackListener();
+
+  UI_Interfaces_cp5_callback_listener = new UI_Interfaces_CP5_CallbackListener();
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -69,10 +94,6 @@ void UI_Interfaces_setup()
         break;
     }
   }
-  if (UI_Interfaces_enabled)
-  {
-    UI_Interfaces_update();
-  }
 }
 
 void UI_Interfaces_update()
@@ -86,6 +107,7 @@ void UI_Interfaces_update()
   }
 
   UI_Interfaces_changed_any = false;
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     UI_Interfaces_update_instance(i);
@@ -135,7 +157,8 @@ void UI_Interfaces_update_instance(int instance)
 
   Textfield tf_ddborder;
   tf_ddborder = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_ddborder");
-  tf_ddborder.setId(instance)
+  tf_ddborder
+    .setId(instance)
     .setPosition(x+1, y)
     .setSize(w - 2, h)
     .setColorBackground(C_UI_INTERFACES_FILL_NORMAL)
@@ -148,7 +171,9 @@ void UI_Interfaces_update_instance(int instance)
   /* add a ScrollableList, by default it behaves like a DropdownList */
   ScrollableList sl_ddmenu;
   sl_ddmenu = UI_Interfaces_cp5[instance].addScrollableList("UI_Interfaces_ddmenu"/*l.get(0).toString()*/);
-  sl_ddmenu.setId(instance)
+  sl_ddmenu
+    .setId(instance)
+    .addCallback(UI_Interfaces_ddmenu_callback_listener)
     .setBackgroundColor( C_UI_INTERFACES_BORDER_ACTIVE /*color(255,0,255)*/ /*color( 255 , 128 )*/ )
     .setColorBackground( C_UI_INTERFACES_FILL_NORMAL /*color(255,255,0)*/ /*color(200)*/ )
     .setColorForeground( C_UI_INTERFACES_FILL_HIGHLIGHT /*color(0,255,255)*/ /*color(235)*/ )
@@ -230,7 +255,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_filename");
-    tf_param1.setId(instance)
+    tf_param1
+      .setId(instance)
+      .addCallback(UI_Interfaces_tf_file_name_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -267,7 +294,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTport");
-    tf_param1.setId(instance)
+    tf_param1
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -302,7 +331,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param2 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTbaud");
-    tf_param2.setId(instance)
+    tf_param2
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -343,7 +374,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param3 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UARTdps");
-    tf_param3.setId(instance)
+    tf_param3
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -380,7 +413,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPremoteip");
-    tf_param1.setId(instance)
+    tf_param1
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -419,7 +454,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param2 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPremoteport");
-    tf_param2.setId(instance)
+    tf_param2
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -456,7 +493,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param3 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_UDPlocalport");
-    tf_param3.setId(instance)
+    tf_param3
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -493,7 +532,9 @@ void UI_Interfaces_update_instance(int instance)
       x = UI_Interfaces_x_base[instance] + 1;
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tf_param1 = UI_Interfaces_cp5[instance].addTextfield("UI_Interfaces_SNserialnumber");
-    tf_param1.setId(instance)
+    tf_param1
+      .setId(instance)
+      .addCallback(UI_Interfaces_cp5_callback_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -538,6 +579,7 @@ void UI_Interfaces_reset()
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     UI_Interfaces_reset_instance(i);
+    UI_Interfaces_cp5[i] = null;
   }
 }
 
@@ -558,191 +600,335 @@ void UI_Interfaces_reset_instance(int instance)
   }
 
   UI_Interfaces_cp5[instance].setGraphics(this,0,0);
-
-  UI_Interfaces_cp5[instance] = null;
 }
 
 void UI_Interfaces_draw()
 {
-  // Nothing to do.
-}
+  if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_DRAW_DBG) println("UI_Interfaces_draw():Enter");
 
-void UI_Interfaces_mouse_pressed()
-{
-  if (!UI_Interfaces_enabled)
+  //println("UI_Interfaces_state=", UI_Interfaces_state);
+  switch (UI_Interfaces_state)
   {
-    UI_Interfaces_reset();
-    return;
-  }
-
-  if (mouseButton == RIGHT)
-  {
-    UI_Interfaces_mouse_right_pressed();
-  }
-}
-
-private void UI_Interfaces_mouse_right_pressed()
-{
-  if (!UI_Interfaces_enabled)
-  {
-    UI_Interfaces_reset();
-    return;
-  }
-
-  for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
-  {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
-    if (tf == null) continue;
-    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_mouse_right_pressed():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
-    if (tf.getId() != instance
-        ||
-        !tf.isFocus())
-    {
-      continue;
-    }
-
-    String cb_str = get_clipboard_string();
-    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_mouse_right_pressed():instance="+instance+":cb_str="+cb_str);
-    if (cb_str == null) continue;
-    tf.setText(tf.getText() + cb_str);
-  }
-}
-
-void UI_Interfaces_mouse_released()
-{
-  if (!UI_Interfaces_enabled)
-  {
-    UI_Interfaces_reset();
-    return;
-  }
-
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    try {
-      Controller controller = (Controller)UI_Interfaces_cp5[i].getWindow().getMouseOverList().get(0);
-      if(controller.getName().equals("UI_Interfaces_ddmenu") == true) {
-        ScrollableList sl_ddmenu = (ScrollableList)controller;
-        Textfield tf_ddborder;
-        int x, y, w, h;
-        int c;
-    
-        textSize(FONT_HEIGHT);
-        w = 0;
-        for(String s: UI_Interfaces_str_array) {
-          w = int(max(w, textWidth(s)));
-        }
-        w += 20;
-        if (UI_Interfaces_align_right[i])
-          x = UI_Interfaces_x_base[i] - w;
-        else
-          x = UI_Interfaces_x_base[i];
-        if(sl_ddmenu.isOpen()) {
-          h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (UI_Interfaces_str_array.length - 1);
-          c = C_UI_INTERFACES_BORDER_ACTIVE;
-        }
-        else {
-          h = FONT_HEIGHT + TEXT_MARGIN*2;
-          c = C_UI_INTERFACES_BORDER_NORMAL;
-        }
-        y = UI_Interfaces_y_base[i];
-        tf_ddborder = (Textfield)UI_Interfaces_cp5[i].getController("UI_Interfaces_ddborder");
-        tf_ddborder
-          .setPosition(x+1, y)
-          .setSize(w - 2, h)
-          .setColorForeground( c )
-          ;
-        sl_ddmenu
-          .setItems(UI_Interfaces_str_array)
-          .removeItem(UI_Interfaces_str_array[PS_Interface[i]])
-          ;
-        return;
+    case IDLE:
+      if (!UI_Interfaces_enabled)
+      {
+        break;
       }
-    }
-    catch (Exception e) {
-      // Do nothing
-    }
 
-    ScrollableList sl_ddmenu;
-    Textfield tf_param;
-    String str;
-
-    sl_ddmenu = (ScrollableList)UI_Interfaces_cp5[i].get("UI_Interfaces_ddmenu");
-    if( sl_ddmenu != null && sl_ddmenu.isOpen()) {
-      Textfield tf_ddborder;
-      int x, y, w, h;
-      int c;
-
-      w = 0;
-      for(String s: UI_Interfaces_str_array) {
-        w = int(max(w, textWidth(s)));
+      /**/
+      // Disable other config UI if enabled.
+      if (UI_System_Config_enabled)
+      {
+        UI_System_Config_enabled = false;
+        break;
       }
-      w += 20;
-      if (UI_Interfaces_align_right[i])
-        x = UI_Interfaces_x_base[i] - w;
+      if (UI_Regions_Config_enabled)
+      {
+        UI_Regions_Config_enabled = false;
+        break;
+      }
+      /**/
+
+      // Check password not required.
+      if (SYSTEM_PASSWORD_disabled)
+      {
+        UI_Interfaces_state = UI_Interfaces_state_enum.WAIT_CONFIG_INPUT;
+        UI_Interfaces_update();
+        UI_Interfaces_changed_any = false;
+        UI_Interfaces_timeout_start = millis();
+        break;
+      }
+
+      UI_Num_Pad_setup("Input system password");
+      UI_Interfaces_state = UI_Interfaces_state_enum.PASSWORD_REQ;
+      UI_Interfaces_timeout_start = millis();
+      break;
+    case PASSWORD_REQ:
+      if (!UI_Interfaces_enabled)
+      {
+        //UI_Interfaces_reset();
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+
+      /*
+      // Disable this config UI if other config UI enabled.
+      if (UI_System_Config_enabled)
+      {
+        UI_Interfaces_enabled = false;
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+      */
+
+      if (get_millis_diff(UI_Interfaces_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Interfaces_enabled = false;
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+
+      UI_Num_Pad_handle.draw();
+      if (!UI_Num_Pad_handle.input_done())
+      {
+        break;
+      }
+
+      if (UI_Num_Pad_handle.input_string == null)
+      {
+        //UI_Interfaces_reset();
+        UI_Interfaces_enabled = false;
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+
+      // Input done, check password.
+      if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
+      {
+        // Password fail...
+        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5000);
+        UI_Interfaces_state = UI_Interfaces_state_enum.DISPLAY_MESSAGE;
+        UI_Interfaces_state_next = UI_Interfaces_state_enum.IDLE;
+        UI_Interfaces_enabled = false;
+        break;
+      }
+      UI_Interfaces_state = UI_Interfaces_state_enum.WAIT_CONFIG_INPUT;
+      UI_Interfaces_update();
+      UI_Interfaces_changed_any = false;
+      UI_Interfaces_timeout_start = millis();
+      break;
+    case WAIT_CONFIG_INPUT:
+      if (!UI_Interfaces_enabled)
+      {
+        UI_Interfaces_reset();
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+
+      if (get_millis_diff(UI_Interfaces_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      {
+        UI_Interfaces_reset();
+        UI_Interfaces_enabled = false;
+        UI_Interfaces_state = UI_Interfaces_state_enum.IDLE;
+        break;
+      }
+
+      /*
+      // Skip this config UI if other config UI enabled.
+      if (UI_System_Config_enabled)
+      {
+        break;
+      }
+      */
+
+      /*
+      if (UI_Interfaces_changed_any)
+      {
+        UI_Interfaces_reset();
+        // Update done! Indicate updated.
+        UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3000);
+        UI_Interfaces_state = UI_Interfaces_state_enum.DISPLAY_MESSAGE;
+        UI_Interfaces_state_next = UI_Interfaces_state_enum.RESET;
+        break;
+      }
+      */
+      break;
+    case DISPLAY_MESSAGE:
+      if (UI_Message_Box_handle.draw())
+      {
+        break;
+      }
+      UI_Interfaces_state = UI_Interfaces_state_next;
+      break;
+    case RESET:
+      // To restart program set frameCount to -1, this wiil call setup() of main.
+      frameCount = -1;
+      break;
+  }
+}
+
+private void UI_Interfaces_tf_file_name_mouse_pressed_right(int instance)
+{
+  Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get(Textfield.class, "UI_Interfaces_filename"));
+  if (tf == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):tf==null");
+    return;
+  }
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):id="+tf.getId()+",isFocus="+tf.isFocus());
+  if (tf.getId() != instance
+      ||
+      !tf.isFocus())
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):id="+tf.getId()+",isFocus="+tf.isFocus());
+    return;
+  }
+
+  String cb_str = get_clipboard_string();
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):cb_str="+cb_str);
+  if (cb_str == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):cb_str=null");
+    return;
+  }
+  tf.setText(tf.getText()+cb_str);
+}
+
+void UI_Interfaces_ddmenu_mouse_released(int instance)
+{
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):ENTER");
+
+  ScrollableList sl_ddmenu = UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu");
+  if (sl_ddmenu == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):sl_ddmenu=null");
+  }
+
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):sl_ddmenu.isOpen()="+sl_ddmenu.isOpen());
+
+  Textfield tf_ddborder;
+  int x, y, w, h;
+  int c;
+
+  textSize(FONT_HEIGHT);
+  w = 0;
+  for(String s: UI_Interfaces_str_array) {
+    w = int(max(w, textWidth(s)));
+  }
+  w += 20;
+  if (UI_Interfaces_align_right[instance])
+    x = UI_Interfaces_x_base[instance] - w;
+  else
+    x = UI_Interfaces_x_base[instance];
+  if(sl_ddmenu.isOpen()) {
+    h = FONT_HEIGHT + TEXT_MARGIN*2 + (FONT_HEIGHT + TEXT_MARGIN*2 + 1 - 2) * (UI_Interfaces_str_array.length - 1);
+    c = C_UI_INTERFACES_BORDER_ACTIVE;
+  }
+  else {
+    h = FONT_HEIGHT + TEXT_MARGIN*2;
+    c = C_UI_INTERFACES_BORDER_NORMAL;
+  }
+  y = UI_Interfaces_y_base[instance];
+  tf_ddborder = (Textfield)UI_Interfaces_cp5[instance].get(Textfield.class, "UI_Interfaces_ddborder");
+  if (tf_ddborder == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):tf_ddborder=null");
+    return;
+  }
+  tf_ddborder
+    .setPosition(x+1, y)
+    .setSize(w - 2, h)
+    .setColorForeground( c )
+    ;
+  sl_ddmenu
+    .setItems(UI_Interfaces_str_array)
+    .removeItem(UI_Interfaces_str_array[PS_Interface[instance]])
+    ;
+}
+
+void UI_Interfaces_ddmenu_mouse_leave(int instance)
+{
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):ENTER");
+
+  ScrollableList sl_ddmenu = UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu");
+  if (sl_ddmenu == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):sl_ddmenu=null");
+  }
+
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):sl_ddmenu.isOpen()="+sl_ddmenu.isOpen());
+
+  if (!sl_ddmenu.isOpen())
+  {
+    // Already closed. So, nothing to do.
+    return;
+  }
+
+  Textfield tf_ddborder;
+  int x, y, w, h;
+  int c;
+
+  w = 0;
+  for(String s: UI_Interfaces_str_array) {
+    w = int(max(w, textWidth(s)));
+  }
+  w += 20;
+  if (UI_Interfaces_align_right[instance])
+    x = UI_Interfaces_x_base[instance] - w;
+  else
+    x = UI_Interfaces_x_base[instance];
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  c = C_UI_INTERFACES_BORDER_NORMAL;
+  y = UI_Interfaces_y_base[instance];
+  tf_ddborder = (Textfield)UI_Interfaces_cp5[instance].get(Textfield.class, "UI_Interfaces_ddborder");
+  if (tf_ddborder == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):tf_ddborder=null");
+    return;
+  }
+  tf_ddborder
+    .setPosition(x+1, y)
+    .setSize(w - 2, h)
+    .setColorForeground( c )
+    ;
+  sl_ddmenu.close();
+}
+
+void UI_Interfaces_mouse_released(int instance)
+{
+  Textfield tf_param;
+  String str;
+
+  if(PS_Interface[instance] == PS_Interface_FILE) {
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_filename");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = FILE_name[instance];
+      tf_param.setText(str);
+    }
+  }
+  else if(PS_Interface[instance] == PS_Interface_UART) {
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTport");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = UART_port_name;
+      tf_param.setText(str);
+    }
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTbaud");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = Integer.toString(UART_baud_rate);
+      tf_param.setText(str);
+    }
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTdps");
+     if( tf_param != null && tf_param.isFocus() == false) {
+     str = Integer.toString(UART_data_bits) + UART_parity;
+      if(int(UART_stop_bits*10.0)%10 == 0)
+        str += int(UART_stop_bits);
       else
-        x = UI_Interfaces_x_base[i];
-      h = FONT_HEIGHT + TEXT_MARGIN*2;
-      c = C_UI_INTERFACES_BORDER_NORMAL;
-      y = UI_Interfaces_y_base[i];
-      tf_ddborder = (Textfield)UI_Interfaces_cp5[i].getController("UI_Interfaces_ddborder");
-      tf_ddborder
-        .setPosition(x+1, y)
-        .setSize(w - 2, h)
-        .setColorForeground( c )
-        ;
-      sl_ddmenu.close();
+        str += UART_stop_bits;
+      tf_param.setText(str);
     }
-    if(PS_Interface[i] == PS_Interface_FILE) {
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_filename");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = FILE_name[i];
-        tf_param.setText(str);
-      }
+  }
+  else if(PS_Interface[instance] == PS_Interface_UDP) {
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteip");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = UDP_remote_ip[instance];
+      tf_param.setText(str);
     }
-    else if(PS_Interface[i] == PS_Interface_UART) {
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTport");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = UART_port_name;
-        tf_param.setText(str);
-      }
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTbaud");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = Integer.toString(UART_baud_rate);
-        tf_param.setText(str);
-      }
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UARTdps");
-       if( tf_param != null && tf_param.isFocus() == false) {
-       str = Integer.toString(UART_data_bits) + UART_parity;
-        if(int(UART_stop_bits*10.0)%10 == 0)
-          str += int(UART_stop_bits);
-        else
-          str += UART_stop_bits;
-        tf_param.setText(str);
-      }
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteport");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = Integer.toString(UDP_remote_port[instance]);
+      tf_param.setText(str);
     }
-    else if(PS_Interface[i] == PS_Interface_UDP) {
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPremoteip");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = UDP_remote_ip[i];
-        tf_param.setText(str);
-      }
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPremoteport");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = Integer.toString(UDP_remote_port[i]);
-        tf_param.setText(str);
-      }
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_UDPlocalport");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = Integer.toString(UDP_local_port[i]);
-        tf_param.setText(str);
-      }
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPlocalport");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = Integer.toString(UDP_local_port[instance]);
+      tf_param.setText(str);
     }
-    else /*if(PS_Interface[i] == PS_Interface_SN)*/ {
-      tf_param = (Textfield)UI_Interfaces_cp5[i].get("UI_Interfaces_SNserialnumber");
-      if( tf_param != null && tf_param.isFocus() == false) {
-        str = Integer.toString(SN_serial_number[i]);
-        tf_param.setText(str);
-      }
+  }
+  else /*if(PS_Interface[instance] == PS_Interface_SN)*/ {
+    tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber");
+    if( tf_param != null && tf_param.isFocus() == false) {
+      str = Integer.toString(SN_serial_number[instance]);
+      tf_param.setText(str);
     }
   }
 }
@@ -762,11 +948,12 @@ void controlEvent(ControlEvent theEvent)
 
 void UI_Interfaces_ddmenu(int n)
 {
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu("+n+"):ENTER");
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     ScrollableList sl_ddmenu = (ScrollableList)(UI_Interfaces_cp5[instance].get("UI_Interfaces_ddmenu"));
-    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu():instance="+instance+":id="+sl_ddmenu.getId()+",isOpen="+sl_ddmenu.isOpen());
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu("+n+"):instance="+instance+":id="+sl_ddmenu.getId()+",isOpen="+sl_ddmenu.isOpen());
     if (sl_ddmenu.getId() == instance
         &&
         sl_ddmenu.isOpen())
@@ -774,37 +961,12 @@ void UI_Interfaces_ddmenu(int n)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu():Can't found instance.");
     return;
   }
 
-/*
-  //int interface = ((sl_ddmenu.getItem(n)).getValue();
-  Map m = UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n);
-  int interface = m.get("value");
-*/
-  /* request the selected item based on index n */
-  //println("dropdown=", n, ",", UI_Interfaces_cp5[instance].get(ScrollableList.class, "UI_Interfaces_ddmenu").getItem(n));
-  
-  /* here an item is stored as a Map  with the following key-value pairs:
-   * name, the given name of the item
-   * text, the given text of the item by default the same as name
-   * value, the given value of the item, can be changed by using .getItem(n).put("value", "abc"); a value here is of type Object therefore can be anything
-   * color, the given color of the item, how to change, see below
-   * view, a customizable view, is of type CDrawable 
-   */
-/*
-  for(int i = 0; i < 3; i ++) {
-    CColor c = new CColor();
-    if(i == n)
-      c.setBackground(color(255,0,0));
-    else
-      c.setBackground(color(255,255,0));
-    UI_Interfaces_cp5[instance].get(ScrollableList.class, "dropdown").getItem(i).put("color", c);
-  }
-*/
   if( n >= PS_Interface[instance] ) n ++;
 
   if( PS_Interface[instance] != n ) {
@@ -1071,5 +1233,84 @@ void UI_Interfaces_SNserialnumber(String theText)
     Config_save();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
+  }
+}
+
+class UI_Interfaces_DDMenu_CallbackListener implements CallbackListener {
+  public void controlEvent(CallbackEvent theEvent) {
+    UI_Interfaces_timeout_start = millis();
+/*
+    switch(theEvent.getAction()) {
+      case(ControlP5.ACTION_ENTER): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:ENTER");
+        break;
+      case(ControlP5.ACTION_LEAVE): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:LEAVE");
+        break;
+      case(ControlP5.ACTION_PRESSED): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:PRESSED");
+        break;
+      case(ControlP5.ACTION_RELEASED): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:RELEASED");
+        break;
+      case(ControlP5.ACTION_RELEASEDOUTSIDE): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:RELEASED OUTSIDE");
+        break;
+      case(ControlP5.ACTION_BROADCAST): 
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:BROADCAST");
+        break;
+      default:
+        println("UI_Interfaces_DDMenu_CallbackListener:controlEvent():Action:"+theEvent.getAction());
+        break;
+    }
+*/
+    if (theEvent.getAction() == ControlP5.ACTION_RELEASED) {
+      //ScrollableList sl_ddmenu = (ScrollableList)theEvent.getController();;
+      UI_Interfaces_ddmenu_mouse_released(theEvent.getController().getId());
+    }
+    if (theEvent.getAction() == ControlP5.ACTION_LEAVE) {
+      //ScrollableList sl_ddmenu = (ScrollableList)theEvent.getController();;
+      UI_Interfaces_ddmenu_mouse_leave(theEvent.getController().getId());
+    }
+  }
+}
+
+class UI_Interfaces_TF_FileName_CallbackListener implements CallbackListener {
+  public void controlEvent(CallbackEvent theEvent) {
+    UI_Interfaces_timeout_start = millis();
+/*
+    switch(theEvent.getAction()) {
+      case(ControlP5.ACTION_ENTER): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:ENTER");
+        break;
+      case(ControlP5.ACTION_LEAVE): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:LEAVE");
+        break;
+      case(ControlP5.ACTION_PRESSED): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:PRESSED");
+        break;
+      case(ControlP5.ACTION_RELEASED): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:RELEASED");
+        break;
+      case(ControlP5.ACTION_RELEASEDOUTSIDE): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:RELEASED OUTSIDE");
+        break;
+      case(ControlP5.ACTION_BROADCAST): 
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:BROADCAST");
+        break;
+      default:
+        println("UI_Interfaces_TF_FileName_CallbackListener:controlEvent():Action:"+theEvent.getAction());
+        break;
+    }
+*/
+    if (theEvent.getAction() == ControlP5.ACTION_PRESSED && mouseButton == RIGHT) {
+      //ScrollableList sl_ddmenu = (ScrollableList)theEvent.getController();;
+      UI_Interfaces_tf_file_name_mouse_pressed_right(theEvent.getController().getId());
+    }
+  }
+}
+class UI_Interfaces_CP5_CallbackListener implements CallbackListener {
+  public void controlEvent(CallbackEvent theEvent) {
+    UI_Interfaces_timeout_start = millis();
   }
 }
