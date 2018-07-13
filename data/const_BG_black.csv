@@ -6,9 +6,10 @@ PS_DATA_SAVE_ALWAYS_DURATION,2000,Time duration of received PS data keep in mill
 PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,2000,Default time duration of event PS data keep in milli-seconds to save on disk.
 PS_DATA_SAVE_EVENTS_DURATION_LIMIT,30000,Limit time duration of event PS data keep in milli-seconds to save on disk.
 ROI_OBJECT_MARKER_MARGIN,10,Margin of objects ROI marker.
-ROI_OBJECT_DETECT_DISTANCE_MIN,5000,Minimum distance of object to detect one object ROI.(5000=50cm=0.5meter)
-ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
+ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX,5000,Maximum distance of points to detect one object ROI.(5000=50cm=0.5meter)
+ROI_OBJECT_DETECT_DIAMETER_MIN,2000,Minimum diameter of object to detect the object ROI.(2000=20cm=0.2meter)
 ROI_OBJECT_DETECT_TIME_MIN,500,Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)
+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
 Relay_Module_UART_port_name,COM1,UART port name of Relay module.
 Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
 Relay_Module_UART_parity,N,UART parity of Relay module.

@@ -47,12 +47,14 @@ void Const_setup()
       PS_DATA_SAVE_EVENTS_DURATION_LIMIT = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_MARKER_MARGIN"))
       ROI_OBJECT_MARKER_MARGIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_DETECT_DISTANCE_MIN"))
-      ROI_OBJECT_DETECT_DISTANCE_MIN = variable.getInt("Value");
-    else if(name.equals("ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN"))
-      ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX"))
+      ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_DETECT_DIAMETER_MIN"))
+      ROI_OBJECT_DETECT_DIAMETER_MIN = variable.getInt("Value");
     else if(name.equals("ROI_OBJECT_DETECT_TIME_MIN"))
       ROI_OBJECT_DETECT_TIME_MIN = variable.getInt("Value");
+    else if(name.equals("ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN"))
+      ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_port_name"))
       Relay_Module_UART_port_name = variable.getString("Value");
     else if (name.equals("Relay_Module_UART_baud_rate"))
@@ -203,19 +205,24 @@ void Const_create()
   variable.setString("Comment", "Margin of objects ROI marker.");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_DETECT_DISTANCE_MIN");
-  variable.setInt("Value", ROI_OBJECT_DETECT_DISTANCE_MIN);
-  variable.setString("Comment", "Minimum distance of object to detect one object ROI.(5000=50cm=0.5meter)");
+  variable.setString("Name", "ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX");
+  variable.setInt("Value", ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX);
+  variable.setString("Comment", "Maximum distance of points to detect one object ROI.(5000=50cm=0.5meter)");
 
   variable = table.addRow();
-  variable.setString("Name", "ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN");
-  variable.setInt("Value", ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN);
-  variable.setString("Comment", "Minimum Diameter of object to no maker display.(20000=200cm=2meter)");
+  variable.setString("Name", "ROI_OBJECT_DETECT_DIAMETER_MIN");
+  variable.setInt("Value", ROI_OBJECT_DETECT_DIAMETER_MIN);
+  variable.setString("Comment", "Minimum diameter of object to detect the object ROI.(2000=20cm=0.2meter)");
 
   variable = table.addRow();
   variable.setString("Name", "ROI_OBJECT_DETECT_TIME_MIN");
   variable.setInt("Value", ROI_OBJECT_DETECT_TIME_MIN);
   variable.setString("Comment", "Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)");
+
+  variable = table.addRow();
+  variable.setString("Name", "ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN");
+  variable.setInt("Value", ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN);
+  variable.setString("Comment", "Minimum Diameter of object to no maker display.(20000=200cm=2meter)");
 
   variable = table.addRow();
   variable.setString("Name", "Relay_Module_UART_port_name");

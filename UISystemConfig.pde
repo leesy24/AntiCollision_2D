@@ -48,7 +48,8 @@ static enum UI_System_Config_tf_enum {
   PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,
   PS_DATA_SAVE_EVENTS_DURATION_LIMIT,
   Relay_Module_UART_port_name,
-  ROI_OBJECT_DETECT_DISTANCE_MIN,
+  ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX,
+  ROI_OBJECT_DETECT_DIAMETER_MIN,
   ROI_OBJECT_DETECT_TIME_MIN,
   ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,
   ROI_OBJECT_MARKER_MARGIN,
@@ -275,13 +276,31 @@ void UI_System_Config_update()
       .setSize(FONT_HEIGHT)
       ;
 
-  // ROI_OBJECT_DETECT_DISTANCE_MIN
+  // ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX
   y += h + TEXT_MARGIN;
-  str = "ROI_OBJECT_DETECT_DISTANCE_MIN(m)";
+  str = "ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX(m)";
   w = int(textWidth(str));
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
-  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_DISTANCE_MIN");
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX");
+  tl_handle
+    .addCallback(UI_System_Config_cp5_callback_listener)
+    .setText(str)
+    .setPosition(x, y)
+    .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
+    .setHeight(h)
+    ;
+  tl_handle.get()
+      .setSize(FONT_HEIGHT)
+      ;
+
+  // ROI_OBJECT_DETECT_DIAMETER_MIN
+  y += h + TEXT_MARGIN;
+  str = "ROI_OBJECT_DETECT_DIAMETER_MIN(m)";
+  w = int(textWidth(str));
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_DIAMETER_MIN");
   tl_handle
     .addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
@@ -569,15 +588,50 @@ void UI_System_Config_update()
       .getStyle()
         .marginLeft = 1;
 
-  // ROI_OBJECT_DETECT_DISTANCE_MIN input
+  // ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX input
   y += h + TEXT_MARGIN;
-  str = String.valueOf(ROI_OBJECT_DETECT_DISTANCE_MIN / 10000.);
+  str = String.valueOf(ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX / 10000.);
   w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
-  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_DISTANCE_MIN_input");
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX_input");
   tf_handle
-    .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_DISTANCE_MIN.ordinal())
+    .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX.ordinal())
+    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addListener(UI_System_Config_tf_control_listener)
+    .setPosition(x, y).setSize(w, h)
+    //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+    .setAutoClear(false)
+    .setColorBackground( C_UI_SYSTEM_CONFIG_FILL_NORMAL )
+    .setColorForeground( C_UI_SYSTEM_CONFIG_BORDER_NORMAL )
+    .setColorActive( C_UI_SYSTEM_CONFIG_BORDER_ACTIVE )
+    .setColorValueLabel( C_UI_SYSTEM_CONFIG_TEXT )
+    .setColorCursor( C_UI_SYSTEM_CONFIG_CURSOR )
+    .setCaptionLabel("")
+    .setText(str)
+    ;
+  //println("tf.getText() = ", tf.getText());
+  tf_handle.getValueLabel()
+      //.setFont(UI_System_Config_cf)
+      .setSize(FONT_HEIGHT)
+      //.toUpperCase(false)
+      ;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginTop = -1;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginLeft = 1;
+
+  // ROI_OBJECT_DETECT_DIAMETER_MIN input
+  y += h + TEXT_MARGIN;
+  str = String.valueOf(ROI_OBJECT_DETECT_DIAMETER_MIN / 10000.);
+  w = int(textWidth(str) * 1.5 + TEXT_MARGIN * 2);
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_DIAMETER_MIN_input");
+  tf_handle
+    .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_DIAMETER_MIN.ordinal())
     .addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
@@ -1052,19 +1106,33 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
           updated = true;
           if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
           break;
-        case ROI_OBJECT_DETECT_DISTANCE_MIN:
+        case ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX:
           try {
             val = int(Float.parseFloat(str.trim()) * 10000.0);
           }
           catch (NumberFormatException e) {
             break;
           }
-          if (val == ROI_OBJECT_DETECT_DISTANCE_MIN) {
+          if (val == ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX) {
             break;
           }
-          ROI_OBJECT_DETECT_DISTANCE_MIN = val;
+          ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX = val;
           updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DISTANCE_MIN="+ROI_OBJECT_DETECT_DISTANCE_MIN+",tf_enum="+tf_enum);
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX="+ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX+",tf_enum="+tf_enum);
+          break;
+        case ROI_OBJECT_DETECT_DIAMETER_MIN:
+          try {
+            val = int(Float.parseFloat(str.trim()) * 10000.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == ROI_OBJECT_DETECT_DIAMETER_MIN) {
+            break;
+          }
+          ROI_OBJECT_DETECT_DIAMETER_MIN = val;
+          updated = true;
+          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DIAMETER_MIN="+ROI_OBJECT_DETECT_DIAMETER_MIN+",tf_enum="+tf_enum);
           break;
         case ROI_OBJECT_DETECT_TIME_MIN:
           try {
