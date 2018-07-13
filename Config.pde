@@ -40,9 +40,15 @@ void Config_setup()
       // You can access the fields via their column name (or index)
       String name = variable.getString("Name");
       if (name.equals("PS_Interface")) {
-        for (int j = 0; j < PS_Interface_str.length; j ++) {
-          if (PS_Interface_str[j].equals(variable.getString("Value")))
+        int j;
+        for (j = 0; j < PS_Interface_str.length; j ++) {
+          if (PS_Interface_str[j].equals(variable.getString("Value"))) {
             PS_Interface[i] = j;
+            break;
+          }
+        }
+        if (j == PS_Interface_str.length) {
+          if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup():Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
         }
       }
       else if (name.equals("ZOOM_FACTOR")) {
