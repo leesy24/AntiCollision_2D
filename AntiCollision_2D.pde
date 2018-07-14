@@ -21,7 +21,7 @@ final static String TITLE_PRODUCT = "2D Anti-Collision System";
 String Title;
 
 static int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
-static int FRAME_TIME; // Frame time will calculated from frame rate.
+static int FRAME_TIME = 50; // Frame time will calculated from FRAME_RATE.
 
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
@@ -74,6 +74,10 @@ void setup() {
   Title = TITLE_COMPANY + ":" + TITLE_PRODUCT;
 
   Const_setup();
+
+  frameRate(FRAME_RATE);
+  FRAME_TIME = int(1000. / FRAME_RATE);
+
   Config_setup();
   Screen_setup();
   Update_Data_Files_setup();
@@ -90,9 +94,6 @@ void setup() {
   UI_Regions_Config_setup();
   Disk_Space_setup();
   Version_Date_setup();
-
-  frameRate(FRAME_RATE);
-  FRAME_TIME = int(1000. / FRAME_RATE);
 
   // Set window title
   surface.setTitle(Title);
