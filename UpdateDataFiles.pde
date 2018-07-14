@@ -44,8 +44,8 @@ void Update_Data_Files_setup()
   Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT; // 1sec
   Update_Data_Files_check_timer = millis();
 
-  Update_Data_Files_thread_pause = false;
   Update_Data_Files_zip_file_full_name = null;
+  Update_Data_Files_thread_pause = false;
 
   if (Update_Data_Files_thread_setup_done) return;
 
@@ -79,8 +79,8 @@ void Update_Data_Files_check()
         break;
       }
       */
-      Update_Data_Files_check_interval = 0;
       Update_Data_Files_thread_pause = true;
+      Update_Data_Files_check_interval = 0;
       if (!unzip_check_password_protected(Update_Data_Files_zip_file_full_name))
       {
         UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.\nAnd, Check Zip file is password protected.\nOr, Check the Zip file currupted.", 5000);
@@ -176,8 +176,8 @@ void Update_Data_Files_check()
       if (Update_Data_Files_state_next == Update_Data_Files_state_enum.IDLE)
       {
         Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT;
-        Update_Data_Files_thread_pause = false;
         Update_Data_Files_zip_file_full_name = null;
+        Update_Data_Files_thread_pause = false;
       }
       Update_Data_Files_state = Update_Data_Files_state_next;
       break;
