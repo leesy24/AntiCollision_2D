@@ -1,3 +1,6 @@
+//final static boolean PRINT_ROI_DATA_OBJECTS_DBG = true;
+final static boolean PRINT_ROI_DATA_OBJECTS_DBG = false;
+
 //final static boolean PRINT_ROI_DATA_ALL_DBG = true;
 final static boolean PRINT_ROI_DATA_ALL_DBG = false;
 final static boolean PRINT_ROI_DATA_ALL_ERR = true;
@@ -305,9 +308,9 @@ class ROI_Data {
 
     // Get new objects.
     get_objects(objects_new, points_array[instance], angle_step[instance]);
-    //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size()="+objects_new.size());
+    if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
 
-    //if (instance == 1) println("ROI_Data:detect_objects("+instance+"):"+"before objects_array[instance].size()="+objects_array[instance].size());
+    if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"before objects_array[instance].size()="+objects_array[instance].size());
 
     // Check new objects is come from previous objects.
     for (ROI_Object_Data object_new:objects_new) {
@@ -330,29 +333,33 @@ class ROI_Data {
       }
     }
 
-    //if (instance == 1) println("ROI_Data:detect_objects("+instance+"):"+"after objects_array[instance].size()="+objects_array[instance].size());
+    if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_array[instance].size()="+objects_array[instance].size());
 
     // Check disappeared object on previous object
     for (ROI_Object_Data object_prev:objects_array[instance]) {
-      /*
+      /**/
       int time_duration =
         get_int_diff(
           object_prev.time_stamp_last, object_prev.time_stamp_start);
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"time_duration="+time_duration);
-      //if (instance == 1) println("ROI_Data:detect_objects("+instance+"):"+"object time_duration="+time_duration);
-      */
+      if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):"+"object_prev time_duration="+time_duration);
+      /**/
       if (object_prev.disappeared == false) {
-        object_prev.time_stamp_last = time_stamp_curr[instance];
-        object_prev.time_stamp_start =
-          object_prev.time_stamp_last - ROI_OBJECT_DETECT_KEEP_TIME;
-        object_prev.disappeared = true;
-        objects_new.add(object_prev);
+        if (time_duration >= ROI_OBJECT_DETECT_TIME_MIN) {
+          object_prev.time_stamp_last = time_stamp_curr[instance];
+          object_prev.time_stamp_start =
+            object_prev.time_stamp_last - ROI_OBJECT_DETECT_KEEP_TIME;
+          object_prev.disappeared = true;
+          objects_new.add(object_prev);
+        }
       }
       else {
         //if (instance == 1) println("ROI_Data:detect_objects("+instance+"):"+"current time_duration="+get_int_diff(time_stamp_curr[instance], object_prev.time_stamp_last));
+        /*
         int time_duration =
           get_int_diff(
             object_prev.time_stamp_last, object_prev.time_stamp_start);
+        */
         if (time_duration > 0) {
           time_duration -=
             get_int_diff(
@@ -449,12 +456,12 @@ class ROI_Data {
         int weight;
 
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
-        //println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
 
         if (time_duration < ROI_OBJECT_DETECT_TIME_MIN) {
-          if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time_duration="+time_duration);
+          if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG || PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time too short time_duration="+time_duration);
           continue;
         }
+        if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time long enough time_duration="+time_duration);
 
         has_objects[instance] = true;
         for (int region_index:object.region_indexes) {
@@ -1060,10 +1067,12 @@ class ROI_Data {
 
     // Check object diameter is too small.
     int object_diameter = get_points_distance(mi_x_min, mi_y_min, mi_x_max, mi_y_max);
+    //println("ROI_Data:add_object():"+"object is big enough object_diameter="+object_diameter);
     if (object_diameter < ROI_OBJECT_DETECT_DIAMETER_MIN) {
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():"+"object is too small. object_diameter="+object_diameter);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG || PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:add_object():"+"object is too small. object_diameter="+object_diameter);
       return;
     }
+    if (PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:add_object():"+"object is big enough object_diameter="+object_diameter);
 
     region_indexes = new LinkedList<Integer>();
     region_indexes.add(region_min); // Add first min region index.
