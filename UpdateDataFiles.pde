@@ -6,6 +6,9 @@ final static boolean PRINT_UPDATE_DATA_ALL_DBG = false;
 //final static boolean PRINT_UPDATE_DATA_SETUP_DBG = true;
 final static boolean PRINT_UPDATE_DATA_SETUP_DBG = false;
 
+final static boolean PRINT_UPDATE_DATA_THREAD_DBG = true;
+//final static boolean PRINT_UPDATE_DATA_THREAD_DBG = false;
+
 final static String UPDATE_DATA_FILES_ZIP_FILE_NAME = "data";
 final static String UPDATE_DATA_FILES_ZIP_FILE_EXT = ".zip";
 
@@ -30,6 +33,9 @@ static int Update_Data_Files_check_interval;
 static int Update_Data_Files_check_timer;
 static int Update_Data_Files_timeout_start;
 
+static boolean Update_Data_Files_thread_setup_done = false;
+static boolean Update_Data_Files_thread_pause;
+
 void Update_Data_Files_setup()
 {
   if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_SETUP_DBG) println("Update_Data_Files_setup():Enter");
@@ -37,23 +43,44 @@ void Update_Data_Files_setup()
   Update_Data_Files_state = Update_Data_Files_state_enum.IDLE;
   Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT; // 1sec
   Update_Data_Files_check_timer = millis();
+
+  Update_Data_Files_thread_pause = false;
+  Update_Data_Files_zip_file_full_name = null;
+
+  if (Update_Data_Files_thread_setup_done) return;
+
+  thread("Update_Data_Files_check_new_zip_file_exist");
+  Update_Data_Files_thread_setup_done = true;
 }
 
 void Update_Data_Files_check()
 {
-  if (get_millis_diff(Update_Data_Files_check_timer) < Update_Data_Files_check_interval) return;
+  // Check interval of checking.
+  if (get_millis_diff(Update_Data_Files_check_timer)
+      <
+      Update_Data_Files_check_interval)
+  {
+    return;
+  }
+
   Update_Data_Files_check_timer = millis();
 
   //println("Update_Data_Files_state=", Update_Data_Files_state);
   switch (Update_Data_Files_state)
   {
     case IDLE:
-      Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT;
+      if (Update_Data_Files_zip_file_full_name == null)
+      {
+        break;
+      }
+      /*
       if (!Update_Data_Files_check_new_zip_file_exist())
       {
         break;
       }
+      */
       Update_Data_Files_check_interval = 0;
+      Update_Data_Files_thread_pause = true;
       if (!unzip_check_password_protected(Update_Data_Files_zip_file_full_name))
       {
         UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.\nAnd, Check Zip file is password protected.\nOr, Check the Zip file currupted.", 5000);
@@ -63,11 +90,13 @@ void Update_Data_Files_check()
       }
       Update_Data_Files_state = Update_Data_Files_state_enum.ZIP_READY;
       break;
+
     case ZIP_READY:
       UI_Num_Pad_setup("Input ZIP file password");
       Update_Data_Files_timeout_start = millis();
       Update_Data_Files_state = Update_Data_Files_state_enum.PASSWORD_REQ;
       break;
+
     case PASSWORD_REQ:
       if (get_millis_diff(Update_Data_Files_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
       {
@@ -94,6 +123,7 @@ void Update_Data_Files_check()
       Update_Data_Files_zip_file_password = UI_Num_Pad_handle.input_string;
       Update_Data_Files_state = Update_Data_Files_state_enum.UNZIP;
       break;
+
     case UNZIP:
       if (!Update_Data_Files_unzip())
       {
@@ -106,6 +136,7 @@ void Update_Data_Files_check()
       // unzip done! Indicate updated.
       Update_Data_Files_state = Update_Data_Files_state_enum.CHECK_UPDATES;
       break;
+
     case CHECK_UPDATES:
       if (!Update_Data_Files_check_updates())
       {
@@ -118,6 +149,7 @@ void Update_Data_Files_check()
       // Update available.
       Update_Data_Files_state = Update_Data_Files_state_enum.UPDATE_PERFORM;
       break;
+
     case UPDATE_PERFORM:
       // Need to call gc() to use file copy and move functions.
       System.gc();
@@ -135,13 +167,21 @@ void Update_Data_Files_check()
       Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
       Update_Data_Files_state_next = Update_Data_Files_state_enum.RESET;
       break;
+
     case DISPLAY_MESSAGE:
       if (UI_Message_Box_handle.draw())
       {
         break;
       }
+      if (Update_Data_Files_state_next == Update_Data_Files_state_enum.IDLE)
+      {
+        Update_Data_Files_check_interval = UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT;
+        Update_Data_Files_thread_pause = false;
+        Update_Data_Files_zip_file_full_name = null;
+      }
       Update_Data_Files_state = Update_Data_Files_state_next;
       break;
+
     case RESET:
       // To restart program set frameCount to -1, this wiil call setup() of main.
       frameCount = -1;
@@ -151,47 +191,58 @@ void Update_Data_Files_check()
 
 boolean Update_Data_Files_check_new_zip_file_exist()
 {
-  boolean found = false;
+  if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_THREAD_DBG) println("Update_Data_Files_check_new_zip_file_exist():Enter");
+
   String drive, source_file_full_name, target_file_full_name;
   File source_file_handle, target_file_handle;
   boolean tartget_file_is_file;
 
   target_file_full_name = sketchPath("unzip\\") + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
-  // if target zip file exist and same on local.
-  tartget_file_is_file = target_file_handle.isFile();
 
-  for (char d = 'd'; d <= 'z'; d ++)
+  delay(FRAME_TIME);
+  do
   {
-    drive = d + ":\\";
-    source_file_handle = new File(drive);
-    if (!source_file_handle.isDirectory())
+    delay(UPDATE_DATA_FILES_CHECK_INTERVAL_DEFAULT);
+
+    if (Update_Data_Files_thread_pause) continue;
+
+    if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_THREAD_DBG) println("Update_Data_Files_check_new_zip_file_exist():Start");
+
+    // To check target zip file exist and same on local.
+    tartget_file_is_file = target_file_handle.isFile();
+
+    for (char d = 'd'; d <= 'z'; d ++)
     {
-      continue;
+      delay(1);
+      drive = d + ":\\";
+      source_file_handle = new File(drive);
+      if (!source_file_handle.isDirectory())
+      {
+        continue;
+      }
+      //println("Drive "+drive+" found!");
+
+      source_file_full_name = drive + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+      source_file_handle = new File(source_file_full_name);
+      if (!source_file_handle.isFile())
+      {
+        continue;
+      }
+
+      // if target zip file same with source zip fiel on unzip dir.
+      if (tartget_file_is_file
+          &&
+          is_files_equals(target_file_full_name, source_file_full_name))
+      {
+        continue;
+      }
+
+      Update_Data_Files_zip_file_full_name = source_file_full_name;
+      Update_Data_Files_thread_pause = true;
+      break;
     }
-    //println("Drive "+drive+" found!");
-
-    source_file_full_name = drive + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
-    source_file_handle = new File(source_file_full_name);
-    if (!source_file_handle.isFile())
-    {
-      continue;
-    }
-
-    // if target zip file same with source zip fiel on unzip dir.
-    if (tartget_file_is_file
-        &&
-        is_files_equals(target_file_full_name, source_file_full_name))
-    {
-      continue;
-    }
-
-    Update_Data_Files_zip_file_full_name = source_file_full_name;
-    found = true;
-    break;
-  }
-
-  return found;
+  } while (true);
 }
 
 boolean Update_Data_Files_unzip()
@@ -233,7 +284,7 @@ boolean Update_Data_Files_unzip()
 
 boolean Update_Data_Files_check_updates()
 {
-  boolean ret = false;
+  boolean has_updates = false;
   String source_file_full_name, target_file_full_name;
   File source_file_handle, target_file_handle;
 
@@ -257,10 +308,10 @@ boolean Update_Data_Files_check_updates()
     {
       continue;
     }
-    ret = true;
+    has_updates = true;
   }
 
-  return ret;
+  return has_updates;
 }
 
 boolean Update_Data_Files_perform_update()
