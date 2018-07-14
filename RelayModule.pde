@@ -441,7 +441,7 @@ class UI_Relay_Indicator {
   UI_Relay_Indicator() {
   }
 
-  void set(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color of_fill_c, color on_stroke_c, color off_stroke_c, int text_height, String on_text, String off_text) {
+  void set(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color off_fill_c, color on_stroke_c, color off_stroke_c, int text_height, String on_text, String off_text) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -456,7 +456,9 @@ class UI_Relay_Indicator {
     this.on_text = on_text;
     this.off_text = off_text;
     init = true;
-    //println("UI_Relay_Indicator():constructor():"+"x="+x+",y="+y+",w="+w+",h="+h);
+    //println("UI_Relay_Indicator():set():"+"x="+x+",y="+y+",w="+w+",h="+h);
+    //println("UI_Relay_Indicator:set():off_stroke_c="+Integer.toHexString(off_stroke_c));
+    //println("UI_Relay_Indicator:set():off_fill_c="+Integer.toHexString(off_fill_c));
   }
 
   void draw(boolean on) {
