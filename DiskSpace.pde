@@ -74,6 +74,7 @@ void Disk_Space_free_events()
       if (!events_subdir_handle.isDirectory()) {
         if (PRINT_DISK_SPACE_ALL_ERR || PRINT_DISK_SPACE_FREE_EVENTS_ERR) println("Disk_Space_free_events():not directory! "+events_dir_full_name+events_subdir_name+"\\");
         events_subdir_handle.delete();
+        delay(1);
         continue;
       }
       String[] events_subdir_files_list = events_subdir_handle.list();
@@ -81,6 +82,7 @@ void Disk_Space_free_events()
       if (events_subdir_files_list == null) {
         if (PRINT_DISK_SPACE_ALL_DBG || PRINT_DISK_SPACE_FREE_EVENTS_DBG) println("Disk_Space_free_events():no files on sub directory! "+events_dir_full_name+events_subdir_name+"\\");
         events_subdir_handle.delete();
+        delay(1);
         continue;
       }
       if (PRINT_DISK_SPACE_ALL_DBG || PRINT_DISK_SPACE_FREE_EVENTS_DBG) println("Disk_Space_free_events():events_subdir_files_list.length="+events_subdir_files_list.length);
@@ -92,8 +94,10 @@ void Disk_Space_free_events()
           continue;
         }
         events_file_handle.delete();
+        delay(1);
       }
       events_subdir_handle.delete();
+      delay(1);
       if (PRINT_DISK_SPACE_ALL_DBG || PRINT_DISK_SPACE_FREE_EVENTS_DBG) println("Disk_Space_free_events():delete done! "+events_subdir_name);
       break;
     }
@@ -134,6 +138,7 @@ void Disk_Space_free_always()
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);
       always_file_handle.delete();
+      delay(1);
     }
   } while (true);
 }
