@@ -6,8 +6,8 @@ final static boolean PRINT_UPDATE_DATA_ALL_DBG = false;
 //final static boolean PRINT_UPDATE_DATA_SETUP_DBG = true;
 final static boolean PRINT_UPDATE_DATA_SETUP_DBG = false;
 
-final static boolean PRINT_UPDATE_DATA_THREAD_DBG = true;
-//final static boolean PRINT_UPDATE_DATA_THREAD_DBG = false;
+//final static boolean PRINT_UPDATE_DATA_THREAD_DBG = true;
+final static boolean PRINT_UPDATE_DATA_THREAD_DBG = false;
 
 final static String UPDATE_DATA_FILES_ZIP_FILE_NAME = "data";
 final static String UPDATE_DATA_FILES_ZIP_FILE_EXT = ".zip";
