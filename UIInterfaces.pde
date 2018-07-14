@@ -29,7 +29,7 @@ static boolean UI_Interfaces_enabled;
 static ControlFont UI_Interfaces_cf = null;
 static ControlP5[] UI_Interfaces_cp5 = new ControlP5[PS_INSTANCE_MAX];
 
-static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN"};
+static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN", "NA"};
 
 
 static boolean[] UI_Interfaces_changed = new boolean[PS_INSTANCE_MAX];
@@ -523,7 +523,7 @@ void UI_Interfaces_update_instance(int instance)
           .marginLeft = TEXT_MARGIN;
 */
   }
-  else /*if(PS_Interface[instance] == PS_Interface_SN)*/ {
+  else if(PS_Interface[instance] == PS_Interface_SN) {
     str = Integer.toString(SN_serial_number[instance]);
     w = int(textWidth(str) + TEXT_MARGIN*2);
     if (UI_Interfaces_align_right[instance])
@@ -564,6 +564,9 @@ void UI_Interfaces_update_instance(int instance)
           .marginLeft = TEXT_MARGIN;
 */
 
+  }
+  else {// if (PS_Interface[instance] == PS_Interface_NA) {
+    // Nothing to do.
   }
 
   tf_ddborder.bringToFront();
@@ -924,12 +927,15 @@ void UI_Interfaces_mouse_released(int instance)
       tf_param.setText(str);
     }
   }
-  else /*if(PS_Interface[instance] == PS_Interface_SN)*/ {
+  else if(PS_Interface[instance] == PS_Interface_SN) {
     tf_param = (Textfield)UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber");
     if( tf_param != null && tf_param.isFocus() == false) {
       str = Integer.toString(SN_serial_number[instance]);
       tf_param.setText(str);
     }
+  }
+  else { // if(PS_Interface[instance] == PS_Interface_NA) {
+    // Nothing to do.
   }
 }
 

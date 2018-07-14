@@ -50,13 +50,22 @@ final static int PS_Interface_FILE = 0;
 final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
 final static int PS_Interface_SN = 3;
+final static int PS_Interface_NA = 4;
+static enum PS_Interface_enum {
+  FILE,
+  UART,
+  UDP,
+  SN,
+  NA,
+  MAX
+}
 
 static boolean PS_Data_draw_points_with_line;
 
 static boolean PS_Data_save_enabled;
 
 static int[] PS_Interface = new int[PS_INSTANCE_MAX];
-static String[] PS_Interface_str = {"File", "UART", "UDP", "SN"};
+static String[] PS_Interface_str = {"File", "UART", "UDP", "SN", "NA"};
 
 static String[] FILE_name = new String[PS_INSTANCE_MAX];
 
@@ -136,6 +145,8 @@ void PS_Data_setup()
       Title += "UDP";
     else if(PS_Interface[i] == PS_Interface_SN)
       Title += "SN";
+    else if(PS_Interface[i] == PS_Interface_NA)
+      Title += "NA";
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
     }      
@@ -168,6 +179,9 @@ void PS_Data_setup()
       PS_Data_handle.serial_number[i] = SN_serial_number[i];
       PS_Data_handle.remote_ip[i] = remote_ip;
       PS_Data_handle.remote_port[i] = remote_port;
+    }
+    else if(PS_Interface[i] == PS_Interface_NA) {
+      // Nothing to do.
     }
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
@@ -295,6 +309,9 @@ class PS_Data {
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
     }
+    else if(PS_Interface[instance] == PS_Interface_NA) {
+      return false;
+    }
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):PS_Interface["+instance+"] error! " + PS_Interface[instance]);
       return false;
@@ -312,6 +329,7 @@ class PS_Data {
   void save_always(int instance) {
     // Save always feature will not run when PS Interface is FILE.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
+    if (PS_Interface[instance] == PS_Interface_NA) return;
     
     if (!PS_Data_save_enabled) return;
 
