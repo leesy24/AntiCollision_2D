@@ -294,5 +294,5 @@ void Screen_update_variable()
   Grid_update();
   PS_Image_update();
   Regions_update();
-  Config_save();
+  //Config_save();
 }

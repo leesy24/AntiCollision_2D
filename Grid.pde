@@ -126,6 +126,18 @@ void Grid_draw_texts()
   }
 }
 
+int Grid_get_instance_xy_over(int x, int y)
+{
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (is_point_over_rect(x, y, Grid_scr_x_min[i], Grid_scr_y_min[i], Grid_scr_x_max[i], Grid_scr_y_max[i]))
+    {
+      return i;
+    }
+  }
+  return -1;
+}
+
 class Grid_Line_Data {
   int x_start, y_start;
   int x_end, y_end;

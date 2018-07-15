@@ -106,8 +106,12 @@ void mousePressed()
 
   if (mouse_dragging_enabled)
   {
-    mousePressedX = mouseX - DRAW_OFFSET_X[0];
-    mousePressedY = mouseY - DRAW_OFFSET_Y[0];
+    int instance = Grid_get_instance_xy_over(mouseX, mouseY);
+    if (instance != -1)
+    {
+      mousePressedX = mouseX - DRAW_OFFSET_X[instance];
+      mousePressedY = mouseY - DRAW_OFFSET_Y[instance];
+    }
   }
 
   UI_Message_Box_mouse_pressed();
@@ -154,12 +158,16 @@ void mouseDragged()
 
   if (mouse_dragging_enabled)
   {
-    DRAW_OFFSET_X[0] = mouseX - mousePressedX;
-    DRAW_OFFSET_Y[0] = mouseY - mousePressedY;
-    //println("DRAW_OFFSET_X[0]=" + DRAW_OFFSET_X[0] + ",DRAW_OFFSET_Y[0]=" + DRAW_OFFSET_Y[0]);
-    Screen_update_variable();
+    int instance = Grid_get_instance_xy_over(mouseX, mouseY);
+    if (instance != -1)
+    {
+      DRAW_OFFSET_X[instance] = mouseX - mousePressedX;
+      DRAW_OFFSET_Y[instance] = mouseY - mousePressedY;
+      //println("DRAW_OFFSET_X["+instance+"]=" + DRAW_OFFSET_X[instance] + ",DRAW_OFFSET_Y["+instance+"]=" + DRAW_OFFSET_Y[instance]);
+      Screen_update_variable();
 
-    if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X[0]:" + DRAW_OFFSET_X[0] + ", DRAW_OFFSET_Y[0]:" + DRAW_OFFSET_Y[0]);
+      if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X["+instance+"]:" + DRAW_OFFSET_X[instance] + ", DRAW_OFFSET_Y["+instance+"]:" + DRAW_OFFSET_Y[instance]);
+    }
   }
 }
 
