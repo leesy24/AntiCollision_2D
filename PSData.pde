@@ -208,6 +208,13 @@ void PS_Data_mouse_moved()
   }
 }
 
+void PS_Data_mouse_dragged()
+{
+  if (PS_Data_draw_points_all_enabled && PS_Data_draw_points_all_time_started)
+  {
+    PS_Data_draw_points_all_start_time = millis();
+  }
+}
 
 // A PS_Data class
 class PS_Data {

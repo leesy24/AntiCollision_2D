@@ -149,6 +149,7 @@ void mouseDragged()
   UI_NumPad_mouse_dragged();
   UI_Buttons_mouse_dragged();
   PS_Image_mouse_dragged();
+  PS_Data_mouse_dragged();
   ROI_Data_mouse_dragged();
 
   if (mouse_dragging_enabled)
