@@ -249,7 +249,6 @@ void UI_Buttons_mouse_pressed()
     for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
     {
       if (buttons_group.mouse_pressed()) {
-        UI_Buttons_timeout_start = millis();
         switch (buttons_group.get_action())
         {
           case ZOOM_PLUSE:
@@ -288,6 +287,8 @@ void UI_Buttons_mouse_moved()
 {
   if (!UI_Buttons_enabled) return;
 
+  UI_Buttons_timeout_start = millis();
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
@@ -299,7 +300,17 @@ void UI_Buttons_mouse_moved()
 
 void UI_Buttons_mouse_dragged()
 {
-  UI_Buttons_mouse_moved();
+  if (!UI_Buttons_enabled) return;
+
+  UI_Buttons_timeout_start = millis();
+
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    for (Buttons_Group buttons_group:UI_Buttons_groups_array[i])
+    {
+      buttons_group.mouse_dragged();
+    }
+  }
 }
 
 void UI_Buttons_mouse_wheel(int wheel_count)
@@ -530,6 +541,12 @@ class Buttons_Group {
       button.mouse_moved();
     }
   }
+
+  public void mouse_dragged() {
+    for (Button_Instance button:buttons) {
+      button.mouse_dragged();
+    }
+  }
 }
 
 class Button_Instance {
@@ -583,6 +600,16 @@ class Button_Instance {
   }
 
   public void mouse_moved() {
+    if (mouse_is_over(left_x, top_y, w, h)) {
+      focused = true;
+    }
+    else
+    {
+      focused = false;
+    }
+  }
+
+  public void mouse_dragged() {
     if (mouse_is_over(left_x, top_y, w, h)) {
       focused = true;
     }
