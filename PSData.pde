@@ -84,6 +84,8 @@ static PS_Data PS_Data_handle;
 static byte[][] PS_Data_buf = new byte[PS_INSTANCE_MAX][]; 
 
 static boolean PS_Data_draw_points_all_enabled;
+static boolean PS_Data_draw_points_all_time_started;
+static int PS_Data_draw_points_all_start_time;
 
 static boolean[] PS_Data_draw_params_enabled = new boolean[PS_INSTANCE_MAX];
 static int[] PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
@@ -107,6 +109,7 @@ void PS_Data_setup()
 
   //PS_Data_draw_points_all_enabled = true;
   PS_Data_draw_points_all_enabled = false;
+  PS_Data_draw_points_all_time_started = false;
 
   if (PS_DATA_SAVE_ALWAYS_DURATION > PS_DATA_SAVE_ALWAYS_DURATION_MAX) PS_DATA_SAVE_ALWAYS_DURATION = PS_DATA_SAVE_ALWAYS_DURATION_MAX;
   if (PS_DATA_SAVE_ALWAYS_DURATION < PS_DATA_SAVE_ALWAYS_DURATION_MIN) PS_DATA_SAVE_ALWAYS_DURATION = PS_DATA_SAVE_ALWAYS_DURATION_MIN;
@@ -188,6 +191,23 @@ void PS_Data_setup()
     }
   }
 }
+
+void PS_Data_mouse_pressed()
+{
+  if (PS_Data_draw_points_all_enabled && PS_Data_draw_points_all_time_started)
+  {
+    PS_Data_draw_points_all_start_time = millis();
+  }
+}
+
+void PS_Data_mouse_moved()
+{
+  if (PS_Data_draw_points_all_enabled && PS_Data_draw_points_all_time_started)
+  {
+    PS_Data_draw_points_all_start_time = millis();
+  }
+}
+
 
 // A PS_Data class
 class PS_Data {
@@ -948,6 +968,18 @@ class PS_Data {
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):number_of_points="+number_of_points[instance]);
 
+    if (PS_Data_draw_points_all_enabled) {
+      if (!PS_Data_draw_points_all_time_started) {
+        PS_Data_draw_points_all_start_time = millis();
+        PS_Data_draw_points_all_time_started = true;
+      }
+      else {
+        if (get_millis_diff(PS_Data_draw_points_all_start_time) > SYSTEM_UI_TIMEOUT * 1000) {
+          PS_Data_draw_points_all_enabled = false;
+          PS_Data_draw_points_all_time_started = false;
+        }
+      }
+    }
     // Sets the weight used to draw lines and rect borders around shapes.
     strokeWeight(W_PS_DATA_LINE);
 

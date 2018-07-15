@@ -114,6 +114,7 @@ void mousePressed()
   UI_NumPad_mouse_pressed();
   UI_Buttons_mouse_pressed();
   PS_Image_mouse_pressed();
+  PS_Data_mouse_pressed();
   ROI_Data_mouse_pressed();
 }
 
@@ -135,6 +136,7 @@ void mouseMoved()
   UI_NumPad_mouse_moved();
   UI_Buttons_mouse_moved();
   PS_Image_mouse_moved();
+  PS_Data_mouse_moved();
   ROI_Data_mouse_moved();
 }
 
