@@ -16,6 +16,9 @@ final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = false;
 //final static boolean PRINT_UI_BUTTONS_RESET_DBG = true;
 final static boolean PRINT_UI_BUTTONS_RESET_DBG = false;
 
+//final static boolean PRINT_UI_BUTTONS_MOUSE_DBG = true;
+final static boolean PRINT_UI_BUTTONS_MOUSE_DBG = false;
+
 static color C_UI_BUTTONS_NORMAL = #FFFFFF; // White
 static color C_UI_BUTTONS_HIGHLIGHT = #C0C0C0; //
 static color C_UI_BUTTONS_TEXT = #000000; // Black
@@ -240,9 +243,19 @@ void UI_Buttons_draw()
   }
 }
 
+int UI_Buttons_mouse_drag_base_x;
+int UI_Buttons_mouse_drag_base_y;
+
 void UI_Buttons_mouse_pressed()
 {
   if (!UI_Buttons_enabled) return;
+
+  int instance = Grid_get_instance_xy_over(mouseX, mouseY);
+  if (instance != -1)
+  {
+    UI_Buttons_mouse_drag_base_x = mouseX - DRAW_OFFSET_X[instance];
+    UI_Buttons_mouse_drag_base_y = mouseY - DRAW_OFFSET_Y[instance];
+  }
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -303,6 +316,19 @@ void UI_Buttons_mouse_dragged()
   if (!UI_Buttons_enabled) return;
 
   UI_Buttons_timeout_start = millis();
+
+  if (PRINT_UI_BUTTONS_MOUSE_DBG) println("UI_Buttons_mouse_dragged():" + "UI_Buttons_mouse_drag_base_x=" + UI_Buttons_mouse_drag_base_x + ",UI_Buttons_mouse_drag_base_y=" + UI_Buttons_mouse_drag_base_y);
+
+  int instance = Grid_get_instance_xy_over(mouseX, mouseY);
+  if (instance != -1)
+  {
+    DRAW_OFFSET_X[instance] = mouseX - UI_Buttons_mouse_drag_base_x;
+    DRAW_OFFSET_Y[instance] = mouseY - UI_Buttons_mouse_drag_base_y;
+    //println("DRAW_OFFSET_X["+instance+"]=" + DRAW_OFFSET_X[instance] + ",DRAW_OFFSET_Y["+instance+"]=" + DRAW_OFFSET_Y[instance]);
+    Screen_update_variable();
+
+    if (PRINT_UI_BUTTONS_MOUSE_DBG) println("UI_Buttons_mouse_dragged():" + "DRAW_OFFSET_X["+instance+"]:" + DRAW_OFFSET_X[instance] + ", DRAW_OFFSET_Y["+instance+"]:" + DRAW_OFFSET_Y[instance]);
+  }
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {

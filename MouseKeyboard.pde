@@ -21,12 +21,6 @@ final static boolean PRINT_MOUSEFUNC_Dragged = false;
 //final static boolean PRINT_MOUSEFUNC_Wheel = true; 
 final static boolean PRINT_MOUSEFUNC_Wheel = false;
 
-int mousePressedX;
-int mousePressedY;
-
-static boolean mouse_dragging_enabled = false;
-//static boolean mouse_wheel_enabled = false;
-
 /**/
 void keyPressed()
 {
@@ -41,7 +35,6 @@ void keyPressed()
   {
     if(keyCode == KeyEvent.VK_F10)
     {
-      mouse_dragging_enabled = !mouse_dragging_enabled;
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
@@ -104,16 +97,6 @@ void mousePressed()
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
-  if (mouse_dragging_enabled)
-  {
-    int instance = Grid_get_instance_xy_over(mouseX, mouseY);
-    if (instance != -1)
-    {
-      mousePressedX = mouseX - DRAW_OFFSET_X[instance];
-      mousePressedY = mouseY - DRAW_OFFSET_Y[instance];
-    }
-  }
-
   UI_Message_Box_mouse_pressed();
   UI_NumPad_mouse_pressed();
   UI_Buttons_mouse_pressed();
@@ -148,27 +131,12 @@ void mouseDragged()
 {
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse dragged!");
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
-  if (PRINT_MOUSEFUNC_Dragged) println("\t mousePressedX=" + mousePressedX + ", mousePressedY=" + mousePressedY);
 
   UI_NumPad_mouse_dragged();
   UI_Buttons_mouse_dragged();
   PS_Image_mouse_dragged();
   PS_Data_mouse_dragged();
   ROI_Data_mouse_dragged();
-
-  if (mouse_dragging_enabled)
-  {
-    int instance = Grid_get_instance_xy_over(mouseX, mouseY);
-    if (instance != -1)
-    {
-      DRAW_OFFSET_X[instance] = mouseX - mousePressedX;
-      DRAW_OFFSET_Y[instance] = mouseY - mousePressedY;
-      //println("DRAW_OFFSET_X["+instance+"]=" + DRAW_OFFSET_X[instance] + ",DRAW_OFFSET_Y["+instance+"]=" + DRAW_OFFSET_Y[instance]);
-      Screen_update_variable();
-
-      if (PRINT_MOUSEFUNC_Dragged) println("\t DRAW_OFFSET_X["+instance+"]:" + DRAW_OFFSET_X[instance] + ", DRAW_OFFSET_Y["+instance+"]:" + DRAW_OFFSET_Y[instance]);
-    }
-  }
 }
 
 void mouseWheel(MouseEvent event)

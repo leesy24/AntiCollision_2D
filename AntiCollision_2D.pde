@@ -227,11 +227,6 @@ void Notice_Messages_draw()
 {
   LinkedList<String> strings = new LinkedList<String>();
 
-  if (mouse_dragging_enabled)
-  {
-    strings.add("Mouse dragging enabled!");
-  }
-
   if (!PS_Data_save_enabled)
   {
     strings.add("PS data saving disabled!");
