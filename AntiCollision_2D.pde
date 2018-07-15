@@ -227,6 +227,11 @@ void Notice_Messages_draw()
 {
   LinkedList<String> strings = new LinkedList<String>();
 
+  if (SYSTEM_PASSWORD_disabled)
+  {
+    strings.add("System password disabled!");
+  }
+
   if (!PS_Data_save_enabled)
   {
     strings.add("PS data saving disabled!");
