@@ -346,6 +346,7 @@ void UI_Buttons_zoom_minus(int i)
     else if (ZOOM_FACTOR[i] < 2000) ZOOM_FACTOR[i] += 200;
     else ZOOM_FACTOR[i] += 500;
     Screen_update_variable();
+    Config_save();
   }
   if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
 }
@@ -359,6 +360,7 @@ void UI_Buttons_zoom_pluse(int i)
     else if (ZOOM_FACTOR[i] <= 2000) ZOOM_FACTOR[i] -= 200;
     else ZOOM_FACTOR[i] -= 500;
     Screen_update_variable();
+    Config_save();
   }
   if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+i+"]=" + ZOOM_FACTOR[i]);
 }
@@ -369,6 +371,7 @@ void UI_Buttons_rotate_ccw(int i)
   if (ROTATE_FACTOR[i] < 0) ROTATE_FACTOR[i] += 360;
   Screen_update_offsets();
   Screen_update_variable();
+  Config_save();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[i]=" + ROTATE_FACTOR[i]);
 }
 
@@ -421,6 +424,7 @@ void UI_Buttons_rotate_cw(int i)
 */
   Screen_update_offsets();
   Screen_update_variable();
+  Config_save();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[i]=" + ROTATE_FACTOR[i]);
 }
 
@@ -438,6 +442,7 @@ void UI_Buttons_mirror_ud(int i)
   }
   Screen_update_offsets();
   Screen_update_variable();
+  Config_save();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[i]=" + MIRROR_ENABLE[i] + ", ROTATE_FACTOR[i]=" + ROTATE_FACTOR[i]);
 }
 
@@ -455,6 +460,7 @@ void UI_Buttons_mirror_lr(int i)
   }
   Screen_update_offsets();
   Screen_update_variable();
+  Config_save();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[i]=" + MIRROR_ENABLE[i] + ", ROTATE_FACTOR[i]=" + ROTATE_FACTOR[i]);
 }
 
@@ -472,6 +478,7 @@ void UI_Buttons_reset_en(int i)
 
   Screen_update_offsets();
   Screen_update_variable();
+  Config_save();
 }
 
 class Buttons_Group {
