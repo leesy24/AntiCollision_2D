@@ -260,7 +260,6 @@ void File_Operations_save_events()
           break;
 
         case COPY_ALWAYS_TO_EVENTS:
-          int copy_count = 0;
           int copy_start_millis = millis();
           int i;
           for (i = always_files_list_index[instance]; i < always_files_list[instance].length; i ++)
@@ -301,7 +300,6 @@ void File_Operations_save_events()
             copy_time_sum += Dbg_Time_logs_handle.get_add_diff();
             copy_count ++;
             */
-            copy_count ++;
             // Check copy operation is too late by frame time.
             if (get_millis_diff(copy_start_millis) >= FRAME_TIME) break;
           }
