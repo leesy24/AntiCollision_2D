@@ -241,6 +241,8 @@ class PS_Data {
   String[] parse_err_str = new String[PS_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_INSTANCE_MAX];
+  int[] load_done_prev_millis = new int[PS_INSTANCE_MAX];
+  int[] load_done_interval_millis = new int[PS_INSTANCE_MAX];
   String[] file_name = new String[PS_INSTANCE_MAX];
   String[] remote_ip = new String[PS_INSTANCE_MAX];
   int[] remote_port = new int[PS_INSTANCE_MAX];
@@ -270,6 +272,8 @@ class PS_Data {
       parse_err_str[i] = null;
       parse_err_cnt[i] = 0;
       load_take_time[i] = 0;
+      load_done_prev_millis[i] = -1;
+      load_done_interval_millis[i] = -1;
       file_name[i] = null;
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
@@ -342,6 +346,16 @@ class PS_Data {
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):PS_Interface["+instance+"] error! " + PS_Interface[instance]);
       return false;
+    }
+
+    if (load_done_interval_millis[instance] == -1) {
+      load_done_prev_millis[instance] = millis();
+      load_done_interval_millis[instance] = 0;
+    }
+    else {
+      int millis_curr = millis();
+      load_done_interval_millis[instance] = get_int_diff(millis_curr, load_done_prev_millis[instance]);
+      load_done_prev_millis[instance] = millis_curr;
     }
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
@@ -827,7 +841,9 @@ class PS_Data {
     if(remote_port[instance] != MIN_INT)
       strings.add("Port:" + remote_port[instance]);
     if(load_take_time[instance] != -1)
-      strings.add("Reponse time:" + load_take_time[instance] + "ms");
+      strings.add("Response time:" + load_take_time[instance] + "ms");
+    if (load_done_interval_millis[instance] != -1)
+      strings.add("Refresh time:" + load_done_interval_millis[instance] + "ms");
     strings.add("Scan number:" + scan_number[instance]);
     strings.add("Time stamp:" + time_stamp[instance]);
     strings.add("Scan start direction:" + scan_angle_start[instance] + "°");
