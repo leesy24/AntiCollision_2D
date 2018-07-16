@@ -349,10 +349,10 @@ class PS_Data {
     return true;
   }
 
-  int write_count = 0;
-  int write_time_sum = 0;
-  int delete_count = 0;
-  int delete_time_sum = 0;
+  int write_always_count = 0;
+  int write_always_time_sum = 0;
+  int write_events_count = 0;
+  int write_events_time_sum = 0;
   void save_always(int instance) {
     // Save always feature will not run when PS Interface is FILE.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
@@ -360,67 +360,46 @@ class PS_Data {
     
     if (!PS_Data_save_enabled) return;
 
-    int save_always_start_millis = millis();
-
-    long time_stamp = new Date().getTime();
-    //Dbg_Time_logs_handle.add("Date().getTime()");
-    String always_dir_full_name = sketchPath("always\\");
-    File always_dir_handle = new File(always_dir_full_name);
-    //println("time_stamp="+time_stamp+",millis()="+millis());
-    if (!always_dir_handle.isDirectory()) {
-      if (!always_dir_handle.mkdir()) {
-        if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):mkdir() error! "+always_dir_full_name);
-        return;
-      }
-      Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):mkdir():");
-    }
-    if (!write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+time_stamp+".dat")) {
-      if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+time_stamp+".dat");
+    // Check always directory ready.
+    if (!File_Operations_always_dir_ready) {
+      if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):always dir is not ready!");
       return;
     }
-//    println("PS_Data:save_always("+instance+"):"+"save_bytes_take_time="+get_millis_diff(save_always_start_millis));
-    Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file():avg="+((write_count!=0)?(write_time_sum/write_count):0));
-    write_time_sum += Dbg_Time_logs_handle.get_add_diff();
-    write_count ++;
 
-/*
-    // Check save always operation is too late by frame time.
-    if (Dbg_Time_logs_handle.get_diff() >= FRAME_TIME) return;
+    long date_time = new Date().getTime();
+    //Dbg_Time_logs_handle.add("Date().getTime()");
+    //println("date_time="+date_time+",millis()="+millis());
 
-    // Check save always operation is too late by frame time.
-    if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) return;
-*/
-// Delete save files will run at Disk Space Free threads.
-/*
-    // get files list to decide delete file.
-    String[] always_files_list = always_dir_handle.list();
-    if (always_files_list == null) return;
-    int count = 0;
-    for (String always_file_name:always_files_list) {
-      if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
-      long file_time_stamp;
-      try {
-        file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
-      }
-      catch (NumberFormatException e) {
-        file_time_stamp = time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L; // to delete file.
-      }
-      if (file_time_stamp > time_stamp - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L) continue;
-      //println(always_file_name+","+file_time_stamp);
-      File always_file_handle;
-      always_file_handle = new File(always_dir_full_name+always_file_name);
-      always_file_handle.delete();
-      count ++;
-      Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):delete_file():"+always_file_name+":count="+count+",avg="+((delete_count!=0)?(delete_time_sum/delete_count):0));
-      delete_time_sum += Dbg_Time_logs_handle.get_add_diff();
-      delete_count ++;
-      // Check delete operation of save always is too much.
-      if (delete_count >= 5) break;
-      // Check save always operation is too late by frame time.
-      if (get_millis_diff(save_always_start_millis) >= (FRAME_TIME / 2)) break;
+    String always_dir_full_name = sketchPath("always\\");
+
+    // Write data file to always.
+    if (!write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+date_time+".dat")) {
+      if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+date_time+".dat");
+      return;
     }
-    //println("PS_Data:save_always("+instance+"):"+"delete_file_take_time="+get_millis_diff(save_always_start_millis));
-*/
+
+    Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file() to always:avg="+((write_always_count!=0)?(write_always_time_sum/write_always_count):0));
+    write_always_time_sum += Dbg_Time_logs_handle.get_add_diff();
+    write_always_count ++;
+
+    if (File_Operations_save_events_started[instance]
+        &&
+        !File_Operations_save_events_write_events_done[instance]) {
+      if (date_time <= File_Operations_save_events_end_date_time[instance]) {
+        // Write data file to events.
+        if (!write_file(PS_Data_buf[instance], File_Operations_save_events_dir_full_name[instance]+instance+"_"+date_time+".dat")) {
+          if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+date_time+".dat");
+          return;
+        }
+
+        Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file() to events:avg="+((write_events_count!=0)?(write_events_time_sum/write_events_count):0));
+        write_events_time_sum += Dbg_Time_logs_handle.get_add_diff();
+        write_events_count ++;
+      }
+      else {
+        File_Operations_save_events_write_events_done[instance] = true;
+      }
+    }
   }
 
   // Parsing Data buffer

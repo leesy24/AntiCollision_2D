@@ -96,6 +96,11 @@ final static boolean PRINT_ROI_DATA_PRINT_POINTS_DBG = false;
 //final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = true;
 final static boolean PRINT_ROI_DATA_PRINT_POINTS_ERR = false;
 
+//final static boolean PRINT_ROI_DATA_SAVE_EVENT_DBG = true;
+final static boolean PRINT_ROI_DATA_SAVE_EVENT_DBG = false;
+//final static boolean PRINT_ROI_DATA_SAVE_EVENT_ERR = true;
+final static boolean PRINT_ROI_DATA_SAVE_EVENT_ERR = false;
+
 static int ROI_OBJECT_MARKER_MARGIN = 10;
 
 //static int ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX = 10000; // = 1 meter
@@ -239,11 +244,6 @@ class ROI_Data {
   //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
   float[] angle_step = new float[PS_INSTANCE_MAX];
   boolean[] has_objects = new boolean[PS_INSTANCE_MAX];
-  boolean[] save_events_started = new boolean[PS_INSTANCE_MAX];
-  int[] save_events_start_time_millis = new int[PS_INSTANCE_MAX];
-  long[] save_events_start_time_stamp = new long[PS_INSTANCE_MAX];
-  int[] save_events_duration_millis = new int[PS_INSTANCE_MAX];
-  String[] save_events_dir_full_name = new String[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
   ROI_Data() {
@@ -253,7 +253,7 @@ class ROI_Data {
       points_array[i] = new LinkedList<ROI_Point_Data>();
       objects_array[i] = new LinkedList<ROI_Object_Data>();
       has_objects[i] = false;
-      save_events_started[i] = false;
+      File_Operations_save_events_started[i] = false;
     }
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():Exit");
   }
@@ -556,107 +556,75 @@ class ROI_Data {
   int copy_count = 0;
   int copy_time_sum = 0;
   void save_events(int instance) {
-    // Save always feature will not run when PS Interface is FILE.
+    // Save events feature will not run when PS Interface is FILE.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
 
     if (!PS_Data_save_enabled) return;
 
-    if (!has_objects[instance] && !save_events_started[instance]) return;
+    // Check events directory ready.
+    if (!File_Operations_events_dir_ready) {
+      if (PRINT_ROI_DATA_ALL_DBG) println("ROI_Data:save_events("+instance+"):events dir is not ready!");
+      return;
+    }
 
-    if (!save_events_started[instance]) {
-      save_events_start_time_millis[instance] = millis();
-      save_events_start_time_stamp[instance] = new Date().getTime();
-      save_events_duration_millis[instance] = PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
-      save_events_started[instance] = true;
-      save_events_dir_full_name[instance] =
+    if (!has_objects[instance] && !File_Operations_save_events_started[instance]) return;
+
+    // Check save events started.
+    if (!File_Operations_save_events_started[instance]) {
+      // Save events not started.
+      File_Operations_save_events_event_date_time[instance] = new Date().getTime();
+      File_Operations_save_events_start_date_time[instance] = File_Operations_save_events_event_date_time[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+      File_Operations_save_events_end_date_time[instance] = File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+      File_Operations_save_events_dir_full_name[instance] =
         sketchPath("events\\")
         +nf(year(),4)+nf(month(),2)+nf(day(),2)
         +"_"
         +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
         +"_"
-        +nf(int(save_events_start_time_stamp[instance]%1000),3)
+        +nf(int(File_Operations_save_events_event_date_time[instance]%1000),3)
         +"_"
         +instance+"\\";
+
+      File File_Operations_save_events_dir_handle;
+      File_Operations_save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
+      if (!File_Operations_save_events_dir_handle.isDirectory())
+      {
+        if (!File_Operations_save_events_dir_handle.mkdirs())
+        {
+          if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SAVE_EVENT_ERR) println("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
+          return;
+        }
+      }
+
+      File_Operations_save_events_write_events_done[instance] = false;
+      File_Operations_save_events_done[instance] = false;
+      File_Operations_save_events_started[instance] = true;
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):save events start!");
+      return;
     }
     
-    int save_events_start_time_millis_diff = get_millis_diff(save_events_start_time_millis[instance]);
-    if (!has_objects[instance]) {
-      if (save_events_start_time_millis_diff > save_events_duration_millis[instance]) {
-        save_events_started[instance] = false;
-        return;
+    // Save events not started.
+    // Check it has objects to save events.
+    if (has_objects[instance]) {
+      // Advance end date time.
+      // Check advanced end date time is reached to limit.
+      if (File_Operations_save_events_end_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
+          <=
+          File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
+        File_Operations_save_events_end_date_time[instance] += PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       }
     }
-    else {
-      // Extend save events duration.
-      save_events_duration_millis[instance] = save_events_start_time_millis_diff + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
-    }
 
-    // If ROI Data has objects than keep save events until limit time.
-    if (save_events_start_time_millis_diff > PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
-      save_events_started[instance] = false;
+    // Check save events done.
+    if (!File_Operations_save_events_done[instance]) {
       return;
     }
 
-    File save_events_dir_handle;
-    //File target_file_handle;
-    save_events_dir_handle = new File(save_events_dir_full_name[instance]);
-    if (!save_events_dir_handle.isDirectory()) {
-      if (!save_events_dir_handle.mkdirs()) {
-        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):mkdirs() error! "+save_events_dir_full_name[instance]);
-        return;
-      }
-    }
-
-    // Set pause state of Disk Space thread to save events files.
-    Disk_Space_threads_pause = true;
-
-    String always_dir_full_name = sketchPath("always\\");
-    File always_dir_handle;
-    always_dir_handle = new File(always_dir_full_name);
-    // get files list.
-    String[] always_files_list = always_dir_handle.list();
-    if (always_files_list == null) {
-      if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):always_files_list = null! "+always_dir_full_name);
-      // Reset pause state of Disk Space thread to save events files.
-      Disk_Space_threads_pause = false;
-      return;
-    }
-
-    //int count = 0;
-    //int start_millis = millis();
-    for (String always_file_name:always_files_list) {
-      // Check file is for this instance.
-      //println("ROI_Data:save_events("+instance+"):always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
-      if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
-      long always_file_time_stamp;
-      try {
-        always_file_time_stamp = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
-      }
-      catch (NumberFormatException e) {
-        always_file_time_stamp = save_events_start_time_stamp[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT; // to skip file.
-      }
-      // Check file time stamp is older than expected time stamp to skip.
-      if (always_file_time_stamp <= save_events_start_time_stamp[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT) continue;
-      // Check target file already exist to skip copy file.
-      if (new File(save_events_dir_full_name[instance] + always_file_name).isFile()) continue;
-      // Copy data files only not exist.
-      if (!copy_file(
-            always_dir_full_name + always_file_name,
-            save_events_dir_full_name[instance] + always_file_name,
-            new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES})) {
-        if (PRINT_ROI_DATA_ALL_ERR) println("ROI_Data:save_events("+instance+"):copy_file() error! "+always_dir_full_name+always_file_name+"->"+save_events_dir_full_name[instance]+always_file_name);
-        return;
-      }
-      Dbg_Time_logs_handle.add("ROI_Data:save_events("+instance+"):copy_file():avg="+((copy_count!=0)?(copy_time_sum/copy_count):0));
-      copy_time_sum += Dbg_Time_logs_handle.get_add_diff();
-      copy_count ++;
-      //count ++;
-      // Check save events operation is too late by frame time.
-      //if (get_millis_diff(start_millis) >= (FRAME_TIME / 2)) break;
-    }
-    // Reset pause state of Disk Space thread to save events files.
-    Disk_Space_threads_pause = false;
-    //if (PRINT_ROI_DATA_ALL_DBG) println("ROI_Data:save_events("+instance+"):"+"copy count="+count+",take time="+get_millis_diff(start_millis));
+    // Save events done.
+    // Stop save events.
+    File_Operations_save_events_write_events_done[instance] = false;
+    File_Operations_save_events_done[instance] = false;
+    File_Operations_save_events_started[instance] = false;
   }
 
   void draw_object_info(int instance) {

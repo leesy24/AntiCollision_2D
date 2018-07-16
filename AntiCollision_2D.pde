@@ -92,7 +92,7 @@ void setup() {
   UI_Interfaces_setup();
   UI_System_Config_setup();
   UI_Regions_Config_setup();
-  Disk_Space_setup();
+  File_Operations_setup();
   Version_Date_setup();
 
   // Set window title
@@ -213,9 +213,9 @@ void draw() {
 
 // Disk Space free will run as threads on Disk Space feature.
 /*
-  Disk_Space_free();
+  File_Operations_free();
 
-  Dbg_Time_logs_handle.add("Disk_Space_free()");
+  Dbg_Time_logs_handle.add("File_Operations_free()");
 */
 
   Version_Date_draw();
