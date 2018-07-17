@@ -607,11 +607,14 @@ class ROI_Data {
     // Check it has objects to save events.
     if (has_objects[instance]) {
       // Advance end date time.
+      // Get current date time.
+      long date_time_curr = new Date().getTime();
+
       // Check advanced end date time is reached to limit.
-      if (File_Operations_save_events_end_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
+      if (date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
           <=
           File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
-        File_Operations_save_events_end_date_time[instance] += PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+        File_Operations_save_events_end_date_time[instance] = date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       }
     }
 
