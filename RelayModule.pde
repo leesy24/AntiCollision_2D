@@ -287,8 +287,10 @@ void Relay_Module_output()
       }
     }
   }
+  Dbg_Time_logs_handle.add("Relay_Module_output():for loop");
 
   Relay_Module_draw_indicator();
+  Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_draw_indicator()");
 
   if (!updated
       &&
@@ -300,6 +302,7 @@ void Relay_Module_output()
   Relay_Module_output_interval = RELAY_MODULE_CHECK_INTERVAL_IDLE;
 
   Relay_Module_set_relay();
+  Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_set_relay()");
 }
 
 private void Relay_Module_set_relay()
