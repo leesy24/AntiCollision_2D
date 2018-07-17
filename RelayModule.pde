@@ -57,6 +57,7 @@ final static String RELAY_MODULE_RELAYS_FILE_NAME = "relays";
 final static String RELAY_MODULE_RELAYS_FILE_EXT = ".csv";
 
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
+static boolean[] Relay_Module_output_block = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
 LinkedList<UI_Relay_Indicator> Relay_Module_indicators = null;
@@ -84,20 +85,6 @@ void Relay_Module_setup()
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
 
-  if (Relay_Module_indicators == null)
-  {
-    Relay_Module_indicators = new LinkedList();
-  }
-  else
-  {
-    Relay_Module_indicators.clear();
-  }
-  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
-  {
-    Relay_Module_output_val[relay_index] = false;
-    Relay_Module_indicators.add(new UI_Relay_Indicator());
-  }
-
   String file_full_name;
   Table table;
 
@@ -124,6 +111,7 @@ void Relay_Module_setup()
   for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
   {
     Relay_Module_output_val[relay_index] = false;
+    Relay_Module_output_block[relay_index] = false;
     Relay_Module_indicators.add(new UI_Relay_Indicator());
   }
 
@@ -293,6 +281,15 @@ void Relay_Module_output()
       if (output != Relay_Module_output_val[relay_index])
       {
         Relay_Module_output_val[relay_index] = output;
+        // Relay output will block when PS Interface is FILE.
+        if (PS_Interface[instance] == PS_Interface_FILE)
+        {
+          Relay_Module_output_block[relay_index] = true;
+        }
+        else
+        {
+          Relay_Module_output_block[relay_index] = false;
+        }
         updated = true;
       }
     }
@@ -335,7 +332,10 @@ void Relay_Module_set_relay_thread()
     int cnt = 0;
     for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
     {
-      if (Relay_Module_output_val[relay_index])
+      // Relay output will off when PS Interface is FILE.
+      if (Relay_Module_output_val[relay_index]
+          &&
+          !Relay_Module_output_block[relay_index])
       {
         buf[relay_index + 1] = '1';
         cnt ++;
