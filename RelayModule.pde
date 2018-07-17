@@ -56,6 +56,8 @@ final static int RELAY_MODULE_CHECK_INTERVAL_IDLE = 1000;
 final static String RELAY_MODULE_RELAYS_FILE_NAME = "relays";
 final static String RELAY_MODULE_RELAYS_FILE_EXT = ".csv";
 
+static boolean Relay_Module_output_block_enables;
+
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static boolean[] Relay_Module_output_block = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
@@ -81,6 +83,9 @@ void Relay_Module_setup()
   boolean found = false;
 
   //printArray(Serial.list());
+
+  Relay_Module_output_block_enables = true;
+  //Relay_Module_output_block_enables = false;
 
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
@@ -282,7 +287,9 @@ void Relay_Module_output()
       {
         Relay_Module_output_val[relay_index] = output;
         // Relay output will block when PS Interface is FILE.
-        if (PS_Interface[instance] == PS_Interface_FILE)
+        if (PS_Interface[instance] == PS_Interface_FILE
+            &&
+            Relay_Module_output_block_enables)
         {
           Relay_Module_output_block[relay_index] = true;
         }
