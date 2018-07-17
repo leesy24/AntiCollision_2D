@@ -70,6 +70,9 @@ class Relay_CSV {
   int indicator_text_height;
 }
 
+static boolean Relay_Module_set_relay_thread_setup_done;
+static boolean Relay_Module_set_relay_thread_run;
+
 void Relay_Module_setup()
 {
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Enter");
@@ -206,6 +209,13 @@ void Relay_Module_setup()
     }
   }
 
+  Relay_Module_set_relay_thread_run = false;
+  if (!Relay_Module_set_relay_thread_setup_done)
+  {
+    thread("Relay_Module_set_relay_thread");
+    Relay_Module_set_relay_thread_setup_done = true;
+  }
+
   // Reset Serial. 
   if (Relay_Module_UART_handle != null)
   {
@@ -309,23 +319,37 @@ private void Relay_Module_set_relay()
 {
   if (!Relay_Module_UART_enabled) return;
 
-  byte[] buf = new byte[4 + 2];
-  buf[0] = 'R';
-  int cnt = 0;
-  for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
+  Relay_Module_set_relay_thread_run = true;
+}
+
+void Relay_Module_set_relay_thread()
+{
+  do
   {
-    if (Relay_Module_output_val[relay_index])
+    delay(FRAME_TIME);
+
+    if (!Relay_Module_set_relay_thread_run) continue;
+
+    byte[] buf = new byte[4 + 2];
+    buf[0] = 'R';
+    int cnt = 0;
+    for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
     {
-      buf[relay_index + 1] = '1';
-      cnt ++;
+      if (Relay_Module_output_val[relay_index])
+      {
+        buf[relay_index + 1] = '1';
+        cnt ++;
+      }
+      else
+      {
+        buf[relay_index + 1] = '0';
+      }
     }
-    else
-    {
-      buf[relay_index + 1] = '0';
-    }
-  }
-  buf[5] = byte('0' + cnt);
-  Relay_Module_UART_write(buf);
+    buf[5] = byte('0' + cnt);
+    Relay_Module_UART_write(buf);
+
+    Relay_Module_set_relay_thread_run = false;
+  } while (true);
 }
 
 private void Relay_Module_draw_indicator()
