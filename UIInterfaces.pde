@@ -985,10 +985,16 @@ void UI_Interfaces_ddmenu(int n)
 
 void UI_Interfaces_filename(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_filename():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_filename():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1006,7 +1012,7 @@ void UI_Interfaces_filename(String theText)
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
 
-  if(theText.equals(FILE_name[instance]) != true) {
+  if(!theText.equals(FILE_name[instance])) {
     FILE_name[instance] = theText;
     Config_save();
     UI_Interfaces_changed[instance] = true;
@@ -1016,10 +1022,16 @@ void UI_Interfaces_filename(String theText)
 
 void UI_Interfaces_UARTport(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTport"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTport():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1047,10 +1059,16 @@ void UI_Interfaces_UARTport(String theText)
 
 void UI_Interfaces_UARTbaud(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTbaud"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTbaud():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTbaud():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1079,10 +1097,16 @@ void UI_Interfaces_UARTbaud(String theText)
 
 void UI_Interfaces_UARTdps(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTdps"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTdps():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTdps():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1117,10 +1141,16 @@ void UI_Interfaces_UARTdps(String theText)
 
 void UI_Interfaces_UDPremoteip(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteip"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteip():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteip():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1138,7 +1168,7 @@ void UI_Interfaces_UDPremoteip(String theText)
   // automatically receives results from controller input
   //println("a textfield event for controller 'input' : "+theText);
 
-  if(theText.equals(UDP_remote_ip[instance]) != true) {
+  if(!theText.equals(UDP_remote_ip[instance])) {
     UDP_remote_ip[instance] = theText;
     Config_save();
     UI_Interfaces_changed[instance] = true;
@@ -1148,10 +1178,16 @@ void UI_Interfaces_UDPremoteip(String theText)
 
 void UI_Interfaces_UDPremoteport(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteport"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteport():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteport():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1180,10 +1216,16 @@ void UI_Interfaces_UDPremoteport(String theText)
 
 void UI_Interfaces_UDPlocalport(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPlocalport"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPlocalport():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPlocalport():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
     if (tf.getId() == instance
         &&
@@ -1212,10 +1254,16 @@ void UI_Interfaces_UDPlocalport(String theText)
 
 void UI_Interfaces_SNserialnumber(String theText)
 {
+  // Find instance of tf for this.
   int instance;
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
     Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_SNserialnumber():tf=null");
+      continue;
+    }
     if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_SNserialnumber():instance="+instance+":id="+tf.getId()+",isOpen="+tf.isFocus());
     if (tf.getId() == instance
         &&
