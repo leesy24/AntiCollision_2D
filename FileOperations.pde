@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 //final static boolean PRINT_FILE_OPERATIONS_ALL_DBG = true;
 final static boolean PRINT_FILE_OPERATIONS_ALL_DBG = false;
@@ -51,11 +52,25 @@ static enum File_Operations_save_events_state_enum {
 }
 static File_Operations_save_events_state_enum[] File_Operations_save_events_state = new File_Operations_save_events_state_enum[PS_INSTANCE_MAX];
 
+static class File_Operations_save_always_data {
+  private int instance;
+  private byte[] data_buf;
+  private long date_time;
+  private boolean save_events;
+  private String save_events_dir_full_name;
+
+  File_Operations_save_always_data(int instance, byte[] data_buf, long date_time, String save_events_dir_full_name) {
+    this.instance = instance;
+    this.data_buf = data_buf;
+    this.date_time = date_time;
+    this.save_events_dir_full_name = save_events_dir_full_name;
+  }
+}
+static ConcurrentLinkedQueue<File_Operations_save_always_data> File_Operations_save_always_queue = new ConcurrentLinkedQueue<File_Operations_save_always_data>();
+
+
 void File_Operations_setup()
 {
-  //File_Operations_free_always();
-  //File_Operations_free_events();
-
   String always_dir_full_name = sketchPath("always\\");
   File always_dir_handle = new File(always_dir_full_name);
   //println("data_time="+data_time+",millis()="+millis());
@@ -90,17 +105,18 @@ void File_Operations_setup()
     File_Operations_events_dir_ready = true;
   }
 
+  if (File_Operations_setup_done) return;
+
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.IDLE;
   }
 
-  if (File_Operations_setup_done) return;
-
   File_Operations_free_threads_pause = false;
-  thread("File_Operations_free_always");
   thread("File_Operations_free_events");
+  thread("File_Operations_free_always");
   thread("File_Operations_save_events");
+  thread("File_Operations_save_always");
   File_Operations_setup_done = true;
 }
 
@@ -406,5 +422,61 @@ void File_Operations_save_events()
           break;
       }
     }
+  } while (true);
+}
+
+void File_Operations_save_always()
+{
+  /*
+  int write_always_count = 0;
+  int write_always_time_sum = 0;
+  int write_events_count = 0;
+  int write_events_time_sum = 0;
+  */
+  File_Operations_save_always_data save_always_data;
+  String always_dir_full_name = sketchPath("always\\");
+
+  delay(FRAME_TIME * 4 / 4);
+  do
+  {
+    delay(FRAME_TIME);
+
+    while ((save_always_data = File_Operations_save_always_queue.poll()) != null)
+    {
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_DBG) println("File_Operations_save_always()" + ":instance=" + save_always_data.instance + ",date_time=" + save_always_data.date_time + ",data_buf=" + save_always_data.data_buf);
+
+      // Write data file to always.
+      if (!write_file(save_always_data.data_buf, always_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat"))
+      {
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_ERR) println("File_Operations_save_always("+save_always_data.instance+"):write_file() error! "+always_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat");
+        return;
+      }
+
+      /*
+      Dbg_Time_logs_handle.add("File_Operations_save_always("+save_always_data.instance+"):write_file() to always:avg="+((write_always_count!=0)?(write_always_time_sum/write_always_count):0));
+      write_always_time_sum += Dbg_Time_logs_handle.get_add_diff();
+      write_always_count ++;
+      */
+
+      if (save_always_data.save_events_dir_full_name != null)
+      {
+        // Write data file to events.
+        if (
+          !write_file(
+            save_always_data.data_buf,
+            save_always_data.save_events_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat"))
+        {
+          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_ERR) println("File_Operations_save_always("+save_always_data.instance+"):write_file() error! "+always_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat");
+          return;
+        }
+
+        /*
+        Dbg_Time_logs_handle.add("File_Operations_save_always("+save_always_data.instance+"):write_file() to events:avg="+((write_events_count!=0)?(write_events_time_sum/write_events_count):0));
+        write_events_time_sum += Dbg_Time_logs_handle.get_add_diff();
+        write_events_count ++;
+        */
+      }
+    } // End of while ((save_always_data = File_Operations_save_always_queue.poll()) != null)
+    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_DBG) println("File_Operations_save_always()" + ":queue empty!");
   } while (true);
 }

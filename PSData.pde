@@ -363,10 +363,6 @@ class PS_Data {
     return true;
   }
 
-  int write_always_count = 0;
-  int write_always_time_sum = 0;
-  int write_events_count = 0;
-  int write_events_time_sum = 0;
   void save_always(int instance) {
     // Save always feature will not run when PS Interface is FILE.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
@@ -383,37 +379,22 @@ class PS_Data {
     long date_time = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
     //println("date_time="+date_time+",millis()="+millis());
-
-    String always_dir_full_name = sketchPath("always\\");
-
-    // Write data file to always.
-    if (!write_file(PS_Data_buf[instance], always_dir_full_name+instance+"_"+date_time+".dat")) {
-      if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+date_time+".dat");
-      return;
-    }
-
-    Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file() to always:avg="+((write_always_count!=0)?(write_always_time_sum/write_always_count):0));
-    write_always_time_sum += Dbg_Time_logs_handle.get_add_diff();
-    write_always_count ++;
-
+    String save_events_dir_full_name = null;
     if (File_Operations_save_events_started[instance]
         &&
         !File_Operations_save_events_write_events_done[instance]) {
       if (date_time <= File_Operations_save_events_end_date_time[instance]) {
-        // Write data file to events.
-        if (!write_file(PS_Data_buf[instance], File_Operations_save_events_dir_full_name[instance]+instance+"_"+date_time+".dat")) {
-          if (PRINT_PS_DATA_PARSE_ERR) println("PS_Data:save_always("+instance+"):write_file() error! "+always_dir_full_name+instance+"_"+date_time+".dat");
-          return;
-        }
-
-        Dbg_Time_logs_handle.add("PS_Data:save_always("+instance+"):write_file() to events:avg="+((write_events_count!=0)?(write_events_time_sum/write_events_count):0));
-        write_events_time_sum += Dbg_Time_logs_handle.get_add_diff();
-        write_events_count ++;
+        save_events_dir_full_name =
+          File_Operations_save_events_dir_full_name[instance];
       }
       else {
         File_Operations_save_events_write_events_done[instance] = true;
       }
     }
+
+    File_Operations_save_always_data save_always_data = new File_Operations_save_always_data(
+        instance, PS_Data_buf[instance], date_time, save_events_dir_full_name);
+    File_Operations_save_always_queue.add(save_always_data);
   }
 
   // Parsing Data buffer
