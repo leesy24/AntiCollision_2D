@@ -174,7 +174,7 @@ void File_Operations_free_events()
 
       File events_subdir_handle = new File(events_dir_full_name+events_subdir_name+"\\");
       if (!events_subdir_handle.isDirectory()) {
-        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():not directory! "+events_dir_full_name+events_subdir_name+"\\");
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Directory not exist or not a directory!:"+events_dir_full_name+events_subdir_name+"\\");
         events_subdir_handle.delete();
         delay(1);
         continue;
@@ -201,7 +201,7 @@ void File_Operations_free_events()
         //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_file_name="+events_file_name);
         File events_file_handle = new File(events_dir_full_name+events_subdir_name+"\\"+events_file_name);
         if (!events_file_handle.isFile()) {
-          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():not file! "+events_dir_full_name+events_subdir_name+"\\"+events_file_name);
+          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():File not exist or not a file!:"+events_dir_full_name+events_subdir_name+"\\"+events_file_name);
           continue;
         }
         events_file_handle.delete();
@@ -269,7 +269,7 @@ void File_Operations_free_always()
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);
       if (!always_file_handle.isFile()) {
-        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():not file! "+always_dir_full_name+"\\"+always_file_name);
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
         continue;
       }
       always_file_handle.delete();
@@ -349,12 +349,6 @@ void File_Operations_save_events()
             String always_file_name = always_file_path.getFileName().toString();
             //println("File_Operations_save_events("+instance+"):always_file_name="+always_file_name);
 
-            always_file_handle = new File(always_dir_full_name+always_file_name);
-            if (!always_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():not file! "+always_dir_full_name+"\\"+always_file_name);
-              continue;
-            }
-
             // Get date time of always file.
             long always_file_date_time;
             try
@@ -371,6 +365,13 @@ void File_Operations_save_events()
             if (always_file_date_time < File_Operations_save_events_start_date_time[instance]) continue;
             // Check date time of always file is new than expected date time to skip.
             if (always_file_date_time > File_Operations_save_events_event_date_time[instance]) continue;
+
+            always_file_handle = new File(always_dir_full_name+always_file_name);
+            if (!always_file_handle.isFile()) {
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
+              continue;
+            }
+
             // Copy data file.
             if (!copy_file(
                   always_dir_full_name + always_file_name,
