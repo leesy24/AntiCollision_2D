@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+
 //final static boolean PRINT_FILE_OPERATIONS_ALL_DBG = true;
 final static boolean PRINT_FILE_OPERATIONS_ALL_DBG = false;
 final static boolean PRINT_FILE_OPERATIONS_ALL_ERR = true;
@@ -210,10 +214,9 @@ void File_Operations_free_always()
 void File_Operations_save_events()
 {
   String always_dir_full_name = sketchPath("always\\");
-  File always_dir_handle;
-  always_dir_handle = new File(always_dir_full_name);
-  String[][] always_files_list = new String[PS_INSTANCE_MAX][];
-  int[] always_files_list_index = new int[PS_INSTANCE_MAX];
+  Path always_dir_path = Paths.get(always_dir_full_name);
+  DirectoryStream<Path>[] always_files_list = new DirectoryStream[PS_INSTANCE_MAX];
+  Iterator<Path>[] always_files_list_iterator = new Iterator[PS_INSTANCE_MAX];
 
   delay(FRAME_TIME * 3 / 4);
   do
@@ -245,29 +248,33 @@ void File_Operations_save_events()
           // Set pause state of Disk Space free threads to save events files.
           File_Operations_free_threads_pause = true;
 
-          // get files list.
-          always_files_list[instance] = always_dir_handle.list();
-          if (always_files_list[instance] == null)
+          // get files list of instance.
+          try
           {
-            if (PRINT_FILE_OPERATIONS_ALL_ERR) println("File_Operations_save_events("+instance+"):always_files_list[instance] = null! "+always_dir_full_name);
+            always_files_list[instance] = Files.newDirectoryStream(always_dir_path, instance+"_*.dat");
+          }
+          catch (IOException e) {
+            // An I/O problem has occurred
+            if (PRINT_FILE_OPERATIONS_ALL_ERR) println("File_Operations_save_events("+instance+"):Files.newDirectoryStream err!"+"\n\t"+e.toString());
             // Reset pause state of Disk Space free threads to save events files.
             File_Operations_free_threads_pause = false;
             break;
           }
 
+          // Get list iterator.
+          always_files_list_iterator[instance] = always_files_list[instance].iterator();
+
           File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS;
-          always_files_list_index[instance] = 0;
           break;
 
         case COPY_ALWAYS_TO_EVENTS:
           int copy_start_millis = millis();
-          int i;
-          for (i = always_files_list_index[instance]; i < always_files_list[instance].length; i ++)
+          for (; always_files_list_iterator[instance].hasNext();)
           {
-            String always_file_name = always_files_list[instance][i];
-            // Check file is for this instance.
-            //println("File_Operations_save_events("+instance+"):always_file_name="+always_file_name+",substring="+always_file_name.substring(0, 2));
-            if (!always_file_name.substring(0, 2).equals(instance+"_")) continue;
+            Path always_file_path = always_files_list_iterator[instance].next();
+
+            String always_file_name = always_file_path.getFileName().toString();
+            //println("File_Operations_save_events("+instance+"):always_file_name="+always_file_name);
 
             // Get date time of always file.
             long always_file_date_time;
@@ -295,20 +302,19 @@ void File_Operations_save_events()
               break;
             }
             //delay(1);
-            /*
-            Dbg_Time_logs_handle.add("File_Operations_save_events("+instance+"):copy_file():avg="+((copy_count!=0)?(copy_time_sum/copy_count):0));
-            copy_time_sum += Dbg_Time_logs_handle.get_add_diff();
-            copy_count ++;
-            */
             // Check copy operation is too late by frame time.
             if (get_millis_diff(copy_start_millis) >= FRAME_TIME) break;
           }
-          if (i != always_files_list[instance].length)
+          if (!always_files_list_iterator[instance].hasNext())
           {
-            always_files_list_index[instance] = i + 1;
-          }
-          else
-          {
+            try
+            {
+              always_files_list[instance].close();
+            }
+            catch (IOException e) {
+              // An I/O problem has occurred
+              if (PRINT_FILE_OPERATIONS_ALL_ERR) println("File_Operations_save_events("+instance+"):DirectoryStream close() err!"+"\n\t"+e.toString());
+            }
             File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.WAIT_WRITE_EVENTS_DONE;
             // Reset pause state of Disk Space free threads to save events files.
             File_Operations_free_threads_pause = false;
