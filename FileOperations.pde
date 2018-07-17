@@ -71,7 +71,7 @@ static ConcurrentLinkedQueue<File_Operations_save_always_data> File_Operations_s
 
 void File_Operations_setup()
 {
-  String always_dir_full_name = sketchPath("always\\");
+  String always_dir_full_name = sketchPath() + "\\always\\";
   File always_dir_handle = new File(always_dir_full_name);
   //println("data_time="+data_time+",millis()="+millis());
   // Check exists the always directory.
@@ -88,7 +88,7 @@ void File_Operations_setup()
     File_Operations_always_dir_ready = true;
   }
 
-  String events_dir_full_name = sketchPath("events\\");
+  String events_dir_full_name = sketchPath() + "\\events\\";
   File events_dir_handle = new File(events_dir_full_name);
   //println("data_time="+data_time+",millis()="+millis());
   // Check exists the always directory.
@@ -129,7 +129,7 @@ void File_Operations_free()
 
 void File_Operations_free_events()
 {
-  String events_dir_full_name = sketchPath("events\\");
+  String events_dir_full_name = sketchPath() + "\\events\\";
   File events_dir_handle = new File(events_dir_full_name);
   Path events_dir_full_path = Paths.get(events_dir_full_name);
   DirectoryStream<Path> events_dirs_list;
@@ -208,17 +208,37 @@ void File_Operations_free_events()
         delay(1);
       }
 
+      // Close list of DirectoryStream.
+      try
+      {
+        events_subdir_files_list.close();
+      }
+      catch (IOException e) {
+        // An I/O problem has occurred
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_subdir_files_list.close() err!"+"\n\t"+e.toString());
+      }
+
       events_subdir_handle.delete();
-      delay(1);
       if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():delete done! "+events_subdir_name);
       break;
+    } // End of for (Path events_subdir_path:events_dirs_list)
+
+    // Close list of DirectoryStream.
+    try
+    {
+      events_dirs_list.close();
     }
+    catch (IOException e) {
+      // An I/O problem has occurred
+      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
+    }
+
   } while (true);
 }
 
 void File_Operations_free_always()
 {
-  String always_dir_full_name = sketchPath("always\\");
+  String always_dir_full_name = sketchPath() + "\\always\\";
   File always_dir_handle = new File(always_dir_full_name);
   Path always_dir_full_path = Paths.get(always_dir_full_name);
   DirectoryStream<Path> always_files_list;
@@ -275,12 +295,24 @@ void File_Operations_free_always()
       always_file_handle.delete();
       delay(1);
     }
+
+    // Close list of DirectoryStream.
+    try
+    {
+      always_files_list.close();
+    }
+    catch (IOException e) {
+      // An I/O problem has occurred
+      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
+    }
+
   } while (true);
 }
 
 void File_Operations_save_events()
 {
-  String always_dir_full_name = sketchPath("always\\");
+  String data_dir_full_name = sketchPath() + "\\data\\";
+  String always_dir_full_name = sketchPath() + "\\always\\";
   Path always_dir_full_path = Paths.get(always_dir_full_name);
   DirectoryStream<Path>[] always_files_list = new DirectoryStream[PS_INSTANCE_MAX];
   Iterator<Path>[] always_files_list_iterator = new Iterator[PS_INSTANCE_MAX];
@@ -318,6 +350,33 @@ void File_Operations_save_events()
         case IDLE:
           // Set pause state of Disk Space free threads to save events files.
           File_Operations_free_threads_pause = true;
+
+          LinkedList<String> data_files_list = new LinkedList<String>();
+
+          // Set files on data dir to copy.
+          data_files_list.add(CONST_FILE_NAME + CONST_FILE_EXT);
+          data_files_list.add(CONFIG_FILE_NAME + "_" + instance + CONFIG_FILE_EXT);
+          data_files_list.add(REGIONS_FILE_NAME + "_" + instance + REGIONS_FILE_EXT);
+          data_files_list.add(RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT);
+          data_files_list.add(BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT);
+          
+          for (String data_file_name:data_files_list)
+          {
+            File data_file_handle;
+            // Copy file to events dir.
+            data_file_handle = new File(data_dir_full_name + data_file_name);
+            if (!data_file_handle.isFile()) {
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
+              continue;
+            }
+            if (!copy_file(
+                  data_dir_full_name + data_file_name,
+                  File_Operations_save_events_dir_full_name[instance] + data_file_name,
+                  new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES}))
+            {
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + data_dir_full_name + data_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + data_file_name + "\n\t" + copy_file_error);
+            }
+          }
 
           // Get files list of instance.
           try
@@ -389,10 +448,11 @@ void File_Operations_save_events()
           // Check end of iterator.
           if (always_files_list_iterator[instance].hasNext())
           {
+            // Files remained. come back this switch case.
             break;
           }
 
-          // Reset list.
+          // Close list of DirectoryStream.
           try
           {
             always_files_list[instance].close();
@@ -435,7 +495,7 @@ void File_Operations_save_always()
   int write_events_time_sum = 0;
   */
   File_Operations_save_always_data save_always_data;
-  String always_dir_full_name = sketchPath("always\\");
+  String always_dir_full_name = sketchPath() + "\\always\\";
 
   delay(FRAME_TIME * 4 / 4);
   do
