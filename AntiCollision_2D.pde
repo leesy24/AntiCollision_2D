@@ -129,6 +129,9 @@ void draw() {
     Config_setup();
     ROI_Data_setup();
     PS_Data_setup();
+    Regions_setup();
+    Relay_Module_setup();
+    UI_Interfaces_setup();
     // Set window title
     surface.setTitle(Title);
     // Need to call gc() to free memory.

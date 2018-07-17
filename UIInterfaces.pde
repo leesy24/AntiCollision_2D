@@ -25,6 +25,7 @@ static color C_UI_INTERFACES_BORDER_NORMAL = #000000; // Black
 static color C_UI_INTERFACES_CURSOR = #0000FF; // Blue
 
 static boolean UI_Interfaces_enabled;
+static boolean UI_Interfaces_is_special;
 
 static ControlFont UI_Interfaces_cf = null;
 static ControlP5[] UI_Interfaces_cp5 = new ControlP5[PS_INSTANCE_MAX];
@@ -57,8 +58,38 @@ void UI_Interfaces_setup()
 {
   if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_SETUP_DBG) println("UI_Interfaces_setup():Enter");
 
-  //UI_Interfaces_enabled = true;
-  UI_Interfaces_enabled = false;
+  boolean found_specific_PS_Interface = false;
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (PS_Interface[i] == PS_Interface_FILE)
+    {
+      found_specific_PS_Interface = true;
+      break;
+    }
+  }
+  int found_count = 0;
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (PS_Interface[i] == PS_Interface_NA)
+    {
+      found_count ++;
+    }
+  }
+  if (found_count == PS_INSTANCE_MAX)
+  {
+    found_specific_PS_Interface = true;
+  }
+
+  if (found_specific_PS_Interface)
+  {
+    UI_Interfaces_enabled = true;
+    UI_Interfaces_is_special = true;
+  }
+  else
+  {
+    UI_Interfaces_enabled = false;
+    UI_Interfaces_is_special = false;
+  }
 
   UI_Interfaces_changed_any = false;
 
@@ -633,7 +664,9 @@ void UI_Interfaces_draw()
       /**/
 
       // Check password not required.
-      if (SYSTEM_PASSWORD_disabled)
+      if (SYSTEM_PASSWORD_disabled
+          ||
+          UI_Interfaces_is_special)
       {
         UI_Interfaces_state = UI_Interfaces_state_enum.WAIT_CONFIG_INPUT;
         UI_Interfaces_update();
@@ -708,7 +741,9 @@ void UI_Interfaces_draw()
         break;
       }
 
-      if (get_millis_diff(UI_Interfaces_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
+      if (!UI_Interfaces_is_special
+          &&
+          get_millis_diff(UI_Interfaces_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
       {
         UI_Interfaces_reset();
         UI_Interfaces_enabled = false;
@@ -716,25 +751,6 @@ void UI_Interfaces_draw()
         break;
       }
 
-      /*
-      // Skip this config UI if other config UI enabled.
-      if (UI_System_Config_enabled)
-      {
-        break;
-      }
-      */
-
-      /*
-      if (UI_Interfaces_changed_any)
-      {
-        UI_Interfaces_reset();
-        // Update done! Indicate updated.
-        UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3000);
-        UI_Interfaces_state = UI_Interfaces_state_enum.DISPLAY_MESSAGE;
-        UI_Interfaces_state_next = UI_Interfaces_state_enum.RESET;
-        break;
-      }
-      */
       break;
     case DISPLAY_MESSAGE:
       if (UI_Message_Box_handle.draw())
@@ -749,6 +765,52 @@ void UI_Interfaces_draw()
       break;
   }
 }
+
+/*
+private void UI_Interfaces_key_pressed()
+{
+  println("UI_Interfaces_key_pressed():keyPressed " + int(key) + " " + keyCode);
+  if (!(key == CONTROL && keyCode == 'v' || keyCode == 'V'))
+  {
+    return;
+  }
+
+  // Ctrl+V key pressed, copy clipboard text to tf of filename.
+  // Find instance of tf for this.
+  int instance;
+  Textfield tf = null;
+  for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+  {
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get(Textfield.class, "UI_Interfaces_filename"));
+    if (tf == null)
+    {
+      if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_key_pressed():tf=null");
+      continue;
+    }
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_key_pressed():instance="+instance+":id="+tf.getId()+",isFocus="+tf.isFocus());
+    if (tf.getId() == instance
+        &&
+        tf.isFocus())
+    {
+      break;
+    }
+  }
+  if (instance == PS_INSTANCE_MAX)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_key_pressed():Can't found instance.");
+    return;
+  }
+
+  String cb_str = get_clipboard_string();
+  if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_key_pressed():instance="+instance+":cb_str="+cb_str);
+  if (cb_str == null)
+  {
+    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_key_pressed():instance="+instance+":cb_str=null");
+    return;
+  }
+  tf.setText(tf.getText()+cb_str);
+}
+*/
 
 private void UI_Interfaces_tf_file_name_mouse_pressed_right(int instance)
 {
@@ -1329,6 +1391,36 @@ class UI_Interfaces_DDMenu_CallbackListener implements CallbackListener {
   }
 }
 
+/*
+// Custom key input handler for the filename
+final CustomKeyEvent nin = new CustomKeyEvent();
+
+public class CustomKeyEvent {
+  public void keyEvent(KeyEvent theKeyEvent) {
+    println("UI_Interfaces_TF_FileName_CallbackListener:keyEvent():theKeyEvent action=" + theKeyEvent.getAction() + ",key code=" + theKeyEvent.getKeyCode() + ",key=" + theKeyEvent.getKey());
+    // only process key event if input is active 
+    if (k.getAction()==KeyEvent.PRESS && active) {
+      if (k.getKey()=='\n') { // confirm input with enter
+        submit();
+        return;
+      } else if(k.getKeyCode()==BACKSPACE) { 
+        text = text.isEmpty() ? "":text.substring(0, text.length()-1);
+        //text = ""; // clear all text with backspace
+      }
+      else if(k.getKey()<255) {
+        // check if the input is a valid (decimal) number
+        final String regex = "\\d+([.]\\d{0,2})?";
+        String s = text + k.getKey();
+        if ( java.util.regex.Pattern.matches(regex, s ) ) {
+          text += k.getKey();
+        }
+      }
+      n.getValueLabel().setText(this.text);
+    }
+  }
+}
+*/
+
 class UI_Interfaces_TF_FileName_CallbackListener implements CallbackListener {
   public void controlEvent(CallbackEvent theEvent) {
     UI_Interfaces_timeout_start = millis();
@@ -1363,6 +1455,7 @@ class UI_Interfaces_TF_FileName_CallbackListener implements CallbackListener {
     }
   }
 }
+
 class UI_Interfaces_CP5_CallbackListener implements CallbackListener {
   public void controlEvent(CallbackEvent theEvent) {
     UI_Interfaces_timeout_start = millis();
