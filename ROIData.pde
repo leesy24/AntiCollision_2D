@@ -587,13 +587,13 @@ class ROI_Data {
       return;
     }
 
-    if (!detected_objects[instance].has_detected_objects && !File_Operations_save_events_started[instance]) return;
+    if (!detected_objects[instance].have_detected_objects && !File_Operations_save_events_started[instance]) return;
 
     // Check save events started.
     if (!File_Operations_save_events_started[instance]) {
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):save events start!");
       SYSTEM_logger.info("ROI_Data:save_events("+instance+"):save events start!");  
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):detected_objects["+instance+"].has_detected_objects="+detected_objects[instance].has_detected_objects);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):detected_objects["+instance+"].have_detected_objects="+detected_objects[instance].have_detected_objects);
       // Save events not started.
       File_Operations_save_events_event_date_time[instance] = new Date().getTime();
       File_Operations_save_events_start_date_time[instance] = File_Operations_save_events_event_date_time[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
@@ -627,7 +627,7 @@ class ROI_Data {
     
     // Save events started.
     // Check it has objects to save events.
-    if (detected_objects[instance].has_detected_objects) {
+    if (detected_objects[instance].have_detected_objects) {
       // Advance end date time.
       // Get current date time.
       long date_time_curr = new Date().getTime();
@@ -646,7 +646,9 @@ class ROI_Data {
     }
 
     // Check detected object are same.
-    if (detected_objects_are_same[instance]) {
+    if (detected_objects[instance].have_detected_objects
+        &&
+        detected_objects_are_same[instance]) {
       return;
     }
 
@@ -1296,24 +1298,24 @@ final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_ERR = false;
 
 class ROI_Detected_Objects {
   public ArrayList<ROI_Detected_Object_Data> objects_data = new ArrayList<ROI_Detected_Object_Data>();
-  public boolean has_detected_objects;
+  public boolean have_detected_objects;
   public int objects_count;
   
   ROI_Detected_Objects() {
     if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Objects:ROI_Detected_Objects()"+":Enter");
-    has_detected_objects = false;
+    have_detected_objects = false;
     objects_count = 0;
   }
 
   void add(ROI_Detected_Object_Data object_data) {
     objects_data.add(object_data);
-    has_detected_objects = true;
+    have_detected_objects = true;
     objects_count ++;
   }
 
   void clear() {
     objects_data.clear();
-    has_detected_objects = false;
+    have_detected_objects = false;
     objects_count = 0;
   }
 
