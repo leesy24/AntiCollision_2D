@@ -1,10 +1,13 @@
 import java.awt.event.KeyEvent;
 
-//final static boolean PRINT_MOUSEFUNC_DBG_ALL = true;
-final static boolean PRINT_MOUSEFUNC_DBG_ALL = false;
+//final static boolean PRINT_MOUSEKEYFUNC_DBG_ALL = true;
+final static boolean PRINT_MOUSEKEYFUNC_DBG_ALL = false;
 
-//final static boolean PRINT_MOUSEFUNC_DBG_POS = true;
-final static boolean PRINT_MOUSEFUNC_DBG_POS = false;
+//final static boolean PRINT_MOUSEKEYFUNC_DBG_POS = true;
+final static boolean PRINT_MOUSEKEYFUNC_DBG_POS = false;
+
+//final static boolean PRINT_KEYFUNC_Pressed = true; 
+final static boolean PRINT_KEYFUNC_Pressed = false;
 
 //final static boolean PRINT_MOUSEFUNC_Pressed = true; 
 final static boolean PRINT_MOUSEFUNC_Pressed = false;
@@ -27,7 +30,7 @@ void keyPressed()
   UI_NumPad_key_pressed();
 
   String msg = "keyPressed():key=(" + int(key) + ")" + ((key>=32 && key<=126)?key:"") + ",keyCode=(" + keyCode + ")" + KeyEvent.getKeyText(keyCode);
-  println(msg);
+  if (PRINT_KEYFUNC_Pressed || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println(msg);
   SYSTEM_logger.info(msg);
   if (key == ESC)
   {
@@ -94,9 +97,9 @@ void keyReleased()
 
 void mousePressed()
 {
-  if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse pressed! ");
+  if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse pressed! ");
 
-  if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
+  if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
   SYSTEM_logger.info("mousePressed()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
@@ -110,7 +113,7 @@ void mousePressed()
 
 void mouseReleased()
 {
-  if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse released! ");
+  if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse released! ");
   SYSTEM_logger.info("mouseReleased()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
 
   UI_NumPad_mouse_released();
@@ -121,8 +124,8 @@ void mouseReleased()
 
 void mouseMoved()
 {
-  if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse moved!");
-  if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
+  if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse moved!");
+  if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
   UI_NumPad_mouse_moved();
   UI_Buttons_mouse_moved();
@@ -133,8 +136,8 @@ void mouseMoved()
 
 void mouseDragged() 
 {
-  if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse dragged!");
-  if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
+  if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse dragged!");
+  if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
   UI_NumPad_mouse_dragged();
   UI_Buttons_mouse_dragged();
@@ -149,7 +152,7 @@ void mouseWheel(MouseEvent event)
   SYSTEM_logger.info("mouseWheel()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton + ",Count=" + wheel_count);
   //int zoom_factor_save = ZOOM_FACTOR[0];
 
-  if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);
+  if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);
 
   //if (!mouse_wheel_enabled) return;
 
