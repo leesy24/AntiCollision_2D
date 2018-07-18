@@ -243,8 +243,10 @@ class ROI_Data {
   int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
   float[] angle_step = new float[PS_INSTANCE_MAX];
-  boolean[] has_objects = new boolean[PS_INSTANCE_MAX];
-  int[] has_objects_count = new int[PS_INSTANCE_MAX];
+  boolean[] detected_objects_are_same = new boolean[PS_INSTANCE_MAX];
+
+  ROI_Detected_Objects[] detected_objects = new ROI_Detected_Objects[PS_INSTANCE_MAX];
+  ROI_Detected_Objects[] detected_objects_prev = new ROI_Detected_Objects[PS_INSTANCE_MAX];
 
   // Create the ROI_Data
   ROI_Data() {
@@ -253,8 +255,7 @@ class ROI_Data {
     {
       points_array[i] = new LinkedList<ROI_Point_Data>();
       objects_array[i] = new LinkedList<ROI_Object_Data>();
-      has_objects[i] = false;
-      has_objects_count[i] = 0;
+      detected_objects_are_same[i] = false;
       File_Operations_save_events_started[i] = false;
     }
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():Exit");
@@ -287,7 +288,7 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Enter");
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):"+"objects length="+objects_array[instance].size());
     objects_array[instance].clear();
-    has_objects[instance] = false;
+    detected_objects_are_same[instance] = false;
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
   }
 
@@ -485,8 +486,7 @@ class ROI_Data {
       }
     }
 
-    has_objects[instance] = false;
-    has_objects_count[instance] = 0;
+    detected_objects[instance] = new ROI_Detected_Objects();
     Regions_handle.reset_regions_has_object(instance);
     // Start from low priority.
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
@@ -514,8 +514,7 @@ class ROI_Data {
         }
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"time long enough time_duration="+time_duration);
 
-        has_objects[instance] = true;
-        has_objects_count[instance] ++;
+        detected_objects[instance].add(new ROI_Detected_Object_Data(object.mi_center_x, object.mi_center_y, object.mi_diameter));
         for (int region_index:object.region_indexes) {
           Regions_handle.set_region_has_object(instance, region_index);
           //println("ROI_Data:draw_objects("+instance+"):"+"set_region_has_object("+region_index+");");
@@ -555,7 +554,22 @@ class ROI_Data {
         */
       } //  End of for (ROI_Object_Data object:objects_array[instance])
     } // End of for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --)
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):has_objects_count["+instance+"]="+has_objects_count[instance]);
+
+    //println("ROI_Data:draw_objects("+instance+"):detected_objects_prev["+instance+"]="+detected_objects_prev[instance]);
+    if (detected_objects_prev[instance] == null) {
+      detected_objects_are_same[instance] = false;
+    }
+    else {
+      if (detected_objects[instance].are_same(detected_objects_prev[instance])) {
+        detected_objects_are_same[instance] = true;
+      }
+      else {
+        detected_objects_are_same[instance] = false;
+      }
+    }
+    //println("ROI_Data:draw_objects("+instance+")"+":detected_objects_are_same["+instance+"]="+detected_objects_are_same[instance]);
+    detected_objects_prev[instance] = detected_objects[instance];
+    //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):has_objects_count["+instance+"]="+has_objects_count[instance]);
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):Exit");
   }
 
@@ -573,11 +587,13 @@ class ROI_Data {
       return;
     }
 
-    if (!has_objects[instance] && !File_Operations_save_events_started[instance]) return;
+    if (!detected_objects[instance].has_detected_objects && !File_Operations_save_events_started[instance]) return;
 
     // Check save events started.
     if (!File_Operations_save_events_started[instance]) {
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):has_objects_count["+instance+"]="+has_objects_count[instance]);
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):save events start!");
+      SYSTEM_logger.info("ROI_Data:save_events("+instance+"):save events start!");  
+      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):detected_objects["+instance+"].has_detected_objects="+detected_objects[instance].has_detected_objects);
       // Save events not started.
       File_Operations_save_events_event_date_time[instance] = new Date().getTime();
       File_Operations_save_events_start_date_time[instance] = File_Operations_save_events_event_date_time[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
@@ -592,11 +608,11 @@ class ROI_Data {
         +"_"
         +instance+"\\";
 
-      File File_Operations_save_events_dir_handle;
-      File_Operations_save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
-      if (!File_Operations_save_events_dir_handle.isDirectory())
+      File save_events_dir_handle;
+      save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
+      if (!save_events_dir_handle.isDirectory())
       {
-        if (!File_Operations_save_events_dir_handle.mkdirs())
+        if (!save_events_dir_handle.mkdirs())
         {
           if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SAVE_EVENT_ERR) println("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
           return;
@@ -606,18 +622,17 @@ class ROI_Data {
       File_Operations_save_events_write_events_done[instance] = false;
       File_Operations_save_events_done[instance] = false;
       File_Operations_save_events_started[instance] = true;
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):save events start!");
       return;
     }
     
-    // Save events not started.
+    // Save events started.
     // Check it has objects to save events.
-    if (has_objects[instance]) {
+    if (detected_objects[instance].has_detected_objects) {
       // Advance end date time.
       // Get current date time.
       long date_time_curr = new Date().getTime();
 
-      // Check advanced end date time is reached to limit.
+      // Check advanced end date time will reached to limit.
       if (date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
           <=
           File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
@@ -630,11 +645,18 @@ class ROI_Data {
       return;
     }
 
+    // Check detected object are same.
+    if (detected_objects_are_same[instance]) {
+      return;
+    }
+
     // Save events done.
     // Stop save events.
     File_Operations_save_events_write_events_done[instance] = false;
     File_Operations_save_events_done[instance] = false;
     File_Operations_save_events_started[instance] = false;
+    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):save events end!");
+    SYSTEM_logger.info("ROI_Data:save_events("+instance+"):save events end!");  
   }
 
   void draw_object_info(int instance) {
@@ -1245,6 +1267,18 @@ class ROI_Object_Data {
 
 }
 
+class ROI_Detected_Object_Data {
+  public int mi_center_x, mi_center_y;
+  public int mi_diameter;
+  
+  ROI_Detected_Object_Data(int mi_center_x, int mi_center_y, int mi_diameter) {
+    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Object_Data:ROI_Detected_Object_Data()"+":Enter");
+    this.mi_center_x = mi_center_x;
+    this.mi_center_y = mi_center_y;
+    this.mi_diameter = mi_diameter;
+  }
+}
+
 //final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_DBG = true;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_DBG = false;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_ERR = true;
@@ -1255,81 +1289,61 @@ final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG = false;
 //final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_ERR = true;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_ERR = false;
 
-class ROI_Detected_Object_Data {
-  public LinkedList<Integer> region_indexes;
-  public int mi_center_x, mi_center_y;
-  public int mi_diameter;
-  public int mi_distance;
-  public int detected_time_start;
-  public int detected_time_last;
-  
-  ROI_Detected_Object_Data() {
-    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Object_Data:ROI_Detected_Object_Data()"+":Enter");
-    /*
-    this.region_indexes = region_indexes;
-    this.region_index_min = region_index_min;
-    this.mi_start_x = mi_start_x;
-    this.mi_start_y = mi_start_y;
-    this.mi_end_x = mi_end_x;
-    this.mi_end_y = mi_end_y;
-    this.mi_width = mi_end_x - mi_start_x;
-    this.mi_height = mi_end_y - mi_start_y;
-    this.mi_center_x = mi_start_x + this.mi_width / 2;
-    this.mi_center_y = mi_start_y + this.mi_height / 2;
-    this.mi_diameter = get_points_distance(mi_start_x, mi_start_y, mi_end_x, mi_end_y);
-    this.mi_distance = get_points_distance(0, 0, mi_center_x, mi_center_y);
-    this.scr_start_x = scr_start_x;
-    this.scr_start_y = scr_start_y;
-    this.scr_end_x = scr_end_x;
-    this.scr_end_y = scr_end_y;
-    if (scr_start_x == scr_end_x) {
-      this.scr_width = 1;
-      this.scr_center_x = scr_start_x;
-    }
-    else {
-      this.scr_width = scr_end_x - scr_start_x;
-      this.scr_center_x = scr_start_x + this.scr_width / 2;
-    }
-    if (scr_start_y == scr_end_y) {
-      this.scr_height = 1;
-      this.scr_center_y = scr_start_y;
-    }
-    else {
-      this.scr_height = scr_end_y - scr_start_y;
-      this.scr_center_y = scr_start_y + this.scr_height / 2;
-    }
-    if (scr_start_x == scr_end_x && scr_start_y == scr_end_y) {
-      this.scr_diameter = 1;
-    }
-    else {
-      this.scr_diameter = get_points_distance(scr_start_x, scr_start_y, scr_end_x, scr_end_y);
-    }
-    this.number_of_points = number_of_points;
-    // Check object diameter is too small.
-    if (this.mi_diameter >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG || PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Object_Data:ROI_Object_Data():"+"object is big enough this.mi_diameter="+this.mi_diameter);
-      this.big_enough = true;
-    }
-    else {
-      if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG || PRINT_ROI_DATA_OBJECTS_DBG) println("ROI_Object_Data:ROI_Object_Data():"+"object is too small. this.mi_diameter="+this.mi_diameter);
-      //this.big_enough = false;
-    }
-    //this.reused = false;
-    //this.disappeared = false;
-    */
-  }
-}
+//final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG = true;
+final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG = false;
+//final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_ERR = true;
+final static boolean PRINT_ROI_DETECTED_OBJECTS_IS_SAME_ERR = false;
 
 class ROI_Detected_Objects {
-  public List<ROI_Detected_Object_Data> objects_data;
-  public boolean has_objects;
+  public ArrayList<ROI_Detected_Object_Data> objects_data = new ArrayList<ROI_Detected_Object_Data>();
+  public boolean has_detected_objects;
   public int objects_count;
   
   ROI_Detected_Objects() {
     if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Objects:ROI_Detected_Objects()"+":Enter");
+    has_detected_objects = false;
+    objects_count = 0;
   }
 
-  void add() {
+  void add(ROI_Detected_Object_Data object_data) {
+    objects_data.add(object_data);
+    has_detected_objects = true;
+    objects_count ++;
   }
 
+  void clear() {
+    objects_data.clear();
+    has_detected_objects = false;
+    objects_count = 0;
+  }
+
+  boolean are_same(ROI_Detected_Objects other_objects_data) {
+    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":Enter");
+    // Check objects counts.
+    if (this.objects_count != other_objects_data.objects_count) {
+      if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same():objects count diff="+this.objects_count+","+ other_objects_data.objects_count);
+      return false;
+    }
+    for (int i = 0; i < this.objects_data.size(); i ++) {
+      ROI_Detected_Object_Data this_object_data = this.objects_data.get(i);
+      ROI_Detected_Object_Data other_object_data = other_objects_data.objects_data.get(i);
+      int diff;
+      // Get diff of object_data's center x y.
+      diff = abs(this_object_data.mi_diameter - other_object_data.mi_diameter);
+      // Check diameter of object_data's.
+      if (diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":diameter diff="+(this_object_data.mi_diameter - other_object_data.mi_diameter));
+        return false;
+      }
+      // Get distance diff of object_data's center x y.
+      diff = get_points_distance(this_object_data.mi_center_x, this_object_data.mi_center_y, other_object_data.mi_center_x, other_object_data.mi_center_y);
+      // Check distance diff of object_data's center x y.
+      if (diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects distance diff="+diff);
+        return false;
+      }
+    }
+    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":same!");
+    return true;
+  }
 }

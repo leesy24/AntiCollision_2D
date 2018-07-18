@@ -351,6 +351,8 @@ void File_Operations_save_events()
           // Set pause state of Disk Space free threads to save events files.
           File_Operations_free_threads_pause = true;
 
+          SYSTEM_logger.info("File_Operations_save_events():"+instance+":save events start!");  
+
           LinkedList<String> data_files_list = new LinkedList<String>();
 
           // Set files on data dir to copy.
@@ -385,7 +387,7 @@ void File_Operations_save_events()
           }
           catch (IOException e) {
             // An I/O problem has occurred
-            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events("+instance+"):Files.newDirectoryStream err!"+"\n\t"+e.toString());
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":Files.newDirectoryStream err!"+"\n\t"+e.toString());
             // Reset pause state of Disk Space free threads to save events files.
             File_Operations_free_threads_pause = false;
             break;
@@ -427,7 +429,7 @@ void File_Operations_save_events()
 
             always_file_handle = new File(always_dir_full_name+always_file_name);
             if (!always_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
               continue;
             }
 
@@ -459,7 +461,7 @@ void File_Operations_save_events()
           }
           catch (IOException e) {
             // An I/O problem has occurred
-            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events("+instance+"):DirectoryStream close() err!"+"\n\t"+e.toString());
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():"+instance+":DirectoryStream close() err!"+"\n\t"+e.toString());
           }
 
           File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.WAIT_WRITE_EVENTS_DONE;
@@ -477,6 +479,8 @@ void File_Operations_save_events()
           break;
 
         case DONE:
+          //println("File_Operations_save_events():"+instance+":save events done!");
+          SYSTEM_logger.info("File_Operations_save_events():"+instance+":save events done!");  
           File_Operations_save_events_done[instance] = true;
           File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.IDLE;
 
