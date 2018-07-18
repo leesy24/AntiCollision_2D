@@ -97,7 +97,7 @@ void mousePressed()
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse pressed! ");
 
   if (PRINT_MOUSEFUNC_Pressed || PRINT_MOUSEFUNC_DBG_ALL || PRINT_MOUSEFUNC_DBG_POS) println("mouseX=" + mouseX + ", mouseY=" + mouseY);
-  SYSTEM_logger.info("mousePressed()" + ":X=" + mouseX + ",Y=" + mouseY + "Button=" + mouseButton);
+  SYSTEM_logger.info("mousePressed()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
   UI_Message_Box_mouse_pressed();
@@ -111,7 +111,7 @@ void mousePressed()
 void mouseReleased()
 {
   if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse released! ");
-  SYSTEM_logger.info("mouseReleased()" + ":X=" + mouseX + ",Y=" + mouseY + "Button=" + mouseButton);
+  SYSTEM_logger.info("mouseReleased()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
 
   UI_NumPad_mouse_released();
   UI_Buttons_mouse_released();
@@ -146,7 +146,7 @@ void mouseDragged()
 void mouseWheel(MouseEvent event)
 {
   int wheel_count = event.getCount();
-  SYSTEM_logger.info("mouseWheel()" + ":X=" + mouseX + ",Y=" + mouseY + "Button=" + mouseButton + "Count=" + wheel_count);
+  SYSTEM_logger.info("mouseWheel()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton + ",Count=" + wheel_count);
   //int zoom_factor_save = ZOOM_FACTOR[0];
 
   if (PRINT_MOUSEFUNC_Wheel || PRINT_MOUSEFUNC_DBG_ALL) println("Mouse wheeled!\n\t count=" + wheel_count);

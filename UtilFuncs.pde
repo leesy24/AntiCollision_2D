@@ -512,10 +512,10 @@ void set_logger()
       new FileHandler(
             sketchPath() + "\\AntiCollision_2D_%g.log",
             //1*1024, // 1KB
-            //1*1024*1024, // 1MB
-            10*1024*1024, // 10MB
+            1*1024*1024, // 1MB
+            //10*1024*1024, // 10MB
             100, // file count
-            false // not append
+            true // append
             );
     SYSTEM_logger.addHandler(fh);
     SimpleFormatter formatter = new SimpleFormatter()
