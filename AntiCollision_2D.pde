@@ -26,6 +26,7 @@ static int FRAME_TIME = 50; // Frame time will calculated from FRAME_RATE.
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
+  set_logger();
   Screen_settings();
 }
 

@@ -494,3 +494,53 @@ String get_clipboard_string()
 
   return result;
 }
+
+import java.util.logging.*;
+
+Logger SYSTEM_logger;
+
+void set_logger()
+{
+  FileHandler fh;
+
+  SYSTEM_logger = Logger.getLogger("2D Anti-Collision System log");
+  SYSTEM_logger.setUseParentHandlers(false);
+  try
+  {
+    // This block configure the SYSTEM_logger with handler and formatter  
+    fh =
+      new FileHandler(
+            sketchPath() + "\\AntiCollision_2D_%g.log",
+            //1*1024, // 1KB
+            //1*1024*1024, // 1MB
+            10*1024*1024, // 10MB
+            100, // file count
+            false // not append
+            );
+    SYSTEM_logger.addHandler(fh);
+    SimpleFormatter formatter = new SimpleFormatter()
+    {
+      private static final String format = "[%1$tF %1$tT][%2$-7s]%3$s%n";
+      //private static final String format = "[%1$tc]%2$s:%3$s%n";
+
+      @Override
+      public synchronized String format(LogRecord lr)
+      {
+        return String.format(
+                format,
+                new Date(lr.getMillis()),
+                lr.getLevel().getName(),
+                lr.getMessage());
+      }
+    };
+    fh.setFormatter(formatter);
+  }
+  catch (SecurityException e)
+  {
+    e.printStackTrace();
+  }
+  catch (IOException e)
+  {
+    e.printStackTrace();
+  }  
+}

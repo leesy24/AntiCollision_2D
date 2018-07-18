@@ -47,8 +47,10 @@ class Dbg_Time_logs {
 
   void print() {
     println(str);
+    SYSTEM_logger.warning(str);  
     for (Dbg_Time_log time_log:time_logs) {
       println("\t"+time_log.str+":"+time_log.time+","+time_log.diff);
+      SYSTEM_logger.warning("\t"+time_log.str+":"+time_log.time+","+time_log.diff);  
     }
   }
 }

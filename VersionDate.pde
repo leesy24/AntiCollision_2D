@@ -6,7 +6,8 @@ final static String VERSION_DATE_DATE_STR = "2018-07-13";
 
 void Version_Date_setup()
 {
-  println("Version:"+VERSION_DATE_VERSION_STR+" Date:"+VERSION_DATE_DATE_STR);
+  println("Version:" + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);
+  SYSTEM_logger.info("Version:" + VERSION_DATE_VERSION_STR + " Date:" + VERSION_DATE_DATE_STR);  
 }
 
 void Version_Date_draw()
