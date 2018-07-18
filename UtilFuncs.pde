@@ -91,9 +91,7 @@ void set_str_bytes(byte[] buf, int offset, String str)
 
 int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
 {
-  int distance = int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y)));
-  //println("get_points_distance():"+"distance="+distance);
-  return distance;
+  return abs(int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y))));
 }
 
 int get_point_rotate_x(int point_x, int point_y, float degree)
