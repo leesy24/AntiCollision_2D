@@ -30,7 +30,7 @@ static boolean UI_Interfaces_is_special;
 static ControlFont UI_Interfaces_cf = null;
 static ControlP5[] UI_Interfaces_cp5 = new ControlP5[PS_INSTANCE_MAX];
 
-static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN", "NA"};
+static String[] UI_Interfaces_str_array = {"File", "UART", "UDP", "SN", "None"};
 
 
 static boolean[] UI_Interfaces_changed = new boolean[PS_INSTANCE_MAX];
@@ -70,7 +70,7 @@ void UI_Interfaces_setup()
   int found_count = 0;
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    if (PS_Interface[i] == PS_Interface_NA)
+    if (PS_Interface[i] == PS_Interface_None)
     {
       found_count ++;
     }
@@ -596,7 +596,7 @@ void UI_Interfaces_update_instance(int instance)
 */
 
   }
-  else {// if (PS_Interface[instance] == PS_Interface_NA) {
+  else {// if (PS_Interface[instance] == PS_Interface_None) {
     // Nothing to do.
   }
 
@@ -996,7 +996,7 @@ void UI_Interfaces_mouse_released(int instance)
       tf_param.setText(str);
     }
   }
-  else { // if(PS_Interface[instance] == PS_Interface_NA) {
+  else { // if(PS_Interface[instance] == PS_Interface_None) {
     // Nothing to do.
   }
 }

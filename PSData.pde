@@ -50,13 +50,13 @@ final static int PS_Interface_FILE = 0;
 final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
 final static int PS_Interface_SN = 3;
-final static int PS_Interface_NA = 4;
+final static int PS_Interface_None = 4;
 static enum PS_Interface_enum {
   FILE,
   UART,
   UDP,
   SN,
-  NA,
+  None,
   MAX
 }
 
@@ -65,7 +65,7 @@ static boolean PS_Data_draw_points_with_line;
 static boolean PS_Data_save_enabled;
 
 static int[] PS_Interface = new int[PS_INSTANCE_MAX];
-static String[] PS_Interface_str = {"File", "UART", "UDP", "SN", "NA"};
+static String[] PS_Interface_str = {"File", "UART", "UDP", "SN", "None"};
 
 static String[] FILE_name = new String[PS_INSTANCE_MAX];
 
@@ -148,8 +148,8 @@ void PS_Data_setup()
       Title += "UDP";
     else if(PS_Interface[i] == PS_Interface_SN)
       Title += "SN";
-    else if(PS_Interface[i] == PS_Interface_NA)
-      Title += "NA";
+    else if(PS_Interface[i] == PS_Interface_None)
+      Title += "None";
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
     }      
@@ -183,7 +183,7 @@ void PS_Data_setup()
       PS_Data_handle.remote_ip[i] = remote_ip;
       PS_Data_handle.remote_port[i] = remote_port;
     }
-    else if(PS_Interface[i] == PS_Interface_NA) {
+    else if(PS_Interface[i] == PS_Interface_None) {
       // Nothing to do.
     }
     else {
@@ -305,7 +305,7 @@ class PS_Data {
         }
         return false;
       }
-      // No mean in file interface.
+      // No mean in FILE interface.
       load_take_time[instance] = -1;
     }
     else if(PS_Interface[instance] == PS_Interface_UART) {
@@ -340,7 +340,9 @@ class PS_Data {
       }
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
     }
-    else if(PS_Interface[instance] == PS_Interface_NA) {
+    else if(PS_Interface[instance] == PS_Interface_None) {
+      // No mean in None interface.
+      load_take_time[instance] = -1;
       return false;
     }
     else {
@@ -364,9 +366,9 @@ class PS_Data {
   }
 
   void save_always(int instance) {
-    // Save always feature will not run when PS Interface is FILE.
+    // Save always feature will not run when PS Interface is FILE or None.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
-    if (PS_Interface[instance] == PS_Interface_NA) return;
+    if (PS_Interface[instance] == PS_Interface_None) return;
     
     if (!PS_Data_save_enabled) return;
 
@@ -802,39 +804,41 @@ class PS_Data {
 
   // Draw params of parsed Data buffer
   void draw_params(int instance) {
-    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_params("+instance+"):");
+    if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_params("+instance+"):Enter");
 
-    if(!PS_Data_draw_params_enabled[instance]) return;
+    if (!PS_Data_draw_params_enabled[instance]) return;
 
-    if(get_millis_diff(PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT) {
+    if (get_millis_diff(PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT) {
       PS_Data_draw_params_enabled[instance] = false;
     }
 
-    LinkedList<String> strings = new LinkedList<String>();
+    ArrayList<String> strings = new ArrayList<String>();
 
     strings.add("Interface:" + PS_Interface_str[PS_Interface[instance]]);
-    if(file_name[instance] != null)
+    if (file_name[instance] != null)
       strings.add("File name:" + file_name[instance]);;
-    if(serial_number[instance] != MIN_INT)
+    if (serial_number[instance] != MIN_INT)
       strings.add("Serial Number:" + serial_number[instance]);;
-    if(remote_ip[instance] != null)
+    if (remote_ip[instance] != null)
       strings.add("IP:" + remote_ip[instance]);
-    if(remote_port[instance] != MIN_INT)
+    if (remote_port[instance] != MIN_INT)
       strings.add("Port:" + remote_port[instance]);
-    if(load_take_time[instance] != -1)
+    if (load_take_time[instance] != -1)
       strings.add("Response time:" + load_take_time[instance] + "ms");
     if (load_done_interval_millis[instance] != -1)
       strings.add("Refresh time:" + load_done_interval_millis[instance] + "ms");
-    strings.add("Scan number:" + scan_number[instance]);
-    strings.add("Time stamp:" + time_stamp[instance]);
-    strings.add("Scan start direction:" + scan_angle_start[instance] + "°");
-    strings.add("Scan angle size:" + scan_angle_size[instance] + "°");
-    strings.add("Number of echoes:" + number_of_echoes[instance]);
-    strings.add("Encoder count:" + incremental_count[instance]);
-    strings.add("System temp.:" + system_temperature[instance] + "°C");
-    strings.add("System status:" + system_status[instance]);
-    strings.add("Data content:" + data_content[instance]);
-    strings.add("Number of points:" + number_of_points[instance]);
+    if (PS_Interface[instance] != PS_Interface_None) {
+      strings.add("Scan number:" + scan_number[instance]);
+      strings.add("Time stamp:" + time_stamp[instance]);
+      strings.add("Scan start direction:" + scan_angle_start[instance] + "°");
+      strings.add("Scan angle size:" + scan_angle_size[instance] + "°");
+      strings.add("Number of echoes:" + number_of_echoes[instance]);
+      strings.add("Encoder count:" + incremental_count[instance]);
+      strings.add("System temp.:" + system_temperature[instance] + "°C");
+      strings.add("System status:" + system_status[instance]);
+      strings.add("Data content:" + data_content[instance]);
+      strings.add("Number of points:" + number_of_points[instance]);
+    }
     strings.add("Time-out:" + ((DRAW_PARAMS_TIMEOUT + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
 
     // Get max string width

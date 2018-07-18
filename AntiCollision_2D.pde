@@ -165,7 +165,7 @@ void draw() {
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    if (PS_Interface[i] == PS_Interface_NA) continue;
+    //if (PS_Interface[i] == PS_Interface_None) continue;
     if (PS_Data_handle.load(i) == true) {
       Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):true");
       PS_Data_handle.save_always(i);
