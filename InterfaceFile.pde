@@ -3,6 +3,9 @@ final static boolean PRINT_INTERFACES_FILE_ALL_DBG = false;
 final static boolean PRINT_INTERFACES_FILE_ALL_ERR = true;
 //final static boolean PRINT_INTERFACES_FILE_ALL_ERR = false;
 
+//final static boolean PRINT_INTERFACES_FILE_NAME_DBG = true; 
+final static boolean PRINT_INTERFACES_FILE_NAME_DBG = false;
+
 //final static boolean PRINT_INTERFACES_FILE_SETUP_DBG = true; 
 final static boolean PRINT_INTERFACES_FILE_SETUP_DBG = false;
 //final static boolean PRINT_INTERFACES_FILE_SETUP_ERR = true; 
@@ -111,8 +114,8 @@ class Interfaces_File {
 
     //String string;
     String target_full_name = sketchPath(target_name);
-    //println("target_name="+target_name);
-    //println("target_full_name="+target_full_name);
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":target_name="+target_name);
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":target_full_name="+target_full_name);
     // Check target name exists to avoid exception error on loadBytes().
     File target_handle = new File(target_full_name);
 
@@ -135,7 +138,7 @@ class Interfaces_File {
         this.file_name_list[instance] = target_files_list;
         this.file_name_index[instance] = 0;
         this.dir_name[instance] = sketchPath(target_name);
-        if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+"):file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
+        if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+")"+":file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
         //println("Interfaces_File:open("+instance+"):first file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
       }
       else {
@@ -145,7 +148,7 @@ class Interfaces_File {
         this.file_name_index[instance] = 0;
         this.dir_name[instance] = sketchPath(target_name);
       }
-    }
+    } // End of if (target_handle.isDirectory())
     else {
       this.file_time_stamp[instance] = -1;
       this.file_name_list[instance] = new String[1];
@@ -153,8 +156,8 @@ class Interfaces_File {
       this.file_name_index[instance] = 0;
       this.dir_name[instance] = sketchPath();
     }
-    //println("dir_name["+instance+"]="+dir_name[instance]);
-    //println("this.file_name_list["+instance+"][0]="+this.file_name_list[instance][0]);
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":dir_name["+instance+"]="+dir_name[instance]);
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":file_name_list["+instance+"][0]="+this.file_name_list[instance][0]);
     this.eofl_reset_count[instance] = -1;
     this.reached_eofl[instance] = false;
 
@@ -212,16 +215,22 @@ class Interfaces_File {
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
     //println("Interfaces_File:load("+instance+"):current file_time_stamp="+file_time_stamp[instance]+",base_time_stamp="+base_time_stamp[instance]);
 
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":dir_name["+instance+"]="+dir_name[instance]);
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":file_name_list["+instance+"]["+file_name_index[instance]+"]="+file_name_list[instance][file_name_index[instance]]);
+
+    String file_full_name = dir_name[instance]+"\\"+file_name_list[instance][file_name_index[instance]];
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":file_full_name="+file_full_name);
+
     // Check file name exists to avoid exception error on loadBytes().
-    File file_handle = new File(dir_name[instance]+"\\"+file_name_list[instance][file_name_index[instance]]);
+    File file_handle = new File(file_full_name);
     if (!file_handle.isFile()) {
-      str_err_last[instance] = "Error: File not exist! " + file_name_list[instance][file_name_index[instance]];
-      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(str_err_last[instance]);
+      str_err_last[instance] = "Error: File not exist or Not a file! " + file_name_list[instance][file_name_index[instance]];
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     } // End of load()
 
     // Load binary buf.
-    PS_Data_buf[instance] = loadBytes(dir_name[instance]+"\\"+file_name_list[instance][file_name_index[instance]]);
+    PS_Data_buf[instance] = loadBytes(file_full_name);
     if (PS_Data_buf[instance] == null) {
       str_err_last[instance] = "Error: File not exist! " + file_name_list[instance][file_name_index[instance]];
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(str_err_last[instance]);
