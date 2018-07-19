@@ -39,7 +39,7 @@ static int UI_System_Config_x_base;
 static int UI_System_Config_y_base;
 UI_System_Config_BT_ControlListener UI_System_Config_bt_control_listener;
 //UI_System_Config_TF_ControlListener UI_System_Config_tf_control_listener;
-UI_System_Config_CP5_CallbackListener UI_System_Config_cp5_callback_listener;
+//UI_System_Config_CP5_CallbackListener UI_System_Config_cp5_callback_listener;
 
 static enum UI_System_Config_tf_enum {
   SYSTEM_PASSWORD,
@@ -107,7 +107,7 @@ void UI_System_Config_update()
 
   UI_System_Config_bt_control_listener = new UI_System_Config_BT_ControlListener();
   //UI_System_Config_tf_control_listener = new UI_System_Config_TF_ControlListener();
-  UI_System_Config_cp5_callback_listener = new UI_System_Config_CP5_CallbackListener();
+  //UI_System_Config_cp5_callback_listener = new UI_System_Config_CP5_CallbackListener();
 
   int x, y;
   int w, h;
@@ -152,7 +152,7 @@ void UI_System_Config_update()
   y += TEXT_MARGIN;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_title_label");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -177,7 +177,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_SYSTEM_PASSWORD");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -195,7 +195,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_FRAME_RATE");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -213,7 +213,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_PS_DATA_SAVE_ALWAYS_DURATION");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -231,7 +231,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_PS_DATA_SAVE_EVENTS_DURATION_DEFAULT");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -249,7 +249,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_PS_DATA_SAVE_EVENTS_DURATION_LIMIT");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -267,7 +267,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_Relay_Module_UART_port_name");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -285,7 +285,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -303,7 +303,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_DIAMETER_MIN");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -321,7 +321,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_TIME_MIN");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -339,7 +339,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_DETECT_KEEP_TIME");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -357,7 +357,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -375,7 +375,7 @@ void UI_System_Config_update()
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_ROI_OBJECT_MARKER_MARGIN");
   tl_handle
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
@@ -403,7 +403,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_SYSTEM_PASSWORD_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.SYSTEM_PASSWORD.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -438,7 +438,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_FRAME_RATE_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.FRAME_RATE.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -473,7 +473,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_PS_DATA_SAVE_ALWAYS_DURATION_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_ALWAYS_DURATION.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -508,7 +508,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_PS_DATA_SAVE_EVENTS_DURATION_DEFAULT_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_EVENTS_DURATION_DEFAULT.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -543,7 +543,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_PS_DATA_SAVE_EVENTS_DURATION_LIMIT_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_EVENTS_DURATION_LIMIT.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -581,7 +581,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_Relay_Module_UART_port_name_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.Relay_Module_UART_port_name.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -616,7 +616,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -651,7 +651,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_DIAMETER_MIN_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_DIAMETER_MIN.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -686,7 +686,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_TIME_MIN_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_TIME_MIN.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -721,7 +721,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_DETECT_KEEP_TIME_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_KEEP_TIME.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -756,7 +756,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -791,7 +791,7 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_ROI_OBJECT_MARKER_MARGIN_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_MARKER_MARGIN.ordinal())
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     //.addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -841,7 +841,7 @@ void UI_System_Config_update()
   y = SCREEN_height - TEXT_MARGIN * 2 - (FONT_HEIGHT + TEXT_MARGIN * 2 + TEXT_MARGIN) * 1;
   bt_handle = UI_System_Config_cp5_global.addButton(str);
   bt_handle.setId(0)
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .addListener(UI_System_Config_bt_control_listener)
     .setPosition(x, y)
     .setSize(w, h)
@@ -861,7 +861,7 @@ void UI_System_Config_update()
   y = SCREEN_height - TEXT_MARGIN * 2 - (FONT_HEIGHT + TEXT_MARGIN * 2 + TEXT_MARGIN) * 1;
   bt_handle = UI_System_Config_cp5_global.addButton(str);
   bt_handle.setId(1)
-    .addCallback(UI_System_Config_cp5_callback_listener)
+    //.addCallback(UI_System_Config_cp5_callback_listener)
     .addListener(UI_System_Config_bt_control_listener)
     .setPosition(x, y)
     .setSize(w, h)
@@ -1040,21 +1040,6 @@ void UI_System_Config_draw()
   }
 }
 
-
-/*
-class UI_System_Config_TF_ControlListener implements ControlListener {
-  int col;
-  public void controlEvent(ControlEvent theEvent) {
-    Textfield tf_handle;
-    println("UI_System_Config_TF_ControlListener:controlEvent():Enter");
-    tf_handle = (Textfield)theEvent.getController();
-    println("UI_System_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
-    println("UI_System_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
-    println("UI_System_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
-  }
-}
-*/
-
 class UI_System_Config_BT_ControlListener implements ControlListener {
   int col;
   public void controlEvent(ControlEvent theEvent) {
@@ -1065,8 +1050,10 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
 
     if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():button_index="+button_index);
 
-    if (button_index != 0) // Button is not OK.
+    // Check Button is OK.
+    if (button_index != 0)
     {
+      // Button is not OK.
       UI_System_Config_enabled = false;
       return;
     }
@@ -1269,8 +1256,37 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
 
 }
 
+/*
+class UI_System_Config_TF_ControlListener implements ControlListener {
+  int col;
+  public void controlEvent(ControlEvent theEvent) {
+    println("UI_System_Config_TF_ControlListener:controlEvent():Enter");
+    Textfield tf_handle = (Textfield)theEvent.getController();
+    println("UI_System_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
+    println("UI_System_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
+    println("UI_System_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
+  }
+}
+*/
+
+/*
 class UI_System_Config_CP5_CallbackListener implements CallbackListener {
   public void controlEvent(CallbackEvent theEvent) {
     UI_System_Config_timeout_start = millis();
   }
+}
+*/
+
+void UI_System_Config_mouse_moved()
+{
+  if (!UI_System_Config_enabled) return;
+
+  UI_System_Config_timeout_start = millis();
+}
+
+void UI_System_Config_mouse_dragged()
+{
+  if (!UI_System_Config_enabled) return;
+
+  UI_System_Config_timeout_start = millis();
 }

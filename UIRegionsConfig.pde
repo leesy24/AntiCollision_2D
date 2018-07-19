@@ -40,7 +40,7 @@ static int[] UI_Regions_Config_x_base = new int[PS_INSTANCE_MAX];
 static int[] UI_Regions_Config_y_base = new int[PS_INSTANCE_MAX];
 UI_Regions_Config_BT_ControlListener UI_Regions_Config_bt_control_listener;
 //UI_Regions_Config_TF_ControlListener UI_Regions_Config_tf_control_listener;
-UI_Regions_Config_CP5_CallbackListener UI_Regions_Config_cp5_callback_listener;
+//UI_Regions_Config_CP5_CallbackListener UI_Regions_Config_cp5_callback_listener;
 
 static enum UI_Regions_Config_tf_enum {
   REGION_NAME,
@@ -122,7 +122,7 @@ void UI_Regions_Config_update()
 
   UI_Regions_Config_bt_control_listener = new UI_Regions_Config_BT_ControlListener();
   //UI_Regions_Config_tf_control_listener = new UI_Regions_Config_TF_ControlListener();
-  UI_Regions_Config_cp5_callback_listener = new UI_Regions_Config_CP5_CallbackListener();
+  //UI_Regions_Config_cp5_callback_listener = new UI_Regions_Config_CP5_CallbackListener();
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
@@ -152,7 +152,6 @@ void UI_Regions_Config_update()
   tf_handle = UI_Regions_Config_cp5_global.addTextfield("UI_Regions_Config_buttons_border");
   tf_handle
     .setId(-1)
-    //.addCallback(UI_Regions_Config_cp5_callback_listener)
     .setPosition(x+1, y)
     .setSize(w - 2, h)
     .setColorBackground(C_UI_REGIONS_CONFIG_FILL_NORMAL)
@@ -169,7 +168,7 @@ void UI_Regions_Config_update()
   y = SCREEN_height - TEXT_MARGIN * 2 - (FONT_HEIGHT + TEXT_MARGIN * 2 + TEXT_MARGIN) * 1;
   bt_handle = UI_Regions_Config_cp5_global.addButton(str);
   bt_handle.setId(0)
-    .addCallback(UI_Regions_Config_cp5_callback_listener)
+    //.addCallback(UI_Regions_Config_cp5_callback_listener)
     .addListener(UI_Regions_Config_bt_control_listener)
     .setPosition(x, y)
     .setSize(w, h)
@@ -189,7 +188,7 @@ void UI_Regions_Config_update()
   y = SCREEN_height - TEXT_MARGIN * 2 - (FONT_HEIGHT + TEXT_MARGIN * 2 + TEXT_MARGIN) * 1;
   bt_handle = UI_Regions_Config_cp5_global.addButton(str);
   bt_handle.setId(1)
-    .addCallback(UI_Regions_Config_cp5_callback_listener)
+    //.addCallback(UI_Regions_Config_cp5_callback_listener)
     .addListener(UI_Regions_Config_bt_control_listener)
     .setPosition(x, y)
     .setSize(w, h)
@@ -238,7 +237,6 @@ void UI_Regions_Config_update_instance(int instance)
   tf_outline_border = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_outline_border");
   tf_outline_border
     .setId(-1)
-    //.addCallback(UI_Regions_Config_cp5_callback_listener)
     .setPosition(x+1, y)
     .setSize(w - 2, h)
     .setColorBackground(C_UI_REGIONS_CONFIG_FILL_NORMAL)
@@ -257,7 +255,7 @@ void UI_Regions_Config_update_instance(int instance)
   y += TEXT_MARGIN;
   tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_title_label");
   tl_handle
-    .addCallback(UI_Regions_Config_cp5_callback_listener)
+    //.addCallback(UI_Regions_Config_cp5_callback_listener)
     .setText(str)
     .setPosition(x, y)
     .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -285,7 +283,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_region_name_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -305,7 +303,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_x_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -324,7 +322,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_y_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -343,7 +341,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_w_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -362,7 +360,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_h_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -381,7 +379,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_rect_dash_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -410,7 +408,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_region_name_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.REGION_NAME.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -446,7 +444,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_x_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_X.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -485,7 +483,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_y_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_Y.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -522,7 +520,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_w_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_WIDTH.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -561,7 +559,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_h_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_HEIGHT.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -598,7 +596,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_rect_dash_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_DASHED_GAP.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -640,7 +638,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_priority_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -658,7 +656,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_relay_index_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -676,7 +674,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_relay_name_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -694,7 +692,7 @@ void UI_Regions_Config_update_instance(int instance)
     h = FONT_HEIGHT + TEXT_MARGIN*2;
     tl_handle = UI_Regions_Config_cp5_local[instance].addTextlabel("UI_Regions_Config_no_mark_big_"+region_csv_index);
     tl_handle
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       .setText(str)
       .setPosition(x, y)
       .setColorValue(C_UI_REGIONS_CONFIG_TEXT)
@@ -720,7 +718,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_priority_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.REGION_PRIORITY.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -756,7 +754,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_relay_index_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RELAY_INDEX.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -805,7 +803,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_relay_name_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RELAY_NAME.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -843,7 +841,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle = UI_Regions_Config_cp5_local[instance].addTextfield("UI_Regions_Config_no_mark_bit_input_"+region_csv_index);
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.NO_MARK_BIG.ordinal())
-      .addCallback(UI_Regions_Config_cp5_callback_listener)
+      //.addCallback(UI_Regions_Config_cp5_callback_listener)
       //.addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
@@ -971,7 +969,7 @@ void UI_Regions_Config_draw()
 
       /*
       // Disable this config UI if other config UI enabled.
-      if (UI_System_Config_enabled)
+      if (UI_Regions_Config_enabled)
       {
         UI_Regions_Config_enabled = false;
         UI_Regions_Config_state = UI_Regions_Config_state_enum.IDLE;
@@ -1033,7 +1031,7 @@ void UI_Regions_Config_draw()
 
       /*
       // Skip this config UI if other config UI enabled.
-      if (UI_System_Config_enabled)
+      if (UI_Regions_Config_enabled)
       {
         break;
       }
@@ -1369,8 +1367,24 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
 
 }
 
+/*
 class UI_Regions_Config_CP5_CallbackListener implements CallbackListener {
   public void controlEvent(CallbackEvent theEvent) {
     UI_Regions_Config_timeout_start = millis();
   }
+}
+*/
+
+void UI_Regions_Config_mouse_moved()
+{
+  if (!UI_Regions_Config_enabled) return;
+
+  UI_Regions_Config_timeout_start = millis();
+}
+
+void UI_Regions_Config_mouse_dragged()
+{
+  if (!UI_Regions_Config_enabled) return;
+
+  UI_Regions_Config_timeout_start = millis();
 }

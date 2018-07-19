@@ -116,6 +116,8 @@ void mouseReleased()
   if (PRINT_MOUSEFUNC_Released || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse released! ");
   SYSTEM_logger.info("mouseReleased()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
 
+  UI_System_Config_mouse_moved();
+  UI_Regions_Config_mouse_moved();
   UI_NumPad_mouse_released();
   UI_Buttons_mouse_released();
   PS_Image_mouse_released();
@@ -127,6 +129,8 @@ void mouseMoved()
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse moved!");
   if (PRINT_MOUSEFUNC_Moved || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
+  UI_System_Config_mouse_dragged();
+  UI_Regions_Config_mouse_dragged();
   UI_NumPad_mouse_moved();
   UI_Buttons_mouse_moved();
   PS_Image_mouse_moved();
