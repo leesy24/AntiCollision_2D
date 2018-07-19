@@ -17,6 +17,9 @@ final static boolean PRINT_UI_SYSTEM_CONFIG_RESET_DBG = false;
 //final static boolean PRINT_UI_SYSTEM_CONFIG_DRAW_DBG = true;
 final static boolean PRINT_UI_SYSTEM_CONFIG_DRAW_DBG = false;
 
+//final static boolean PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG = true;
+final static boolean PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG = false;
+
 //final static boolean PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG = true;
 final static boolean PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG = false;
 //final static boolean PRINT_UI_SYSTEM_CONFIG_LISTENER_ERR = true;
@@ -38,7 +41,7 @@ static boolean UI_System_Config_changed_any = false;
 static int UI_System_Config_x_base;
 static int UI_System_Config_y_base;
 UI_System_Config_BT_ControlListener UI_System_Config_bt_control_listener;
-//UI_System_Config_TF_ControlListener UI_System_Config_tf_control_listener;
+UI_System_Config_TF_ControlListener UI_System_Config_tf_control_listener;
 //UI_System_Config_CP5_CallbackListener UI_System_Config_cp5_callback_listener;
 
 static enum UI_System_Config_tf_enum {
@@ -106,7 +109,7 @@ void UI_System_Config_update()
   }
 
   UI_System_Config_bt_control_listener = new UI_System_Config_BT_ControlListener();
-  //UI_System_Config_tf_control_listener = new UI_System_Config_TF_ControlListener();
+  UI_System_Config_tf_control_listener = new UI_System_Config_TF_ControlListener();
   //UI_System_Config_cp5_callback_listener = new UI_System_Config_CP5_CallbackListener();
 
   int x, y;
@@ -404,7 +407,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.SYSTEM_PASSWORD.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -439,7 +442,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.FRAME_RATE.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -474,7 +477,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_ALWAYS_DURATION.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -509,7 +512,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_EVENTS_DURATION_DEFAULT.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -544,7 +547,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.PS_DATA_SAVE_EVENTS_DURATION_LIMIT.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -582,7 +585,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.Relay_Module_UART_port_name.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -617,7 +620,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -652,7 +655,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_DIAMETER_MIN.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -687,7 +690,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_TIME_MIN.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -722,7 +725,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_DETECT_KEEP_TIME.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -757,7 +760,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -792,7 +795,7 @@ void UI_System_Config_update()
   tf_handle
     .setId(UI_System_Config_tf_enum.ROI_OBJECT_MARKER_MARGIN.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
-    //.addListener(UI_System_Config_tf_control_listener)
+    .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
     //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
     .setAutoClear(false)
@@ -1040,234 +1043,256 @@ void UI_System_Config_draw()
   }
 }
 
+void UI_System_Config_input_update()
+{
+  if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_input_update():Enter");
+
+  List<Textfield> cp5_tf_list = UI_System_Config_cp5_global.getAll(Textfield.class);
+  //println(cp5_tf_list);
+
+  boolean updated = false;
+
+  for (Textfield tf_handle:cp5_tf_list) {
+    //println("Id="+tf_handle.getId()+":Text="+tf_handle.getText());
+    if (tf_handle.getId() == -1) continue;
+    UI_System_Config_tf_enum tf_enum = UI_System_Config_tf_enum.values()[tf_handle.getId()];
+    //println("tf_enum="+tf_enum);
+
+    String str;
+    int val;
+
+    str = tf_handle.getText();
+    switch (tf_enum) {
+      case SYSTEM_PASSWORD:
+        if (str.length() == 0) {
+          SYSTEM_PASSWORD_disabled = true;
+          break;
+        }
+        SYSTEM_PASSWORD_disabled = false;
+        if (!str.matches("[0-9]+") || str.length() != 4) {
+          break;
+        }
+        if (str.equals(SYSTEM_PASSWORD)) {
+          break;
+        }
+        SYSTEM_PASSWORD = str;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated SYSTEM_PASSWORD="+SYSTEM_PASSWORD+",tf_enum="+tf_enum);
+        break;
+      case FRAME_RATE:
+        try {
+          val = Integer.parseInt(str.trim());
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == FRAME_RATE) {
+          break;
+        }
+        FRAME_RATE = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated FRAME_RATE="+FRAME_RATE+",tf_enum="+tf_enum);
+        break;
+      case PS_DATA_SAVE_ALWAYS_DURATION:
+        try {
+          val = int(Float.parseFloat(str.trim()));
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == PS_DATA_SAVE_ALWAYS_DURATION) {
+          break;
+        }
+        PS_DATA_SAVE_ALWAYS_DURATION = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_ALWAYS_DURATION="+PS_DATA_SAVE_ALWAYS_DURATION+",tf_enum="+tf_enum);
+        break;
+      case PS_DATA_SAVE_EVENTS_DURATION_DEFAULT:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 1000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == PS_DATA_SAVE_EVENTS_DURATION_DEFAULT) {
+          break;
+        }
+        PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_DEFAULT="+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT+",tf_enum="+tf_enum);
+        break;
+      case PS_DATA_SAVE_EVENTS_DURATION_LIMIT:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 1000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
+          break;
+        }
+        PS_DATA_SAVE_EVENTS_DURATION_LIMIT = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_LIMIT="+PS_DATA_SAVE_EVENTS_DURATION_LIMIT+",tf_enum="+tf_enum);
+        break;
+      case Relay_Module_UART_port_name:
+        if (str.equals(Relay_Module_UART_port_name)) {
+          break;
+        }
+        Relay_Module_UART_port_name = str;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 10000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX) {
+          break;
+        }
+        ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX="+ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_DETECT_DIAMETER_MIN:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 10000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_DETECT_DIAMETER_MIN) {
+          break;
+        }
+        ROI_OBJECT_DETECT_DIAMETER_MIN = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DIAMETER_MIN="+ROI_OBJECT_DETECT_DIAMETER_MIN+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_DETECT_TIME_MIN:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 1000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_DETECT_TIME_MIN) {
+          break;
+        }
+        ROI_OBJECT_DETECT_TIME_MIN = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_TIME_MIN="+ROI_OBJECT_DETECT_TIME_MIN+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_DETECT_KEEP_TIME:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 1000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_DETECT_KEEP_TIME) {
+          break;
+        }
+        ROI_OBJECT_DETECT_KEEP_TIME = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_KEEP_TIME="+ROI_OBJECT_DETECT_KEEP_TIME+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN:
+        try {
+          val = int(Float.parseFloat(str.trim()) * 10000.0);
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN) {
+          break;
+        }
+        ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN+",tf_enum="+tf_enum);
+        break;
+      case ROI_OBJECT_MARKER_MARGIN:
+        try {
+          val = Integer.parseInt(str.trim());
+        }
+        catch (NumberFormatException e) {
+          break;
+        }
+        if (val == ROI_OBJECT_MARKER_MARGIN) {
+          break;
+        }
+        ROI_OBJECT_MARKER_MARGIN = val;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_MARKER_MARGIN="+ROI_OBJECT_MARKER_MARGIN+",tf_enum="+tf_enum);
+        break;
+      default:
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_ERR || PRINT_UI_SYSTEM_CONFIG_LISTENER_ERR) println("UI_System_Config_BT_ControlListener:controlEvent():tf_enum="+tf_enum+" error!");
+        SYSTEM_logger.severe("UI_System_Config_BT_ControlListener:controlEvent():tf_enum="+tf_enum+" error!");
+        break;
+    } // End of switch (tf_enum)
+  } // End of for (Textfield tf_handle:cp5_tf_list)
+  if (updated) {
+    Const_create();
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated");
+    UI_System_Config_changed_any = true;
+  }
+  else {
+    UI_System_Config_enabled = false;
+  }
+}
+
 class UI_System_Config_BT_ControlListener implements ControlListener {
-  int col;
   public void controlEvent(ControlEvent theEvent) {
     if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Enter");
 
     Button bt_handle = (Button)theEvent.getController();
-    int button_index = bt_handle.getId();
+    // Check bt_handle.
+    if (bt_handle == null) {
+      return;
+    }
 
+    int button_index = bt_handle.getId();
     if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():button_index="+button_index);
 
     // Check Button is OK.
-    if (button_index != 0)
-    {
+    if (button_index != 0) {
       // Button is not OK.
       UI_System_Config_enabled = false;
       return;
     }
 
-    List<Textfield> cp5_tf_list = UI_System_Config_cp5_global.getAll(Textfield.class);
-    //println(cp5_tf_list);
-
-    boolean updated = false;
-
-    for (Textfield tf_handle:cp5_tf_list) {
-      //println("Id="+tf_handle.getId()+":Text="+tf_handle.getText());
-      if (tf_handle.getId() == -1) continue;
-      UI_System_Config_tf_enum tf_enum = UI_System_Config_tf_enum.values()[tf_handle.getId()];
-      //println("tf_enum="+tf_enum);
-
-      String str;
-      int val;
-
-      str = tf_handle.getText();
-      switch (tf_enum) {
-        case SYSTEM_PASSWORD:
-          if (str.length() == 0) {
-            SYSTEM_PASSWORD_disabled = true;
-            break;
-          }
-          SYSTEM_PASSWORD_disabled = false;
-          if (!str.matches("[0-9]+") || str.length() != 4) {
-            break;
-          }
-          if (str.equals(SYSTEM_PASSWORD)) {
-            break;
-          }
-          SYSTEM_PASSWORD = str;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated SYSTEM_PASSWORD="+SYSTEM_PASSWORD+",tf_enum="+tf_enum);
-          break;
-        case FRAME_RATE:
-          try {
-            val = Integer.parseInt(str.trim());
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == FRAME_RATE) {
-            break;
-          }
-          FRAME_RATE = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated FRAME_RATE="+FRAME_RATE+",tf_enum="+tf_enum);
-          break;
-        case PS_DATA_SAVE_ALWAYS_DURATION:
-          try {
-            val = int(Float.parseFloat(str.trim()));
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == PS_DATA_SAVE_ALWAYS_DURATION) {
-            break;
-          }
-          PS_DATA_SAVE_ALWAYS_DURATION = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_ALWAYS_DURATION="+PS_DATA_SAVE_ALWAYS_DURATION+",tf_enum="+tf_enum);
-          break;
-        case PS_DATA_SAVE_EVENTS_DURATION_DEFAULT:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 1000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == PS_DATA_SAVE_EVENTS_DURATION_DEFAULT) {
-            break;
-          }
-          PS_DATA_SAVE_EVENTS_DURATION_DEFAULT = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_DEFAULT="+PS_DATA_SAVE_EVENTS_DURATION_DEFAULT+",tf_enum="+tf_enum);
-          break;
-        case PS_DATA_SAVE_EVENTS_DURATION_LIMIT:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 1000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
-            break;
-          }
-          PS_DATA_SAVE_EVENTS_DURATION_LIMIT = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated PS_DATA_SAVE_EVENTS_DURATION_LIMIT="+PS_DATA_SAVE_EVENTS_DURATION_LIMIT+",tf_enum="+tf_enum);
-          break;
-        case Relay_Module_UART_port_name:
-          if (str.equals(Relay_Module_UART_port_name)) {
-            break;
-          }
-          Relay_Module_UART_port_name = str;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 10000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX) {
-            break;
-          }
-          ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX="+ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_DETECT_DIAMETER_MIN:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 10000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_DETECT_DIAMETER_MIN) {
-            break;
-          }
-          ROI_OBJECT_DETECT_DIAMETER_MIN = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_DIAMETER_MIN="+ROI_OBJECT_DETECT_DIAMETER_MIN+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_DETECT_TIME_MIN:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 1000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_DETECT_TIME_MIN) {
-            break;
-          }
-          ROI_OBJECT_DETECT_TIME_MIN = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_TIME_MIN="+ROI_OBJECT_DETECT_TIME_MIN+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_DETECT_KEEP_TIME:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 1000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_DETECT_KEEP_TIME) {
-            break;
-          }
-          ROI_OBJECT_DETECT_KEEP_TIME = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_DETECT_KEEP_TIME="+ROI_OBJECT_DETECT_KEEP_TIME+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN:
-          try {
-            val = int(Float.parseFloat(str.trim()) * 10000.0);
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN) {
-            break;
-          }
-          ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN="+ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN+",tf_enum="+tf_enum);
-          break;
-        case ROI_OBJECT_MARKER_MARGIN:
-          try {
-            val = Integer.parseInt(str.trim());
-          }
-          catch (NumberFormatException e) {
-            break;
-          }
-          if (val == ROI_OBJECT_MARKER_MARGIN) {
-            break;
-          }
-          ROI_OBJECT_MARKER_MARGIN = val;
-          updated = true;
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated ROI_OBJECT_MARKER_MARGIN="+ROI_OBJECT_MARKER_MARGIN+",tf_enum="+tf_enum);
-          break;
-        default:
-          if (PRINT_UI_SYSTEM_CONFIG_ALL_ERR || PRINT_UI_SYSTEM_CONFIG_LISTENER_ERR) println("UI_System_Config_BT_ControlListener:controlEvent():tf_enum="+tf_enum+" error!");
-          SYSTEM_logger.severe("UI_System_Config_BT_ControlListener:controlEvent():tf_enum="+tf_enum+" error!");
-          break;
-      } // End of switch (tf_enum)
-    } // End of for (Textfield tf_handle:cp5_tf_list)
-    if (updated) {
-      Const_create();
-      if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated");
-      UI_System_Config_changed_any = true;
-    }
-    else {
-      UI_System_Config_enabled = false;
-    }
+    UI_System_Config_input_update();
   }
-
 }
 
-/*
 class UI_System_Config_TF_ControlListener implements ControlListener {
-  int col;
   public void controlEvent(ControlEvent theEvent) {
-    println("UI_System_Config_TF_ControlListener:controlEvent():Enter");
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_TF_ControlListener:controlEvent():Enter");
+
     Textfield tf_handle = (Textfield)theEvent.getController();
-    println("UI_System_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
-    println("UI_System_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
-    println("UI_System_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
+
+    Button bt_handle = UI_System_Config_cp5_global.get(Button.class, "OK");
+    // Check bt_handle.
+    if (bt_handle == null) {
+      return;
+    }
+
+    int button_index = bt_handle.getId();
+    if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_LISTENER_DBG) println("UI_System_Config_TF_ControlListener:controlEvent():button_index="+button_index);
+    // Check Button is OK.
+    if (button_index != 0) {
+      // Button is not OK.
+      return;
+    }
+
+    UI_System_Config_input_update();
   }
 }
-*/
 
 /*
 class UI_System_Config_CP5_CallbackListener implements CallbackListener {

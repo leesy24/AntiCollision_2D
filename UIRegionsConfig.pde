@@ -17,6 +17,9 @@ final static boolean PRINT_UI_REGIONS_CONFIG_RESET_DBG = false;
 //final static boolean PRINT_UI_REGIONS_CONFIG_DRAW_DBG = true;
 final static boolean PRINT_UI_REGIONS_CONFIG_DRAW_DBG = false;
 
+//final static boolean PRINT_UI_REGIONS_CONFIG_INPUT_UPDATE_DBG = true;
+final static boolean PRINT_UI_REGIONS_CONFIG_INPUT_UPDATE_DBG = false;
+
 //final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_DBG = true;
 final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_DBG = false;
 //final static boolean PRINT_UI_REGIONS_CONFIG_LISTENER_ERR = true;
@@ -39,7 +42,7 @@ static boolean UI_Regions_Config_changed_any = false;
 static int[] UI_Regions_Config_x_base = new int[PS_INSTANCE_MAX];
 static int[] UI_Regions_Config_y_base = new int[PS_INSTANCE_MAX];
 UI_Regions_Config_BT_ControlListener UI_Regions_Config_bt_control_listener;
-//UI_Regions_Config_TF_ControlListener UI_Regions_Config_tf_control_listener;
+UI_Regions_Config_TF_ControlListener UI_Regions_Config_tf_control_listener;
 //UI_Regions_Config_CP5_CallbackListener UI_Regions_Config_cp5_callback_listener;
 
 static enum UI_Regions_Config_tf_enum {
@@ -121,7 +124,7 @@ void UI_Regions_Config_update()
   }
 
   UI_Regions_Config_bt_control_listener = new UI_Regions_Config_BT_ControlListener();
-  //UI_Regions_Config_tf_control_listener = new UI_Regions_Config_TF_ControlListener();
+  UI_Regions_Config_tf_control_listener = new UI_Regions_Config_TF_ControlListener();
   //UI_Regions_Config_cp5_callback_listener = new UI_Regions_Config_CP5_CallbackListener();
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
@@ -409,7 +412,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.REGION_NAME.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -445,7 +448,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_X.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -484,7 +487,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_Y.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -521,7 +524,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_WIDTH.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -560,7 +563,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_FIELD_HEIGHT.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -597,7 +600,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RECT_DASHED_GAP.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -719,7 +722,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.REGION_PRIORITY.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -755,7 +758,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RELAY_INDEX.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -804,7 +807,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.RELAY_NAME.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -842,7 +845,7 @@ void UI_Regions_Config_update_instance(int instance)
     tf_handle
       .setId(instance*1000+region_csv_index*100+UI_Regions_Config_tf_enum.NO_MARK_BIG.ordinal())
       //.addCallback(UI_Regions_Config_cp5_callback_listener)
-      //.addListener(UI_Regions_Config_tf_control_listener)
+      .addListener(UI_Regions_Config_tf_control_listener)
       .setPosition(x, y)
       .setSize(w, h)
       //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
@@ -1061,19 +1064,284 @@ void UI_Regions_Config_draw()
   }
 }
 
-/*
-class UI_Regions_Config_TF_ControlListener implements ControlListener {
-  int col;
-  public void controlEvent(ControlEvent theEvent) {
-    Textfield tf_handle;
-    println("UI_Regions_Config_TF_ControlListener:controlEvent():Enter");
-    tf_handle = (Textfield)theEvent.getController();
-    println("UI_Regions_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
-    println("UI_Regions_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
-    println("UI_Regions_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
+void UI_Regions_Config_input_update()
+{
+  if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_INPUT_UPDATE_DBG) println("UI_Regions_Config_input_update():Enter");
+
+  boolean updated = false;
+  boolean updated_relay = false;
+
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
+    List<Textfield> cp5_tf_list = UI_Regions_Config_cp5_local[i].getAll(Textfield.class);
+    //println(cp5_tf_list);
+    boolean updated_instance;
+    updated_instance = false;
+    for (Textfield tf_handle:cp5_tf_list) {
+      //println("Id="+tf_handle.getId()+":Text="+tf_handle.getText());
+      if (tf_handle.getId() == -1) continue;
+      int instance = tf_handle.getId() / 1000;
+      if (i != instance) continue;
+      int region_csv_index = tf_handle.getId() % 1000 / 100;
+      UI_Regions_Config_tf_enum tf_enum = UI_Regions_Config_tf_enum.values()[tf_handle.getId() % 100];
+      //println("instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+      Region_CSV region_csv = Regions_handle.get_region_csv_element(instance, region_csv_index);
+
+      String str;
+      int val;
+      boolean bool;
+
+      str = tf_handle.getText();
+      switch (tf_enum) {
+        case REGION_NAME: // Region name
+          if (str.equals(region_csv.name)) {
+            break;
+          }
+          region_csv.name = str;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case REGION_PRIORITY: // Region priority
+          try {
+            val = Integer.parseInt(str.trim());
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.priority) {
+            break;
+          }
+          region_csv.priority = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RELAY_INDEX: {
+          try {
+            val = Integer.parseInt(str.trim());
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val != -1 && !Relay_Module_check_relay_index(val)) {
+            break;
+          }
+          if (val == region_csv.relay_index) {
+            break;
+          }
+          // Check other relay_index text field has same with this.
+          int i_;
+          for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
+            int region_csv_index_;
+            for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
+            {
+              if (region_csv_index_ == region_csv_index) continue;
+              int relay_index_;
+              try {
+                relay_index_ =
+                  Integer.parseInt(
+                    UI_Regions_Config_cp5_local[i_]
+                      .get(
+                        Textfield.class,
+                        "UI_Regions_Config_relay_index_input_"+region_csv_index_)
+                          .getText());
+              }
+              catch (NumberFormatException e) {
+                continue;
+              }
+              catch (NullPointerException e) {
+                continue;
+              }
+              if (relay_index_ != -1 && relay_index_ == val) {
+                // Found same relay_index.
+                break;
+              }
+            }
+            if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
+              // Found same relay_index.
+              break;
+            }
+          }
+          if (i_ != PS_INSTANCE_MAX) {
+            // Found same relay_index.
+            break;
+          }
+          region_csv.relay_index = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        }
+        case RELAY_NAME: {
+          // Get relay_index input value from text field of this region.
+          try {
+            val =
+              Integer.parseInt(
+                UI_Regions_Config_cp5_local[i]
+                  .get(
+                    Textfield.class,
+                    "UI_Regions_Config_relay_index_input_"+region_csv_index)
+                      .getText());
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          catch (NullPointerException e) {
+            break;
+          }
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":input relay_index="+val);
+          // Check other relay_index text field has same with this.
+          int i_;
+          for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
+            int region_csv_index_;
+            for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
+            {
+              if (region_csv_index_ == region_csv_index) continue;
+              int relay_index_;
+              try {
+                relay_index_ =
+                  Integer.parseInt(
+                    UI_Regions_Config_cp5_local[i_]
+                      .get(
+                        Textfield.class,
+                        "UI_Regions_Config_relay_index_input_"+region_csv_index_)
+                          .getText());
+              }
+              catch (NumberFormatException e) {
+                continue;
+              }
+              catch (NullPointerException e) {
+                continue;
+              }
+              if (relay_index_ != -1 && relay_index_ == val) {
+                // Found same relay_index.
+                break;
+              }
+            }
+            if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
+              // Found same relay_index.
+              break;
+            }
+          }
+          if (i_ != PS_INSTANCE_MAX) {
+            // Found same relay_index.
+            break;
+          }
+          // Check relay_index is valid.
+          if (!Relay_Module_check_relay_index(val)) {
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_index is not valid. "+val);
+            break;
+          }
+          if (str.equals(Relay_Module_get_relay_name(val))) {
+            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_name is same. "+str+","+Relay_Module_get_relay_name(val));
+            break;
+          }
+          Relay_Module_set_relay_name(region_csv.relay_index, str);
+          updated_relay = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        }
+        case NO_MARK_BIG: // No mark big
+          bool = str.toLowerCase().equals("true")?true:false;
+          if (bool == region_csv.no_mark_big) {
+            break;
+          }
+          region_csv.no_mark_big = bool;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RECT_FIELD_X: // Rect field x
+          try {
+            val = int(Float.parseFloat(str.trim()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.rect_field_x) {
+            break;
+          }
+          region_csv.rect_field_x = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RECT_FIELD_Y: // Rect field y
+          try {
+            val = int(Float.parseFloat(str.trim()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.rect_field_y) {
+            break;
+          }
+          region_csv.rect_field_y = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RECT_FIELD_WIDTH: // Rect field width
+          try {
+            val = int(Float.parseFloat(str.trim()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.rect_field_width) {
+            break;
+          }
+          region_csv.rect_field_width = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RECT_FIELD_HEIGHT: // Rect field height
+          try {
+            val = int(Float.parseFloat(str.trim()) * 100.0);
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.rect_field_height) {
+            break;
+          }
+          region_csv.rect_field_height = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        case RECT_DASHED_GAP: // Rect dashed gap
+          try {
+            val = Integer.parseInt(str.trim());
+          }
+          catch (NumberFormatException e) {
+            break;
+          }
+          if (val == region_csv.rect_dashed_gap) {
+            break;
+          }
+          region_csv.rect_dashed_gap = val;
+          updated_instance = true;
+          if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
+          break;
+        default:
+          if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
+          SYSTEM_logger.severe("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
+          break;
+      } // End of switch (tf_enum)
+    } // End of for (Textfield tf_handle:cp5_tf_list)
+    if (updated_instance) {
+      Regions_handle.update_regions_csv_file(i);
+      updated = true;
+      if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+i);
+    }
+  } // End of for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  if (updated_relay) {
+    Relay_Module_update_relays_csv_file();
+    updated = true;
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated relay");
+  }
+  if (updated) {
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated");
+    UI_Regions_Config_changed_any = true;
+  }
+  else {
+    UI_Regions_Config_enabled = false;
   }
 }
-*/
 
 class UI_Regions_Config_BT_ControlListener implements ControlListener {
   public void controlEvent(ControlEvent theEvent) {
@@ -1090,281 +1358,36 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
       return;
     }
 
-    boolean updated = false;
-    boolean updated_relay = false;
-
-    for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
-      List<Textfield> cp5_tf_list = UI_Regions_Config_cp5_local[i].getAll(Textfield.class);
-      //println(cp5_tf_list);
-      boolean updated_instance;
-      updated_instance = false;
-      for (Textfield tf_handle:cp5_tf_list) {
-        //println("Id="+tf_handle.getId()+":Text="+tf_handle.getText());
-        if (tf_handle.getId() == -1) continue;
-        int instance = tf_handle.getId() / 1000;
-        if (i != instance) continue;
-        int region_csv_index = tf_handle.getId() % 1000 / 100;
-        UI_Regions_Config_tf_enum tf_enum = UI_Regions_Config_tf_enum.values()[tf_handle.getId() % 100];
-        //println("instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-        Region_CSV region_csv = Regions_handle.get_region_csv_element(instance, region_csv_index);
-
-        String str;
-        int val;
-        boolean bool;
-
-        str = tf_handle.getText();
-        switch (tf_enum) {
-          case REGION_NAME: // Region name
-            if (str.equals(region_csv.name)) {
-              break;
-            }
-            region_csv.name = str;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case REGION_PRIORITY: // Region priority
-            try {
-              val = Integer.parseInt(str.trim());
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.priority) {
-              break;
-            }
-            region_csv.priority = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RELAY_INDEX: {
-            try {
-              val = Integer.parseInt(str.trim());
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val != -1 && !Relay_Module_check_relay_index(val)) {
-              break;
-            }
-            if (val == region_csv.relay_index) {
-              break;
-            }
-            // Check other relay_index text field has same with this.
-            int i_;
-            for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
-              int region_csv_index_;
-              for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
-              {
-                if (region_csv_index_ == region_csv_index) continue;
-                int relay_index_;
-                try {
-                  relay_index_ =
-                    Integer.parseInt(
-                      UI_Regions_Config_cp5_local[i_]
-                        .get(
-                          Textfield.class,
-                          "UI_Regions_Config_relay_index_input_"+region_csv_index_)
-                            .getText());
-                }
-                catch (NumberFormatException e) {
-                  continue;
-                }
-                catch (NullPointerException e) {
-                  continue;
-                }
-                if (relay_index_ != -1 && relay_index_ == val) {
-                  // Found same relay_index.
-                  break;
-                }
-              }
-              if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
-                // Found same relay_index.
-                break;
-              }
-            }
-            if (i_ != PS_INSTANCE_MAX) {
-              // Found same relay_index.
-              break;
-            }
-            region_csv.relay_index = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          }
-          case RELAY_NAME: {
-            // Get relay_index input value from text field of this region.
-            try {
-              val =
-                Integer.parseInt(
-                  UI_Regions_Config_cp5_local[i]
-                    .get(
-                      Textfield.class,
-                      "UI_Regions_Config_relay_index_input_"+region_csv_index)
-                        .getText());
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            catch (NullPointerException e) {
-              break;
-            }
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":input relay_index="+val);
-            // Check other relay_index text field has same with this.
-            int i_;
-            for (i_ = 0; i_ < PS_INSTANCE_MAX; i_ ++) {
-              int region_csv_index_;
-              for (region_csv_index_ = 0; region_csv_index_ < Regions_handle.get_regions_csv_size_for_index(i_); region_csv_index_ ++)
-              {
-                if (region_csv_index_ == region_csv_index) continue;
-                int relay_index_;
-                try {
-                  relay_index_ =
-                    Integer.parseInt(
-                      UI_Regions_Config_cp5_local[i_]
-                        .get(
-                          Textfield.class,
-                          "UI_Regions_Config_relay_index_input_"+region_csv_index_)
-                            .getText());
-                }
-                catch (NumberFormatException e) {
-                  continue;
-                }
-                catch (NullPointerException e) {
-                  continue;
-                }
-                if (relay_index_ != -1 && relay_index_ == val) {
-                  // Found same relay_index.
-                  break;
-                }
-              }
-              if (region_csv_index_ != Regions_handle.get_regions_csv_size_for_index(i_)) {
-                // Found same relay_index.
-                break;
-              }
-            }
-            if (i_ != PS_INSTANCE_MAX) {
-              // Found same relay_index.
-              break;
-            }
-            // Check relay_index is valid.
-            if (!Relay_Module_check_relay_index(val)) {
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_index is not valid. "+val);
-              break;
-            }
-            if (str.equals(Relay_Module_get_relay_name(val))) {
-              if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+":relay_name is same. "+str+","+Relay_Module_get_relay_name(val));
-              break;
-            }
-            Relay_Module_set_relay_name(region_csv.relay_index, str);
-            updated_relay = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          }
-          case NO_MARK_BIG: // No mark big
-            bool = str.toLowerCase().equals("true")?true:false;
-            if (bool == region_csv.no_mark_big) {
-              break;
-            }
-            region_csv.no_mark_big = bool;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RECT_FIELD_X: // Rect field x
-            try {
-              val = int(Float.parseFloat(str.trim()) * 100.0);
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.rect_field_x) {
-              break;
-            }
-            region_csv.rect_field_x = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RECT_FIELD_Y: // Rect field y
-            try {
-              val = int(Float.parseFloat(str.trim()) * 100.0);
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.rect_field_y) {
-              break;
-            }
-            region_csv.rect_field_y = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RECT_FIELD_WIDTH: // Rect field width
-            try {
-              val = int(Float.parseFloat(str.trim()) * 100.0);
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.rect_field_width) {
-              break;
-            }
-            region_csv.rect_field_width = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RECT_FIELD_HEIGHT: // Rect field height
-            try {
-              val = int(Float.parseFloat(str.trim()) * 100.0);
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.rect_field_height) {
-              break;
-            }
-            region_csv.rect_field_height = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          case RECT_DASHED_GAP: // Rect dashed gap
-            try {
-              val = Integer.parseInt(str.trim());
-            }
-            catch (NumberFormatException e) {
-              break;
-            }
-            if (val == region_csv.rect_dashed_gap) {
-              break;
-            }
-            region_csv.rect_dashed_gap = val;
-            updated_instance = true;
-            if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum);
-            break;
-          default:
-            if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
-            SYSTEM_logger.severe("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
-            break;
-        } // End of switch (tf_enum)
-      } // End of for (Textfield tf_handle:cp5_tf_list)
-      if (updated_instance) {
-        Regions_handle.update_regions_csv_file(i);
-        updated = true;
-        if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated instance="+i);
-      }
-    } // End of for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-    if (updated_relay) {
-      Relay_Module_update_relays_csv_file();
-      updated = true;
-      if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated relay");
-    }
-    if (updated) {
-      if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_BT_ControlListener:controlEvent():Updated");
-      UI_Regions_Config_changed_any = true;
-    }
-    else {
-      UI_Regions_Config_enabled = false;
-    }
+    UI_Regions_Config_input_update();
   }
+}
 
+class UI_Regions_Config_TF_ControlListener implements ControlListener {
+  int col;
+  public void controlEvent(ControlEvent theEvent) {
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_TF_ControlListener:controlEvent():Enter");
+
+    Textfield tf_handle = (Textfield)theEvent.getController();
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_TF_ControlListener:controlEvent():getId="+tf_handle.getId());
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_TF_ControlListener:controlEvent():getValue="+tf_handle.getValue());
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_TF_ControlListener:controlEvent():getText="+tf_handle.getText());
+
+    Button bt_handle = UI_Regions_Config_cp5_global.get(Button.class, "OK");
+    // Check bt_handle.
+    if (bt_handle == null) {
+      return;
+    }
+
+    int button_index = bt_handle.getId();
+    if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_LISTENER_DBG) println("UI_Regions_Config_TF_ControlListener:controlEvent():button_index="+button_index);
+    // Check Button is OK.
+    if (button_index != 0) {
+      // Button is not OK.
+      return;
+    }
+
+    UI_Regions_Config_input_update();
+  }
 }
 
 /*
