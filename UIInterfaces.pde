@@ -1055,11 +1055,14 @@ void UI_Interfaces_ddmenu(int n)
 
 void UI_Interfaces_filename(String theText)
 {
+  //println("UI_Interfaces_filename():Enter");
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_filename"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_filename():tf=null");
@@ -1073,7 +1076,7 @@ void UI_Interfaces_filename(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_filename():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_filename():Can't found instance.");
@@ -1089,15 +1092,19 @@ void UI_Interfaces_filename(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UARTport(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTport"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTport"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTport():tf=null");
@@ -1111,7 +1118,7 @@ void UI_Interfaces_UARTport(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTport():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UARTport():Can't found instance.");
@@ -1127,15 +1134,19 @@ void UI_Interfaces_UARTport(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UARTbaud(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTbaud"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTbaud"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTbaud():tf=null");
@@ -1149,7 +1160,7 @@ void UI_Interfaces_UARTbaud(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTbaud():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UARTbaud():Can't found instance.");
@@ -1166,15 +1177,19 @@ void UI_Interfaces_UARTbaud(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UARTdps(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTdps"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UARTdps"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UARTdps():tf=null");
@@ -1188,7 +1203,7 @@ void UI_Interfaces_UARTdps(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTdps():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UARTdps():Can't found instance.");
@@ -1211,15 +1226,19 @@ void UI_Interfaces_UARTdps(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UDPremoteip(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteip"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteip"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteip():tf=null");
@@ -1233,7 +1252,7 @@ void UI_Interfaces_UDPremoteip(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPremoteip():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UDPremoteip():Can't found instance.");
@@ -1249,15 +1268,19 @@ void UI_Interfaces_UDPremoteip(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UDPremoteport(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteport"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPremoteport"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPremoteport():tf=null");
@@ -1271,7 +1294,7 @@ void UI_Interfaces_UDPremoteport(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPremoteport():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UDPremoteport():Can't found instance.");
@@ -1288,15 +1311,19 @@ void UI_Interfaces_UDPremoteport(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_UDPlocalport(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPlocalport"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_UDPlocalport"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_UDPlocalport():tf=null");
@@ -1310,7 +1337,7 @@ void UI_Interfaces_UDPlocalport(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPlocalport():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UDPlocalport():Can't found instance.");
@@ -1327,15 +1354,19 @@ void UI_Interfaces_UDPlocalport(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 void UI_Interfaces_SNserialnumber(String theText)
 {
   // Find instance of tf for this.
   int instance;
+  Textfield tf = null;
+
   for (instance = 0; instance < PS_INSTANCE_MAX; instance ++)
   {
-    Textfield tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber"));
+    tf = (Textfield)(UI_Interfaces_cp5[instance].get("UI_Interfaces_SNserialnumber"));
     if (tf == null)
     {
       if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_SNserialnumber():tf=null");
@@ -1349,7 +1380,7 @@ void UI_Interfaces_SNserialnumber(String theText)
       break;
     }
   }
-  if (instance >= PS_INSTANCE_MAX)
+  if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_SNserialnumber():Can't found instance.");
     SYSTEM_logger.severe("UI_Interfaces_UDPlocalport():Can't found instance.");
@@ -1366,6 +1397,8 @@ void UI_Interfaces_SNserialnumber(String theText)
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
+
+  tf.setFocus(false);
 }
 
 class UI_Interfaces_DDMenu_CallbackListener implements CallbackListener {
