@@ -171,6 +171,7 @@ void ROI_Data_setup() {
   if (ROI_Data_handle == null)
   {
     if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SETUP_ERR) println("ROI_Data_setup():ROI_Data_handle=null");
+    SYSTEM_logger.severe("ROI_Data_setup():ROI_Data_handle=null");
     return;
   }
 }
@@ -623,6 +624,7 @@ class ROI_Data {
         if (!save_events_dir_handle.mkdirs())
         {
           if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SAVE_EVENT_ERR) println("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
+          SYSTEM_logger.severe("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
           return;
         }
       }

@@ -38,7 +38,8 @@ void BG_Image_setup()
   // Check loadTable failed.
   if(table == null)
   {
-    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():table=null");
+    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():loadTable() return null! "+BG_IMAGE_file_full_name);
+    SYSTEM_logger.severe("BG_Image_setup():loadTable() return null! "+BG_IMAGE_file_full_name);
     return;
   }
 
@@ -46,7 +47,8 @@ void BG_Image_setup()
   BG_IMAGE_data = new Points_Data(table.getRowCount());
   if(BG_IMAGE_data == null)
   {
-    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():BG_IMAGE_data=null");
+    if (PRINT_BG_IMAGE_ALL_ERR || PRINT_BG_IMAGE_SETUP_ERR) println("BG_Image_setup():Points_Data return null!");
+    SYSTEM_logger.severe("BG_Image_setup():Points_Data return null!");
     return;
   }
   //println("BG_IMAGE_data.length=" + BG_IMAGE_data.length);

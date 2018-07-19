@@ -35,8 +35,8 @@ int[] Grid_scr_x_min = new int[PS_INSTANCE_MAX];
 int[] Grid_scr_x_max = new int[PS_INSTANCE_MAX];
 int[] Grid_scr_y_min = new int[PS_INSTANCE_MAX];
 int[] Grid_scr_y_max = new int[PS_INSTANCE_MAX];
-LinkedList<Grid_Line_Data>[] Grid_Lines_array = new LinkedList[PS_INSTANCE_MAX];
-LinkedList<Grid_Text_Data>[] Grid_Texts_array = new LinkedList[PS_INSTANCE_MAX];
+ArrayList<Grid_Line_Data>[] Grid_Lines_array = new ArrayList[PS_INSTANCE_MAX];
+ArrayList<Grid_Text_Data>[] Grid_Texts_array = new ArrayList[PS_INSTANCE_MAX];
 
 void Grid_setup()
 {
@@ -44,16 +44,18 @@ void Grid_setup()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    Grid_Lines_array[i] = new LinkedList<Grid_Line_Data>();
+    Grid_Lines_array[i] = new ArrayList<Grid_Line_Data>();
     if (Grid_Lines_array[i] == null)
     {
-      if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_Lines_array["+i+"] == null");
+      if (PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_Lines_array["+i+"] == null");
+      SYSTEM_logger.severe("Grid_settings():Grid_Lines_array["+i+"] == null");
       return;
     }
-    Grid_Texts_array[i] = new LinkedList<Grid_Text_Data>();
+    Grid_Texts_array[i] = new ArrayList<Grid_Text_Data>();
     if (Grid_Texts_array[i] == null)
     {
-      if (PRINT_GRID_ALL_DBG || PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_Texts_array["+i+"] == null");
+      if (PRINT_GRID_ALL_ERR || PRINT_GRID_SETTINGS_ERR) println("Grid_settings():Grid_Texts_array["+i+"] == null");
+      SYSTEM_logger.severe("Grid_settings():Grid_Texts_array["+i+"] == null");
       return;
     }
   }

@@ -35,6 +35,7 @@ void Config_setup()
     // Check loadTable failed.
     if(table == null)
     {
+      if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup()"+":"+i+":loadTable() return null! "+CONFIG_file_full_name);
       Config_create();
       return;
     }
@@ -52,7 +53,10 @@ void Config_setup()
           }
         }
         if (j == PS_Interface_str.length) {
-          if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup():Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
+          if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
+          SYSTEM_logger.severe("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
+          // Set default PS Interface.
+          PS_Interface[i] = PS_Interface_None;
         }
       }
       else if (name.equals("ZOOM_FACTOR")) {

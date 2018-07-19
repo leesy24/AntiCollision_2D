@@ -104,11 +104,13 @@ class Interfaces_File {
     if (instance >= PS_INSTANCE_MAX)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:open("+instance+"):instance exceed MAX.");
+      SYSTEM_logger.severe("Interfaces_File:open("+instance+"):instance exceed MAX.");
       return -1;
     }
     if (instance_opened[instance] != false)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:open("+instance+"):instance already opended.");
+      SYSTEM_logger.severe("Interfaces_File:open("+instance+"):instance already opended.");
       return -1;
     }
 
@@ -177,11 +179,13 @@ class Interfaces_File {
     if(instance >= PS_INSTANCE_MAX)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:close("+instance+"):instance exceed MAX.");
+      SYSTEM_logger.severe("Interfaces_File:close("+instance+"):instance exceed MAX.");
       return -1;
     }
     if(instance_opened[instance] != true)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:close("+instance+"):instance already closed.");
+      SYSTEM_logger.severe("Interfaces_File:close("+instance+"):instance already closed.");
       return -1;
     }
 
@@ -225,15 +229,16 @@ class Interfaces_File {
     File file_handle = new File(file_full_name);
     if (!file_handle.isFile()) {
       str_err_last[instance] = "Error: File not exist or Not a file! " + file_name_list[instance][file_name_index[instance]];
-      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
+      if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     } // End of load()
 
     // Load binary buf.
     PS_Data_buf[instance] = loadBytes(file_full_name);
     if (PS_Data_buf[instance] == null) {
-      str_err_last[instance] = "Error: File not exist! " + file_name_list[instance][file_name_index[instance]];
-      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(str_err_last[instance]);
+      str_err_last[instance] = "Error: loadBytes() return null! " + file_name_list[instance][file_name_index[instance]];
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
+      SYSTEM_logger.severe("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     }
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("buf.length = " + PS_Data_buf[instance].length);
@@ -241,7 +246,8 @@ class Interfaces_File {
     // Must larger than Function code(4B) + Length(4B) + Number of parameters(4B) + Number of points(4B) + CRC(4B).
     if (PS_Data_buf[instance].length < 4 + 4 + 4 + 4 + 4) {
       str_err_last[instance] = "Error: File size is invalid! " + PS_Data_buf[instance].length;
-      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println(str_err_last[instance]);
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_LOAD_ERR) println("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
+      SYSTEM_logger.severe("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     }
 

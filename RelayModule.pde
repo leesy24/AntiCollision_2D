@@ -101,6 +101,7 @@ void Relay_Module_setup()
   // Check loadTable failed.
   if(table == null) {
     if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_SETUP_ERR) println("Relay_Module_setup():loadTable("+file_full_name+") Error!");
+    SYSTEM_logger.severe("Relay_Module_setup():loadTable("+file_full_name+") Error!");
     return;
   }
 
@@ -238,6 +239,7 @@ void Relay_Module_setup()
   if (!found)
   {
     if(PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_SETUP_ERR) println("Relay_Module_setup():Can not find com port error! \""+Relay_Module_UART_port_name+"\"");
+    SYSTEM_logger.severe("Relay_Module_setup():Can not find com port error! \""+Relay_Module_UART_port_name+"\"");
     return;
   }
 
@@ -444,6 +446,7 @@ void Relay_Module_UART_write(byte[] buf)
   if (Relay_Module_UART_handle == null)
   {
     if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_WRITE_ERR) println("Relay_Module_UART_write():Relay_Module_UART_handle=null");
+    SYSTEM_logger.severe("Relay_Module_UART_write():Relay_Module_UART_handle=null");
     return;
   }
   Relay_Module_UART_handle.write(buf);

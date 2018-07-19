@@ -818,6 +818,7 @@ private void UI_Interfaces_tf_file_name_mouse_pressed_right(int instance)
   if (tf == null)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):tf==null");
+    SYSTEM_logger.severe("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):tf==null");
     return;
   }
   if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):id="+tf.getId()+",isFocus="+tf.isFocus());
@@ -826,6 +827,7 @@ private void UI_Interfaces_tf_file_name_mouse_pressed_right(int instance)
       !tf.isFocus())
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):id="+tf.getId()+",isFocus="+tf.isFocus());
+    SYSTEM_logger.severe("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):id="+tf.getId()+",isFocus="+tf.isFocus());
     return;
   }
 
@@ -833,7 +835,7 @@ private void UI_Interfaces_tf_file_name_mouse_pressed_right(int instance)
   if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):cb_str="+cb_str);
   if (cb_str == null)
   {
-    if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):cb_str=null");
+    if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_tf_file_name_mouse_pressed_right("+instance+"):cb_str=null");
     return;
   }
   tf.setText(tf.getText()+cb_str);
@@ -847,6 +849,7 @@ void UI_Interfaces_ddmenu_mouse_released(int instance)
   if (sl_ddmenu == null)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):sl_ddmenu=null");
+    SYSTEM_logger.severe("UI_Interfaces_ddmenu_mouse_released("+instance+"):sl_ddmenu=null");
   }
 
   if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):sl_ddmenu.isOpen()="+sl_ddmenu.isOpen());
@@ -878,6 +881,7 @@ void UI_Interfaces_ddmenu_mouse_released(int instance)
   if (tf_ddborder == null)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_released("+instance+"):tf_ddborder=null");
+    SYSTEM_logger.severe("UI_Interfaces_ddmenu_mouse_released("+instance+"):tf_ddborder=null");
     return;
   }
   tf_ddborder
@@ -899,6 +903,8 @@ void UI_Interfaces_ddmenu_mouse_leave(int instance)
   if (sl_ddmenu == null)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):sl_ddmenu=null");
+    SYSTEM_logger.severe("UI_Interfaces_ddmenu_mouse_leave("+instance+"):sl_ddmenu=null");
+    return;
   }
 
   if (PRINT_UI_INTERFACES_ALL_DBG) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):sl_ddmenu.isOpen()="+sl_ddmenu.isOpen());
@@ -929,6 +935,7 @@ void UI_Interfaces_ddmenu_mouse_leave(int instance)
   if (tf_ddborder == null)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu_mouse_leave("+instance+"):tf_ddborder=null");
+    SYSTEM_logger.severe("UI_Interfaces_ddmenu_mouse_leave("+instance+"):tf_ddborder=null");
     return;
   }
   tf_ddborder
@@ -1032,6 +1039,7 @@ void UI_Interfaces_ddmenu(int n)
   if (instance == PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_ddmenu():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_ddmenu():Can't found instance.");
     return;
   }
 
@@ -1068,6 +1076,7 @@ void UI_Interfaces_filename(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_filename():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_filename():Can't found instance.");
     return;
   }
 
@@ -1105,6 +1114,7 @@ void UI_Interfaces_UARTport(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTport():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UARTport():Can't found instance.");
     return;
   }
 
@@ -1142,6 +1152,7 @@ void UI_Interfaces_UARTbaud(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTbaud():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UARTbaud():Can't found instance.");
     return;
   }
 
@@ -1180,6 +1191,7 @@ void UI_Interfaces_UARTdps(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UARTdps():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UARTdps():Can't found instance.");
     return;
   }
 
@@ -1224,6 +1236,7 @@ void UI_Interfaces_UDPremoteip(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPremoteip():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UDPremoteip():Can't found instance.");
     return;
   }
 
@@ -1261,6 +1274,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPremoteport():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UDPremoteport():Can't found instance.");
     return;
   }
 
@@ -1299,6 +1313,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_UDPlocalport():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UDPlocalport():Can't found instance.");
     return;
   }
 
@@ -1337,6 +1352,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   if (instance >= PS_INSTANCE_MAX)
   {
     if (PRINT_UI_INTERFACES_ALL_ERR) println("UI_Interfaces_SNserialnumber():Can't found instance.");
+    SYSTEM_logger.severe("UI_Interfaces_UDPlocalport():Can't found instance.");
     return;
   }
 

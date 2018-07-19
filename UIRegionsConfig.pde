@@ -1343,6 +1343,7 @@ class UI_Regions_Config_BT_ControlListener implements ControlListener {
             break;
           default:
             if (PRINT_UI_REGIONS_CONFIG_ALL_ERR || PRINT_UI_REGIONS_CONFIG_LISTENER_ERR) println("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
+            SYSTEM_logger.severe("UI_Regions_Config_BT_ControlListener:controlEvent():instance="+instance+":region_csv_index="+region_csv_index+",tf_enum="+tf_enum+" error!");
             break;
         } // End of switch (tf_enum)
       } // End of for (Textfield tf_handle:cp5_tf_list)

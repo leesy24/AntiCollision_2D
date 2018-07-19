@@ -131,6 +131,7 @@ void PS_Data_setup()
   if(PS_Data_handle == null)
   {
     if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Data_handle allocation error!");
+    SYSTEM_logger.severe("PS_Data_setup():PS_Data_handle allocation error!");
     return;
   }
 
@@ -152,7 +153,11 @@ void PS_Data_setup()
       Title += "None";
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
-    }      
+      SYSTEM_logger.severe("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
+      Title += "None";
+    }
+    if (i < PS_INSTANCE_MAX - 1)
+      Title += ":";
   }
   
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
@@ -188,6 +193,7 @@ void PS_Data_setup()
     }
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
+      SYSTEM_logger.severe("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
     }
   }
 }
@@ -297,11 +303,11 @@ class PS_Data {
         interfaces_err_str = Interfaces_File_handle.get_error(instance);
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
@@ -314,10 +320,12 @@ class PS_Data {
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
@@ -331,10 +339,12 @@ class PS_Data {
         if(interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
         else if(parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
         return false;
       }
@@ -501,6 +511,7 @@ class PS_Data {
         time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
         if ( time_stamp_diff < 0 && time_stamp_diff > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+          SYSTEM_logger.severe("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
           // time_stamp is big different. PS rebooted!
           time_stamp_reseted[instance] = true;
         }

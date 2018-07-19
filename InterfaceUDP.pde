@@ -309,8 +309,8 @@ class Interfaces_UDP {
 
   public void send(int instance, byte[] buf)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):buf.length="+buf.length);
-    if(Interfaces_UDP_handle == null)
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):buf.length="+buf.length);
+    if (Interfaces_UDP_handle == null)
     {
       if(PRINT_INTERFACES_UDP_SEND_ERR) println("Interfaces_UDP:send() Interfaces_UDP_handle=null");
       return;
@@ -321,14 +321,15 @@ class Interfaces_UDP {
 
   public void prepare_recv(int instance, int buf_size)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):buf_size="+buf_size);
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):buf_size="+buf_size);
 
     //recv_in_buf[instance] = new byte[buf_size * 2];
     recv_in_buf[instance] = new byte[buf_size];
     //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf="+recv_in_buf[instance]);
     if (recv_in_buf[instance] == null)
     {
-      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_P_RECV_ERR) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf["+instance+"]=null");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_P_RECV_ERR) println("Interfaces_UDP:prepare_recv("+instance+")"+":recv_in_buf["+instance+"]=null");
+      SYSTEM_logger.severe("Interfaces_UDP:prepare_recv("+instance+")"+":recv_in_buf["+instance+"]=null");
     }
 
     recv_live_total[instance] = 0; // Init. total received data.
@@ -338,13 +339,14 @@ class Interfaces_UDP {
 
   public void recv(int instance, byte[] data)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP:recv("+instance+"):data.length=" + data.length);
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP:recv("+instance+"):data.length=" + data.length);
     if (data.length > PS_CMD_BUFFER_MAX)
     {
-      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_RECV_ERR) println("Interfaces_UDP:recv("+instance+"):data.length max error! " + data.length);
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_RECV_ERR) println("Interfaces_UDP:recv("+instance+"):data.length max error! " + data.length);
+      SYSTEM_logger.severe("Interfaces_UDP:recv("+instance+"):data.length max error! " + data.length);
     }
     try {
-      if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
+      if (PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
         int inLength = 0;  // Bytes length by readBytes()
     
         inLength = data.length;
