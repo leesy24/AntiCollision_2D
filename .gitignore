@@ -2,3 +2,5 @@
 /always
 /events
 /events.*
+/*.log
+/*.lck
