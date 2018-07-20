@@ -1258,7 +1258,7 @@ class UI_System_Config_BT_ControlListener implements ControlListener {
 
     // Check Button is OK.
     if (button_index != 0) {
-      // Button is not OK.
+      // Button is not OK. Disable UI_System_Config.
       UI_System_Config_enabled = false;
       return;
     }
@@ -1301,6 +1301,17 @@ class UI_System_Config_CP5_CallbackListener implements CallbackListener {
   }
 }
 */
+
+void UI_System_Config_key_pressed()
+{
+  if (!UI_System_Config_enabled) return;
+
+  if (key == ESC)
+  {
+    // Disable UI_System_Config.
+    UI_System_Config_enabled = false;
+  }
+}
 
 void UI_System_Config_mouse_moved()
 {

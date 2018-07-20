@@ -27,11 +27,14 @@ final static boolean PRINT_MOUSEFUNC_Wheel = false;
 /**/
 void keyPressed()
 {
-  UI_NumPad_key_pressed();
-
   String msg = "keyPressed():key=(" + int(key) + ")" + ((key>=32 && key<=126)?key:"") + ",keyCode=(" + keyCode + ")" + KeyEvent.getKeyText(keyCode);
   if (PRINT_KEYFUNC_Pressed || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println(msg);
   SYSTEM_logger.info(msg);
+
+  UI_System_Config_key_pressed();
+  UI_Regions_Config_key_pressed();
+  UI_Num_Pad_key_pressed();
+
   if (key == ESC)
   {
     key = 0;  // Prevents the ESC key from being used.
@@ -104,7 +107,7 @@ void mousePressed()
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
   UI_Message_Box_mouse_pressed();
-  UI_NumPad_mouse_pressed();
+  UI_Num_Pad_mouse_pressed();
   UI_Buttons_mouse_pressed();
   PS_Image_mouse_pressed();
   PS_Data_mouse_pressed();
@@ -118,7 +121,7 @@ void mouseReleased()
 
   UI_System_Config_mouse_moved();
   UI_Regions_Config_mouse_moved();
-  UI_NumPad_mouse_released();
+  UI_Num_Pad_mouse_released();
   UI_Buttons_mouse_released();
   PS_Image_mouse_released();
   ROI_Data_mouse_released();
@@ -131,7 +134,7 @@ void mouseMoved()
 
   UI_System_Config_mouse_dragged();
   UI_Regions_Config_mouse_dragged();
-  UI_NumPad_mouse_moved();
+  UI_Num_Pad_mouse_moved();
   UI_Buttons_mouse_moved();
   PS_Image_mouse_moved();
   PS_Data_mouse_moved();
@@ -143,7 +146,7 @@ void mouseDragged()
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEKEYFUNC_DBG_ALL) println("Mouse dragged!");
   if (PRINT_MOUSEFUNC_Dragged || PRINT_MOUSEKEYFUNC_DBG_ALL || PRINT_MOUSEKEYFUNC_DBG_POS) println("\t mouseX=" + mouseX + ", mouseY=" + mouseY + ", mousePressed=" + mousePressed);
 
-  UI_NumPad_mouse_dragged();
+  UI_Num_Pad_mouse_dragged();
   UI_Buttons_mouse_dragged();
   PS_Image_mouse_dragged();
   PS_Data_mouse_dragged();

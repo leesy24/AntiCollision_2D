@@ -43,39 +43,39 @@ void UI_Num_Pad_setup(String title)
   UI_Num_Pad_enabled = true;
 }
 
-void UI_NumPad_key_pressed()
+void UI_Num_Pad_key_pressed()
 {
   if (!UI_Num_Pad_enabled) return;
 
   UI_Num_Pad_handle.key_pressed();
 }
 
-void UI_NumPad_mouse_pressed()
+void UI_Num_Pad_mouse_pressed()
 {
   if (!UI_Num_Pad_enabled) return;
 
   UI_Num_Pad_handle.mouse_pressed();
 }
 
-void UI_NumPad_mouse_released()
+void UI_Num_Pad_mouse_released()
 {
   if (!UI_Num_Pad_enabled) return;
 
   UI_Num_Pad_handle.mouse_released();
 }
 
-void UI_NumPad_mouse_moved()
+void UI_Num_Pad_mouse_moved()
 {
   if (!UI_Num_Pad_enabled) return;
 
   UI_Num_Pad_handle.mouse_moved();
 }
 
-void UI_NumPad_mouse_dragged()
+void UI_Num_Pad_mouse_dragged()
 {
   if (!UI_Num_Pad_enabled) return;
 
-  UI_NumPad_mouse_moved();
+  UI_Num_Pad_mouse_moved();
 }
 
 class UI_Num_Pad {

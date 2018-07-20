@@ -1398,6 +1398,17 @@ class UI_Regions_Config_CP5_CallbackListener implements CallbackListener {
 }
 */
 
+void UI_Regions_Config_key_pressed()
+{
+  if (!UI_Regions_Config_enabled) return;
+
+  if (key == ESC)
+  {
+    // Disable UI_Regions_Config.
+    UI_Regions_Config_enabled = false;
+  }
+}
+
 void UI_Regions_Config_mouse_moved()
 {
   if (!UI_Regions_Config_enabled) return;
