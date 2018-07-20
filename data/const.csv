@@ -11,7 +11,7 @@ ROI_OBJECT_DETECT_DIAMETER_MIN,2000,Minimum diameter of object to detect the obj
 ROI_OBJECT_DETECT_TIME_MIN,500,Minimum time of object appearance to detect one object ROI.(unit is milli-seconds)
 ROI_OBJECT_DETECT_KEEP_TIME,2000,Keeping time for disappearance object to detect object ROI later.(unit is milli-seconds)
 ROI_OBJECT_NO_MARK_BIG_DIAMETER_MIN,20000,Minimum Diameter of object to no maker display.(20000=200cm=2meter)
-Relay_Module_UART_port_name,COM1,UART port name of Relay module.
+Relay_Module_UART_port_name,COM2,UART port name of Relay module.
 Relay_Module_UART_baud_rate,115200,UART baud rate of Relay module.
 Relay_Module_UART_parity,N,UART parity of Relay module.
 Relay_Module_UART_data_bits,8,UART baud rate of Relay module.
