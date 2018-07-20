@@ -249,6 +249,8 @@ class PS_Data {
   int[] load_take_time = new int[PS_INSTANCE_MAX];
   int[] load_done_prev_millis = new int[PS_INSTANCE_MAX];
   int[] load_done_interval_millis = new int[PS_INSTANCE_MAX];
+  int[] load_done_interval_millis_cnt = new int[PS_INSTANCE_MAX];
+  int[] load_done_interval_millis_accu = new int[PS_INSTANCE_MAX];
   String[] file_name = new String[PS_INSTANCE_MAX];
   String[] remote_ip = new String[PS_INSTANCE_MAX];
   int[] remote_port = new int[PS_INSTANCE_MAX];
@@ -280,6 +282,8 @@ class PS_Data {
       load_take_time[i] = 0;
       load_done_prev_millis[i] = -1;
       load_done_interval_millis[i] = -1;
+      load_done_interval_millis_cnt[i] = 0;
+      load_done_interval_millis_accu[i] = 0;
       file_name[i] = null;
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
@@ -368,6 +372,16 @@ class PS_Data {
       int millis_curr = millis();
       load_done_interval_millis[instance] = get_int_diff(millis_curr, load_done_prev_millis[instance]);
       load_done_prev_millis[instance] = millis_curr;
+      load_done_interval_millis_accu[instance] += load_done_interval_millis[instance];
+      if (load_done_interval_millis_accu[instance] < 0) {
+        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance];
+        load_done_interval_millis_cnt[instance] = 0;
+      }
+      load_done_interval_millis_cnt[instance] ++;
+      if (load_done_interval_millis_cnt[instance] < 0) {
+        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance] - 1;
+        load_done_interval_millis_cnt[instance] = 1;
+      }
     }
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":ok!");
@@ -835,13 +849,13 @@ class PS_Data {
     if (remote_port[instance] != MIN_INT)
       strings.add("Port:" + remote_port[instance]);
     if (load_take_time[instance] != -1)
-      strings.add("Response time:" + load_take_time[instance] + "ms");
+      strings.add("Response t.:" + load_take_time[instance] + "ms");
     if (load_done_interval_millis[instance] != -1)
-      strings.add("Refresh time:" + load_done_interval_millis[instance] + "ms");
+      strings.add("Refresh t.:" + load_done_interval_millis[instance] + "(" + (load_done_interval_millis_cnt[instance] == 0?"N/A":load_done_interval_millis_accu[instance]/load_done_interval_millis_cnt[instance]) + ")" + "ms");
     if (PS_Interface[instance] != PS_Interface_None) {
       strings.add("Scan number:" + scan_number[instance]);
       strings.add("Time stamp:" + time_stamp[instance]);
-      strings.add("Scan start direction:" + scan_angle_start[instance] + "°");
+      strings.add("Scan start dir.:" + scan_angle_start[instance] + "°");
       strings.add("Scan angle size:" + scan_angle_size[instance] + "°");
       strings.add("Number of echoes:" + number_of_echoes[instance]);
       strings.add("Encoder count:" + incremental_count[instance]);
