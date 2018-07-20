@@ -200,6 +200,8 @@ void File_Operations_free_events()
         continue;
       }
 
+      int delete_start_millis = millis();
+
       for (Path events_file_path:events_subdir_files_list)
       {
         String events_file_name = events_file_path.getFileName().toString();
@@ -211,7 +213,12 @@ void File_Operations_free_events()
           continue;
         }
         events_file_handle.delete();
-        delay(1);
+
+        // Check delete operation is too late by frame time.
+        if (get_millis_diff(delete_start_millis) > FRAME_TIME)
+        {
+          delay(FRAME_TIME);
+        }
       }
 
       // Close list of DirectoryStream.
@@ -280,6 +287,8 @@ void File_Operations_free_always()
     long date_time = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
 
+    int delete_start_millis = millis();
+
     for (Path always_file_path:always_files_list)
     {
       String always_file_name = always_file_path.getFileName().toString();
@@ -303,7 +312,12 @@ void File_Operations_free_always()
         continue;
       }
       always_file_handle.delete();
-      delay(1);
+
+      // Check delete operation is too late by frame time.
+      if (get_millis_diff(delete_start_millis) > FRAME_TIME)
+      {
+        delay(FRAME_TIME);
+      }
     }
 
     // Close list of DirectoryStream.
