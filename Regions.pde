@@ -48,14 +48,14 @@ int Regions_check_point_contains(int instance, int mi_x, int mi_y)
 }
 
 class Regions {
-  LinkedList<Region_Data>[] regions_array = new LinkedList[PS_INSTANCE_MAX];
-  LinkedList<Region_CSV>[] regions_csv_array = new LinkedList[PS_INSTANCE_MAX];
+  ArrayList<Region_Data>[] regions_array = new ArrayList[PS_INSTANCE_MAX];
+  ArrayList<Region_CSV>[] regions_csv_array = new ArrayList[PS_INSTANCE_MAX];
   int[] regions_priority_max = new int[PS_INSTANCE_MAX];
 
   Regions() {
     for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++) {
-      regions_array[instance] = new LinkedList<Region_Data>();
-      regions_csv_array[instance] = new LinkedList<Region_CSV>();
+      regions_array[instance] = new ArrayList<Region_Data>();
+      regions_csv_array[instance] = new ArrayList<Region_CSV>();
       regions_priority_max[instance] = MIN_INT;
 
       String file_full_name;
@@ -326,8 +326,8 @@ class Regions {
     return region_index;
   }
 
-  LinkedList<Integer> get_region_indexes_contains_point(int instance, int point_mi_x, int point_mi_y) {
-    LinkedList<Integer> region_indexes = new LinkedList<Integer>();
+  ArrayList<Integer> get_region_indexes_contains_point(int instance, int point_mi_x, int point_mi_y) {
+    ArrayList<Integer> region_indexes = new ArrayList<Integer>();
 
     if (PRINT_REGIONS_ALL_DBG || PRINT_REGIONS_POINT_IS_CONTAINS_DBG) println("get_region_indexes_contains_point("+instance+"):point_mi_x=" + point_mi_x + ",point_mi_y=" + point_mi_y);
 

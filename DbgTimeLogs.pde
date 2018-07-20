@@ -1,7 +1,7 @@
 Dbg_Time_logs Dbg_Time_logs_handle = new Dbg_Time_logs();
 
 class Dbg_Time_logs {
-  private LinkedList<Dbg_Time_log> time_logs = new LinkedList<Dbg_Time_log>();
+  private ArrayList<Dbg_Time_log> time_logs = new ArrayList<Dbg_Time_log>();
   private String str;
   private int start;
   private int diff;

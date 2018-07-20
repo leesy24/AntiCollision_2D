@@ -186,6 +186,8 @@ void draw() {
     }
     PS_Data_handle.draw_points(i);
     Dbg_Time_logs_handle.add("PS_Data_handle.draw_points("+i+")");
+    ROI_Data_handle.detect_objects(i);
+    Dbg_Time_logs_handle.add("ROI_Data_handle.detect_objects("+i+")");
     ROI_Data_handle.draw_objects(i);
     Dbg_Time_logs_handle.add("ROI_Data_handle.draw_objects("+i+")");
     ROI_Data_handle.save_events(i);
@@ -229,7 +231,7 @@ void draw() {
 
 void Notice_Messages_draw()
 {
-  LinkedList<String> strings = new LinkedList<String>();
+  ArrayList<String> strings = new ArrayList<String>();
 
   if (SYSTEM_PASSWORD_disabled)
   {

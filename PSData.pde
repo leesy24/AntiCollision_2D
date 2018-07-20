@@ -1021,7 +1021,7 @@ class PS_Data {
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         */
-        LinkedList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
+        ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
         if (region_indexes.size() > 0) {
           ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
           point_is_contains_curr = true;
@@ -1141,8 +1141,6 @@ class PS_Data {
         }
       }
     } // End of for (int j = 0; j < number_of_points[instance]; j++)
-
-    ROI_Data_handle.detect_objects(instance);
 
     // Check pulse width exist than color mode back to RGB.
     if (data_content[instance] != 4) {

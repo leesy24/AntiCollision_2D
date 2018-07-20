@@ -23,7 +23,7 @@ void Bubble_Info_draw()
 {
   if (!Bubble_Info_enabled) return;
 
-  LinkedList<String> strings = new LinkedList<String>();
+  ArrayList<String> strings = new ArrayList<String>();
   int x, y, w, h, tl = 5, tr = 5, br = 0, bl = 5;
 
   if (BUBBLE_INFO_AVAILABLE || get_millis_diff(BUBBLE_INFO_TIMER) < BUBBLE_INFO_TIMEOUT)

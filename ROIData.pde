@@ -242,8 +242,8 @@ void ROI_Data_mouse_dragged()
 
 // A ROI_Data class
 class ROI_Data {
-  LinkedList<ROI_Point_Data>[] points_array = new LinkedList[PS_INSTANCE_MAX];
-  LinkedList<ROI_Object_Data>[] objects_array = new LinkedList[PS_INSTANCE_MAX];
+  ArrayList<ROI_Point_Data>[] points_array = new ArrayList[PS_INSTANCE_MAX];
+  ArrayList<ROI_Object_Data>[] objects_array = new ArrayList[PS_INSTANCE_MAX];
   int[] time_stamp_curr = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_curr = new long[PS_INSTANCE_MAX];
   float[] angle_step = new float[PS_INSTANCE_MAX];
@@ -257,8 +257,8 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CONSTRUCTOR_DBG) println("ROI_Data:constructor():Enter");
     for (int i = 0; i < PS_INSTANCE_MAX; i ++)
     {
-      points_array[i] = new LinkedList<ROI_Point_Data>();
-      objects_array[i] = new LinkedList<ROI_Object_Data>();
+      points_array[i] = new ArrayList<ROI_Point_Data>();
+      objects_array[i] = new ArrayList<ROI_Object_Data>();
       detected_objects_are_same[i] = false;
       File_Operations_save_events_started[i] = false;
     }
@@ -296,7 +296,7 @@ class ROI_Data {
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CLEAR_POINTS_DBG) println("ROI_Data:clear_objects("+instance+"):Exit");
   }
 
-  void add_point(int instance, LinkedList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
+  void add_point(int instance, ArrayList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):Enter");
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_POINT_DBG) println("ROI_Data:add_points("+instance+"):"+"region="+region+",mi_x="+mi_x+",mi_y="+mi_y+",scr_x="+scr_x+",scr_y="+scr_y);
     points_array[instance].add(new ROI_Point_Data(region_indexes, mi_x, mi_y, scr_x, scr_y));
@@ -306,7 +306,7 @@ class ROI_Data {
   void detect_objects(int instance) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Enter");
 
-    LinkedList<ROI_Object_Data> objects_new = new LinkedList<ROI_Object_Data>();
+    ArrayList<ROI_Object_Data> objects_new = new ArrayList<ROI_Object_Data>();
     //println("ROI_Data:detect_objects("+instance+"):"+"objects_new.size="+objects_new.size());
     //objects_new.clear();
 
@@ -315,6 +315,7 @@ class ROI_Data {
 
     // Get new objects.
     get_objects(objects_new, points_array[instance], angle_step[instance]);
+    Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):get_objects()");
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"get objects_new.size()="+objects_new.size());
 
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"init objects_array[instance].size()="+objects_array[instance].size());
@@ -373,7 +374,8 @@ class ROI_Data {
 
         object_prev.reused = true;
       }
-    }
+    } // End of for (ROI_Object_Data object_prev:objects_array[instance])
+    Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 1");
 
     //if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:detect_objects("+instance+"):"+"after objects_array[instance].size()="+objects_array[instance].size());
 
@@ -443,6 +445,7 @@ class ROI_Data {
     }
 
     objects_array[instance] = objects_new;
+    Dbg_Time_logs_handle.add("ROI_Data:detect_objects("+instance+"):End of for loop 2");
 
     //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DETECT_OBJECTS_DBG) println("ROI_Data:detect_objects("+instance+"):Exit");
   }
@@ -748,7 +751,7 @@ class ROI_Data {
     ROI_Data_draw_info_x[instance] = object.scr_center_x;
     ROI_Data_draw_info_y[instance] = object.scr_center_y;
 
-    LinkedList<String> strings = new LinkedList<String>();
+    ArrayList<String> strings = new ArrayList<String>();
 
     strings.add("Region:" + Regions_handle.get_region_name(instance, object.region_indexes.get(0)));
     strings.add("Appeared dur.:" + ((get_int_diff(object.appeared_time_last, object.appeared_time_start))/100/10.) + "s");
@@ -1058,35 +1061,37 @@ class ROI_Data {
     return ret;
   }
 
-  private void get_objects(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points_list, float angle_step) {
+  private void get_objects(ArrayList<ROI_Object_Data> objects, ArrayList<ROI_Point_Data> points_list, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():Enter");
     if (points_list.size() == 0) {
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_list size is 0. Nothing to do.");
       return;
     }
 
-    LinkedList<ROI_Point_Data> points_group = new LinkedList<ROI_Point_Data>();
+    ArrayList<ROI_Point_Data> points_group = new ArrayList<ROI_Point_Data>();
     // Grab near points sequential order.
     do {
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_list size="+points_list.size());
       points_group.add(points_list.get(0));
       points_list.remove(0);
 
+      ROI_Point_Data points_group_point;
+      ROI_Point_Data points_list_point;
+      int distance;
+
       // Grab near points with points_group
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_list size="+points_list.size());
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_group size="+points_group.size());
       for (int i = 0; i < points_group.size(); i ++) {
-        ROI_Point_Data points_group_point = points_group.get(i);
+        points_group_point = points_group.get(i);
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_group_point["+0+"]:"+"region="+points_group_point.region+",mi_x="+points_group_point.mi_x+",mi_y="+points_group_point.mi_y+",scr_x="+points_group_point.scr_x+",scr_y="+points_group_point.scr_y);
         for (int j = 0; j < points_list.size();) {
-          ROI_Point_Data points_point;
-          points_point = points_list.get(j);
-          //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_point["+i+"]:"+"region="+points_point.region+",mi_x="+points_point.mi_x+",mi_y="+points_point.mi_y+",scr_x="+points_point.scr_x+",scr_y="+points_point.scr_y);
-          int distance;
-          distance = get_points_distance(points_group_point.mi_x, points_group_point.mi_y, points_point.mi_x, points_point.mi_y);
+          points_list_point = points_list.get(j);
+          //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_list_point["+i+"]:"+"region="+points_list_point.region+",mi_x="+points_list_point.mi_x+",mi_y="+points_list_point.mi_y+",scr_x="+points_list_point.scr_x+",scr_y="+points_list_point.scr_y);
+          distance = get_points_distance(points_group_point.mi_x, points_group_point.mi_y, points_list_point.mi_x, points_list_point.mi_y);
           //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:detect_objects()"+":i="+i+":distance="+distance);
           if (distance <= ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX) {
-            points_group.add(points_point);
+            points_group.add(points_list_point);
             points_list.remove(j);
           }
           else {
@@ -1095,18 +1100,20 @@ class ROI_Data {
         } // End of for (int j = 0; j < points_list.size();)
         //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects()"+":i="+i+":points_group size="+points_group.size());
       } // End of for (int i = 0; i < points_group.size(); i ++)
+      Dbg_Time_logs_handle.add("ROI_Data:get_objects():points_group.size()="+points_group.size());
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_group size="+points_group.size());
       add_object(objects, points_group, angle_step);
+      Dbg_Time_logs_handle.add("ROI_Data:get_objects():objects.size()="+objects.size());
       points_group.clear();
       //if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():"+"points_list size="+points_list.size());
     } while (points_list.size() != 0);
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECTS_DBG) println("ROI_Data:get_objects():Exit");
   }
 
-  private void add_object(LinkedList<ROI_Object_Data> objects, LinkedList<ROI_Point_Data> points_group, float angle_step) {
+  private void add_object(ArrayList<ROI_Object_Data> objects, ArrayList<ROI_Point_Data> points_group, float angle_step) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_ADD_OBJECT_DBG) println("ROI_Data:add_object():Enter");
 
-    LinkedList<Integer> region_indexes;
+    ArrayList<Integer> region_indexes;
     int region_min;
     int mi_x_min, mi_y_min, mi_x_max, mi_y_max;
     int scr_x_min, scr_y_min, scr_x_max, scr_y_max;
@@ -1148,7 +1155,7 @@ class ROI_Data {
     if (PRINT_ROI_OBJECTS_NODETECT_ISSUE_DBG) println("ROI_Data:add_object():"+"object is big enough object_diameter="+object_diameter);
     */
 
-    region_indexes = new LinkedList<Integer>();
+    region_indexes = new ArrayList<Integer>();
     region_indexes.add(region_min); // Add first min region index.
     for (ROI_Point_Data point:points_group) {
       for (int point_region_index:point.region_indexes) {
@@ -1172,11 +1179,11 @@ class ROI_Data {
 }
 
 class ROI_Point_Data {
-  public LinkedList<Integer> region_indexes;
+  public ArrayList<Integer> region_indexes;
   public int mi_x, mi_y;
   public int scr_x, scr_y;
   
-  ROI_Point_Data(LinkedList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
+  ROI_Point_Data(ArrayList<Integer> region_indexes, int mi_x, int mi_y, int scr_x, int scr_y) {
     this.region_indexes = region_indexes;
     this.mi_x = mi_x;
     this.mi_y = mi_y;
@@ -1196,7 +1203,7 @@ final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG = false;
 final static boolean PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_ERR = false;
 
 class ROI_Object_Data {
-  public LinkedList<Integer> region_indexes;
+  public ArrayList<Integer> region_indexes;
   public int region_index_min;
   public int mi_start_x, mi_start_y;
   public int mi_end_x, mi_end_y;
@@ -1220,7 +1227,7 @@ class ROI_Object_Data {
   public boolean reused = false;
   public boolean disappeared = false;
   
-  ROI_Object_Data(LinkedList<Integer> region_indexes,int region_index_min, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y, int number_of_points) {
+  ROI_Object_Data(ArrayList<Integer> region_indexes,int region_index_min, int mi_start_x, int mi_start_y, int mi_end_x, int mi_end_y, int scr_start_x, int scr_start_y, int scr_end_x, int scr_end_y, int number_of_points) {
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"region_indexes.size()="+region_indexes.size());
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"mi x="+mi_start_x+",y="+mi_start_y+",x="+mi_end_x+",y="+mi_end_y);
     if (PRINT_ROI_OBJECT_DATA_ALL_DBG || PRINT_ROI_OBJECT_DATA_CONSTRUCTOR_DBG) println("ROI_Object_Data:constructor():"+"scr x="+scr_start_x+",y="+scr_start_y+",x="+scr_end_x+",y="+scr_end_y);

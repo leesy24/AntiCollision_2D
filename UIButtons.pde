@@ -42,7 +42,7 @@ static String UI_Buttons_reset_en_caption_str = "Reset"; // button string reset 
 
 static boolean UI_Buttons_enabled;
 static Buttons_Group UI_Buttons_group_zoom;
-static LinkedList<Buttons_Group>[] UI_Buttons_groups_array;
+static ArrayList<Buttons_Group>[] UI_Buttons_groups_array;
 static enum UI_Buttons_action_enum {
   ZOOM_PLUSE, ZOOM_MINUS, ROTATE_CW, ROTATE_CCW, MIRROR_LR, MIRROR_UD, RESET, MAX
 }
@@ -65,7 +65,7 @@ void UI_Buttons_setup()
   //UI_Buttons_enabled = true;
   UI_Buttons_enabled = false;
 
-  UI_Buttons_groups_array = new LinkedList[PS_INSTANCE_MAX];
+  UI_Buttons_groups_array = new ArrayList[PS_INSTANCE_MAX];
 
   int offset_top_y_start = FONT_HEIGHT + TEXT_MARGIN + TEXT_MARGIN;
   int w_h = FONT_HEIGHT * 2;
@@ -78,7 +78,7 @@ void UI_Buttons_setup()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    UI_Buttons_groups_array[i] = new LinkedList<Buttons_Group>();
+    UI_Buttons_groups_array[i] = new ArrayList<Buttons_Group>();
 
     int center_x_start;
     Buttons_Group buttons_group;
@@ -521,7 +521,7 @@ void UI_Buttons_reset_en(int instance)
 }
 
 class Buttons_Group {
-  private LinkedList<Button_Instance> buttons = new LinkedList<Button_Instance>();
+  private ArrayList<Button_Instance> buttons = new ArrayList<Button_Instance>();
   private int center_x, top_y;
   private String text;
   private color stroke_c;

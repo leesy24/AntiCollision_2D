@@ -62,8 +62,8 @@ static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RE
 static boolean[] Relay_Module_output_block = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
-LinkedList<UI_Relay_Indicator> Relay_Module_indicators = null;
-LinkedList<Relay_CSV> Relay_Module_relays_csv = null;
+ArrayList<UI_Relay_Indicator> Relay_Module_indicators = null;
+ArrayList<Relay_CSV> Relay_Module_relays_csv = null;
 
 class Relay_CSV {
   String relay_name;
@@ -107,7 +107,7 @@ void Relay_Module_setup()
 
   if (Relay_Module_indicators == null)
   {
-    Relay_Module_indicators = new LinkedList();
+    Relay_Module_indicators = new ArrayList();
   }
   else
   {
@@ -123,7 +123,7 @@ void Relay_Module_setup()
 
   if (Relay_Module_relays_csv == null)
   {
-    Relay_Module_relays_csv = new LinkedList();
+    Relay_Module_relays_csv = new ArrayList();
   }
   else
   {

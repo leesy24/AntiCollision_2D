@@ -79,7 +79,7 @@ void UI_NumPad_mouse_dragged()
 }
 
 class UI_Num_Pad {
-  LinkedList<UI_Num_Pad_Button> buttons = new LinkedList();
+  ArrayList<UI_Num_Pad_Button> buttons = new ArrayList();
   boolean input_done = false;
   String title;
   int title_lines;
