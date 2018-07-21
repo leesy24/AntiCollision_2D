@@ -219,7 +219,7 @@ void File_Operations_free_events()
         // Check delete operation is too late by frame time.
         if (get_millis_diff(delete_start_millis) > FRAME_TIME)
         {
-          SYSTEM_logger.severe("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+          SYSTEM_logger.warning("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
           delete_start_millis = millis();
           delay(FRAME_TIME);
         }
@@ -322,7 +322,7 @@ void File_Operations_free_always()
       // Check delete operation is too late by frame time.
       if (get_millis_diff(delete_start_millis) > FRAME_TIME)
       {
-        SYSTEM_logger.severe("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+        SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
         delete_start_millis = millis();
         delay(FRAME_TIME);
       }
@@ -491,7 +491,7 @@ void File_Operations_save_events()
             // Check copy operation is too late by frame time.
             if (get_millis_diff(copy_start_millis) > FRAME_TIME)
             {
-              SYSTEM_logger.severe("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
+              SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
               break;
             }
           }
