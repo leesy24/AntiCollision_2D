@@ -201,7 +201,7 @@ void File_Operations_free_events()
       }
 
       int delete_start_millis = millis();
-      int delete_count = 0;
+      //int delete_count = 0;
 
       for (Path events_file_path:events_subdir_files_list)
       {
@@ -214,13 +214,14 @@ void File_Operations_free_events()
           continue;
         }
         events_file_handle.delete();
-        delete_count ++;
+        //delete_count ++;
 
         // Check delete operation is too late by frame time.
         if (get_millis_diff(delete_start_millis) > FRAME_TIME)
         {
-          SYSTEM_logger.warning("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+          //SYSTEM_logger.warning("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
           delete_start_millis = millis();
+          //delete_count = 0;
           delay(FRAME_TIME);
         }
       }
@@ -292,7 +293,7 @@ void File_Operations_free_always()
     //Dbg_Time_logs_handle.add("Date().getTime()");
 
     int delete_start_millis = millis();
-    int delete_count = 0;
+    //int delete_count = 0;
 
     for (Path always_file_path:always_files_list)
     {
@@ -317,13 +318,14 @@ void File_Operations_free_always()
         continue;
       }
       always_file_handle.delete();
-      delete_count ++;
+      //delete_count ++;
 
       // Check delete operation is too late by frame time.
       if (get_millis_diff(delete_start_millis) > FRAME_TIME)
       {
-        SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+        //SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
         delete_start_millis = millis();
+        //delete_count = 0;
         delay(FRAME_TIME);
       }
     }
@@ -491,7 +493,7 @@ void File_Operations_save_events()
             // Check copy operation is too late by frame time.
             if (get_millis_diff(copy_start_millis) > FRAME_TIME)
             {
-              SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
+              //SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
               break;
             }
           }
