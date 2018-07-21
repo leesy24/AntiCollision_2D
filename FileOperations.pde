@@ -220,9 +220,9 @@ void File_Operations_free_events()
         if (get_millis_diff(delete_start_millis) > FRAME_TIME)
         {
           //SYSTEM_logger.warning("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+          delay(FRAME_TIME);
           delete_start_millis = millis();
           //delete_count = 0;
-          delay(FRAME_TIME);
         }
       }
 
@@ -324,9 +324,9 @@ void File_Operations_free_always()
       if (get_millis_diff(delete_start_millis) > FRAME_TIME)
       {
         //SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+        delay(FRAME_TIME);
         delete_start_millis = millis();
         //delete_count = 0;
-        delay(FRAME_TIME);
       }
     }
 
