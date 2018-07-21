@@ -201,6 +201,7 @@ void File_Operations_free_events()
       }
 
       int delete_start_millis = millis();
+      int delete_count = 0;
 
       for (Path events_file_path:events_subdir_files_list)
       {
@@ -213,10 +214,13 @@ void File_Operations_free_events()
           continue;
         }
         events_file_handle.delete();
+        delete_count ++;
 
         // Check delete operation is too late by frame time.
         if (get_millis_diff(delete_start_millis) > FRAME_TIME)
         {
+          SYSTEM_logger.severe("File_Operations_free_events():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+          delete_start_millis = millis();
           delay(FRAME_TIME);
         }
       }
@@ -288,6 +292,7 @@ void File_Operations_free_always()
     //Dbg_Time_logs_handle.add("Date().getTime()");
 
     int delete_start_millis = millis();
+    int delete_count = 0;
 
     for (Path always_file_path:always_files_list)
     {
@@ -312,10 +317,13 @@ void File_Operations_free_always()
         continue;
       }
       always_file_handle.delete();
+      delete_count ++;
 
       // Check delete operation is too late by frame time.
       if (get_millis_diff(delete_start_millis) > FRAME_TIME)
       {
+        SYSTEM_logger.severe("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+        delete_start_millis = millis();
         delay(FRAME_TIME);
       }
     }
@@ -434,6 +442,7 @@ void File_Operations_save_events()
 
         case COPY_ALWAYS_TO_EVENTS:
           int copy_start_millis = millis();
+          int copy_count = 0;
           File always_file_handle;
           for (; always_files_list_iterator[instance].hasNext();)
           {
@@ -476,9 +485,15 @@ void File_Operations_save_events()
               if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
               SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
             }
+            copy_count ++;
+
             //delay(1);
             // Check copy operation is too late by frame time.
-            if (get_millis_diff(copy_start_millis) > FRAME_TIME) break;
+            if (get_millis_diff(copy_start_millis) > FRAME_TIME)
+            {
+              SYSTEM_logger.severe("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
+              break;
+            }
           }
 
           // Check end of iterator.
