@@ -384,7 +384,7 @@ class PS_Data {
         SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_millis_cnt[instance]);
         load_done_interval_millis_cnt[instance] = 1;
       }
-      if ((load_done_interval_millis_cnt[instance] % 100) == 0) {
+      if ((load_done_interval_millis_cnt[instance] % 1000) == 0) {
         SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + (load_done_interval_millis_accu[instance] / load_done_interval_millis_cnt[instance]) + ",count=" + load_done_interval_millis_cnt[instance]);
       }
     }
