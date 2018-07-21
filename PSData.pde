@@ -375,12 +375,17 @@ class PS_Data {
       load_done_interval_millis_accu[instance] += load_done_interval_millis[instance];
       if (load_done_interval_millis_accu[instance] < 0) {
         load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance];
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_millis_cnt[instance]);
         load_done_interval_millis_cnt[instance] = 0;
       }
       load_done_interval_millis_cnt[instance] ++;
       if (load_done_interval_millis_cnt[instance] < 0) {
         load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance] - 1;
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_millis_cnt[instance]);
         load_done_interval_millis_cnt[instance] = 1;
+      }
+      if ((load_done_interval_millis_cnt[instance] % 100) == 0) {
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + (load_done_interval_millis_accu[instance] / load_done_interval_millis_cnt[instance]) + ",count=" + load_done_interval_millis_cnt[instance]);
       }
     }
 
