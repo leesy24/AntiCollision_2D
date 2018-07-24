@@ -237,7 +237,7 @@ class PS_Data {
   int[] data_content = new int[PS_INSTANCE_MAX];
   int[] number_of_points = new int[PS_INSTANCE_MAX];
   int[][] distances = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
-  float[][] angle_degree = new float[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
+  float[][] point_angle_degree = new float[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] mi_x = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] mi_y = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] scr_x = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
@@ -655,7 +655,7 @@ class PS_Data {
       // : The distance value is -2147483648 (0x80000000) in case that the echo signal was too low.
       // : The distance value is 2147483647 (0x7FFFFFFF) in case that the echo signal was noisy.
       distances[instance][j] = get_int32_bytes(PS_Data_buf[instance], i);
-      angle_degree[instance][j] =
+      point_angle_degree[instance][j] =
         scan_angle_start[instance] - 45.0
         +
         float(j) * scan_angle_size[instance] / float(number_of_points[instance]);
@@ -669,8 +669,8 @@ class PS_Data {
         scr_y[instance][j] = MIN_INT;
       }
       else {
-        mi_x[instance][j] = int(distances[instance][j] * cos(radians(angle_degree[instance][j])));
-        mi_y[instance][j] = int(distances[instance][j] * sin(radians(angle_degree[instance][j])));
+        mi_x[instance][j] = int(distances[instance][j] * cos(radians(point_angle_degree[instance][j])));
+        mi_y[instance][j] = int(distances[instance][j] * sin(radians(point_angle_degree[instance][j])));
 
         final int offset_x =
           (ROTATE_FACTOR[instance] == 315)
@@ -700,7 +700,7 @@ class PS_Data {
         if (ROTATE_FACTOR[instance] == 315) {
           scr_x[instance][j] = mi_y[instance][j] / ZOOM_FACTOR[instance];
           scr_y[instance][j] = mi_x[instance][j] / ZOOM_FACTOR[instance];
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle_degree=" + angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",point_angle_degree=" + point_angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
           scr_x[instance][j] += offset_x;
           if (MIRROR_ENABLE[instance])
             scr_y[instance][j] += offset_y;
@@ -710,7 +710,7 @@ class PS_Data {
         else if (ROTATE_FACTOR[instance] == 45) {
           scr_x[instance][j] = mi_x[instance][j] / ZOOM_FACTOR[instance];
           scr_y[instance][j] = mi_y[instance][j] / ZOOM_FACTOR[instance];
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle_degree=" + angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",point_angle_degree=" + point_angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
           if (MIRROR_ENABLE[instance])
             scr_x[instance][j] = offset_x - scr_x[instance][j];
           else
@@ -720,7 +720,7 @@ class PS_Data {
         else if (ROTATE_FACTOR[instance] == 135) {
           scr_x[instance][j] = mi_y[instance][j] / ZOOM_FACTOR[instance];
           scr_y[instance][j] = mi_x[instance][j] / ZOOM_FACTOR[instance];
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle_degree=" + angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",point_angle_degree=" + point_angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
           scr_x[instance][j] = offset_x - scr_x[instance][j];
           if (MIRROR_ENABLE[instance])
             scr_y[instance][j] = offset_y - scr_y[instance][j];
@@ -730,7 +730,7 @@ class PS_Data {
         else /*if (ROTATE_FACTOR[instance] == 225)*/ {
           scr_x[instance][j] = mi_x[instance][j] / ZOOM_FACTOR[instance];
           scr_y[instance][j] = mi_y[instance][j] / ZOOM_FACTOR[instance];
-          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",angle_degree=" + angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
+          //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + distance + ",point_angle_degree=" + point_angle_degree[instance][j] + ",scr_x=" + scr_x[instance][j] + ",scr_y=", scr_y[instance][j]);
           if (MIRROR_ENABLE[instance])
             scr_x[instance][j] += offset_x;
           else
@@ -1093,7 +1093,7 @@ class PS_Data {
               BUBBLE_INFO_COR_Y = float(mi_y/10)/1000.0;
               BUBBLE_INFO_BOX_X = point_x_curr;
               BUBBLE_INFO_BOX_Y = point_y_curr;
-              BUBBLE_INFO_ANGLE = float(int(angle_degree[instance][j]*100.0))/100.0;
+              BUBBLE_INFO_ANGLE = float(int(point_angle_degree[instance][j]*100.0))/100.0;
               BUBBLE_INFO_PULSE_WIDTH = pulse_width[instance][j];
               point_size_curr = BUBBLE_INFO_POINT_WH;
             }
