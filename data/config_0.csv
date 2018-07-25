@@ -1,8 +1,8 @@
 Name,Value,Comment
 PS_Interface,SN,PS Interface via File or COM or UDP or SN.
 ZOOM_FACTOR,140,Zooming factor of draws.(1000 for 50 meter or 100 for 5 meter)
-ROTATE_FACTOR,135.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
-MIRROR_ENABLE,true,Mirroring or not.(true or false)
+ROTATE_FACTOR,225.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
+MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #,,
 #Possible ROTATE_FACTOR and MIRROR_ENABLE options for sensor direction,,
 #for top left,,
@@ -18,9 +18,10 @@ MIRROR_ENABLE,true,Mirroring or not.(true or false)
 #ROTATE_FACTOR,225.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
 #MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #,,
+ANGLE_ADJUST,0,Angle adjust of draws for 1000 to -1000 in centi-degree
 SCREEN_OFFSET_X,0,X Offset of screen to draw.
 SCREEN_OFFSET_Y,0,Y Offset of screen to draw.
-FILE_name,events\20180703_131621_780_0,File name of PS Interface File.
+FILE_name,events.0\20180723_181324_884_0,File name of PS Interface File.
 UART_port_name,COM1,UART port name of PS Interface UART.
 UART_baud_rate,115200,UART baud rate of PS Interface UART.
 UART_parity,N,UART parity of PS Interface UART.

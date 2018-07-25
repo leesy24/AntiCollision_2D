@@ -13,6 +13,9 @@ final static boolean PRINT_UI_BUTTONS_ROTATE_DBG = false;
 //final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = true;
 final static boolean PRINT_UI_BUTTONS_MIRROR_DBG = false;
 
+//final static boolean PRINT_UI_BUTTONS_ANGLE_DBG = true;
+final static boolean PRINT_UI_BUTTONS_ANGLE_DBG = false;
+
 //final static boolean PRINT_UI_BUTTONS_RESET_DBG = true;
 final static boolean PRINT_UI_BUTTONS_RESET_DBG = false;
 
@@ -27,24 +30,28 @@ static int W_UI_BUTTONS_BOX = 1; // Black
 
 static String UI_Buttons_zoom_minus_str = "-";           // button string zoom minus
 static String UI_Buttons_zoom_pluse_str = "+";           // button string zoom pluse
-static String UI_Buttons_zoom_caption_str = "Zoom";      // button string zoom pluse
+static String UI_Buttons_zoom_caption_str = "Zoom";      // button string zoom caption
 
 //static String UI_Buttons_rotate_ccw_str = "↺";           // button string rotate counter clock-wise
 static String UI_Buttons_rotate_cw_str = "↻";            // button string rotate clock-wise
-static String UI_Buttons_rotate_caption_str = "Rotate";  // button string rotate clock-wise
+static String UI_Buttons_rotate_caption_str = "Rotate";  // button string rotate caption
 
-static String UI_Buttons_mirror_ud_str = "⇅";            // button string mirror enable
-//static String UI_Buttons_mirror_lr_str = "⇄";            // button string mirror enable
-static String UI_Buttons_mirror_caption_str = "Mirror";  // button string mirror enable
+static String UI_Buttons_mirror_ud_str = "⇅";            // button string up-down mirror enable
+//static String UI_Buttons_mirror_lr_str = "⇄";            // button string left-right mirror enable
+static String UI_Buttons_mirror_caption_str = "Mirror";  // button string mirror caption
+
+static String UI_Buttons_angle_minus_str = "-";           // button string angle minus
+static String UI_Buttons_angle_pluse_str = "+";           // button string angle pluse
+static String UI_Buttons_angle_caption_str = "Angle";      // button string angle caption
 
 static String UI_Buttons_reset_en_str = "0";             // button string reset enable
-static String UI_Buttons_reset_en_caption_str = "Reset"; // button string reset enable
+static String UI_Buttons_reset_en_caption_str = "Reset"; // button string reset enable caption
 
 static boolean UI_Buttons_enabled;
 static Buttons_Group UI_Buttons_group_zoom;
 static ArrayList<Buttons_Group>[] UI_Buttons_groups_array;
 static enum UI_Buttons_action_enum {
-  ZOOM_PLUSE, ZOOM_MINUS, ROTATE_CW, ROTATE_CCW, MIRROR_LR, MIRROR_UD, RESET, MAX
+  ZOOM_PLUSE, ZOOM_MINUS, ROTATE_CW, ROTATE_CCW, MIRROR_LR, MIRROR_UD, ANGLE_PLUSE, ANGLE_MINUS, RESET, MAX
 }
 
 static enum UI_Buttons_state_enum {
@@ -70,8 +77,8 @@ void UI_Buttons_setup()
   int offset_top_y_start = FONT_HEIGHT + TEXT_MARGIN + TEXT_MARGIN;
   int w_h = FONT_HEIGHT * 2;
   int center_x_adv = 0;
-  int top_y_adv = FONT_HEIGHT * 4;
-  int top_y = SCREEN_height / 2 - (top_y_adv * 4 + w_h) / 2;
+  int top_y_adv = FONT_HEIGHT * 2;
+  int top_y = SCREEN_height / 2 - (top_y_adv * 12 + w_h) / 2;
   //int top_y = SCREEN_height / 2 - FONT_HEIGHT - FONT_HEIGHT * 2 * 2 - TEXT_MARGIN - FONT_HEIGHT - TEXT_MARGIN;
 
   UI_Buttons_state = UI_Buttons_state_enum.IDLE;
@@ -103,8 +110,14 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_zoom_caption_str, center_x_start, top_y,
-        C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
+        UI_Buttons_zoom_caption_str,
+        center_x_start + center_x_adv * 0,
+        top_y + top_y_adv * 0,
+        C_UI_BUTTONS_BOX,
+        W_UI_BUTTONS_BOX,
+        C_UI_BUTTONS_NORMAL,
+        C_UI_BUTTONS_HIGHLIGHT,
+        C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.ZOOM_PLUSE, UI_Buttons_zoom_pluse_str,
       0, offset_top_y_start, w_h, w_h);
@@ -115,8 +128,14 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_rotate_caption_str, center_x_start + center_x_adv, top_y + top_y_adv + w_h,
-        C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
+        UI_Buttons_rotate_caption_str,
+        center_x_start + center_x_adv * 1,
+        top_y + top_y_adv * 3,
+        C_UI_BUTTONS_BOX,
+        W_UI_BUTTONS_BOX,
+        C_UI_BUTTONS_NORMAL,
+        C_UI_BUTTONS_HIGHLIGHT,
+        C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.ROTATE_CW, UI_Buttons_rotate_cw_str,
       0, offset_top_y_start, w_h, w_h);
@@ -129,8 +148,14 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_mirror_caption_str, center_x_start + center_x_adv * 2, top_y + top_y_adv * 2 + w_h,
-        C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
+        UI_Buttons_mirror_caption_str,
+        center_x_start + center_x_adv * 2,
+        top_y + top_y_adv * 5,
+        C_UI_BUTTONS_BOX,
+        W_UI_BUTTONS_BOX,
+        C_UI_BUTTONS_NORMAL,
+        C_UI_BUTTONS_HIGHLIGHT,
+        C_UI_BUTTONS_TEXT);
     /*
     buttons_group.add_button(
       UI_Buttons_action_enum.MIRROR_LR, UI_Buttons_mirror_lr_str,
@@ -144,8 +169,32 @@ void UI_Buttons_setup()
 
     buttons_group =
       new Buttons_Group(
-        UI_Buttons_reset_en_caption_str, center_x_start + center_x_adv * 3, top_y + top_y_adv * 3 + w_h,
-        C_UI_BUTTONS_BOX, W_UI_BUTTONS_BOX, C_UI_BUTTONS_NORMAL, C_UI_BUTTONS_HIGHLIGHT, C_UI_BUTTONS_TEXT);
+        UI_Buttons_angle_caption_str,
+        center_x_start + center_x_adv * 3,
+        top_y + top_y_adv * 7,
+        C_UI_BUTTONS_BOX,
+        W_UI_BUTTONS_BOX,
+        C_UI_BUTTONS_NORMAL,
+        C_UI_BUTTONS_HIGHLIGHT,
+        C_UI_BUTTONS_TEXT);
+    buttons_group.add_button(
+      UI_Buttons_action_enum.ANGLE_PLUSE, UI_Buttons_angle_pluse_str,
+      0, offset_top_y_start, w_h, w_h);
+    buttons_group.add_button(
+      UI_Buttons_action_enum.ANGLE_MINUS, UI_Buttons_angle_minus_str,
+       0, offset_top_y_start + FONT_HEIGHT * 2, w_h, w_h);
+    UI_Buttons_groups_array[i].add(buttons_group);
+
+    buttons_group =
+      new Buttons_Group(
+        UI_Buttons_reset_en_caption_str,
+        center_x_start + center_x_adv * 5,
+        top_y + top_y_adv * 10,
+        C_UI_BUTTONS_BOX,
+        W_UI_BUTTONS_BOX,
+        C_UI_BUTTONS_NORMAL,
+        C_UI_BUTTONS_HIGHLIGHT,
+        C_UI_BUTTONS_TEXT);
     buttons_group.add_button(
       UI_Buttons_action_enum.RESET, UI_Buttons_reset_en_str,
       0, offset_top_y_start, w_h, w_h);
@@ -291,6 +340,12 @@ void UI_Buttons_mouse_pressed()
           case MIRROR_LR:
             UI_Buttons_mirror_lr(i);
             break;
+          case ANGLE_PLUSE:
+            UI_Buttons_angle_pluse(i);
+            break;
+          case ANGLE_MINUS:
+            UI_Buttons_angle_minus(i);
+            break;
           case RESET:
             UI_Buttons_reset_en(i);
             break;
@@ -381,29 +436,37 @@ void UI_Buttons_mouse_wheel(int wheel_count)
 
 void UI_Buttons_zoom_minus(int instance)
 {
-  if (ZOOM_FACTOR[instance] < 5000)
+  if (ZOOM_FACTOR[instance] >= 5000)
   {
-    if (ZOOM_FACTOR[instance] < 200) ZOOM_FACTOR[instance] += 10;
-    else if (ZOOM_FACTOR[instance] < 1000) ZOOM_FACTOR[instance] += 100;
-    else if (ZOOM_FACTOR[instance] < 2000) ZOOM_FACTOR[instance] += 200;
-    else ZOOM_FACTOR[instance] += 500;
-    Screen_update_variable();
-    Config_save();
+    if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+instance+"]=" + ZOOM_FACTOR[instance]);
+    return;
   }
+
+  if (ZOOM_FACTOR[instance] < 200) ZOOM_FACTOR[instance] += 10;
+  else if (ZOOM_FACTOR[instance] < 1000) ZOOM_FACTOR[instance] += 100;
+  else if (ZOOM_FACTOR[instance] < 2000) ZOOM_FACTOR[instance] += 200;
+  else ZOOM_FACTOR[instance] += 500;
+  Screen_update_variable();
+  Config_update();
+
   if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+instance+"]=" + ZOOM_FACTOR[instance]);
 }
 
 void UI_Buttons_zoom_pluse(int instance)
 {
-  if (ZOOM_FACTOR[instance] > 20)
+  if (ZOOM_FACTOR[instance] <= 20)
   {
-    if (ZOOM_FACTOR[instance] <= 200) ZOOM_FACTOR[instance] -= 10;
-    else if (ZOOM_FACTOR[instance] <= 1000) ZOOM_FACTOR[instance] -= 100;
-    else if (ZOOM_FACTOR[instance] <= 2000) ZOOM_FACTOR[instance] -= 200;
-    else ZOOM_FACTOR[instance] -= 500;
-    Screen_update_variable();
-    Config_save();
+    if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+instance+"]=" + ZOOM_FACTOR[instance]);
+    return;
   }
+
+  if (ZOOM_FACTOR[instance] <= 200) ZOOM_FACTOR[instance] -= 10;
+  else if (ZOOM_FACTOR[instance] <= 1000) ZOOM_FACTOR[instance] -= 100;
+  else if (ZOOM_FACTOR[instance] <= 2000) ZOOM_FACTOR[instance] -= 200;
+  else ZOOM_FACTOR[instance] -= 500;
+  Screen_update_variable();
+  Config_update();
+
   if(PRINT_UI_BUTTONS_ZOOM_DBG) println("ZOOM_FACTOR["+instance+"]=" + ZOOM_FACTOR[instance]);
 }
 
@@ -413,7 +476,7 @@ void UI_Buttons_rotate_ccw(int instance)
   if (ROTATE_FACTOR[instance] < 0) ROTATE_FACTOR[instance] += 360;
   Screen_update_offsets();
   Screen_update_variable();
-  Config_save();
+  Config_update();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[instance]=" + ROTATE_FACTOR[instance]);
 }
 
@@ -466,7 +529,7 @@ void UI_Buttons_rotate_cw(int instance)
 */
   Screen_update_offsets();
   Screen_update_variable();
-  Config_save();
+  Config_update();
   if(PRINT_UI_BUTTONS_ROTATE_DBG) println("ROTATE_FACTOR[instance]=" + ROTATE_FACTOR[instance]);
 }
 
@@ -484,7 +547,7 @@ void UI_Buttons_mirror_ud(int instance)
   }
   Screen_update_offsets();
   Screen_update_variable();
-  Config_save();
+  Config_update();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[instance]=" + MIRROR_ENABLE[instance] + ", ROTATE_FACTOR[instance]=" + ROTATE_FACTOR[instance]);
 }
 
@@ -502,8 +565,42 @@ void UI_Buttons_mirror_lr(int instance)
   }
   Screen_update_offsets();
   Screen_update_variable();
-  Config_save();
+  Config_update();
   if(PRINT_UI_BUTTONS_MIRROR_DBG) println("MIRROR_ENABLE[" + instance + "]=" + MIRROR_ENABLE[instance] + ",ROTATE_FACTOR[" + instance + "]=" + ROTATE_FACTOR[instance]);
+}
+
+void UI_Buttons_angle_minus(int instance)
+{
+  if (ANGLE_ADJUST[instance] <= ANGLE_ADJUST_MIN)
+  {
+    ANGLE_ADJUST[instance] = ANGLE_ADJUST_MIN;
+    return;
+  }
+
+  ANGLE_ADJUST[instance] -= 10;
+
+  PS_Data_draw_params_keep_alive(instance);
+
+  Screen_update_variable();
+  Config_update();
+  if(PRINT_UI_BUTTONS_ANGLE_DBG) println("ANGLE_ADJUST["+instance+"]=" + ANGLE_ADJUST[instance]);
+}
+
+void UI_Buttons_angle_pluse(int instance)
+{
+  if (ANGLE_ADJUST[instance] >= ANGLE_ADJUST_MAX)
+  {
+    ANGLE_ADJUST[instance] = ANGLE_ADJUST_MAX;
+    return;
+  }
+
+  ANGLE_ADJUST[instance] += 10;
+
+  PS_Data_draw_params_keep_alive(instance);
+
+  Screen_update_variable();
+  Config_update();
+  if(PRINT_UI_BUTTONS_ANGLE_DBG) println("ANGLE_ADJUST["+instance+"]=" + ANGLE_ADJUST[instance]);
 }
 
 void UI_Buttons_reset_en(int instance)
@@ -514,10 +611,13 @@ void UI_Buttons_reset_en(int instance)
   //DRAW_OFFSET_X[instance] = DRAW_OFFSET_Y[instance] = 0;
   //MIRROR_ENABLE[instance] = false;
   //ZOOM_FACTOR[instance] = 100;
+  ANGLE_ADJUST[instance] = 0;
+
+  PS_Data_draw_params_keep_alive(instance);
 
   Screen_update_offsets();
   Screen_update_variable();
-  Config_save();
+  Config_update();
 }
 
 class Buttons_Group {

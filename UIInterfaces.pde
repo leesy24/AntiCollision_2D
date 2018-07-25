@@ -1047,7 +1047,7 @@ void UI_Interfaces_ddmenu(int n)
 
   if( PS_Interface[instance] != n ) {
     PS_Interface[instance] = n;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1088,7 +1088,7 @@ void UI_Interfaces_filename(String theText)
 
   if(!theText.equals(FILE_name[instance])) {
     FILE_name[instance] = theText;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1130,7 +1130,7 @@ void UI_Interfaces_UARTport(String theText)
 
   if(theText.equals(UART_port_name) != true) {
     UART_port_name = theText;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1173,7 +1173,7 @@ void UI_Interfaces_UARTbaud(String theText)
   int baud_rate = Integer.parseInt(theText);
   if(baud_rate != UART_baud_rate) {
     UART_baud_rate = baud_rate;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1222,7 +1222,7 @@ void UI_Interfaces_UARTdps(String theText)
     UART_data_bits = data_bits;
     UART_parity = parity;
     UART_stop_bits = stop_bits;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1264,7 +1264,7 @@ void UI_Interfaces_UDPremoteip(String theText)
 
   if(!theText.equals(UDP_remote_ip[instance])) {
     UDP_remote_ip[instance] = theText;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1307,7 +1307,7 @@ void UI_Interfaces_UDPremoteport(String theText)
   int remote_port = Integer.parseInt(theText);
   if(remote_port != UDP_remote_port[instance]) {
     UDP_remote_port[instance] = remote_port;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1350,7 +1350,7 @@ void UI_Interfaces_UDPlocalport(String theText)
   int local_port = Integer.parseInt(theText);
   if(local_port != UDP_local_port[instance]) {
     UDP_local_port[instance] = local_port;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }
@@ -1393,7 +1393,7 @@ void UI_Interfaces_SNserialnumber(String theText)
   int serial_number = Integer.parseInt(theText);
   if(serial_number != SN_serial_number[instance]) {
     SN_serial_number[instance] = serial_number;
-    Config_save();
+    Config_update();
     UI_Interfaces_changed[instance] = true;
     UI_Interfaces_changed_any = true;
   }

@@ -28,6 +28,7 @@ static int FRAME_TIME = 50; // Frame time will calculated from FRAME_RATE.
 void settings() {
   set_logger();
   Screen_settings();
+  PS_Data_settings();
 }
 
 // The setup() function is run once, when the program starts.
@@ -192,6 +193,10 @@ void draw() {
     Dbg_Time_logs_handle.add("ROI_Data_handle.draw_objects("+i+")");
     ROI_Data_handle.save_events(i);
     Dbg_Time_logs_handle.add("ROI_Data_handle.save_events("+i+")");
+  }
+
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
     PS_Data_handle.draw_params(i);
     Dbg_Time_logs_handle.add("PS_Data_handle.draw_params("+i+")");
     ROI_Data_handle.draw_object_info(i);

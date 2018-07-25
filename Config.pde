@@ -12,7 +12,6 @@ final static boolean PRINT_CONFIG_SETUP_ERR = false;
 final static String CONFIG_FILE_NAME = "config";
 final static String CONFIG_FILE_EXT = ".csv";
 
-static String CONFIG_file_full_name;
 // This is for argument passed number of config file.
 /*
 static String CONFIG_instance_number = null;
@@ -24,18 +23,20 @@ void Config_setup()
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
+    String file_full_name;
+
+    file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
  
     // A Table object
     Table table;
 
     // Load config file(CSV type) into a Table object
     // "header" option indicates the file has a header row
-    table = loadTable(CONFIG_file_full_name, "header");
+    table = loadTable(file_full_name, "header");
     // Check loadTable failed.
     if(table == null)
     {
-      if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup()"+":"+i+":loadTable() return null! "+CONFIG_file_full_name);
+      if (PRINT_CONFIG_ALL_DBG || PRINT_CONFIG_SETUP_DBG) println("Config_setup()"+":"+i+":loadTable() return null! "+file_full_name);
       Config_create();
       return;
     }
@@ -53,8 +54,8 @@ void Config_setup()
           }
         }
         if (j == PS_Interface_str.length) {
-          if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
-          SYSTEM_logger.severe("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+CONFIG_file_full_name);
+          if (PRINT_CONFIG_ALL_ERR || PRINT_CONFIG_SETUP_ERR) println("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+file_full_name);
+          SYSTEM_logger.severe("Config_setup()"+":"+i+":Error PS_Interface="+variable.getString("Value")+" of "+file_full_name);
           // Set default PS Interface.
           PS_Interface[i] = PS_Interface_None;
         }
@@ -67,6 +68,9 @@ void Config_setup()
       }
       else if (name.equals("MIRROR_ENABLE")) {
         MIRROR_ENABLE[i] = (variable.getString("Value").toLowerCase().equals("true"))?true:false; 
+      }
+      else if (name.equals("ANGLE_ADJUST")) {
+        ANGLE_ADJUST[i] = variable.getInt("Value"); 
       }
       else if (name.equals("SCREEN_OFFSET_X")) {
         SCREEN_OFFSET_X[i] = variable.getInt("Value");
@@ -109,9 +113,11 @@ void Config_setup()
     if (PRINT_CONFIG_ALL_DBG) println("Config_setup():ROTATE_FACTOR["+i+"]="+ROTATE_FACTOR[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_setup():MIRROR_ENABLE["+i+"]="+MIRROR_ENABLE[i]);
     if (PRINT_CONFIG_ALL_DBG) println("Config_setup():ZOOM_FACTOR["+i+"]="+ZOOM_FACTOR[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():DRAW_OFFSET_X["+i+"]="+DRAW_OFFSET_X[i]);
-    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():DRAW_OFFSET_Y["+i+"]="+DRAW_OFFSET_Y[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():ANGLE_ADJUST["+i+"]="+ANGLE_ADJUST[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():SCREEN_OFFSET_X["+i+"]="+SCREEN_OFFSET_X[i]);
+    if (PRINT_CONFIG_ALL_DBG) println("Config_setup():SCREEN_OFFSET_Y["+i+"]="+SCREEN_OFFSET_Y[i]);
   }
+
   // This is for argument passed number of config file.
   /*
   if(CONFIG_instance_number != null)
@@ -158,6 +164,11 @@ void Config_create()
     variable.setString("Name", "MIRROR_ENABLE");
     variable.setString("Value", ((MIRROR_ENABLE[i])?"true":"false"));
     variable.setString("Comment", "Mirroring or not.(true or false)");
+
+    variable = table.addRow();
+    variable.setString("Name", "ANGLE_ADJUST");
+    variable.setInt("Value", ANGLE_ADJUST[i]);
+    variable.setString("Comment", "Angle adjust of draws for 1000 to -1000 in centi-degree");
 
     variable = table.addRow();
     variable.setString("Name", "SCREEN_OFFSET_X");
@@ -219,14 +230,17 @@ void Config_create()
     variable.setInt("Value", SN_serial_number[i]);
     variable.setString("Comment", "Serial Number of PS Interface SN.");
 
-    CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
-    saveTable(table, "data/" + CONFIG_file_full_name);
+    String file_full_name;
+
+    file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
+
+    saveTable(table, "data/" + file_full_name);
   }
 }
 
-void Config_save()
+void Config_update()
 {
-  if (PRINT_CONFIG_ALL_DBG) println("Config_save():Enter");
+  if (PRINT_CONFIG_ALL_DBG) println("Config_update():Enter");
 
   int value_int;
   float value_float;
@@ -236,14 +250,16 @@ void Config_save()
 
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
-    CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
+    String file_full_name;
+
+    file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
  
     // A Table object
     Table table;
 
     // Load config file(CSV type) into a Table object
     // "header" option indicates the file has a header row
-    table = loadTable(CONFIG_file_full_name, "header");
+    table = loadTable(file_full_name, "header");
     // Check loadTable failed.
     if(table == null)
     {
@@ -282,17 +298,24 @@ void Config_save()
           changed = true;
         }
       }
-      else if(name.equals("DRAW_OFFSET_X")) {
+      else if(name.equals("ANGLE_ADJUST")) {
         value_int = variable.getInt("Value");
-        if(value_int != DRAW_OFFSET_X[i]) {
-          variable.setInt("Value", DRAW_OFFSET_X[i]);
+        if(value_int != ANGLE_ADJUST[i]) {
+          variable.setInt("Value", ANGLE_ADJUST[i]);
           changed = true;
         }
       }
-      else if(name.equals("DRAW_OFFSET_Y")) {
+      else if(name.equals("SCREEN_OFFSET_X")) {
         value_int = variable.getInt("Value");
-        if(value_int != DRAW_OFFSET_Y[i]) {
-          variable.setInt("Value", DRAW_OFFSET_Y[i]);
+        if(value_int != SCREEN_OFFSET_X[i]) {
+          variable.setInt("Value", SCREEN_OFFSET_X[i]);
+          changed = true;
+        }
+      }
+      else if(name.equals("SCREEN_OFFSET_Y")) {
+        value_int = variable.getInt("Value");
+        if(value_int != SCREEN_OFFSET_Y[i]) {
+          variable.setInt("Value", SCREEN_OFFSET_Y[i]);
           changed = true;
         }
       }
@@ -371,8 +394,7 @@ void Config_save()
     // Check config changed
     if(changed) {
       // Writing the config file(CSV type) back to the same file
-      CONFIG_file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
-      saveTable(table, "data/" + CONFIG_file_full_name);
+      saveTable(table, "data/" + file_full_name);
     }
-  }
+  } // End of for(int i = 0; i < PS_INSTANCE_MAX; i ++)
 }

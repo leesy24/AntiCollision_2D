@@ -35,6 +35,11 @@ static color C_PS_DATA_RECT_STROKE = #000000; // Black
 static int W_PS_DATA_RECT_STROKE = 1;
 static color C_PS_DATA_RECT_TEXT = #404040; // Black + 0x40
 
+// Define angle adjust variables of PS Data in centi-degree.
+static int[] ANGLE_ADJUST = new int[PS_INSTANCE_MAX];
+final static int ANGLE_ADJUST_MIN = -1000; // -10.0 degree.
+final static int ANGLE_ADJUST_MAX = +1000; // +10.0 degree.
+
 static int PS_DATA_SAVE_ALWAYS_DURATION = 1; // unit is hours. 1 hour
 
 final static int PS_DATA_SAVE_ALWAYS_DURATION_MIN = 1; // 1 hour
@@ -95,6 +100,22 @@ static int[] PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
 
+void PS_Data_settings() {
+  if(PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETTINGS_DBG) println("PS_Data_settings():Enter");
+
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    PS_Interface[i] = PS_Interface_None;
+    FILE_name[i] = "";
+    UDP_remote_ip[i] = "10.0.8.86";
+    UDP_remote_port[i] = 1024;
+    SN_serial_number[i] = 886;
+    ANGLE_ADJUST[i] = 0;
+  }
+
+  size(SCREEN_width, SCREEN_height);
+}
+
 void PS_Data_setup()
 {
   if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_SETUP_DBG) println("PS_Data_setup():Enter");
@@ -116,13 +137,6 @@ void PS_Data_setup()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i++)
   {
-/*
-    PS_Interface[i] = PS_Interface_FILE;
-    FILE_name[i] = "";
-    UDP_remote_ip[i] = "10.0.8.86";
-    UDP_remote_port[i] = 1024;
-    SN_serial_number[i] = 886;
-*/
     PS_Data_draw_params_enabled[i] = false;
     PS_Data_draw_params_timer[i] = millis();
   }
@@ -198,11 +212,64 @@ void PS_Data_setup()
   }
 }
 
+void PS_Data_draw_params_keep_alive(int instance)
+{
+  if (PS_Data_draw_params_enabled[instance])
+  {
+    PS_Data_draw_params_timer[instance] = millis();
+  }
+}
+
+
 void PS_Data_mouse_pressed()
 {
   if (PS_Data_draw_points_all_enabled && PS_Data_draw_points_all_time_started)
   {
     PS_Data_draw_points_all_start_time = millis();
+  }
+
+  boolean over[] = new boolean[PS_INSTANCE_MAX];
+  boolean over_any = false;
+  int i;
+
+  for (i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    over[i] =
+      mouse_is_over(
+        Grid_zero_x[i] - PS_Image[i].width / 2,
+        Grid_zero_y[i] + PS_Image_y_offset[i],
+        PS_Image[i].width,
+        PS_Image[i].height);
+    if (over[i])
+    {
+      over_any = true;
+    }
+  }
+
+  if (!over_any)
+  {
+    return;
+  }
+
+  for (i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if (!over[i])
+    {
+      PS_Data_draw_params_enabled[i] = false;
+      continue;
+    }
+
+    if (!PS_Data_draw_params_enabled[i])
+    {
+      PS_Data_draw_params_x[i] = mouseX;
+      PS_Data_draw_params_y[i] = mouseY;
+      PS_Data_draw_params_enabled[i] = true;
+      PS_Data_draw_params_timer[i] = millis();
+    }
+    else
+    {
+      PS_Data_draw_params_enabled[i] = false;
+    }
   }
 }
 
@@ -212,6 +279,21 @@ void PS_Data_mouse_moved()
   {
     PS_Data_draw_points_all_start_time = millis();
   }
+
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if( mouse_is_over(
+          Grid_zero_x[i] - PS_Image[i].width / 2,
+          Grid_zero_y[i] + PS_Image_y_offset[i],
+          PS_Image[i].width,
+          PS_Image[i].height) )
+    {
+      if (PS_Data_draw_params_enabled[i])
+      {
+        PS_Data_draw_params_timer[i] = millis();
+      }
+    }
+  }
 }
 
 void PS_Data_mouse_dragged()
@@ -219,6 +301,21 @@ void PS_Data_mouse_dragged()
   if (PS_Data_draw_points_all_enabled && PS_Data_draw_points_all_time_started)
   {
     PS_Data_draw_points_all_start_time = millis();
+  }
+
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    if( mouse_is_over(
+          Grid_zero_x[i] - PS_Image[i].width / 2,
+          Grid_zero_y[i] + PS_Image_y_offset[i],
+          PS_Image[i].width,
+          PS_Image[i].height) )
+    {
+      if (PS_Data_draw_params_enabled[i])
+      {
+        PS_Data_draw_params_timer[i] = millis();
+      }
+    }
   }
 }
 
@@ -656,9 +753,13 @@ class PS_Data {
       // : The distance value is 2147483647 (0x7FFFFFFF) in case that the echo signal was noisy.
       distances[instance][j] = get_int32_bytes(PS_Data_buf[instance], i);
       point_angle_degree[instance][j] =
-        scan_angle_start[instance] - 45.0
+        scan_angle_start[instance]
+        -
+        45.0
         +
-        float(j) * scan_angle_size[instance] / float(number_of_points[instance]);
+        (ANGLE_ADJUST[instance] / 100.0)
+        +
+        (j * scan_angle_size[instance] / number_of_points[instance]);
       // No echo or Noisy
       if (distances[instance][j] == 0x80000000
           ||
@@ -830,15 +931,13 @@ class PS_Data {
     return true;
   } // End of parse()
 
-  final static int DRAW_PARAMS_TIMEOUT = 10000; // 10 seconds
-
   // Draw params of parsed Data buffer
   void draw_params(int instance) {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_params("+instance+"):Enter");
 
     if (!PS_Data_draw_params_enabled[instance]) return;
 
-    if (get_millis_diff(PS_Data_draw_params_timer[instance]) >= DRAW_PARAMS_TIMEOUT) {
+    if (get_millis_diff(PS_Data_draw_params_timer[instance]) >= SYSTEM_UI_TIMEOUT * 1000) {
       PS_Data_draw_params_enabled[instance] = false;
     }
 
@@ -860,16 +959,16 @@ class PS_Data {
     if (PS_Interface[instance] != PS_Interface_None) {
       strings.add("Scan number:" + scan_number[instance]);
       strings.add("Time stamp:" + time_stamp[instance]);
-      strings.add("Scan start dir.:" + scan_angle_start[instance] + "°");
-      strings.add("Scan angle size:" + scan_angle_size[instance] + "°");
+      strings.add("Scan start angle:" + (scan_angle_start[instance] + ANGLE_ADJUST[instance] / 100.) + "°");
+      strings.add("Scan angle size:" + (ANGLE_ADJUST[instance] > 0?(scan_angle_size[instance] - ANGLE_ADJUST[instance] / 100.):scan_angle_size[instance]) + "°");
       strings.add("Number of echoes:" + number_of_echoes[instance]);
-      strings.add("Encoder count:" + incremental_count[instance]);
+      //strings.add("Encoder count:" + incremental_count[instance]);
       strings.add("System temp.:" + system_temperature[instance] + "°C");
       strings.add("System status:" + system_status[instance]);
       strings.add("Data content:" + data_content[instance]);
       strings.add("Number of points:" + number_of_points[instance]);
     }
-    strings.add("Time-out:" + ((DRAW_PARAMS_TIMEOUT + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
+    strings.add("Time-out:" + ((SYSTEM_UI_TIMEOUT * 1000 + 1000 - get_millis_diff(PS_Data_draw_params_timer[instance]))/1000) + "s");
 
     // Get max string width
     textSize(FONT_HEIGHT);
@@ -882,30 +981,46 @@ class PS_Data {
     int rect_x, rect_y;
     int rect_tl = 5, rect_tr = 5, rect_br = 5, rect_bl = 5;
     if (ROTATE_FACTOR[instance] == 315) {
-      if (MIRROR_ENABLE[instance]) { // OK
+      if (MIRROR_ENABLE[instance]) {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x[instance];
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
         rect_y = PS_Data_draw_params_y[instance];
-        rect_tl = 0;
+        rect_tr = 0;
       }
-      else { // OK
+      else {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x[instance];
+        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
         rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
-        rect_bl = 0;
+        rect_br = 0;
       }
     }
     else if (ROTATE_FACTOR[instance] == 45) {
-      if (MIRROR_ENABLE[instance]) { // OK
+      if (MIRROR_ENABLE[instance]) {
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance];
+        rect_tl = 0;
+      }
+      else {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
         rect_y = PS_Data_draw_params_y[instance];
         rect_tr = 0;
       }
-      else { // OK
+    }
+    else if (ROTATE_FACTOR[instance] == 135) {
+      if (MIRROR_ENABLE[instance]) {
+        rect_w = witdh_max + TEXT_MARGIN * 2;
+        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
+        rect_x = PS_Data_draw_params_x[instance];
+        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
+        rect_bl = 0;
+      }
+      else {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = PS_Data_draw_params_x[instance];
@@ -913,36 +1028,20 @@ class PS_Data {
         rect_tl = 0;
       }
     }
-    else if (ROTATE_FACTOR[instance] == 135) {
-      if (MIRROR_ENABLE[instance]) { // OK
+    else /*if (ROTATE_FACTOR[instance] == 225)*/ {
+      if (MIRROR_ENABLE[instance]) {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
         rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_br = 0;
       }
-      else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
-        rect_y = PS_Data_draw_params_y[instance];
-        rect_tr = 0;
-      }
-    }
-    else /*if (ROTATE_FACTOR[instance] == 225)*/ {
-      if (MIRROR_ENABLE[instance]) { // OK
+      else {
         rect_w = witdh_max + TEXT_MARGIN * 2;
         rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
         rect_x = PS_Data_draw_params_x[instance];
         rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
         rect_bl = 0;
-      }
-      else { // OK
-        rect_w = witdh_max + TEXT_MARGIN * 2;
-        rect_h = FONT_HEIGHT * strings.size() + TEXT_MARGIN * 2;
-        rect_x = PS_Data_draw_params_x[instance] - rect_w - 1;
-        rect_y = PS_Data_draw_params_y[instance] - rect_h - 1;
-        rect_br = 0;
       }
     }
 

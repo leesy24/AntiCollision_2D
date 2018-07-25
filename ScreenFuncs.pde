@@ -71,10 +71,19 @@ void Screen_settings() {
   SCREEN_width = int(displayWidth * SCREEN_width_ratio) - SCREEN_BORDER_WIDTH * 2;
   SCREEN_height = int(displayHeight * SCREEN_height_ratio) - (SCREEN_TITLE_HEIGHT + SCREEN_BORDER_WIDTH);
 */
-  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():");
+  if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():Enter");
   if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():displayWidth="+displayWidth+",displayHeight="+displayHeight);
   if(PRINT_SCREENFUNC_ALL_DBG || PRINT_SCREENFUNC_SETTINGS_DBG) println("Screen_settings():SCREEN_x="+SCREEN_x+",SCREEN_y="+SCREEN_y+",SCREEN_width="+SCREEN_width+",SCREEN_height="+SCREEN_height);
- 
+
+  for(int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    ZOOM_FACTOR[i] = 1000; // 10 meter per grid line. 
+    ROTATE_FACTOR[i] = 225;
+    MIRROR_ENABLE[i] = false;
+    SCREEN_OFFSET_X[i] = 0;
+    SCREEN_OFFSET_Y[i] = 0;
+  }
+
   size(SCREEN_width, SCREEN_height);
 }
 
@@ -294,5 +303,5 @@ void Screen_update_variable()
   Grid_update();
   PS_Image_update();
   Regions_update();
-  //Config_save();
+  //Config_update();
 }

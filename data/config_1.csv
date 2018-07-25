@@ -18,9 +18,10 @@ MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
 #MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #,,
+ANGLE_ADJUST,680,Angle adjust of draws for 1000 to -1000 in centi-degree
 SCREEN_OFFSET_X,0,X Offset of screen to draw.
 SCREEN_OFFSET_Y,0,Y Offset of screen to draw.
-FILE_name,events\20180703_153215_066_1,File name of PS Interface File.
+FILE_name,events\20180718_154352_697_1,File name of PS Interface File.
 UART_port_name,COM1,UART port name of PS Interface UART.
 UART_baud_rate,115200,UART baud rate of PS Interface UART.
 UART_parity,N,UART parity of PS Interface UART.
@@ -29,4 +30,4 @@ UART_stop_bits,1.0,UART stop bits of PS Interface UART.
 UDP_remote_ip,10.0.8.86,UDP remote IP of PS Interface UDP.
 UDP_remote_port,1024,UDP remote port of PS Interface UDP.
 UDP_local_port,1025,UDP local port of PS Interface UDP.
-SN_serial_number,886,Serial Number of PS Interface SN.
+SN_serial_number,1519,Serial Number of PS Interface SN.

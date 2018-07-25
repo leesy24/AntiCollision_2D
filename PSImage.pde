@@ -10,8 +10,6 @@ final static boolean PRINT_PS_IMAGE_SETUP_ERR = false;
 
 static PImage[] PS_Image = new PImage[PS_INSTANCE_MAX];
 static int[] PS_Image_y_offset = new int[PS_INSTANCE_MAX];
-static boolean[] PS_Image_mouse_over = new boolean[PS_INSTANCE_MAX];
-static boolean[] PS_Image_mouse_pressed = new boolean[PS_INSTANCE_MAX];
 
 void PS_Image_setup()
 {
@@ -20,8 +18,6 @@ void PS_Image_setup()
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
     PS_Image_y_offset[i] = 0;
-    PS_Image_mouse_over[i] = false;
-    PS_Image_mouse_pressed[i] = false;
   }
 
   PS_Image_update();
@@ -86,33 +82,6 @@ void PS_Image_update()
 
 void PS_Image_mouse_pressed()
 {
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    PS_Image_mouse_pressed[i] = false;
-    if (PS_Image_mouse_over[i])
-    {
-      PS_Image_mouse_pressed[i] = true;
-      PS_Data_draw_params_x[i] = mouseX;
-      PS_Data_draw_params_y[i] = mouseY;
-      PS_Data_draw_params_enabled[i] = true;
-      if (PS_Data_draw_params_enabled[i])
-      {
-        PS_Data_draw_params_timer[i] = millis();
-      }
-    }
-    else
-    {
-      int j;
-      for (j = 0; j < PS_INSTANCE_MAX; j ++)
-      {
-        if (PS_Image_mouse_over[j]) break;
-      }
-      if (j == PS_INSTANCE_MAX)
-      {
-        PS_Data_draw_params_enabled[i] = false;
-      }
-    }
-  }
 }
 
 void PS_Image_mouse_released()
@@ -121,28 +90,8 @@ void PS_Image_mouse_released()
 
 void PS_Image_mouse_moved()
 {
-  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
-  {
-    if( mouse_is_over(
-          Grid_zero_x[i] - PS_Image[i].width / 2,
-          Grid_zero_y[i] + PS_Image_y_offset[i],
-          PS_Image[i].width,
-          PS_Image[i].height) )
-    {
-      PS_Image_mouse_over[i] = true;
-      if (PS_Data_draw_params_enabled[i])
-      {
-        PS_Data_draw_params_timer[i] = millis();
-      }
-    }
-    else
-    {
-      PS_Image_mouse_over[i] = false;
-    }
-  }
 }
 
 void PS_Image_mouse_dragged()
 {
-  PS_Image_mouse_moved();
 }
