@@ -18,7 +18,7 @@ MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #ROTATE_FACTOR,315.0,Rotate factor of draws for 45.0 or 135.0 or 225.0 or 315.0
 #MIRROR_ENABLE,false,Mirroring or not.(true or false)
 #,,
-ANGLE_ADJUST,680,Angle adjust of draws for 1000 to -1000 in centi-degree
+ANGLE_ADJUST,0,Angle adjust of draws for 1000 to -1000 in centi-degree
 SCREEN_OFFSET_X,0,X Offset of screen to draw.
 SCREEN_OFFSET_Y,0,Y Offset of screen to draw.
 FILE_name,events\20180718_154352_697_1,File name of PS Interface File.
