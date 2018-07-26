@@ -353,6 +353,10 @@ class PS_Data {
   int[] remote_port = new int[PS_INSTANCE_MAX];
   int[] serial_number = new int[PS_INSTANCE_MAX];
   boolean[] time_stamp_reseted = new boolean[PS_INSTANCE_MAX];
+  boolean[] interfaces_err_started = new boolean[PS_INSTANCE_MAX];
+  int[] interfaces_err_start_millis = new int[PS_INSTANCE_MAX];
+  int[] interfaces_err_count = new int[PS_INSTANCE_MAX];
+
   // Test time_stamp wrap-around.
   //int[] time_stamp_offset = new int[PS_INSTANCE_MAX];
   //long[] time_stamp_offset = new long[PS_INSTANCE_MAX];
@@ -389,6 +393,7 @@ class PS_Data {
       // Test time_stamp wrap-around.
       //time_stamp_offset[i] = -1;
       //time_stamp_last[i] = -1L;
+      interfaces_err_started[i] = false;
     }
   }
 
@@ -399,14 +404,14 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):");
     //if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println(""PS_Data:load("+instance+"):PS_Data_buf["+instance+"]="+PS_Data_buf[instance]);
 
-    if(PS_Interface[instance] == PS_Interface_FILE) {
-      if(Interfaces_File_handle.load(instance) != true) {
+    if (PS_Interface[instance] == PS_Interface_FILE) {
+      if (Interfaces_File_handle.load(instance) != true) {
         interfaces_err_str = Interfaces_File_handle.get_error(instance);
-        if(interfaces_err_str != null) {
+        if (interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
-        else if(parse_err_str[instance] != null) {
+        else if (parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
         }
@@ -415,15 +420,15 @@ class PS_Data {
       // No mean in FILE interface.
       load_take_time[instance] = -1;
     }
-    else if(PS_Interface[instance] == PS_Interface_UART) {
-      if(Interfaces_UART_load() != true) {
+    else if (PS_Interface[instance] == PS_Interface_UART) {
+      if (Interfaces_UART_load() != true) {
         interfaces_err_str = Interfaces_UART_get_error();
-        if(interfaces_err_str != null) {
+        if (interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
           SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
         }
-        else if(parse_err_str[instance] != null) {
+        else if (parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
           SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
@@ -432,26 +437,52 @@ class PS_Data {
       }
       load_take_time[instance] = Interfaces_UART_get_take_time();
     }
-    else if(PS_Interface[instance] == PS_Interface_UDP
-            ||
-            PS_Interface[instance] == PS_Interface_SN) {
-      if(Interfaces_UDP_handle.load(instance) != true) {
+    else if ( PS_Interface[instance] == PS_Interface_UDP
+              ||
+              PS_Interface[instance] == PS_Interface_SN) {
+      if (Interfaces_UDP_handle.load(instance) != true) {
         interfaces_err_str = Interfaces_UDP_handle.get_error(instance);
-        if(interfaces_err_str != null) {
+        if (interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
-          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          if (!interfaces_err_started[instance]) {
+            interfaces_err_start_millis[instance] = millis();
+            interfaces_err_count[instance] = 0;
+            interfaces_err_started[instance] = true;
+            if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+            SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          }
+          else
+          {
+            int diff_millis = get_millis_diff(interfaces_err_start_millis[instance]);
+            if (diff_millis > (10*1000)) { // Every 10 seconds.
+              interfaces_err_count[instance] ++;
+              interfaces_err_start_millis[instance] = millis();
+              if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
+              SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
+            }
+            //if (interfaces_err_count[instance] >= 2) { // During over 20 seconds for test.
+            if (interfaces_err_count[instance] >= 10*6) { // During over 10 minutes.
+              if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
+              SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
+              // To restart program set frameCount to -1, this wiil call setup() of main.
+              frameCount = -1;
+            }
+          }
         }
-        else if(parse_err_str[instance] != null) {
-          draw_error(instance, parse_err_str[instance]);
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
-          SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+        else {
+          interfaces_err_started[instance] = false;
+          if (parse_err_str[instance] != null) {
+            draw_error(instance, parse_err_str[instance]);
+            if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+            SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
+          }
         }
         return false;
       }
+      interfaces_err_started[instance] = false;
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
     }
-    else if(PS_Interface[instance] == PS_Interface_None) {
+    else if (PS_Interface[instance] == PS_Interface_None) {
       // No mean in None interface.
       load_take_time[instance] = -1;
       return false;
