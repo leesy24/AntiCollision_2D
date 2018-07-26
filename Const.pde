@@ -8,7 +8,6 @@ final static boolean PRINT_CONST_SETUP_DBG = false;
 final static String CONST_FILE_NAME = "const";
 final static String CONST_FILE_EXT = ".csv";
 
-static String CONST_file_full_name;
 
 void Const_setup()
 {
@@ -17,11 +16,9 @@ void Const_setup()
   // A Table object
   Table table;
 
-  CONST_file_full_name = CONST_FILE_NAME + CONST_FILE_EXT;
-
   // Load config file(CSV type) into a Table object
   // "header" option indicates the file has a header row
-  table = loadTable(CONST_file_full_name, "header");
+  table = loadTable(sketchPath() + "\\data\\" + CONST_FILE_NAME + CONST_FILE_EXT, "header");
   // Check loadTable failed.
   if (table == null)
   {
@@ -67,6 +64,8 @@ void Const_setup()
       Relay_Module_UART_data_bits = variable.getInt("Value");
     else if (name.equals("Relay_Module_UART_stop_bits"))
       Relay_Module_UART_stop_bits = variable.getFloat("Value"); 
+    else if (name.equals("RELAY_MODULE_UART_REPLY_REQUEST_ENABLED"))
+      RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = (variable.getString("Value").toLowerCase().equals("true"))?true:false; 
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_FILL"))
       C_RELAY_MODULE_INDICATOR_OFF_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_RELAY_MODULE_INDICATOR_OFF_STROKE"))
@@ -255,6 +254,11 @@ void Const_create()
   variable.setString("Name", "Relay_Module_UART_stop_bits");
   variable.setFloat("Value", Relay_Module_UART_stop_bits);
   variable.setString("Comment", "UART stop bits of Relay module.");
+
+  variable = table.addRow();
+  variable.setString("Name", "RELAY_MODULE_UART_REPLY_REQUEST_ENABLED");
+  variable.setString("Value", (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED?"true":"false"));
+  variable.setString("Comment", "Reply data request of Relay moudle version 1.10.");
 
   variable = table.addRow();
   variable.setString("Name", "C_RELAY_MODULE_INDICATOR_OFF_FILL");
@@ -476,5 +480,5 @@ void Const_create()
   variable.setInt("Value", W_BG_IMAGE_LINE);
   variable.setString("Comment", "Line weight of background image lines.");
 
-  saveTable(table, "data/" + CONST_file_full_name);
+  saveTable(table, sketchPath() + "\\data\\" + CONST_FILE_NAME + CONST_FILE_EXT);
 }

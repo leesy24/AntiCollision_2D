@@ -51,6 +51,7 @@ static enum UI_System_Config_tf_enum {
   PS_DATA_SAVE_EVENTS_DURATION_DEFAULT,
   PS_DATA_SAVE_EVENTS_DURATION_LIMIT,
   Relay_Module_UART_port_name,
+  RELAY_MODULE_UART_REPLY_REQUEST_ENABLED,
   ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX,
   ROI_OBJECT_DETECT_DIAMETER_MIN,
   ROI_OBJECT_DETECT_TIME_MIN,
@@ -271,6 +272,24 @@ void UI_System_Config_update()
   w_max = max(w_max, w);
   h = FONT_HEIGHT + TEXT_MARGIN*2;
   tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_Relay_Module_UART_port_name");
+  tl_handle
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .setText(str)
+    .setPosition(x, y)
+    .setColorValue(C_UI_SYSTEM_CONFIG_TEXT)
+    .setHeight(h)
+    ;
+  tl_handle.get()
+      .setSize(FONT_HEIGHT)
+      ;
+
+  // RELAY_MODULE_UART_REPLY_REQUEST_ENABLED
+  y += h + TEXT_MARGIN;
+  str = "RELAY_MODULE_UART_REPLY_REQUEST_ENABLED";
+  w = int(textWidth(str));
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tl_handle = UI_System_Config_cp5_global.addTextlabel("UI_System_Config_RELAY_MODULE_UART_REPLY_REQUEST_ENABLEDe");
   tl_handle
     //.addCallback(UI_System_Config_cp5_callback_listener)
     .setText(str)
@@ -586,6 +605,41 @@ void UI_System_Config_update()
   tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_Relay_Module_UART_port_name_input");
   tf_handle
     .setId(UI_System_Config_tf_enum.Relay_Module_UART_port_name.ordinal())
+    //.addCallback(UI_System_Config_cp5_callback_listener)
+    .addListener(UI_System_Config_tf_control_listener)
+    .setPosition(x, y).setSize(w, h)
+    //.setHeight(FONT_HEIGHT + TEXT_MARGIN*2)
+    .setAutoClear(false)
+    .setColorBackground( C_UI_SYSTEM_CONFIG_FILL_NORMAL )
+    .setColorForeground( C_UI_SYSTEM_CONFIG_BORDER_NORMAL )
+    .setColorActive( C_UI_SYSTEM_CONFIG_BORDER_ACTIVE )
+    .setColorValueLabel( C_UI_SYSTEM_CONFIG_TEXT )
+    .setColorCursor( C_UI_SYSTEM_CONFIG_CURSOR )
+    .setCaptionLabel("")
+    .setText(str)
+    ;
+  //println("tf.getText() = ", tf.getText());
+  tf_handle.getValueLabel()
+      //.setFont(UI_System_Config_cf)
+      .setSize(FONT_HEIGHT)
+      //.toUpperCase(false)
+      ;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginTop = -1;
+  tf_handle.getValueLabel()
+      .getStyle()
+        .marginLeft = 1;
+
+  // RELAY_MODULE_UART_REPLY_REQUEST_ENABLED input
+  y += h + TEXT_MARGIN;
+  str = RELAY_MODULE_UART_REPLY_REQUEST_ENABLED?"true":"false";
+  w = int(textWidth("false") * 1.5 + TEXT_MARGIN * 2);
+  w_max = max(w_max, w);
+  h = FONT_HEIGHT + TEXT_MARGIN*2;
+  tf_handle = UI_System_Config_cp5_global.addTextfield("UI_System_Config_RELAY_MODULE_UART_REPLY_REQUEST_ENABLED_input");
+  tf_handle
+    .setId(UI_System_Config_tf_enum.RELAY_MODULE_UART_REPLY_REQUEST_ENABLED.ordinal())
     //.addCallback(UI_System_Config_cp5_callback_listener)
     .addListener(UI_System_Config_tf_control_listener)
     .setPosition(x, y).setSize(w, h)
@@ -1062,6 +1116,7 @@ void UI_System_Config_input_update()
 
     String str;
     int val;
+    boolean bool;
 
     str = tf_handle.getText();
     switch (tf_enum) {
@@ -1144,6 +1199,15 @@ void UI_System_Config_input_update()
         Relay_Module_UART_port_name = str;
         updated = true;
         if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated Relay_Module_UART_port_name="+Relay_Module_UART_port_name+",tf_enum="+tf_enum);
+        break;
+      case RELAY_MODULE_UART_REPLY_REQUEST_ENABLED:
+        bool = str.toLowerCase().equals("true")?true:false;
+        if (bool == RELAY_MODULE_UART_REPLY_REQUEST_ENABLED) {
+          break;
+        }
+        RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = bool;
+        updated = true;
+        if (PRINT_UI_SYSTEM_CONFIG_ALL_DBG || PRINT_UI_SYSTEM_CONFIG_INPUT_UPDATE_DBG) println("UI_System_Config_BT_ControlListener:controlEvent():Updated RELAY_MODULE_UART_REPLY_REQUEST_ENABLED="+RELAY_MODULE_UART_REPLY_REQUEST_ENABLED+",tf_enum="+tf_enum);
         break;
       case ROI_OBJECT_DETECT_POINTS_DISTANCE_MAX:
         try {

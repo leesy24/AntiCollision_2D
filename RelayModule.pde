@@ -38,8 +38,8 @@ final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false;
 static color C_RELAY_MODULE_INDICATOR_OFF_FILL = 0x40000000; // Black
 static color C_RELAY_MODULE_INDICATOR_OFF_STROKE = 0xFF404040; // Dark gray
 
-final static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = true;
-//final static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = false;
+//static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = true;
+static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = false;
 
 static boolean Relay_Module_UART_enabled = true;
 
