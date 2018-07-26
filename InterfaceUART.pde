@@ -4,10 +4,12 @@ import processing.serial.*;
 final static boolean PRINT_INTERFACES_UART_WRITE_DBG = false; 
 //final static boolean PRINT_INTERFACES_UART_WRITE_ERR = true; 
 final static boolean PRINT_INTERFACES_UART_WRITE_ERR = false; 
+
 //final static boolean PRINT_INTERFACES_UART_READ_DBG = true; 
 final static boolean PRINT_INTERFACES_UART_READ_DBG = false; 
 //final static boolean PRINT_INTERFACES_UART_READ_ERR = true; 
 final static boolean PRINT_INTERFACES_UART_READ_ERR = false; 
+
 //final static boolean PRINT_INTERFACES_UART_LOAD_DBG = true; 
 final static boolean PRINT_INTERFACES_UART_LOAD_DBG = false; 
 //final static boolean PRINT_INTERFACES_UART_LOAD_ERR = true; 
@@ -195,7 +197,7 @@ void UART_prepare_read(int buf_size)
   UART_len = 0x7fffffff - 12; // 12 = 4bytes Function code + 4bytes length + 4bytes CRC on UDP data format.
 }
 
-void serialEvent(Serial p)
+void UART_serialEvent(Serial p)
 {
   try {
     if(PRINT_INTERFACES_UART_READ_DBG) println("UART serialEvent");

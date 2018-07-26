@@ -1,52 +1,55 @@
 import processing.serial.*;
 
-//final static boolean PRINT_RELAY_MODULE_ALL_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_ALL_DBG = false; 
-final static boolean PRINT_RELAY_MODULE_ALL_ERR = true; 
-//final static boolean PRINT_RELAY_MODULE_ALL_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_ALL_DBG = true;
+final static boolean PRINT_RELAY_MODULE_ALL_DBG = false;
+final static boolean PRINT_RELAY_MODULE_ALL_ERR = true;
+//final static boolean PRINT_RELAY_MODULE_ALL_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_SETUP_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_SETUP_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_SETUP_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_SETUP_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_SETUP_DBG = true;
+final static boolean PRINT_RELAY_MODULE_SETUP_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_SETUP_ERR = true;
+final static boolean PRINT_RELAY_MODULE_SETUP_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_RESET_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_RESET_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_RESET_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_RESET_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_RESET_DBG = true;
+final static boolean PRINT_RELAY_MODULE_RESET_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_RESET_ERR = true;
+final static boolean PRINT_RELAY_MODULE_RESET_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_SET_RELAY_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_SET_RELAY_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_SET_RELAY_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_SET_RELAY_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_SET_RELAY_DBG = true;
+final static boolean PRINT_RELAY_MODULE_SET_RELAY_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_SET_RELAY_ERR = true;
+final static boolean PRINT_RELAY_MODULE_SET_RELAY_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_WRITE_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_WRITE_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_WRITE_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_WRITE_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_WRITE_DBG = true;
+final static boolean PRINT_RELAY_MODULE_WRITE_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_WRITE_ERR = true;
+final static boolean PRINT_RELAY_MODULE_WRITE_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_READ_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_READ_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_READ_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_READ_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_READ_DBG = true;
+final static boolean PRINT_RELAY_MODULE_READ_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_READ_ERR = true;
+final static boolean PRINT_RELAY_MODULE_READ_ERR = false;
 
-//final static boolean PRINT_RELAY_MODULE_LOAD_DBG = true; 
-final static boolean PRINT_RELAY_MODULE_LOAD_DBG = false; 
-//final static boolean PRINT_RELAY_MODULE_LOAD_ERR = true; 
-final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false; 
+//final static boolean PRINT_RELAY_MODULE_LOAD_DBG = true;
+final static boolean PRINT_RELAY_MODULE_LOAD_DBG = false;
+//final static boolean PRINT_RELAY_MODULE_LOAD_ERR = true;
+final static boolean PRINT_RELAY_MODULE_LOAD_ERR = false;
 
 static color C_RELAY_MODULE_INDICATOR_OFF_FILL = 0x40000000; // Black
 static color C_RELAY_MODULE_INDICATOR_OFF_STROKE = 0xFF404040; // Dark gray
 
-boolean Relay_Module_UART_enabled = true;
+final static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = true;
+//final static boolean RELAY_MODULE_UART_REPLY_REQUEST_ENABLED = false;
 
-Serial Relay_Module_UART_handle = null;  // The handle of UART(serial port)
+static boolean Relay_Module_UART_enabled = true;
 
-String Relay_Module_UART_port_name = "NA"; // String: name of the port (COM1 is the default)
-int Relay_Module_UART_baud_rate = 115200; // int: 9600 is the default
-char Relay_Module_UART_parity = 'N'; // char: 'N' for none, 'E' for even, 'O' for odd, 'M' for mark, 'S' for space ('N' is the default)
-int Relay_Module_UART_data_bits = 8; // int: 8 is the default
-float Relay_Module_UART_stop_bits = 1.0; // float: 1.0, 1.5, or 2.0 (1.0 is the default)
+static Serial Relay_Module_UART_handle = null;  // The handle of UART(serial port)
+
+static String Relay_Module_UART_port_name = "NA"; // String: name of the port (COM1 is the default)
+static int Relay_Module_UART_baud_rate = 115200; // int: 9600 is the default
+static char Relay_Module_UART_parity = 'N'; // char: 'N' for none, 'E' for even, 'O' for odd, 'M' for mark, 'S' for space ('N' is the default)
+static int Relay_Module_UART_data_bits = 8; // int: 8 is the default
+static float Relay_Module_UART_stop_bits = 1.0; // float: 1.0, 1.5, or 2.0 (1.0 is the default)
 
 final static int RELAY_MODULE_NUMBER_OF_RELAYS = 4;
 
@@ -56,14 +59,14 @@ final static int RELAY_MODULE_CHECK_INTERVAL_IDLE = 1000;
 final static String RELAY_MODULE_RELAYS_FILE_NAME = "relays";
 final static String RELAY_MODULE_RELAYS_FILE_EXT = ".csv";
 
-static boolean Relay_Module_output_block_enables;
+static boolean Relay_Module_output_block_enabled;
 
 static boolean[] Relay_Module_output_val = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static boolean[] Relay_Module_output_block = new boolean[RELAY_MODULE_NUMBER_OF_RELAYS];
 static int Relay_Module_output_interval;
 static int Relay_Module_output_timer;
-ArrayList<UI_Relay_Indicator> Relay_Module_indicators = null;
-ArrayList<Relay_CSV> Relay_Module_relays_csv = null;
+static ArrayList<UI_Relay_Indicator> Relay_Module_indicators = null;
+static ArrayList<Relay_CSV> Relay_Module_relays_csv = null;
 
 class Relay_CSV {
   String relay_name;
@@ -76,6 +79,20 @@ class Relay_CSV {
 static boolean Relay_Module_set_relay_thread_setup_done;
 static boolean Relay_Module_set_relay_thread_run;
 
+static boolean Relay_Module_set_relay_first_done = false;
+static boolean Relay_Module_UART_error_flag = false;
+
+static enum Relay_Module_UART_read_state_enum {
+  IDLE,
+  DATA,
+  CHECK_SUM,
+  MAX
+}
+
+static Relay_Module_UART_read_state_enum Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
+
+static UI_Message_Box Relay_Moude_Message_Box_handle = null;
+
 void Relay_Module_setup()
 {
   if (PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_SETUP_DBG) println("Relay_Module_setup():Enter");
@@ -84,11 +101,15 @@ void Relay_Module_setup()
 
   //printArray(Serial.list());
 
-  Relay_Module_output_block_enables = true;
-  //Relay_Module_output_block_enables = false;
+  Relay_Module_output_block_enabled = true;
+  //Relay_Module_output_block_enabled = false;
 
   Relay_Module_output_interval = 0; // to set at initial time.
   Relay_Module_output_timer = millis();
+
+  Relay_Module_set_relay_first_done = false;
+  Relay_Module_UART_error_flag = false;
+  Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
 
   String file_full_name;
   Table table;
@@ -225,6 +246,8 @@ void Relay_Module_setup()
     return;
   }
 
+  Relay_Module_UART_enabled = true;
+
   // Check Relay_Module_UART_port_name with the available serial ports
   for (String port:Serial.list())
   {
@@ -291,7 +314,7 @@ void Relay_Module_output()
         // Relay output will block when PS Interface is FILE.
         if (PS_Interface[instance] == PS_Interface_FILE
             &&
-            Relay_Module_output_block_enables)
+            Relay_Module_output_block_enabled)
         {
           Relay_Module_output_block[relay_index] = true;
         }
@@ -303,10 +326,21 @@ void Relay_Module_output()
       }
     }
   }
-  Dbg_Time_logs_handle.add("Relay_Module_output():for loop");
+  //Dbg_Time_logs_handle.add("Relay_Module_output():for loop");
 
   Relay_Module_draw_indicator();
-  Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_draw_indicator()");
+  //Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_draw_indicator()");
+
+  if (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED
+      &&
+      Relay_Module_UART_error_flag)
+  {
+    if (!Relay_Moude_Message_Box_handle.draw())
+    {
+      Relay_Module_UART_error_flag = false;
+    }
+    //Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Moude_Message_Box_handle.draw()");
+  }
 
   if (!updated
       &&
@@ -318,15 +352,40 @@ void Relay_Module_output()
   Relay_Module_output_interval = RELAY_MODULE_CHECK_INTERVAL_IDLE;
 
   Relay_Module_set_relay();
-  Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_set_relay()");
+  //Dbg_Time_logs_handle.add("Relay_Module_output():Relay_Module_set_relay()");
 }
 
 private void Relay_Module_set_relay()
 {
   if (!Relay_Module_UART_enabled) return;
 
+  if (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED)
+  {
+    if (Relay_Module_set_relay_first_done
+        &&
+        !Arrays.equals(Relay_Module_UART_write_data_buf, Relay_Module_UART_read_data_buf))
+    {
+      Relay_Moude_Message_Box_handle = UI_Message_Box_setup("Relay Module Error !", "Check Relay Module and Serial port name ("+Relay_Module_UART_port_name+") available.", 5);
+      Relay_Module_UART_error_flag = true;
+    }
+    else
+    {
+      UI_Message_Box_reset();
+      Relay_Module_UART_error_flag = false;
+    }
+  }
+
+  if (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED)
+  {
+    Relay_Module_UART_read_data_buf[0] = '0';
+    Relay_Module_set_relay_first_done = true;
+  }
+
   Relay_Module_set_relay_thread_run = true;
+
 }
+
+static byte[] Relay_Module_UART_write_data_buf = new byte[RELAY_MODULE_NUMBER_OF_RELAYS + 2];
 
 void Relay_Module_set_relay_thread()
 {
@@ -336,26 +395,28 @@ void Relay_Module_set_relay_thread()
 
     if (!Relay_Module_set_relay_thread_run) continue;
 
-    byte[] buf = new byte[4 + 2];
-    buf[0] = 'R';
+    if (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED)  Relay_Module_UART_write_data_buf[0] = 'Q';
+    else                                  Relay_Module_UART_write_data_buf[0] = 'R';
+
     int cnt = 0;
-    for (int relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
+    int relay_index;
+    for (relay_index = 0; relay_index < RELAY_MODULE_NUMBER_OF_RELAYS; relay_index ++)
     {
       // Relay output will off when PS Interface is FILE.
       if (Relay_Module_output_val[relay_index]
           &&
           !Relay_Module_output_block[relay_index])
       {
-        buf[relay_index + 1] = '1';
+        Relay_Module_UART_write_data_buf[relay_index + 1] = '1';
         cnt ++;
       }
       else
       {
-        buf[relay_index + 1] = '0';
+        Relay_Module_UART_write_data_buf[relay_index + 1] = '0';
       }
     }
-    buf[5] = byte('0' + cnt);
-    Relay_Module_UART_write(buf);
+    Relay_Module_UART_write_data_buf[relay_index + 1] = byte('0' + cnt);
+    Relay_Module_UART_write(Relay_Module_UART_write_data_buf);
 
     Relay_Module_set_relay_thread_run = false;
   } while (true);
@@ -452,12 +513,90 @@ void Relay_Module_UART_write(byte[] buf)
   Relay_Module_UART_handle.write(buf);
 }
 
-void Relay_Module_UART_prepare_read(int buf_size)
-{
-}
+static byte[] Relay_Module_UART_read_data_buf = new byte[RELAY_MODULE_NUMBER_OF_RELAYS+2];
+static int Relay_Module_UART_read_data_count;
+static byte Relay_Module_UART_read_check_sum;
 
 void Relay_Module_UART_read(byte[] buf)
 {
+
+  if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) println("Relay_Module_UART_read():Enter");
+
+  for (int index = 0; index < buf.length; index ++) {
+    do { // do while loop for continue statement on switch.
+      if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) println("Relay_Module_UART_read():Relay_Module_UART_read_state="+Relay_Module_UART_read_state);
+      switch (Relay_Module_UART_read_state) {
+        case IDLE:
+          if (buf[index] != 'Q') break;
+          Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.DATA;
+          Relay_Module_UART_read_data_count = 0;
+          Relay_Module_UART_read_data_buf[Relay_Module_UART_read_data_count] = buf[index];
+          Relay_Module_UART_read_data_count ++;
+          Relay_Module_UART_read_check_sum = '0';
+          break;
+        case DATA:
+          if (buf[index] != '0' && buf[index] != '1') {
+            Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
+            continue;
+          }
+          Relay_Module_UART_read_data_buf[Relay_Module_UART_read_data_count] = buf[index];
+          Relay_Module_UART_read_data_count ++;
+          Relay_Module_UART_read_check_sum += buf[index] - '0';
+          if (Relay_Module_UART_read_data_count == RELAY_MODULE_NUMBER_OF_RELAYS + 1)
+            Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.CHECK_SUM;
+          break;
+        case CHECK_SUM:
+          if (buf[index] != Relay_Module_UART_read_check_sum) {
+            Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
+            continue;
+          }
+          Relay_Module_UART_read_data_buf[Relay_Module_UART_read_data_count] = buf[index];
+          Relay_Module_UART_read_data_count ++;
+          if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) {
+            print("Relay_Module_UART_read()"+":Relay_Module_UART_read_data_count="+Relay_Module_UART_read_data_count+":");
+            for (int i = 0; i < Relay_Module_UART_read_data_count; i ++) {
+              print(char(Relay_Module_UART_read_data_buf[i]));
+            }
+            println("");
+          }
+          Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
+          break;
+        default:
+          if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_READ_ERR) println("Relay_Module_UART_read():switch case error! "+Relay_Module_UART_read_state);
+          break;
+      }
+      break;
+    } while (true);
+  } // End of for (int index = 0; index < buf.length; index ++)
+}
+
+void Relay_Module_UART_serialEvent(Serial serial_port)
+{
+  if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) println("Relay_Module_UART_serialEvent():Enter");
+
+  try {
+    byte[] data;
+    int length = 0;  // Bytes length by readBytes()
+
+    length = serial_port.available();
+    if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) println("Relay_Module_UART_serialEvent():serial_port.available()=" + length);
+    data = serial_port.readBytes(length);
+    if(length != data.length) {
+      if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_READ_ERR) println("Relay_Module_UART_serialEvent():"+"Error: UART read length error! " + length + "," + data.length);
+      return;
+    }
+    if(PRINT_RELAY_MODULE_ALL_DBG || PRINT_RELAY_MODULE_READ_DBG) {
+      print("Relay_Module_UART_serialEvent()"+":length="+length);
+      for (int i = 0; i < length; i ++) {
+        print(":["+i+"]"+"="+data[i]+"("+char(data[i])+")");
+      }
+      println("");
+    }
+    Relay_Module_UART_read(data);
+  }
+  catch (Exception e) {
+    if (PRINT_RELAY_MODULE_ALL_ERR || PRINT_RELAY_MODULE_READ_ERR) println("Relay_Module_UART_serialEvent():"+e.toString());
+  }
 } 
 
 class UI_Relay_Indicator {
