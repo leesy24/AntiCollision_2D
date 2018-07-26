@@ -54,6 +54,8 @@ static UI_Interfaces_state_enum UI_Interfaces_state;
 static UI_Interfaces_state_enum UI_Interfaces_state_next;
 static int UI_Interfaces_timeout_start;
 
+static UI_Message_Box UI_Interfaces_Message_Box_handle = null;
+
 void UI_Interfaces_setup()
 {
   if (PRINT_UI_INTERFACES_ALL_DBG || PRINT_UI_INTERFACES_SETUP_DBG) println("UI_Interfaces_setup():Enter");
@@ -722,7 +724,7 @@ void UI_Interfaces_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
+        UI_Interfaces_Message_Box_handle = UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
         UI_Interfaces_state = UI_Interfaces_state_enum.DISPLAY_MESSAGE;
         UI_Interfaces_state_next = UI_Interfaces_state_enum.IDLE;
         UI_Interfaces_enabled = false;
@@ -753,7 +755,7 @@ void UI_Interfaces_draw()
 
       break;
     case DISPLAY_MESSAGE:
-      if (UI_Message_Box_handle.draw())
+      if (UI_Interfaces_Message_Box_handle.draw())
       {
         break;
       }

@@ -36,6 +36,8 @@ static int Update_Data_Files_timeout_start;
 static boolean Update_Data_Files_thread_setup_done = false;
 static boolean Update_Data_Files_thread_pause;
 
+static UI_Message_Box Update_Data_Files_Message_Box_handle = null;
+
 void Update_Data_Files_setup()
 {
   if (PRINT_UPDATE_DATA_ALL_DBG || PRINT_UPDATE_DATA_SETUP_DBG) println("Update_Data_Files_setup():Enter");
@@ -83,7 +85,7 @@ void Update_Data_Files_check()
       Update_Data_Files_check_interval = 0;
       if (!unzip_check_password_protected(Update_Data_Files_zip_file_full_name))
       {
-        UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.\nAnd, Check Zip file is password protected.\nOr, Check the Zip file currupted.", 5);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Error !", "Incorrect Zip file !\nPlease remove the USB drive.\nAnd, Check Zip file is password protected.\nOr, Check the Zip file currupted.", 5);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -100,7 +102,7 @@ void Update_Data_Files_check()
     case PASSWORD_REQ:
       if (get_millis_diff(Update_Data_Files_timeout_start) > SYSTEM_UI_TIMEOUT * 1000)
       {
-        UI_Message_Box_setup("Time out !", "Please remove the USB drive.\nIf you don't want update.", 3);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Time out !", "Please remove the USB drive.\nIf you don't want update.", 3);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -114,7 +116,7 @@ void Update_Data_Files_check()
 
       if (UI_Num_Pad_handle.input_string == null)
       {
-        UI_Message_Box_setup("Escape !", "Please remove the USB drive.\nIf you don't want update.", 10);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Escape !", "Please remove the USB drive.\nIf you don't want update.", 10);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -128,7 +130,7 @@ void Update_Data_Files_check()
       if (!Update_Data_Files_unzip())
       {
         // unzip fail...
-        UI_Message_Box_setup("Error !", "Wrong password !\nOr, Zip file currupted !", 5);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Error !", "Wrong password !\nOr, Zip file currupted !", 5);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -141,7 +143,7 @@ void Update_Data_Files_check()
       if (!Update_Data_Files_check_updates())
       {
         // Noting to update...
-        UI_Message_Box_setup("Update already applied !", "Zip file has same configuration files with current.\nPlease check the Zip file has new configuration files.", 5);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Update already applied !", "Zip file has same configuration files with current.\nPlease check the Zip file has new configuration files.", 5);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
@@ -157,19 +159,19 @@ void Update_Data_Files_check()
       if (!Update_Data_Files_perform_update())
       {
         // Noting to update...
-        UI_Message_Box_setup("Error !", "Uhmmm. Somthing wrong.\nPlease check the system and contact engineers !"+"\n"+Update_Data_Files_error, 0);
+        Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Error !", "Uhmmm. Somthing wrong.\nPlease check the system and contact engineers !"+"\n"+Update_Data_Files_error, 0);
         Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
         Update_Data_Files_state_next = Update_Data_Files_state_enum.IDLE;
         break;
       }
       // Update done! Indicate updated.
-      UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3);
+      Update_Data_Files_Message_Box_handle = UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3);
       Update_Data_Files_state = Update_Data_Files_state_enum.DISPLAY_MESSAGE;
       Update_Data_Files_state_next = Update_Data_Files_state_enum.RESET;
       break;
 
     case DISPLAY_MESSAGE:
-      if (UI_Message_Box_handle.draw())
+      if (Update_Data_Files_Message_Box_handle.draw())
       {
         break;
       }

@@ -23,46 +23,14 @@ static int W_UI_MESSAGE_BOX_RECT = 1; // Black
 
 static boolean UI_Message_Box_enabled = false;
 
-static UI_Message_Box UI_Message_Box_handle = null;
-
-void UI_Message_Box_setup(String title, String message, int time_out)
+UI_Message_Box UI_Message_Box_setup(String title, String message, int time_out)
 {
-  UI_Message_Box_handle = new UI_Message_Box(title, message, time_out);
-  UI_Message_Box_enabled = true;
+  UI_Message_Box handle = new UI_Message_Box(title, message, time_out);
+  return handle;
 }
 
 void UI_Message_Box_reset()
 {
-  UI_Message_Box_enabled = false;
-}
-
-void UI_Message_Box_mouse_pressed()
-{
-  if (!UI_Message_Box_enabled) return;
-
-  UI_Message_Box_handle.forced_time_out = true;
-  //UI_Message_Box_handle.mouse_pressed();
-}
-
-void UI_Message_Box_mouse_released()
-{
-  if (!UI_Message_Box_enabled) return;
-
-  //UI_Message_Box_handle.mouse_released();
-}
-
-void UI_Message_Box_mouse_moved()
-{
-  if (!UI_Message_Box_enabled) return;
-
-  //UI_Message_Box_handle.mouse_moved();
-}
-
-void UI_Message_Box_mouse_dragged()
-{
-  if (!UI_Message_Box_enabled) return;
-
-  //UI_Message_Box_mouse_moved();
 }
 
 class UI_Message_Box {

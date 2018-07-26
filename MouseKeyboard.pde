@@ -106,7 +106,6 @@ void mousePressed()
   SYSTEM_logger.info("mousePressed()" + ":X=" + mouseX + ",Y=" + mouseY + ",Button=" + mouseButton);
   //if (PRINT_MOUSEFUNC_Pressed) println("SCREEN_width - mouseX=" + (SCREEN_width - mouseX) + ", mouseY=" + mouseY);
 
-  UI_Message_Box_mouse_pressed();
   UI_Num_Pad_mouse_pressed();
   UI_Buttons_mouse_pressed();
   PS_Image_mouse_pressed();

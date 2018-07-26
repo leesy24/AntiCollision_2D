@@ -71,6 +71,8 @@ static UI_Regions_Config_state_enum UI_Regions_Config_state;
 static UI_Regions_Config_state_enum UI_Regions_Config_state_next;
 static int UI_Regions_Config_timeout_start;
 
+static UI_Message_Box UI_Regions_Config_Message_Box_handle = null;
+
 void UI_Regions_Config_setup()
 {
   if (PRINT_UI_REGIONS_CONFIG_ALL_DBG || PRINT_UI_REGIONS_CONFIG_SETUP_DBG) println("UI_Regions_Config_setup():Enter");
@@ -1005,7 +1007,7 @@ void UI_Regions_Config_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
+        UI_Regions_Config_Message_Box_handle = UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
         UI_Regions_Config_state = UI_Regions_Config_state_enum.DISPLAY_MESSAGE;
         UI_Regions_Config_state_next = UI_Regions_Config_state_enum.IDLE;
         UI_Regions_Config_enabled = false;
@@ -1044,14 +1046,14 @@ void UI_Regions_Config_draw()
       {
         UI_Regions_Config_reset();
         // Update done! Indicate updated.
-        UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3);
+        UI_Regions_Config_Message_Box_handle = UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3);
         UI_Regions_Config_state = UI_Regions_Config_state_enum.DISPLAY_MESSAGE;
         UI_Regions_Config_state_next = UI_Regions_Config_state_enum.RESET;
         break;
       }
       break;
     case DISPLAY_MESSAGE:
-      if (UI_Message_Box_handle.draw())
+      if (UI_Regions_Config_Message_Box_handle.draw())
       {
         break;
       }
