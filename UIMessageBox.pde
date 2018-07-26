@@ -23,11 +23,6 @@ static int W_UI_MESSAGE_BOX_RECT = 1; // Black
 
 static boolean UI_Message_Box_enabled = false;
 
-static enum UI_Message_Box_button_enum {
-  NUM_0, NUM_1, NUM_2, NUM_3, NUM_4, NUM_5, NUM_6, NUM_7, NUM_8, NUM_9,
-  CLEAR, BACK, ENTER, OUTPUT
-}
-
 static UI_Message_Box UI_Message_Box_handle = null;
 
 void UI_Message_Box_setup(String title, String message, int time_out)
@@ -125,7 +120,7 @@ class UI_Message_Box {
     this.box_x = min(this.msg_x, this.title_x) - TEXT_MARGIN;
     this.box_y = this.title_y - TEXT_MARGIN;
 
-    this.time_out = time_out;
+    this.time_out = time_out * 1000;
     this.time_start = millis();
   }
 

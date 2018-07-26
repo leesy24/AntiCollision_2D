@@ -248,7 +248,7 @@ void UI_Buttons_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5000);
+        UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
         UI_Buttons_state = UI_Buttons_state_enum.DISPLAY_MESSAGE;
         UI_Buttons_state_next = UI_Buttons_state_enum.IDLE;
         UI_Buttons_enabled = false;
