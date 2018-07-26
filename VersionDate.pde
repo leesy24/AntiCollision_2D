@@ -1,8 +1,8 @@
 //static color C_VERSION_DATE_TEXT = 0xFFFFFFFF; // Black
 static color C_VERSION_DATE_TEXT = 0xFF000000; // White
 
-final static String VERSION_DATE_VERSION_STR = "1.00.09";
-final static String VERSION_DATE_DATE_STR = "2018-07-23";
+final static String VERSION_DATE_VERSION_STR = "1.00.10";
+final static String VERSION_DATE_DATE_STR = "2018-07-26";
 
 void Version_Date_setup()
 {
