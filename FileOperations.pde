@@ -139,7 +139,7 @@ void File_Operations_free_events()
   delay(FRAME_TIME * 1 / 4);
   do
   {
-    delay(FRAME_TIME);
+    delay(1000); // 1s
 
     if (File_Operations_free_threads_pause) continue;
 
@@ -155,7 +155,9 @@ void File_Operations_free_events()
     long free_space = events_dir_handle.getUsableSpace();
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():check free_space="+free_space+" at "+events_dir_full_name);
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():FILE_OPERATIONS_FREE_LIMIT="+FILE_OPERATIONS_FREE_LIMIT);
+
     if (free_space > FILE_OPERATIONS_FREE_LIMIT) continue;
+
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():have not enough free_space="+free_space+" at "+events_dir_full_name);
 
     // Get dirs list.
@@ -224,7 +226,7 @@ void File_Operations_free_events()
           delete_start_millis = millis();
           //delete_count = 0;
         }
-      }
+      } // End of for (Path events_file_path:events_subdir_files_list)
 
       // Close list of DirectoryStream.
       try
@@ -266,7 +268,8 @@ void File_Operations_free_always()
   delay(FRAME_TIME * 2 / 4);
   do
   {
-    delay(FRAME_TIME);
+    delay(1000); // 1s
+
     if (File_Operations_free_threads_pause) continue;
 
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_ALWAYS_DBG) println("File_Operations_free_always():Run"+millis());
@@ -289,7 +292,11 @@ void File_Operations_free_always()
       continue;
     }
 
-    long date_time = new Date().getTime();
+    // Get target date time for delete always file.
+    long target_date_time =
+      new Date().getTime()
+      -
+      PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L;
     //Dbg_Time_logs_handle.add("Date().getTime()");
 
     int delete_start_millis = millis();
@@ -305,16 +312,16 @@ void File_Operations_free_always()
         file_date_time = Long.parseLong(always_file_name.substring(2, always_file_name.length() - 4));
       }
       catch (NumberFormatException e) {
-        file_date_time = date_time - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L; // to delete file.
+        file_date_time = target_date_time; // to delete file.
       }
-      if (file_date_time > date_time - PS_DATA_SAVE_ALWAYS_DURATION*60*60*1000L) continue;
+      if (file_date_time > target_date_time) continue;
       //println(always_file_name+","+file_date_time);
 
       File always_file_handle;
       always_file_handle = new File(always_dir_full_name+always_file_name);
       if (!always_file_handle.isFile()) {
-        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
-        SYSTEM_logger.severe("File_Operations_free_always():File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():File not exist or not a file!:"+always_dir_full_name+always_file_name);
+        SYSTEM_logger.severe("File_Operations_free_always():File not exist or not a file!:"+always_dir_full_name+always_file_name);
         continue;
       }
       always_file_handle.delete();
@@ -328,7 +335,7 @@ void File_Operations_free_always()
         delete_start_millis = millis();
         //delete_count = 0;
       }
-    }
+    } // End of for (Path always_file_path:always_files_list)
 
     // Close list of DirectoryStream.
     try
@@ -444,7 +451,7 @@ void File_Operations_save_events()
 
         case COPY_ALWAYS_TO_EVENTS:
           int copy_start_millis = millis();
-          int copy_count = 0;
+          //int copy_count = 0;
           File always_file_handle;
           for (; always_files_list_iterator[instance].hasNext();)
           {
@@ -473,8 +480,8 @@ void File_Operations_save_events()
             // Check file is exist and is file.
             always_file_handle = new File(always_dir_full_name+always_file_name);
             if (!always_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+"\\"+always_file_name);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
+              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
               continue;
             }
 
@@ -487,7 +494,7 @@ void File_Operations_save_events()
               if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
               SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
             }
-            copy_count ++;
+            //copy_count ++;
 
             //delay(1);
             // Check copy operation is too late by frame time.
@@ -496,7 +503,7 @@ void File_Operations_save_events()
               //SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
               break;
             }
-          }
+          } // End of for (; always_files_list_iterator[instance].hasNext();)
 
           // Check end of iterator.
           if (always_files_list_iterator[instance].hasNext())
