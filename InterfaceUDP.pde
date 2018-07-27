@@ -457,6 +457,8 @@ class Interfaces_UDP {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP SCAN send() error!";
         if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):"+str_err_last[instance]);
+        // Need to call gc() to free memory.
+        System.gc();
         return -1;
       }
       return PS_CMD_state[instance];
@@ -529,6 +531,8 @@ class Interfaces_UDP {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP GSCN send() error!";
         if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
+        // Need to call gc() to free memory.
+        System.gc();
         return -1;
       }
       return PS_CMD_state[instance];
@@ -542,7 +546,15 @@ class Interfaces_UDP {
           // Prepare read
           prepare_recv(instance, PS_CMD_BUFFER_MAX);
           // Write buffer
-          send(instance, outBuffer);
+          if (send(instance, outBuffer) != 0)
+          {
+            PS_CMD_state[instance] = PS_CMD_STATE_NONE;
+            str_err_last[instance] = "Error: UDP GSCN send() error!";
+            if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
+            // Need to call gc() to free memory.
+            System.gc();
+            return -1;
+          }
           return PS_CMD_state[instance];
         }
         str_err_last[instance] = "Error: UDP GSCN timeout! " + comm_timeout[instance] + "," + get_millis_diff(comm_start_time[instance]);
