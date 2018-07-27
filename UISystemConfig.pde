@@ -73,7 +73,7 @@ static UI_System_Config_state_enum UI_System_Config_state;
 static UI_System_Config_state_enum UI_System_Config_state_next;
 static int UI_System_Config_timeout_start;
 
-static UI_Message_Box UI_System_Config_Message_Box_handle = null;
+static Message_Box UI_System_Config_Message_Box_handle = null;
 
 void UI_System_Config_setup()
 {
@@ -1040,7 +1040,7 @@ void UI_System_Config_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_System_Config_Message_Box_handle = UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
+        UI_System_Config_Message_Box_handle = new Message_Box("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
         UI_System_Config_state = UI_System_Config_state_enum.DISPLAY_MESSAGE;
         UI_System_Config_state_next = UI_System_Config_state_enum.IDLE;
         UI_System_Config_enabled = false;
@@ -1079,7 +1079,7 @@ void UI_System_Config_draw()
       {
         UI_System_Config_reset();
         // Update done! Indicate updated.
-        UI_System_Config_Message_Box_handle = UI_Message_Box_setup("Update done !", "New configuration will applied right now.", 3);
+        UI_System_Config_Message_Box_handle = new Message_Box("Update done !", "New configuration will applied right now.", 3);
         UI_System_Config_state = UI_System_Config_state_enum.DISPLAY_MESSAGE;
         UI_System_Config_state_next = UI_System_Config_state_enum.RESET;
         break;

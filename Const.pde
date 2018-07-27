@@ -130,14 +130,14 @@ void Const_setup()
       W_GRID_LINE = variable.getInt("Value");
     else if(name.equals("C_GRID_TEXT"))
       C_GRID_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_UI_MESSAGE_BOX_FILL"))
-      C_UI_MESSAGE_BOX_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_UI_MESSAGE_BOX_TEXT"))
-      C_UI_MESSAGE_BOX_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("C_UI_MESSAGE_BOX_RECT"))
-      C_UI_MESSAGE_BOX_RECT = (int)Long.parseLong(variable.getString("Value"), 16);
-    else if(name.equals("W_UI_MESSAGE_BOX_RECT"))
-      W_UI_MESSAGE_BOX_RECT = variable.getInt("Value");
+    else if(name.equals("C_MESSAGE_BOX_FILL"))
+      C_MESSAGE_BOX_FILL = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_MESSAGE_BOX_TEXT"))
+      C_MESSAGE_BOX_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("C_MESSAGE_BOX_RECT"))
+      C_MESSAGE_BOX_RECT = (int)Long.parseLong(variable.getString("Value"), 16);
+    else if(name.equals("W_MESSAGE_BOX_RECT"))
+      W_MESSAGE_BOX_RECT = variable.getInt("Value");
     else if(name.equals("C_UI_INTERFACES_TEXT"))
       C_UI_INTERFACES_TEXT = (int)Long.parseLong(variable.getString("Value"), 16);
     else if(name.equals("C_UI_INTERFACES_FILL_NORMAL"))
@@ -421,23 +421,23 @@ void Const_create()
   variable.setString("Comment", "Grid text color. Color data format is AARRGGBB");
 
   variable = table.addRow();
-  variable.setString("Name", "C_UI_MESSAGE_BOX_FILL");
-  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_FILL));
+  variable.setString("Name", "C_MESSAGE_BOX_FILL");
+  variable.setString("Value", String.format("%08X", C_MESSAGE_BOX_FILL));
   variable.setString("Comment", "Color of fill of message box. Color data format is AARRGGBB");
 
   variable = table.addRow();
-  variable.setString("Name", "C_UI_MESSAGE_BOX_TEXT");
-  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_TEXT));
+  variable.setString("Name", "C_MESSAGE_BOX_TEXT");
+  variable.setString("Value", String.format("%08X", C_MESSAGE_BOX_TEXT));
   variable.setString("Comment", "Color of text of message box. Color data format is AARRGGBB");
 
   variable = table.addRow();
-  variable.setString("Name", "C_UI_MESSAGE_BOX_RECT");
-  variable.setString("Value", String.format("%08X", C_UI_MESSAGE_BOX_RECT));
+  variable.setString("Name", "C_MESSAGE_BOX_RECT");
+  variable.setString("Value", String.format("%08X", C_MESSAGE_BOX_RECT));
   variable.setString("Comment", "Color of rect of message box. Color data format is AARRGGBB");
 
   variable = table.addRow();
-  variable.setString("Name", "W_UI_MESSAGE_BOX_RECT");
-  variable.setInt("Value", W_UI_MESSAGE_BOX_RECT);
+  variable.setString("Name", "W_MESSAGE_BOX_RECT");
+  variable.setInt("Value", W_MESSAGE_BOX_RECT);
   variable.setString("Comment", "Weight of rect lines of message box.");
 
   variable = table.addRow();

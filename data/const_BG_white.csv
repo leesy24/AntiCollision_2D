@@ -49,10 +49,10 @@ C_PS_DATA_RECT_TEXT,FF404040,Scan info box text color. Color data format is AARR
 C_GRID_LINE,FFC0C0C0,Grid line color. Color data format is AARRGGBB
 W_GRID_LINE,1,Grid line weight.
 C_GRID_TEXT,FF404040,Grid text color. Color data format is AARRGGBB
-C_UI_MESSAGE_BOX_FILL,C0FFFFFF,Color of fill of message box. Color data format is AARRGGBB
-C_UI_MESSAGE_BOX_TEXT,C0000000,Color of text of message box. Color data format is AARRGGBB
-C_UI_MESSAGE_BOX_RECT,C0000000,Color of rect of message box. Color data format is AARRGGBB
-W_UI_MESSAGE_BOX_RECT,1,Weight of rect lines of message box.
+C_MESSAGE_BOX_FILL,C0FFFFFF,Color of fill of message box. Color data format is AARRGGBB
+C_MESSAGE_BOX_TEXT,C0000000,Color of text of message box. Color data format is AARRGGBB
+C_MESSAGE_BOX_RECT,C0000000,Color of rect of message box. Color data format is AARRGGBB
+W_MESSAGE_BOX_RECT,1,Weight of rect lines of message box.
 C_UI_INTERFACES_TEXT,FF000000,Interface menu text color. Color data format is AARRGGBB
 C_UI_INTERFACES_FILL_NORMAL,FFFFFFFF,Interface menu fill color. Color data format is AARRGGBB
 C_UI_INTERFACES_FILL_HIGHLIGHT,FFC0C0C0,Interface menu hightlight color. Color data format is AARRGGBB

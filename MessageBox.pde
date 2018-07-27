@@ -1,39 +1,27 @@
-//final static boolean PRINT_UI_MESSAGE_BOX_ZOOM_DBG = true; 
-final static boolean PRINT_UI_MESSAGE_BOX_ZOOM_DBG = false;
+//final static boolean PRINT_MESSAGE_BOX_ZOOM_DBG = true; 
+final static boolean PRINT_MESSAGE_BOX_ZOOM_DBG = false;
 
-//final static boolean PRINT_UI_MESSAGE_BOX_ROTATE_DBG = true; 
-final static boolean PRINT_UI_MESSAGE_BOX_ROTATE_DBG = false;
+//final static boolean PRINT_MESSAGE_BOX_ROTATE_DBG = true; 
+final static boolean PRINT_MESSAGE_BOX_ROTATE_DBG = false;
 
-//final static boolean PRINT_UI_MESSAGE_BOX_MIRROR_DBG = true; 
-final static boolean PRINT_UI_MESSAGE_BOX_MIRROR_DBG = false;
+//final static boolean PRINT_MESSAGE_BOX_MIRROR_DBG = true; 
+final static boolean PRINT_MESSAGE_BOX_MIRROR_DBG = false;
 
-//final static boolean PRINT_UI_MESSAGE_BOX_RESET_DBG = true; 
-final static boolean PRINT_UI_MESSAGE_BOX_RESET_DBG = false;
+//final static boolean PRINT_MESSAGE_BOX_RESET_DBG = true; 
+final static boolean PRINT_MESSAGE_BOX_RESET_DBG = false;
 
 /*
-static color C_UI_MESSAGE_BOX_FILL = #FFFFFF; // White
-static color C_UI_MESSAGE_BOX_TEXT = #000000; // Black
-static color C_UI_MESSAGE_BOX_RECT = #000000; // Black
-static int W_UI_MESSAGE_BOX_RECT = 1; // Black
+static color C_MESSAGE_BOX_FILL = #FFFFFF; // White
+static color C_MESSAGE_BOX_TEXT = #000000; // Black
+static color C_MESSAGE_BOX_RECT = #000000; // Black
+static int W_MESSAGE_BOX_RECT = 1; // Black
 */
-static color C_UI_MESSAGE_BOX_FILL = 0xC0000000; // White
-static color C_UI_MESSAGE_BOX_TEXT = 0xC0FFFFFF; // Black
-static color C_UI_MESSAGE_BOX_RECT = 0xC0FFFFFF; // Black
-static int W_UI_MESSAGE_BOX_RECT = 1; // Black
+static color C_MESSAGE_BOX_FILL = 0xC0000000; // White
+static color C_MESSAGE_BOX_TEXT = 0xC0FFFFFF; // Black
+static color C_MESSAGE_BOX_RECT = 0xC0FFFFFF; // Black
+static int W_MESSAGE_BOX_RECT = 1; // Black
 
-static boolean UI_Message_Box_enabled = false;
-
-UI_Message_Box UI_Message_Box_setup(String title, String message, int time_out)
-{
-  UI_Message_Box handle = new UI_Message_Box(title, message, time_out);
-  return handle;
-}
-
-void UI_Message_Box_reset()
-{
-}
-
-class UI_Message_Box {
+class Message_Box {
   String title;
   String msg;
   int box_x, box_y, box_w, box_h;
@@ -44,15 +32,15 @@ class UI_Message_Box {
   boolean forced_time_out = false;
   boolean long_message_mode = false;
 
-  UI_Message_Box(String title, String msg, int time_out) {
-    set(title, msg, time_out, SCREEN_width, SCREEN_height);
+  Message_Box(String title, String msg, int time_out) {
+    setup(title, msg, time_out, SCREEN_width, SCREEN_height);
   }
 
-  UI_Message_Box(String title, String msg, int time_out, int width, int height) {
-    set(title, msg, time_out, width, height);
+  Message_Box(String title, String msg, int time_out, int width, int height) {
+    setup(title, msg, time_out, width, height);
   }
 
-  private void set(String title, String msg, int time_out, int width, int height) {
+  private void setup(String title, String msg, int time_out, int width, int height) {
     String[] lines = msg.split("\r\n|\r|\n");
 
     int center_x, center_y;
@@ -92,18 +80,18 @@ class UI_Message_Box {
     this.time_start = millis();
   }
 
-  boolean draw() {
+  public boolean draw() {
     // Sets the color and weight used to draw lines and borders around shapes.
-    stroke(C_UI_MESSAGE_BOX_RECT);
-    strokeWeight(W_UI_MESSAGE_BOX_RECT);
+    stroke(C_MESSAGE_BOX_RECT);
+    strokeWeight(W_MESSAGE_BOX_RECT);
 
-    fill(C_UI_MESSAGE_BOX_FILL);
+    fill(C_MESSAGE_BOX_FILL);
     rect(box_x, box_y, box_w, box_h, 3, 3, 3, 3);
     rect(box_x, box_y, box_w, title_h, 3, 3, 0, 0);
     //rect(title_x, title_y, title_w, title_h);
     //rect(msg_x, msg_y, msg_w, msg_h);
 
-    fill(C_UI_MESSAGE_BOX_TEXT);
+    fill(C_MESSAGE_BOX_TEXT);
     textAlign(LEFT, TOP);
     textSize(FONT_HEIGHT*2);
     text(title, title_x, title_y, title_w, title_h);
@@ -126,6 +114,10 @@ class UI_Message_Box {
     }
 
     return true;
+  }
+
+  public void set_forced_timeout() {
+    forced_time_out = true;
   }
 
 }

@@ -65,7 +65,7 @@ static UI_Buttons_state_enum UI_Buttons_state;
 static UI_Buttons_state_enum UI_Buttons_state_next;
 static int UI_Buttons_timeout_start;
 
-static UI_Message_Box UI_Buttons_Message_Box_handle = null;
+static Message_Box UI_Buttons_Message_Box_handle = null;
 
 void UI_Buttons_setup()
 {
@@ -250,7 +250,7 @@ void UI_Buttons_draw()
       if (!UI_Num_Pad_handle.input_string.equals(SYSTEM_PASSWORD))
       {
         // Password fail...
-        UI_Buttons_Message_Box_handle = UI_Message_Box_setup("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
+        UI_Buttons_Message_Box_handle = new Message_Box("Error !", "Wrong password input!\nYou can NOT access special functions.", 5);
         UI_Buttons_state = UI_Buttons_state_enum.DISPLAY_MESSAGE;
         UI_Buttons_state_next = UI_Buttons_state_enum.IDLE;
         UI_Buttons_enabled = false;

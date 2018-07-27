@@ -91,7 +91,7 @@ static enum Relay_Module_UART_read_state_enum {
 
 static Relay_Module_UART_read_state_enum Relay_Module_UART_read_state = Relay_Module_UART_read_state_enum.IDLE;
 
-static UI_Message_Box Relay_Moude_Message_Box_handle = null;
+static Message_Box Relay_Moude_Message_Box_handle = null;
 
 void Relay_Module_setup()
 {
@@ -365,18 +365,19 @@ private void Relay_Module_set_relay()
         &&
         !Arrays.equals(Relay_Module_UART_write_data_buf, Relay_Module_UART_read_data_buf))
     {
-      Relay_Moude_Message_Box_handle = UI_Message_Box_setup("Relay Module Error !", "Check Relay Module and Serial port name ("+Relay_Module_UART_port_name+") available.", 5);
+      Relay_Moude_Message_Box_handle = new Message_Box("Relay Module Error !", "Check Relay Module and Serial port name ("+Relay_Module_UART_port_name+") available.", 5);
       Relay_Module_UART_error_flag = true;
     }
     else
     {
-      UI_Message_Box_reset();
+      if (Relay_Moude_Message_Box_handle != null)
+      {
+        Relay_Moude_Message_Box_handle.set_forced_timeout();
+        Relay_Moude_Message_Box_handle = null;
+      }
       Relay_Module_UART_error_flag = false;
     }
-  }
 
-  if (RELAY_MODULE_UART_REPLY_REQUEST_ENABLED)
-  {
     Relay_Module_UART_read_data_buf[0] = '0';
     Relay_Module_set_relay_first_done = true;
   }
