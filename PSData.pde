@@ -398,7 +398,7 @@ class PS_Data {
   }
 
   // Load PS_Data_buf
-  boolean load(int instance) {
+  public boolean load(int instance) {
     String interfaces_err_str;
 
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):");
@@ -461,7 +461,7 @@ class PS_Data {
               SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
             }
             //if (interfaces_err_count[instance] >= 2) { // During over 20 seconds for test.
-            if (interfaces_err_count[instance] >= 10*6) { // During over 10 minutes.
+            if (interfaces_err_count[instance] >= 6) { // During over 1 minutes.
               if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
               SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
               // To restart program set frameCount to -1, this wiil call setup() of main.
@@ -522,7 +522,7 @@ class PS_Data {
     return true;
   }
 
-  void save_always(int instance) {
+  public void save_always(int instance) {
     // Save always feature will not run when PS Interface is FILE or None.
     if (PS_Interface[instance] == PS_Interface_FILE) return;
     if (PS_Interface[instance] == PS_Interface_None) return;
@@ -557,7 +557,7 @@ class PS_Data {
   }
 
   // Parsing Data buffer
-  boolean parse(int instance) {
+  public boolean parse(int instance) {
     String func;
     int i = 0; // index for navigating Data bufffer.
     int crc_c; // calculated CRC
@@ -963,7 +963,7 @@ class PS_Data {
   } // End of parse()
 
   // Draw params of parsed Data buffer
-  void draw_params(int instance) {
+  public void draw_params(int instance) {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_params("+instance+"):Enter");
 
     if (!PS_Data_draw_params_enabled[instance]) return;
@@ -1096,7 +1096,7 @@ class PS_Data {
   } // End of draw_params()
   
   // Draw points of parsed Data buffer
-  void draw_points(int instance)
+  public void draw_points(int instance)
   {
     int distance;
     int mi_x, mi_y;
@@ -1299,7 +1299,7 @@ class PS_Data {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):Exit");
   } // End of draw_points()
   
-  void draw_error(int instance, String message)
+  public void draw_error(int instance, String message)
   {
     if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_error("+instance+"):");
 
