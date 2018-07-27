@@ -396,6 +396,21 @@ void File_Operations_save_events()
 
           SYSTEM_logger.info("File_Operations_save_events():"+instance+":save events start!");  
 
+          // Make save events dir.
+          File save_events_dir_handle;
+          save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
+          if (!save_events_dir_handle.isDirectory())
+          {
+            if (!save_events_dir_handle.mkdirs())
+            {
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[instance]);
+              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[instance]);
+              // Reset pause state of Disk Space free threads to save events files.
+              File_Operations_free_threads_pause = false;
+              break;
+            }
+          }
+
           // Get always files list of instance to copy.
           try
           {
@@ -577,7 +592,20 @@ void File_Operations_save_always()
 
       if (save_always_data.save_events_dir_full_name != null)
       {
-        // Write data file to events.
+        // Make save events dir.
+        File save_events_dir_handle;
+        save_events_dir_handle = new File(save_always_data.save_events_dir_full_name);
+        if (!save_events_dir_handle.isDirectory())
+        {
+          if (!save_events_dir_handle.mkdirs())
+          {
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_ERR) println("File_Operations_save_always()" + ":" + save_always_data.instance + ":mkdirs() error! " + save_always_data.save_events_dir_full_name);
+            SYSTEM_logger.severe("File_Operations_save_always()" + ":" + save_always_data.instance + ":mkdirs() error! " + save_always_data.save_events_dir_full_name);
+            //break;
+          }
+        }
+
+        // Write data file to events dir.
         if (
           !write_file(
             save_always_data.data_buf,
@@ -586,7 +614,6 @@ void File_Operations_save_always()
           if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_ERR) println("File_Operations_save_always()" + ":" + save_always_data.instance + ":write_file() error! " + always_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat" + "\n\t" + write_file_error);
           SYSTEM_logger.severe("File_Operations_save_always()" + ":" + save_always_data.instance + ":write_file() error! " + always_dir_full_name+save_always_data.instance+"_"+save_always_data.date_time+".dat" + "\n\t" + write_file_error);
         }
-
       }
     } // End of while ((save_always_data = File_Operations_save_always_queue.poll()) != null)
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_DBG) println("File_Operations_save_always()" + ":queue empty!");

@@ -638,18 +638,6 @@ class ROI_Data {
         +"_"
         +instance+"\\";
 
-      File save_events_dir_handle;
-      save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
-      if (!save_events_dir_handle.isDirectory())
-      {
-        if (!save_events_dir_handle.mkdirs())
-        {
-          if (PRINT_ROI_DATA_ALL_ERR || PRINT_ROI_DATA_SAVE_EVENT_ERR) println("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
-          SYSTEM_logger.severe("PS_Data:save_events("+instance+"):mkdirs() error! "+File_Operations_save_events_dir_full_name[instance]);
-          return;
-        }
-      }
-
       File_Operations_save_events_write_events_done[instance] = false;
       File_Operations_save_events_done[instance] = false;
       File_Operations_save_events_started[instance] = true;
