@@ -535,14 +535,16 @@ class PS_Data {
       return;
     }
 
-    long date_time = new Date().getTime();
+    long curr_date_time = new Date().getTime();
     //Dbg_Time_logs_handle.add("Date().getTime()");
-    //println("date_time="+date_time+",millis()="+millis());
+    //println("curr_date_time="+curr_date_time+",millis()="+millis());
     String save_events_dir_full_name = null;
     if (File_Operations_save_events_started[instance]
         &&
         !File_Operations_save_events_write_events_done[instance]) {
-      if (date_time <= File_Operations_save_events_end_date_time[instance]) {
+      if (curr_date_time
+          <=
+          File_Operations_save_events_end_date_time[instance]) {
         save_events_dir_full_name =
           File_Operations_save_events_dir_full_name[instance];
       }
@@ -551,9 +553,12 @@ class PS_Data {
       }
     }
 
-    File_Operations_save_always_data save_always_data = new File_Operations_save_always_data(
-        instance, PS_Data_buf[instance], date_time, save_events_dir_full_name);
-    File_Operations_save_always_queue.add(save_always_data);
+    File_Operations_save_always_queue.add(
+      new File_Operations_save_always_data(
+        instance,
+        PS_Data_buf[instance],
+        curr_date_time,
+        save_events_dir_full_name));
   }
 
   // Parsing Data buffer
