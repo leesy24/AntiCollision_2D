@@ -236,6 +236,7 @@ void File_Operations_free_events()
         if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_subdir_files_list.close() err!"+"\n\t"+e.toString());
         SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_subdir_files_list.close() err!"+"\n\t"+e.toString());
       }
+      events_subdir_files_list = null;
 
       events_subdir_handle.delete();
       if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():delete done! "+events_subdir_name);
@@ -252,6 +253,7 @@ void File_Operations_free_events()
       if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
       SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
     }
+    events_dirs_list = null;
 
   } while (true);
 }
@@ -345,6 +347,7 @@ void File_Operations_free_always()
       if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
       SYSTEM_logger.severe("File_Operations_free_always():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
     }
+    always_files_list = null;
 
   } while (true);
 }
@@ -520,6 +523,7 @@ void File_Operations_save_events()
             if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():"+instance+":DirectoryStream close() err!"+"\n\t"+e.toString());
             SYSTEM_logger.severe("File_Operations_save_events():"+instance+":DirectoryStream close() err!"+"\n\t"+e.toString());
           }
+          always_files_list[instance] = null;
 
           File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.WAIT_WRITE_EVENTS_DONE;
           // Reset pause state of Disk Space free threads to save events files.
