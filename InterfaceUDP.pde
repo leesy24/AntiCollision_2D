@@ -2,44 +2,55 @@
 final static boolean PRINT_INTERFACES_UDP_ALL_DBG = false;
 final static boolean PRINT_INTERFACES_UDP_ALL_ERR = true;
 //final static boolean PRINT_INTERFACES_UDP_ALL_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_SETUP_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_SETUP_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_RESET_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_RESET_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_RESET_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_RESET_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_OPEN_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_OPEN_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_CLOSE_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_CLOSE_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_SEND_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_SEND_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_SEND_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_SEND_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_RECV_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_P_RECV_ERR = false;
-//final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = true;
-final static boolean PRINT_INTERFACES_UDP_RECV_DBG = false;
+
 //final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_RECV_IN_DBG = false;
+
+//final static boolean PRINT_INTERFACES_UDP_P_RECV_DBG = true;
+final static boolean PRINT_INTERFACES_UDP_RECV_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_RECV_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_RECV_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_LOAD_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_LOAD_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_SET_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_SET_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_SET_ERR = true;
 final static boolean PRINT_INTERFACES_UDP_SET_ERR = false;
+
 //final static boolean PRINT_INTERFACES_UDP_GET_DBG = true;
 final static boolean PRINT_INTERFACES_UDP_GET_DBG = false;
 //final static boolean PRINT_INTERFACES_UDP_GET_ERR = true;
@@ -51,11 +62,11 @@ static Interfaces_UDP Interfaces_UDP_handle = null;
 
 void Interfaces_UDP_setup(int local_port)
 {
-  if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SETUP_DBG) println("Interfaces_UDP_setup():");
+  if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SETUP_DBG) println("Interfaces_UDP_setup():");
 
-  if(Interfaces_UDP_handle != null)
+  if (Interfaces_UDP_handle != null)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SETUP_DBG) println("Interfaces_UDP_setup():Interfaces_UDP_handle already setup.");
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SETUP_DBG) println("Interfaces_UDP_setup():Interfaces_UDP_handle already setup.");
     return;
   }
 
@@ -66,9 +77,9 @@ void Interfaces_UDP_setup(int local_port)
   Comm_UDP_setup(local_port);
 
   Interfaces_UDP_handle = new Interfaces_UDP();
-  if(Interfaces_UDP_handle == null)
+  if (Interfaces_UDP_handle == null)
   {
-    if(PRINT_INTERFACES_UDP_SETUP_ERR) println("Interfaces_UDP_setup():Interfaces_UDP_handle=null");
+    if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_SETUP_ERR) println("Interfaces_UDP_setup():Interfaces_UDP_handle=null");
     Comm_UDP_reset();
     return;
   }
@@ -77,24 +88,25 @@ void Interfaces_UDP_setup(int local_port)
 
 void Interfaces_UDP_reset()
 {
-  if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RESET_DBG) println("Interfaces_UDP_reset():");
+  if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RESET_DBG) println("Interfaces_UDP_reset():");
 
   Comm_UDP_reset();
 
-  if(Interfaces_UDP_handle == null)
+  if (Interfaces_UDP_handle == null)
   {
-    if(PRINT_INTERFACES_UDP_RESET_ERR) println("Interfaces_UDP_reset():Interfaces_UDP_handle already reset.");
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RESET_DBG) println("Interfaces_UDP_reset():Interfaces_UDP_handle already reset.");
     return;
   }
+
   Interfaces_UDP_handle = null;
 }
 
 void Interfaces_UDP_recv(int instance, byte[] data)
 {
-  if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP_recv(" + instance + "):data.length=" + data.length);
-  if(Interfaces_UDP_handle == null)
+  if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP_recv(" + instance + "):data.length=" + data.length);
+  if (Interfaces_UDP_handle == null)
   {
-    if(PRINT_INTERFACES_UDP_RECV_ERR) println("Interfaces_UDP_recv():Interfaces_UDP_handle=null");
+    if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_RECV_ERR) println("Interfaces_UDP_recv():Interfaces_UDP_handle=null");
     return;
   }
   Interfaces_UDP_handle.recv(instance, data);
@@ -162,20 +174,20 @@ class Interfaces_UDP {
 
   public int open(int instance, String remote_ip, int remote_port)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_OPEN_DBG) println("Interfaces_UDP:open("+instance+"):remote_ip="+remote_ip+",remote_port="+remote_port);
-    if(Comm_UDP_handle == null)
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_OPEN_DBG) println("Interfaces_UDP:open("+instance+"):remote_ip="+remote_ip+",remote_port="+remote_port);
+    if (Comm_UDP_handle == null)
     {
-      if(PRINT_INTERFACES_UDP_OPEN_ERR) println("Interfaces_UDP:open("+instance+"):Comm_UDP_handle=null");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_OPEN_ERR) println("Interfaces_UDP:open("+instance+"):Comm_UDP_handle=null");
       return -1;
     }
-    if(instance >= PS_INSTANCE_MAX)
+    if (instance >= PS_INSTANCE_MAX)
     {
-      println("Interfaces_UDP:open("+instance+"):instance exceed MAX.");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_OPEN_ERR) println("Interfaces_UDP:open("+instance+"):instance exceed MAX.");
       return -1;
     }
-    if(instance_opened[instance] != false)
+    if (instance_opened[instance] != false)
     {
-      println("Interfaces_UDP:open("+instance+"):instance already opended.");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_OPEN_ERR) println("Interfaces_UDP:open("+instance+"):instance already opended.");
       return -1;
     }
 
@@ -192,20 +204,20 @@ class Interfaces_UDP {
 
   public int close(int instance)
   {
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_CLOSE_DBG) println("Interfaces_UDP:close("+instance+"):");
-    if(UDP_handle == null)
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_CLOSE_DBG) println("Interfaces_UDP:close("+instance+"):");
+    if (UDP_handle == null)
     {
-      if(PRINT_INTERFACES_UDP_CLOSE_ERR) println("Interfaces_UDP:close("+instance+"):UDP_handle=null");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_CLOSE_ERR) println("Interfaces_UDP:close("+instance+"):UDP_handle=null");
       return -1;
     }
-    if(instance >= PS_INSTANCE_MAX)
+    if (instance >= PS_INSTANCE_MAX)
     {
-      println("Interfaces_UDP:close("+instance+"):instance exceed MAX.");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_CLOSE_ERR) println("Interfaces_UDP:close("+instance+"):instance exceed MAX.");
       return -1;
     }
-    if(instance_opened[instance] != true)
+    if (instance_opened[instance] != true)
     {
-      println("Interfaces_UDP:close("+instance+"):instance already closed.");
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_CLOSE_ERR) println("Interfaces_UDP:close("+instance+"):instance already closed.");
       return -1;
     }
 
@@ -245,25 +257,25 @@ class Interfaces_UDP {
   {
     int err;
 
-    if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_LOAD_DBG) println("Interfaces_UDP:load("+instance+"):");
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_LOAD_DBG) println("Interfaces_UDP:load("+instance+"):Enter");
 
 /*
-    if(Interfaces_UDP_handle == null) {
+    if (Interfaces_UDP_handle == null) {
       Interfaces_UDP_setup(local_port);
-      if(Interfaces_UDP_handle == null) {
+      if (Interfaces_UDP_handle == null) {
         str_err_last[instance] = "Error: UDP local port open error! " + local_port;
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
         return false;
       }
     }
 */
 
-    if(PS_CMD_SCAN_DONE[instance] == false) {
+    if (PS_CMD_SCAN_DONE[instance] == false) {
       err = PS_CMD_perform_SCAN(instance, 1);
-      if(err < 0) {
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println("PS_perform_SCAN() error! " + err);
+      if (err < 0) {
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:load("+instance+"):PS_perform_SCAN() error!:" + err);
       }
-      else if(err > 0) {
+      else if (err > 0) {
         //println("PS_perform_SCAN() pending! " + err);
       }
       else {
@@ -274,18 +286,18 @@ class Interfaces_UDP {
     }
     else {
       err = PS_CMD_perform_GSCN(instance, 0);
-      if(err < 0) {
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println("PS_perform_GSCN() error! " + err);
+      if (err < 0) {
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:load("+instance+"):PS_perform_GSCN() error!:" + err);
         return false;
       }
-      else if(err > 0) {
+      else if (err > 0) {
         //println("PS_perform_GSCN() pending! " + err);
         return false;
       }
       else {
         str_err_last[instance] = null;
-        //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:load("+instance+"):recv_in_buf="+recv_in_buf[instance]);
-        //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:load("+instance+"):PS_Data_buf="+PS_Data_buf[instance]);
+        //if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:load("+instance+"):recv_in_buf="+recv_in_buf[instance]);
+        //if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:load("+instance+"):PS_Data_buf="+PS_Data_buf[instance]);
         PS_Data_buf[instance] = recv_in_buf[instance];
         //println("PS_perform_GSCN() ok! ");
         return true;
@@ -307,25 +319,30 @@ class Interfaces_UDP {
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SET_DBG) println("Interfaces_UDP:set_comm_timeout("+instance+"):"+"comm_timeout = " + comm_timeout[instance] + "msec" + ",retry = " + comm_timeout_retry[instance]);
   }
 
-  public void send(int instance, byte[] buf)
+  private int send(int instance, byte[] buf)
   {
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):buf.length="+buf.length);
     if (Interfaces_UDP_handle == null)
     {
-      if(PRINT_INTERFACES_UDP_SEND_ERR) println("Interfaces_UDP:send() Interfaces_UDP_handle=null");
-      return;
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_SEND_ERR) println("Interfaces_UDP:send():Interfaces_UDP_handle=null");
+      return -1;
     }
 
-    Comm_UDP_handle.send(instance, buf);
+    if (Comm_UDP_handle.send(instance, buf) != 0)
+    {
+      if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_SEND_ERR) println("Interfaces_UDP:send():Comm_UDP_handle.send() return error!");
+      return -1;
+    }
+    return 0;
   }
 
-  public void prepare_recv(int instance, int buf_size)
+  private void prepare_recv(int instance, int buf_size)
   {
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):buf_size="+buf_size);
 
     //recv_in_buf[instance] = new byte[buf_size * 2];
     recv_in_buf[instance] = new byte[buf_size];
-    //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf="+recv_in_buf[instance]);
+    //if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:prepare_recv("+instance+"):recv_in_buf="+recv_in_buf[instance]);
     if (recv_in_buf[instance] == null)
     {
       if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_P_RECV_ERR) println("Interfaces_UDP:prepare_recv("+instance+")"+":recv_in_buf["+instance+"]=null");
@@ -337,7 +354,7 @@ class Interfaces_UDP {
     recv_length[instance] = 0x7fffffff - 12; // 12 = 4bytes Function code + 4bytes length + 4bytes CRC on UDP data format.
   }
 
-  public void recv(int instance, byte[] data)
+  private void recv(int instance, byte[] data)
   {
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG || PRINT_INTERFACES_UDP_RECV_IN_DBG) println("Interfaces_UDP:recv("+instance+"):data.length=" + data.length);
     if (data.length > PS_CMD_BUFFER_MAX)
@@ -350,7 +367,7 @@ class Interfaces_UDP {
         int inLength = 0;  // Bytes length by readBytes()
     
         inLength = data.length;
-        if(recv_live_total[instance] + inLength > recv_in_buf[instance].length) {
+        if (recv_live_total[instance] + inLength > recv_in_buf[instance].length) {
           inLength = recv_in_buf[instance].length - recv_live_total[instance];
         }
         arrayCopy(data, 0, recv_in_buf[instance], recv_live_total[instance], inLength);
@@ -367,7 +384,7 @@ class Interfaces_UDP {
             if ((recv_length[instance] > recv_in_buf[instance].length - 12) ||
                 (recv_length[instance] < 4)) {
               str_err_last[instance] = "Error: UDP read protocol length error! " + recv_length[instance] + "," + inLength + "," + recv_live_total[instance]/* + "," + recv_in_buf*/;
-              if (PRINT_INTERFACES_UDP_RECV_ERR) println(str_err_last[instance]);
+              if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_RECV_ERR) println(str_err_last[instance]);
               //printArray(recv_in_buf);
               //printArray(data);
               PS_CMD_state[instance] = PS_CMD_STATE_ERROR;
@@ -378,12 +395,12 @@ class Interfaces_UDP {
         }
         
         // Check received all data
-        if(recv_live_total[instance] >= recv_length[instance] + 12) {
+        if (recv_live_total[instance] >= recv_length[instance] + 12) {
           recv_in_length[instance] = recv_length[instance] + 12;
           //println("Read SCAN state changed to PS_CMD_STATE_RECEIVED! " + recv_live_total + "," + recv_length);
           PS_CMD_state[instance] = PS_CMD_STATE_RECEIVED;
 
-          if(UDP_get_take_time_enable)
+          if (UDP_get_take_time_enable)
           {
             comm_take_time[instance] = get_millis_diff(comm_start_time[instance]);
             if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_RECV_DBG) println("Read comm_take_time=" + comm_take_time[instance]);
@@ -399,11 +416,11 @@ class Interfaces_UDP {
     }
   } 
 
-  byte[] PS_CMD_make_cmd(String cmd, int param)
+  private byte[] PS_CMD_make_cmd(String cmd, int param)
   {
     byte[] buf = new byte[16];
 
-    //if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:PS_CMD_make_cmd():buf_size="+buf_size);
+    //if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_P_RECV_DBG) println("Interfaces_UDP:PS_CMD_make_cmd():buf_size="+buf_size);
 
     // Set function code
     set_str_bytes(buf, 0, cmd);
@@ -421,7 +438,7 @@ class Interfaces_UDP {
   {
     byte[] outBuffer;
 
-    if(PS_CMD_state[instance] == PS_CMD_STATE_NONE) {
+    if (PS_CMD_state[instance] == PS_CMD_STATE_NONE) {
       // Make command buffer
       outBuffer = PS_CMD_make_cmd("SCAN", on);
       // Prepare read
@@ -433,48 +450,54 @@ class Interfaces_UDP {
       comm_start_time[instance] = millis();
       comm_retry_count[instance] = comm_timeout_retry[instance];
 
-      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
+      if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):send() start_time="+comm_start_time[instance]);
       // Write buffer
-      send(instance, outBuffer);
-      return PS_CMD_state[instance];
-    }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
-      if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance]) {
+      if (send(instance, outBuffer) != 0)
+      {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
-        str_err_last[instance] = "Error: UDP SCAN timeout! " + get_millis_diff(comm_start_time[instance]) + "," + comm_timeout[instance];
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        str_err_last[instance] = "Error: UDP SCAN send() error!";
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):"+str_err_last[instance]);
         return -1;
       }
       return PS_CMD_state[instance];
     }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_RECEIVED) {
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
+      if (get_millis_diff(comm_start_time[instance]) > comm_timeout[instance]) {
+        PS_CMD_state[instance] = PS_CMD_STATE_NONE;
+        str_err_last[instance] = "Error: UDP SCAN timeout! " + get_millis_diff(comm_start_time[instance]) + "," + comm_timeout[instance];
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):"+str_err_last[instance]);
+        return -1;
+      }
+      return PS_CMD_state[instance];
+    }
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_RECEIVED) {
       String func;
       int crc, crc_c;
 
       // Check CRC
       crc = get_int32_bytes(recv_in_buf[instance], recv_in_length[instance] - 4);
       crc_c = get_crc32(recv_in_buf[instance], 0, recv_in_length[instance] - 4);
-      if(crc != crc_c) {
+      if (crc != crc_c) {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP SCAN CRC error! " + crc + "," + crc_c + "," + recv_in_length[instance] + "," + recv_live_total[instance];
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):"+str_err_last[instance]);
         return -1;
       }
       // Check function code
       func = get_str_bytes(recv_in_buf[instance], 0, 4);
-      if(func.equals("SCAN") == false) {
+      if (func.equals("SCAN") == false) {
         // Get error code and return
         int err = get_int32_bytes(recv_in_buf[instance], 8);
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP SCAN error return! " + err;
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_SCAN("+instance+"):"+str_err_last[instance]);
         // Get error code and return
         return err;
       }
       PS_CMD_state[instance] = PS_CMD_STATE_NONE;
       return 0;
     }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_ERROR) {
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_ERROR) {
       PS_CMD_state[instance] = PS_CMD_STATE_NONE;
       return -1;
     }
@@ -486,7 +509,7 @@ class Interfaces_UDP {
   {
     byte[] outBuffer;
 
-    if(PS_CMD_state[instance] == PS_CMD_STATE_NONE) {
+    if (PS_CMD_state[instance] == PS_CMD_STATE_NONE) {
       // Make command buffer
       outBuffer = PS_CMD_make_cmd("GSCN", scan_number);
       // Prepare read
@@ -499,13 +522,19 @@ class Interfaces_UDP {
       comm_start_time[instance] = millis();
       comm_retry_count[instance] = comm_timeout_retry[instance];
 
-      if(PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:send("+instance+"):start_time="+comm_start_time[instance]);
+      if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SEND_DBG) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):send() start_time="+comm_start_time[instance]);
       // Write buffer
-      send(instance, outBuffer);
+      if (send(instance, outBuffer) != 0)
+      {
+        PS_CMD_state[instance] = PS_CMD_STATE_NONE;
+        str_err_last[instance] = "Error: UDP GSCN send() error!";
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
+        return -1;
+      }
       return PS_CMD_state[instance];
     }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
-      if(get_millis_diff(comm_start_time[instance]) > comm_timeout[instance] * (comm_timeout_retry[instance] + 1 - comm_retry_count[instance])) {
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_SENT) {
+      if (get_millis_diff(comm_start_time[instance]) > comm_timeout[instance] * (comm_timeout_retry[instance] + 1 - comm_retry_count[instance])) {
         if (comm_retry_count[instance] > 0) {
           comm_retry_count[instance] --;
           // Make command buffer
@@ -517,40 +546,40 @@ class Interfaces_UDP {
           return PS_CMD_state[instance];
         }
         str_err_last[instance] = "Error: UDP GSCN timeout! " + comm_timeout[instance] + "," + get_millis_diff(comm_start_time[instance]);
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         return -1;
       }
       return PS_CMD_state[instance];
     }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_RECEIVED) {
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_RECEIVED) {
       String func;
       int crc, crc_c;
 
       // Check CRC
       crc = get_int32_bytes(recv_in_buf[instance], recv_in_length[instance] - 4);
       crc_c = get_crc32(recv_in_buf[instance], 0, recv_in_length[instance] - 4);
-      if(crc != crc_c) {
+      if (crc != crc_c) {
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP GSCN CRC error! " + crc + "," + crc_c + "," + recv_in_length[instance] + "," + recv_live_total[instance];
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
         return -1;
       }
       // Check function code
       func = get_str_bytes(recv_in_buf[instance], 0, 4);
-      if(func.equals("GSCN") == false) {
+      if (func.equals("GSCN") == false) {
         // Get error code and return
         int err = get_int32_bytes(recv_in_buf[instance], 8);
         PS_CMD_state[instance] = PS_CMD_STATE_NONE;
         str_err_last[instance] = "Error: UDP GSCN error return! " + err;
-        if(PRINT_INTERFACES_UDP_LOAD_ERR) println(str_err_last[instance]);
+        if (PRINT_INTERFACES_UDP_ALL_ERR || PRINT_INTERFACES_UDP_LOAD_ERR) println("Interfaces_UDP:PS_CMD_perform_GSCN("+instance+"):"+str_err_last[instance]);
         // Get error code and return
         return err;
       }
       PS_CMD_state[instance] = PS_CMD_STATE_NONE;
       return 0;
     }
-    else if(PS_CMD_state[instance] == PS_CMD_STATE_ERROR) {
+    else if (PS_CMD_state[instance] == PS_CMD_STATE_ERROR) {
       PS_CMD_state[instance] = PS_CMD_STATE_NONE;
       return -1;
     }
