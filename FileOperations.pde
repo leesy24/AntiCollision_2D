@@ -56,7 +56,6 @@ static class File_Operations_save_always_data {
   private int instance;
   private byte[] data_buf;
   private long date_time;
-  private boolean save_events;
   private String save_events_dir_full_name;
 
   File_Operations_save_always_data(int instance, byte[] data_buf, long date_time, String save_events_dir_full_name) {
@@ -67,7 +66,6 @@ static class File_Operations_save_always_data {
   }
 }
 static ConcurrentLinkedQueue<File_Operations_save_always_data> File_Operations_save_always_queue = new ConcurrentLinkedQueue<File_Operations_save_always_data>();
-
 
 void File_Operations_setup()
 {
