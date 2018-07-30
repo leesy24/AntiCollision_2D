@@ -346,7 +346,7 @@ class PS_Data {
   int[] load_take_time = new int[PS_INSTANCE_MAX];
   int[] load_done_prev_millis = new int[PS_INSTANCE_MAX];
   int[] load_done_interval_millis = new int[PS_INSTANCE_MAX];
-  int[] load_done_interval_millis_cnt = new int[PS_INSTANCE_MAX];
+  int[] load_done_interval_count = new int[PS_INSTANCE_MAX];
   int[] load_done_interval_millis_accu = new int[PS_INSTANCE_MAX];
   String[] file_name = new String[PS_INSTANCE_MAX];
   String[] remote_ip = new String[PS_INSTANCE_MAX];
@@ -383,7 +383,7 @@ class PS_Data {
       load_take_time[i] = 0;
       load_done_prev_millis[i] = -1;
       load_done_interval_millis[i] = -1;
-      load_done_interval_millis_cnt[i] = 0;
+      load_done_interval_count[i] = 0;
       load_done_interval_millis_accu[i] = 0;
       file_name[i] = null;
       remote_ip[i] = null;
@@ -502,18 +502,18 @@ class PS_Data {
       load_done_prev_millis[instance] = millis_curr;
       load_done_interval_millis_accu[instance] += load_done_interval_millis[instance];
       if (load_done_interval_millis_accu[instance] < 0) {
-        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance];
-        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_millis_cnt[instance]);
-        load_done_interval_millis_cnt[instance] = 0;
+        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_count[instance];
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_count[instance]);
+        load_done_interval_count[instance] = 0;
       }
-      load_done_interval_millis_cnt[instance] ++;
-      if (load_done_interval_millis_cnt[instance] < 0) {
-        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / load_done_interval_millis_cnt[instance] - 1;
-        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + load_done_interval_millis_cnt[instance]);
-        load_done_interval_millis_cnt[instance] = 1;
+      load_done_interval_count[instance] ++;
+      if (load_done_interval_count[instance] < 0) {
+        load_done_interval_millis_accu[instance] = (load_done_interval_millis_accu[instance] - load_done_interval_millis[instance]) / (load_done_interval_count[instance] - 1);
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + load_done_interval_millis_accu[instance] + ",count=" + (load_done_interval_count[instance] - 1));
+        load_done_interval_count[instance] = 1;
       }
-      if ((load_done_interval_millis_cnt[instance] % 1000) == 0) {
-        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + (load_done_interval_millis_accu[instance] / load_done_interval_millis_cnt[instance]) + ",count=" + load_done_interval_millis_cnt[instance]);
+      if ((load_done_interval_count[instance] % 1000) == 0) {
+        SYSTEM_logger.info("PS_Data:load(" + instance + "):Refresh avg time=" + (load_done_interval_millis_accu[instance] / load_done_interval_count[instance]) + ",count=" + load_done_interval_count[instance]);
       }
     }
 
@@ -991,7 +991,7 @@ class PS_Data {
     if (load_take_time[instance] != -1)
       strings.add("Response t.:" + load_take_time[instance] + "ms");
     if (load_done_interval_millis[instance] != -1)
-      strings.add("Refresh t.:" + load_done_interval_millis[instance] + "(" + (load_done_interval_millis_cnt[instance] == 0?"N/A":load_done_interval_millis_accu[instance]/load_done_interval_millis_cnt[instance]) + ")" + "ms");
+      strings.add("Refresh t.:" + load_done_interval_millis[instance] + "(" + (load_done_interval_count[instance] == 0?"N/A":load_done_interval_millis_accu[instance]/load_done_interval_count[instance]) + ")" + "ms");
     if (PS_Interface[instance] != PS_Interface_None) {
       strings.add("Scan number:" + scan_number[instance]);
       strings.add("Time stamp:" + time_stamp[instance]);
