@@ -199,7 +199,8 @@ boolean Update_Data_Files_check_new_zip_file_exist()
   File source_file_handle, target_file_handle;
   boolean tartget_file_is_file;
 
-  target_file_full_name = sketchPath("unzip\\") + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  // Must use '/' instead '\\' to compatible with linux.
+  target_file_full_name = sketchPath() + "/unzip/" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
 
   delay(FRAME_TIME);
@@ -217,7 +218,8 @@ boolean Update_Data_Files_check_new_zip_file_exist()
     for (char d = 'd'; d <= 'z'; d ++)
     {
       delay(1);
-      drive = d + ":\\";
+      // Must use '/' instead '\\' to compatible with linux.
+      drive = d + ":/";
       source_file_handle = new File(drive);
       if (!source_file_handle.isDirectory())
       {
@@ -259,7 +261,8 @@ boolean Update_Data_Files_unzip()
     return ret;
   }
 
-  target_file_full_name = sketchPath("unzip\\") + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  // Must use '/' instead '\\' to compatible with linux.
+  target_file_full_name = sketchPath() + "/unzip/" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
   // if zip file exist and same on local.
   if (target_file_handle.isFile()
@@ -273,7 +276,8 @@ boolean Update_Data_Files_unzip()
 
   if (unzip_perform(
         Update_Data_Files_zip_file_full_name,
-        sketchPath("unzip\\"), Update_Data_Files_zip_file_password)
+        // Must use '/' instead '\\' to compatible with linux.
+        sketchPath() + "/unzip/", Update_Data_Files_zip_file_password)
       < 0)
   {
     return ret;
@@ -291,18 +295,21 @@ boolean Update_Data_Files_check_updates()
   File source_file_handle, target_file_handle;
 
   String[] files_list;
-  source_file_handle = new File(sketchPath("unzip\\"));
+  // Must use '/' instead '\\' to compatible with linux.
+  source_file_handle = new File(sketchPath() + "/unzip/");
   files_list = source_file_handle.list();
   for ( String file_name:files_list)
   {
     //println("file name:"+file_name);
-    source_file_full_name = sketchPath("unzip\\") + file_name;
+    // Must use '/' instead '\\' to compatible with linux.
+    source_file_full_name = sketchPath() + "/unzip/" + file_name;
     source_file_handle = new File(source_file_full_name);
     if (!source_file_handle.isFile())
     {
       continue;
     }
-    target_file_full_name = sketchPath("data\\") + file_name;
+    // Must use '/' instead '\\' to compatible with linux.
+    target_file_full_name = sketchPath() + "/data/" + file_name;
     target_file_handle = new File(target_file_full_name);
     if (target_file_handle.isFile()
         &&
@@ -324,15 +331,18 @@ boolean Update_Data_Files_perform_update()
   //File target_file_handle;
 
   String[] files_list;
-  source_file_handle = new File(sketchPath("unzip\\"));
+  // Must use '/' instead '\\' to compatible with linux.
+  source_file_handle = new File(sketchPath() + "/unzip/");
   files_list = source_file_handle.list();
   for ( String file_name:files_list)
   {
     //println("file name:"+file_name);
-    source_file_full_name = sketchPath("unzip\\") + file_name;
+    // Must use '/' instead '\\' to compatible with linux.
+    source_file_full_name = sketchPath() + "/unzip/" + file_name;
     //source_file_handle = new File(source_file_full_name);
-    target_file_full_name = sketchPath("data\\") + file_name;
-    //target_file_full_name = sketchPath("data\\") + file_name + ".new";
+    // Must use '/' instead '\\' to compatible with linux.
+    target_file_full_name = sketchPath() + "/data/" + file_name;
+    //target_file_full_name = sketchPath() + "/data/" + file_name + ".new";
     //target_file_handle = new File(target_file_full_name);
 /*
     if (!delete_file(target_file_full_name))
@@ -379,12 +389,14 @@ boolean Update_Data_Files_perform_update()
 
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
   target_file_full_name =
-    sketchPath(
-      "unzip\\"
-      +
-      UPDATE_DATA_FILES_ZIP_FILE_NAME
-      +
-      UPDATE_DATA_FILES_ZIP_FILE_EXT);
+    sketchPath()
+    +
+    // Must use '/' instead '\\' to compatible with linux.
+    "/unzip/"
+    +
+    UPDATE_DATA_FILES_ZIP_FILE_NAME
+    +
+    UPDATE_DATA_FILES_ZIP_FILE_EXT;
   if (!copy_file(
     Update_Data_Files_zip_file_full_name,
     target_file_full_name,
