@@ -858,7 +858,14 @@ class ROI_Data {
       }
     }
     else if (rect_x < 0) {
-      if (rect_br == 0) {
+      if (rect_tr == 0) {
+        rect_x = object.scr_center_x;
+        if (rect_x < 0)
+          rect_x = 0;
+        rect_tl = 0;
+        rect_tr = 5;
+      }
+      else if (rect_br == 0) {
         rect_x = object.scr_center_x;
         if (rect_x < 0)
           rect_x = 0;
@@ -890,8 +897,20 @@ class ROI_Data {
     }
 
     if (rect_x + rect_w > SCREEN_width && rect_y + rect_h > SCREEN_height) {
-      rect_x = SCREEN_width - rect_w;
-      rect_y = SCREEN_height - rect_h;
+      if (rect_tl == 0) {
+        rect_x = object.scr_center_x - rect_w - 1;
+        rect_y = object.scr_center_y - rect_h - 1;
+        if (rect_x + rect_w > SCREEN_width)
+          rect_x = SCREEN_width - rect_w;
+        if (rect_y + rect_h > SCREEN_height)
+          rect_y = SCREEN_height - rect_h;
+        rect_br = 0;
+        rect_tl = 5;
+      }
+      else {
+        rect_x = SCREEN_width - rect_w;
+        rect_y = SCREEN_height - rect_h;
+      }
     }
     else if (rect_x + rect_w > SCREEN_width ) {
       if (rect_bl == 0) {
@@ -913,7 +932,23 @@ class ROI_Data {
       }
     }
     else if (rect_y + rect_h > SCREEN_height) {
-      rect_y = SCREEN_height - rect_h;
+      if (rect_tl == 0) {
+        rect_y = object.scr_center_y - rect_h - 1;
+        if (rect_y + rect_h > SCREEN_height)
+          rect_y = SCREEN_height - rect_h;
+        rect_bl = 0;
+        rect_tl = 5;
+      }
+      else if (rect_tr == 0) {
+        rect_y = object.scr_center_y - rect_h - 1;
+        if (rect_y + rect_h > SCREEN_height)
+          rect_y = SCREEN_height - rect_h;
+        rect_br = 0;
+        rect_tr = 5;
+      }
+      else {
+        rect_y = SCREEN_height - rect_h;
+      }
     }
 
     // Draw rect
