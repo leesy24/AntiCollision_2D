@@ -18,8 +18,14 @@ void Const_setup()
 
   // Load config file(CSV type) into a Table object
   // "header" option indicates the file has a header row
-  // Must use '/' instead '\\' to compatible with linux.
-  table = loadTable(sketchPath() + "/data/" + CONST_FILE_NAME + CONST_FILE_EXT, "header");
+  if (OS_is_Windows)
+  {
+    table = loadTable(sketchPath() + "\\data\\" + CONST_FILE_NAME + CONST_FILE_EXT, "header");
+  }
+  else
+  {
+    table = loadTable(sketchPath() + "/data/" + CONST_FILE_NAME + CONST_FILE_EXT, "header");
+  }
   // Check loadTable failed.
   if (table == null)
   {
@@ -481,6 +487,12 @@ void Const_create()
   variable.setInt("Value", W_BG_IMAGE_LINE);
   variable.setString("Comment", "Line weight of background image lines.");
 
-  // Must use '/' instead '\\' to compatible with linux.
-  saveTable(table, sketchPath() + "/data/" + CONST_FILE_NAME + CONST_FILE_EXT);
+  if (OS_is_Windows)
+  {
+    saveTable(table, sketchPath() + "\\data\\" + CONST_FILE_NAME + CONST_FILE_EXT);
+  }
+  else
+  {
+    saveTable(table, sketchPath() + "/data/" + CONST_FILE_NAME + CONST_FILE_EXT);
+  }
 }

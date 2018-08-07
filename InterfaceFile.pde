@@ -222,8 +222,15 @@ class Interfaces_File {
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":dir_name["+instance+"]="+dir_name[instance]);
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":file_name_list["+instance+"]["+file_name_index[instance]+"]="+file_name_list[instance][file_name_index[instance]]);
 
-    // Must use '/' instead '\\' to compatible with linux.
-    String file_full_name = dir_name[instance]+"/"+file_name_list[instance][file_name_index[instance]];
+    String file_full_name;
+    if (OS_is_Windows)
+    {
+      file_full_name = dir_name[instance]+"\\"+file_name_list[instance][file_name_index[instance]];
+    }
+    else
+    {
+      file_full_name = dir_name[instance]+"/"+file_name_list[instance][file_name_index[instance]];
+    }
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:load("+instance+")"+":file_full_name="+file_full_name);
 
     // Check file name exists to avoid exception error on loadBytes().

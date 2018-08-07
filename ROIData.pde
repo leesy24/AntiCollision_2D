@@ -635,17 +635,32 @@ class ROI_Data {
       File_Operations_save_events_event_date_time[instance] = new Date().getTime();
       File_Operations_save_events_start_date_time[instance] = File_Operations_save_events_event_date_time[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       File_Operations_save_events_end_date_time[instance] = File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
-      // Must use '/' instead '\\' to compatible with linux.
-      File_Operations_save_events_dir_full_name[instance] =
-        sketchPath()
-        +"/events/"
-        +nf(year(),4)+nf(month(),2)+nf(day(),2)
-        +"_"
-        +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
-        +"_"
-        +nf(int(File_Operations_save_events_event_date_time[instance]%1000),3)
-        +"_"
-        +instance+"/";
+      if (OS_is_Windows)
+      {
+        File_Operations_save_events_dir_full_name[instance] =
+          sketchPath()
+          +"\\events\\"
+          +nf(year(),4)+nf(month(),2)+nf(day(),2)
+          +"_"
+          +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
+          +"_"
+          +nf(int(File_Operations_save_events_event_date_time[instance]%1000),3)
+          +"_"
+          +instance+"\\";
+      }
+      else
+      {
+        File_Operations_save_events_dir_full_name[instance] =
+          sketchPath()
+          +"/events/"
+          +nf(year(),4)+nf(month(),2)+nf(day(),2)
+          +"_"
+          +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
+          +"_"
+          +nf(int(File_Operations_save_events_event_date_time[instance]%1000),3)
+          +"_"
+          +instance+"/";
+      }
 
       File_Operations_save_events_write_events_done[instance] = false;
       File_Operations_save_events_done[instance] = false;

@@ -511,16 +511,30 @@ void set_logger()
   try
   {
     // This block configure the SYSTEM_logger with handler and formatter  
-    // Must use '/' instead '\\' to compatible with linux.
-    fh =
-      new FileHandler(
-            sketchPath() + "/AntiCollision_2D_%g.log",
-            //1*1024, // 1KB
-            1*1024*1024, // 1MB
-            //10*1024*1024, // 10MB
-            100, // file count
-            true // append
-            );
+    if (OS_is_Windows)
+    {
+      fh =
+        new FileHandler(
+              sketchPath() + "\\AntiCollision_2D_%g.log",
+              //1*1024, // 1KB
+              1*1024*1024, // 1MB
+              //10*1024*1024, // 10MB
+              100, // file count
+              true // append
+              );
+    }
+    else
+    {
+      fh =
+        new FileHandler(
+              sketchPath() + "/AntiCollision_2D_%g.log",
+              //1*1024, // 1KB
+              1*1024*1024, // 1MB
+              //10*1024*1024, // 10MB
+              100, // file count
+              true // append
+              );
+    }
     SYSTEM_logger.addHandler(fh);
     SimpleFormatter formatter = new SimpleFormatter()
     {

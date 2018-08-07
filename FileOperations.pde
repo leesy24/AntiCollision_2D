@@ -8,6 +8,11 @@ final static boolean PRINT_FILE_OPERATIONS_ALL_DBG = false;
 final static boolean PRINT_FILE_OPERATIONS_ALL_ERR = true;
 //final static boolean PRINT_FILE_OPERATIONS_ALL_ERR = false;
 
+//final static boolean PRINT_FILE_OPERATIONS_SETUP_DBG = true;
+final static boolean PRINT_FILE_OPERATIONS_SETUP_DBG = false;
+//final static boolean PRINT_FILE_OPERATIONS_SETUP_ERR = true;
+final static boolean PRINT_FILE_OPERATIONS_SETUP_ERR = false;
+
 //final static boolean PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG = true;
 final static boolean PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG = false;
 //final static boolean PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR = true;
@@ -69,30 +74,42 @@ static ConcurrentLinkedQueue<File_Operations_save_always_data> File_Operations_s
 
 void File_Operations_setup()
 {
-  // Must use '/' instead '\\' to compatible with linux.
-  String always_dir_full_name = sketchPath() + "/always/";
+  String always_dir_full_name;
+  if (OS_is_Windows)
+  {
+    always_dir_full_name = sketchPath() + "\\always\\";
+  }
+  else
+  {
+    always_dir_full_name = sketchPath() + "/always/";
+  }
   File always_dir_handle = new File(always_dir_full_name);
   //println("data_time="+data_time+",millis()="+millis());
   // Check exists the always directory.
+  File_Operations_always_dir_ready = true;
   if (!always_dir_handle.isDirectory())
   {
     if (!always_dir_handle.mkdir())
     {
-      if (PRINT_FILE_OPERATIONS_ALL_ERR) println("File_Operations_setup():mkdir() error! "+always_dir_full_name);
+      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SETUP_ERR) println("File_Operations_setup():mkdir() error! "+always_dir_full_name);
       SYSTEM_logger.severe("File_Operations_setup():mkdir() error! "+always_dir_full_name);
       File_Operations_always_dir_ready = false;
     }
   }
+
+  String events_dir_full_name;
+  if (OS_is_Windows)
+  {
+    events_dir_full_name = sketchPath() + "\\events\\";
+  }
   else
   {
-    File_Operations_always_dir_ready = true;
+    events_dir_full_name = sketchPath() + "/events/";
   }
-
-  // Must use '/' instead '\\' to compatible with linux.
-  String events_dir_full_name = sketchPath() + "/events/";
   File events_dir_handle = new File(events_dir_full_name);
   //println("data_time="+data_time+",millis()="+millis());
   // Check exists the always directory.
+  File_Operations_events_dir_ready = true;
   if (!events_dir_handle.isDirectory())
   {
     if (!events_dir_handle.mkdir())
@@ -101,10 +118,6 @@ void File_Operations_setup()
       File_Operations_events_dir_ready = false;
       SYSTEM_logger.severe("File_Operations_setup():mkdir() error! "+events_dir_full_name);
     }
-  }
-  else
-  {
-    File_Operations_events_dir_ready = true;
   }
 
   if (File_Operations_setup_done) return;
@@ -131,8 +144,15 @@ void File_Operations_free()
 
 void File_Operations_free_events()
 {
-  // Must use '/' instead '\\' to compatible with linux.
-  String events_dir_full_name = sketchPath() + "/events/";
+  String events_dir_full_name;
+  if (OS_is_Windows)
+  {
+    events_dir_full_name = sketchPath() + "\\events\\";
+  }
+  else
+  {
+    events_dir_full_name = sketchPath() + "/events/";
+  }
   File events_dir_handle = new File(events_dir_full_name);
   Path events_dir_full_path = Paths.get(events_dir_full_name);
   DirectoryStream<Path> events_dirs_list;
@@ -178,8 +198,18 @@ void File_Operations_free_events()
       String events_subdir_name = events_subdir_path.getFileName().toString();
       if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_subdir_name="+events_subdir_name);
 
-      // Must use '/' instead '\\' to compatible with linux.
-      File events_subdir_handle = new File(events_dir_full_name+events_subdir_name+"/");
+      String events_subdir_full_name;
+      if (OS_is_Windows)
+      {
+        events_subdir_full_name = events_dir_full_name+events_subdir_name+"\\";
+      }
+      else
+      {
+        events_subdir_full_name = events_dir_full_name+events_subdir_name+"/";
+      }
+
+      File events_subdir_handle;
+      events_subdir_handle = new File(events_subdir_full_name);
       if (!events_subdir_handle.isDirectory()) {
         if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Directory not exist or not a directory!:"+events_dir_full_name+events_subdir_name+"/");
         SYSTEM_logger.severe("File_Operations_free_events():Directory not exist or not a directory!:"+events_dir_full_name+events_subdir_name+"/");
@@ -192,8 +222,7 @@ void File_Operations_free_events()
       DirectoryStream<Path> events_subdir_files_list;
       try
       {
-        // Must use '/' instead '\\' to compatible with linux.
-        events_subdir_files_list = Files.newDirectoryStream(Paths.get(events_dir_full_name+events_subdir_name+"/"));
+        events_subdir_files_list = Files.newDirectoryStream(Paths.get(events_subdir_full_name));
       }
       catch (IOException e) {
         // An I/O problem has occurred
@@ -212,8 +241,7 @@ void File_Operations_free_events()
       {
         String events_file_name = events_file_path.getFileName().toString();
         //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_file_name="+events_file_name);
-        // Must use '/' instead '\\' to compatible with linux.
-        File events_file_handle = new File(events_dir_full_name+events_subdir_name+"/"+events_file_name);
+        File events_file_handle = new File(events_subdir_full_name+events_file_name);
         if (!events_file_handle.isFile()) {
           if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():File not exist or not a file!:"+events_dir_full_name+events_subdir_name+"/"+events_file_name);
           SYSTEM_logger.severe("File_Operations_free_events():File not exist or not a file!:"+events_dir_full_name+events_subdir_name+"/"+events_file_name);
@@ -266,8 +294,15 @@ void File_Operations_free_events()
 
 void File_Operations_free_always()
 {
-  // Must use '/' instead '\\' to compatible with linux.
-  String always_dir_full_name = sketchPath() + "/always/";
+  String always_dir_full_name;
+  if (OS_is_Windows)
+  {
+    always_dir_full_name = sketchPath() + "\\always\\";
+  }
+  else
+  {
+    always_dir_full_name = sketchPath() + "/always/";
+  }
   File always_dir_handle = new File(always_dir_full_name);
   Path always_dir_full_path = Paths.get(always_dir_full_name);
   DirectoryStream<Path> always_files_list;
@@ -361,10 +396,19 @@ void File_Operations_free_always()
 
 void File_Operations_save_events()
 {
-  // Must use '/' instead '\\' to compatible with linux.
-  String data_dir_full_name = sketchPath() + "/data/";
-  // Must use '/' instead '\\' to compatible with linux.
-  String always_dir_full_name = sketchPath() + "/always/";
+  String data_dir_full_name;
+  String always_dir_full_name;
+  if (OS_is_Windows)
+  {
+    data_dir_full_name = sketchPath() + "\\data\\";
+    always_dir_full_name = sketchPath() + "\\always\\";
+  }
+  else
+  {
+    data_dir_full_name = sketchPath() + "/data/";
+    always_dir_full_name = sketchPath() + "/always/";
+  }
+
   Path always_dir_full_path = Paths.get(always_dir_full_name);
   DirectoryStream<Path>[] always_files_list = new DirectoryStream[PS_INSTANCE_MAX];
   Iterator<Path>[] always_files_list_iterator = new Iterator[PS_INSTANCE_MAX];
@@ -578,8 +622,15 @@ void File_Operations_save_events()
 void File_Operations_save_always()
 {
   File_Operations_save_always_data save_always_data;
-  // Must use '/' instead '\\' to compatible with linux.
-  String always_dir_full_name = sketchPath() + "/always/";
+  String always_dir_full_name;
+  if (OS_is_Windows)
+  {
+    always_dir_full_name = sketchPath() + "\\always\\";
+  }
+  else
+  {
+    always_dir_full_name = sketchPath() + "/always/";
+  }
 
   delay(FRAME_TIME * 4 / 4);
   do

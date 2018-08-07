@@ -23,9 +23,28 @@ String Title;
 static int FRAME_RATE = 20; // Frame rate per second of screen update in Hz. 20Hz = 50msec
 static int FRAME_TIME = 50; // Frame time will calculated from FRAME_RATE.
 
+static boolean OS_is_Linux = false;
+static boolean OS_is_Windows = false;
+static boolean OS_is_Others = false;
+
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
+  String os_name=System.getProperty("os.name");
+  if (PRINT_DBG) println("settings():os_name="+os_name);
+  if (os_name.contains("Windows"))
+  {
+    OS_is_Windows = true;
+  }
+  else if (os_name.contains("Linux"))
+  {
+    OS_is_Linux = true;
+  }
+  else
+  {
+    OS_is_Others = true;
+  }
+
   set_logger();
   Screen_settings();
   PS_Data_settings();

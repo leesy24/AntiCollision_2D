@@ -32,8 +32,14 @@ void Config_setup()
 
     // Load config file(CSV type) into a Table object
     // "header" option indicates the file has a header row
-    // Must use '/' instead '\\' to compatible with linux.
-    table = loadTable(sketchPath() + "/data/" + file_full_name, "header");
+    if (OS_is_Windows)
+    {
+      table = loadTable(sketchPath() + "\\data\\" + file_full_name, "header");
+    }
+    else
+    {
+      table = loadTable(sketchPath() + "/data/" + file_full_name, "header");
+    }
     // Check loadTable failed.
     if(table == null)
     {
@@ -235,8 +241,14 @@ void Config_create()
 
     file_full_name = CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT;
 
-    // Must use '/' instead '\\' to compatible with linux.
-    saveTable(table, sketchPath() + "/data/" + file_full_name);
+    if (OS_is_Windows)
+    {
+      saveTable(table, sketchPath() + "\\data\\" + file_full_name);
+    }
+    else
+    {
+      saveTable(table, sketchPath() + "/data/" + file_full_name);
+    }
   }
 }
 
@@ -261,8 +273,14 @@ void Config_update()
 
     // Load config file(CSV type) into a Table object
     // "header" option indicates the file has a header row
-    // Must use '/' instead '\\' to compatible with linux.
-    table = loadTable(sketchPath() + "/data/" + file_full_name, "header");
+    if (OS_is_Windows)
+    {
+      table = loadTable(sketchPath() + "\\data\\" + file_full_name, "header");
+    }
+    else
+    {
+      table = loadTable(sketchPath() + "/data/" + file_full_name, "header");
+    }
     // Check loadTable failed.
     if(table == null)
     {
@@ -397,8 +415,14 @@ void Config_update()
     // Check config changed
     if(changed) {
       // Writing the config file(CSV type) back to the same file
-      // Must use '/' instead '\\' to compatible with linux.
-      saveTable(table, sketchPath() + "/data/" + file_full_name);
+      if (OS_is_Windows)
+      {
+        saveTable(table, sketchPath() + "\\data\\" + file_full_name);
+      }
+      else
+      {
+        saveTable(table, sketchPath() + "/data/" + file_full_name);
+      }
     }
   } // End of for(int i = 0; i < PS_INSTANCE_MAX; i ++)
 }

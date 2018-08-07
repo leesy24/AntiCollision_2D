@@ -199,8 +199,14 @@ boolean Update_Data_Files_check_new_zip_file_exist()
   File source_file_handle, target_file_handle;
   boolean tartget_file_is_file;
 
-  // Must use '/' instead '\\' to compatible with linux.
-  target_file_full_name = sketchPath() + "/unzip/" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  if (OS_is_Windows)
+  {
+    target_file_full_name = sketchPath() + "\\unzip\\" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  }
+  else
+  {
+    target_file_full_name = sketchPath() + "/unzip/" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  }
   target_file_handle = new File(target_file_full_name);
 
   delay(FRAME_TIME);
@@ -217,9 +223,15 @@ boolean Update_Data_Files_check_new_zip_file_exist()
 
     for (char d = 'd'; d <= 'z'; d ++)
     {
-      delay(1);
-      // Must use '/' instead '\\' to compatible with linux.
-      drive = d + ":/";
+      delay(FRAME_TIME);
+      if (OS_is_Windows)
+      {
+        drive = d + ":\\";
+      }
+      else
+      {
+        drive = d + ":/";
+      }
       source_file_handle = new File(drive);
       if (!source_file_handle.isDirectory())
       {
@@ -252,7 +264,8 @@ boolean Update_Data_Files_check_new_zip_file_exist()
 boolean Update_Data_Files_unzip()
 {
   boolean ret = false;
-  String source_file_full_name, target_file_full_name;
+  String target_dir_full_name;
+  String target_file_full_name;
   File source_file_handle, target_file_handle;
 
   source_file_handle = new File(Update_Data_Files_zip_file_full_name);
@@ -261,8 +274,15 @@ boolean Update_Data_Files_unzip()
     return ret;
   }
 
-  // Must use '/' instead '\\' to compatible with linux.
-  target_file_full_name = sketchPath() + "/unzip/" + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
+  if (OS_is_Windows)
+  {
+    target_dir_full_name = sketchPath() + "\\unzip\\";
+  }
+  else
+  {
+    target_dir_full_name = sketchPath() + "/unzip/";
+  }
+  target_file_full_name = target_dir_full_name + UPDATE_DATA_FILES_ZIP_FILE_NAME + UPDATE_DATA_FILES_ZIP_FILE_EXT;
   target_file_handle = new File(target_file_full_name);
   // if zip file exist and same on local.
   if (target_file_handle.isFile()
@@ -276,8 +296,8 @@ boolean Update_Data_Files_unzip()
 
   if (unzip_perform(
         Update_Data_Files_zip_file_full_name,
-        // Must use '/' instead '\\' to compatible with linux.
-        sketchPath() + "/unzip/", Update_Data_Files_zip_file_password)
+        target_dir_full_name,
+        Update_Data_Files_zip_file_password)
       < 0)
   {
     return ret;
@@ -291,25 +311,33 @@ boolean Update_Data_Files_unzip()
 boolean Update_Data_Files_check_updates()
 {
   boolean has_updates = false;
-  String source_file_full_name, target_file_full_name;
+  String source_dir_full_name, source_file_full_name;
+  String target_dir_full_name, target_file_full_name;
   File source_file_handle, target_file_handle;
-
   String[] files_list;
-  // Must use '/' instead '\\' to compatible with linux.
-  source_file_handle = new File(sketchPath() + "/unzip/");
+
+  if (OS_is_Windows)
+  {
+    source_dir_full_name = sketchPath() + "\\unzip\\";
+    target_dir_full_name = sketchPath() + "\\data\\";
+  }
+  else
+  {
+    source_dir_full_name = sketchPath() + "/unzip/";
+    target_dir_full_name = sketchPath() + "/data/";
+  }
+  source_file_handle = new File(source_dir_full_name);
   files_list = source_file_handle.list();
   for ( String file_name:files_list)
   {
     //println("file name:"+file_name);
-    // Must use '/' instead '\\' to compatible with linux.
-    source_file_full_name = sketchPath() + "/unzip/" + file_name;
+    source_file_full_name = source_dir_full_name + file_name;
     source_file_handle = new File(source_file_full_name);
     if (!source_file_handle.isFile())
     {
       continue;
     }
-    // Must use '/' instead '\\' to compatible with linux.
-    target_file_full_name = sketchPath() + "/data/" + file_name;
+    target_file_full_name = target_dir_full_name + file_name;
     target_file_handle = new File(target_file_full_name);
     if (target_file_handle.isFile()
         &&
@@ -326,61 +354,69 @@ boolean Update_Data_Files_check_updates()
 boolean Update_Data_Files_perform_update()
 {
   boolean ret = true;
-  String source_file_full_name, target_file_full_name;
-  File source_file_handle;
-  //File target_file_handle;
-
+  String unzip_dir_full_name, unzip_file_full_name;
+  String data_dir_full_name, data_file_full_name;
+  File unzip_file_handle;
+  //File data_file_handle;
   String[] files_list;
-  // Must use '/' instead '\\' to compatible with linux.
-  source_file_handle = new File(sketchPath() + "/unzip/");
-  files_list = source_file_handle.list();
+
+  if (OS_is_Windows)
+  {
+    unzip_dir_full_name = sketchPath() + "\\unzip\\";
+    data_dir_full_name = sketchPath() + "\\data\\";
+  }
+  else
+  {
+    unzip_dir_full_name = sketchPath() + "/unzip/";
+    data_dir_full_name = sketchPath() + "/data/";
+  }
+  unzip_file_handle = new File(unzip_dir_full_name);
+  files_list = unzip_file_handle.list();
   for ( String file_name:files_list)
   {
     //println("file name:"+file_name);
-    // Must use '/' instead '\\' to compatible with linux.
-    source_file_full_name = sketchPath() + "/unzip/" + file_name;
-    //source_file_handle = new File(source_file_full_name);
-    // Must use '/' instead '\\' to compatible with linux.
-    target_file_full_name = sketchPath() + "/data/" + file_name;
-    //target_file_full_name = sketchPath() + "/data/" + file_name + ".new";
-    //target_file_handle = new File(target_file_full_name);
+    unzip_file_full_name = unzip_dir_full_name + file_name;
+    //unzip_file_handle = new File(unzip_file_full_name);
+    data_file_full_name = data_dir_full_name + file_name;
+    //data_file_full_name = sketchPath() + "/data/" + file_name + ".new";
+    //data_file_handle = new File(data_file_full_name);
 /*
-    if (!delete_file(target_file_full_name))
+    if (!delete_file(data_file_full_name))
     {
       Update_Data_Files_error = Update_Data_Files_error+"\n"+"delete:\n"+delete_file_error;
-      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      //Update_Data_Files_error = "copy_file:\n"+unzip_file_full_name+"\n"+data_file_full_name;
       ret = false;
       //continue;
     }
-    if (!copy_file(source_file_full_name, target_file_full_name))
+    if (!copy_file(unzip_file_full_name, data_file_full_name))
     {
       Update_Data_Files_error = Update_Data_Files_error+"\n"+"copy_file:\n"+copy_file_error;
-      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      //Update_Data_Files_error = "copy_file:\n"+unzip_file_full_name+"\n"+data_file_full_name;
       ret = false;
       //continue;
     }
-    if (!delete_file(source_file_full_name))
+    if (!delete_file(unzip_file_full_name))
     {
       Update_Data_Files_error = Update_Data_Files_error+"\n"+"delete:\n"+delete_file_error;
-      //Update_Data_Files_error = "copy_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      //Update_Data_Files_error = "copy_file:\n"+unzip_file_full_name+"\n"+data_file_full_name;
       ret = false;
       //continue;
     }
 */
 /**/
-    if (!move_file(source_file_full_name, target_file_full_name))
+    if (!move_file(unzip_file_full_name, data_file_full_name))
     {
       Update_Data_Files_error = Update_Data_Files_error+"\n"+"move_file:\n"+move_file_error;
-      //Update_Data_Files_error = "move_file:\n"+source_file_full_name+"\n"+target_file_full_name;
+      //Update_Data_Files_error = "move_file:\n"+unzip_file_full_name+"\n"+data_file_full_name;
       ret = false;
       return ret;
     }
 /**/
 /*
-    if (!move_file_atomic(source_file_full_name, target_file_full_name))
+    if (!move_file_atomic(unzip_file_full_name, data_file_full_name))
     {
       Update_Data_Files_error = Update_Data_Files_error+"\n"+"move_file_atomic:\n"+move_file_atomic_error;
-      //Update_Data_Files_error = "move_file_atomic:\n"+source_file_full_name+"\n"+target_file_full_name;
+      //Update_Data_Files_error = "move_file_atomic:\n"+unzip_file_full_name+"\n"+data_file_full_name;
       ret = false;
       return ret;
     }
@@ -388,22 +424,19 @@ boolean Update_Data_Files_perform_update()
   }
 
   // Finally, copy new zip file to current zip on unzip dir to indicate update is done.
-  target_file_full_name =
-    sketchPath()
-    +
-    // Must use '/' instead '\\' to compatible with linux.
-    "/unzip/"
+  unzip_file_full_name =
+    unzip_dir_full_name
     +
     UPDATE_DATA_FILES_ZIP_FILE_NAME
     +
     UPDATE_DATA_FILES_ZIP_FILE_EXT;
   if (!copy_file(
     Update_Data_Files_zip_file_full_name,
-    target_file_full_name,
+    unzip_file_full_name,
     new CopyOption[] {StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES}))
   {
     Update_Data_Files_error = Update_Data_Files_error+"\n"+"copy_file:\n"+copy_file_error;
-    //Update_Data_Files_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+target_file_full_name;
+    //Update_Data_Files_error = "copy_file:\n"+Update_Data_Files_zip_file_full_name+"\n"+unzip_file_full_name;
     ret = false;
   }
 
