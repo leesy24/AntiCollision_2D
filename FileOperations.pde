@@ -208,6 +208,9 @@ void File_Operations_free_events()
         events_subdir_full_name = events_dir_full_name+events_subdir_name+"/";
       }
 
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Start delete "+events_subdir_name);
+      SYSTEM_logger.info("File_Operations_free_events():Start delete "+events_subdir_name);
+
       File events_subdir_handle;
       events_subdir_handle = new File(events_subdir_full_name);
       if (!events_subdir_handle.isDirectory()) {
@@ -273,7 +276,8 @@ void File_Operations_free_events()
       events_subdir_files_list = null;
 
       events_subdir_handle.delete();
-      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():delete done! "+events_subdir_name);
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():End delete! "+events_subdir_name);
+      SYSTEM_logger.info("File_Operations_free_events():End delete! "+events_subdir_name);
       break;
     } // End of for (Path events_subdir_path:events_dirs_list)
 
@@ -346,6 +350,16 @@ void File_Operations_free_always()
 
     for (Path always_file_path:always_files_list)
     {
+      //delete_count ++;
+      // Check delete operation is too late by frame time.
+      if (get_millis_diff(delete_start_millis) > FRAME_TIME)
+      {
+        //SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
+        delay(FRAME_TIME);
+        delete_start_millis = millis();
+        //delete_count = 0;
+      }
+
       String always_file_name = always_file_path.getFileName().toString();
       //println("File_Operations_free_always():always_file_name="+always_file_name);
 
@@ -367,16 +381,6 @@ void File_Operations_free_always()
         continue;
       }
       always_file_handle.delete();
-      //delete_count ++;
-
-      // Check delete operation is too late by frame time.
-      if (get_millis_diff(delete_start_millis) > FRAME_TIME)
-      {
-        //SYSTEM_logger.warning("File_Operations_free_always():delete operation take long time!:"+delete_count+","+get_millis_diff(delete_start_millis));
-        delay(FRAME_TIME);
-        delete_start_millis = millis();
-        //delete_count = 0;
-      }
     } // End of for (Path always_file_path:always_files_list)
 
     // Close list of DirectoryStream.
@@ -416,22 +420,22 @@ void File_Operations_save_events()
   delay(FRAME_TIME * 3 / 4);
   do
   {
-    for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++)
+    for (int i = 0; i < PS_INSTANCE_MAX; i ++)
     {
-      if (File_Operations_save_events_state[instance] == File_Operations_save_events_state_enum.IDLE)
+      if (File_Operations_save_events_state[i] == File_Operations_save_events_state_enum.IDLE)
       {
         delay(FRAME_TIME);
-        if (!File_Operations_save_events_started[instance])
+        if (!File_Operations_save_events_started[i])
         {
           continue;
         }
 
-        if (File_Operations_save_events_done[instance])
+        if (File_Operations_save_events_done[i])
         {
           continue;
         }
       }
-      else if (File_Operations_save_events_state[instance] != File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS)
+      else if (File_Operations_save_events_state[i] != File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS)
       {
         delay(FRAME_TIME);
       }
@@ -440,24 +444,26 @@ void File_Operations_save_events()
         delay(1);
       }
 
-      //println("File_Operations_save_events():"+":File_Operations_save_events_state["+instance+"]="+File_Operations_save_events_state[instance]);
-      switch (File_Operations_save_events_state[instance])
+      //int copy_count = 0;
+      int copy_start_millis;
+      //println("File_Operations_save_events():"+":File_Operations_save_events_state["+i+"]="+File_Operations_save_events_state[i]);
+      switch (File_Operations_save_events_state[i])
       {
         case IDLE:
           // Set pause state of Disk Space free threads to save events files.
           File_Operations_free_threads_pause = true;
 
-          SYSTEM_logger.info("File_Operations_save_events():"+instance+":save events start!");  
+          SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events start!");  
 
           // Make save events dir.
           File save_events_dir_handle;
-          save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[instance]);
+          save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[i]);
           if (!save_events_dir_handle.isDirectory())
           {
             if (!save_events_dir_handle.mkdirs())
             {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[instance]);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[instance]);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[i]);
+              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[i]);
               // Reset pause state of Disk Space free threads to save events files.
               File_Operations_free_threads_pause = false;
               break;
@@ -467,30 +473,32 @@ void File_Operations_save_events()
           // Get always files list of instance to copy.
           try
           {
-            always_files_list[instance] = Files.newDirectoryStream(always_dir_full_path, instance+"_*.dat");
+            always_files_list[i] = Files.newDirectoryStream(always_dir_full_path, i+"_*.dat");
           }
           catch (IOException e) {
             // An I/O problem has occurred
-            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":Files.newDirectoryStream err!"+"\n\t"+e.toString());
-            SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":Files.newDirectoryStream err!"+"\n\t"+e.toString());
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":Files.newDirectoryStream err!"+"\n\t"+e.toString());
+            SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":Files.newDirectoryStream err!"+"\n\t"+e.toString());
             // Reset pause state of Disk Space free threads to save events files.
             File_Operations_free_threads_pause = false;
             break;
           }
 
           // Get list iterator.
-          always_files_list_iterator[instance] = always_files_list[instance].iterator();
+          always_files_list_iterator[i] = always_files_list[i].iterator();
 
           // Copy config files on data dir to events dir.
           ArrayList<String> data_files_list = new ArrayList<String>();
 
           // Set files on data dir to copy.
           data_files_list.add(CONST_FILE_NAME + CONST_FILE_EXT);
-          data_files_list.add(CONFIG_FILE_NAME + "_" + instance + CONFIG_FILE_EXT);
-          data_files_list.add(REGIONS_FILE_NAME + "_" + instance + REGIONS_FILE_EXT);
+          data_files_list.add(CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT);
+          data_files_list.add(REGIONS_FILE_NAME + "_" + i + REGIONS_FILE_EXT);
           data_files_list.add(RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT);
           data_files_list.add(BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT);
 
+          //copy_count = 0;
+          copy_start_millis = millis();
           // Loop for files.          
           for (String data_file_name:data_files_list)
           {
@@ -498,36 +506,52 @@ void File_Operations_save_events()
             File data_file_handle;
             data_file_handle = new File(data_dir_full_name + data_file_name);
             if (!data_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
+              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
               continue;
             }
             // Copy file to events dir.
             if (!copy_file(
                   data_dir_full_name + data_file_name,
-                  File_Operations_save_events_dir_full_name[instance] + data_file_name,
+                  File_Operations_save_events_dir_full_name[i] + data_file_name,
                   new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES}))
             {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + data_dir_full_name + data_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + data_file_name + "\n\t" + copy_file_error);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + data_dir_full_name + data_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + data_file_name + "\n\t" + copy_file_error);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":copy_file() error!" + "\n\t" + data_dir_full_name + data_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[i] + data_file_name + "\n\t" + copy_file_error);
+              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":copy_file() error!" + "\n\t" + data_dir_full_name + data_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[i] + data_file_name + "\n\t" + copy_file_error);
+            }
+            // Check copy operation is too late by frame time.
+            //println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i]+":get_millis_diff(copy_start_millis)="+get_millis_diff(copy_start_millis));
+            if (get_millis_diff(copy_start_millis) > FRAME_TIME)
+            {
+              delay(FRAME_TIME);
+              copy_start_millis = millis();
             }
           }
 
           // Set state to next.
-          File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS;
+          File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS;
 
           break;
 
         case COPY_ALWAYS_TO_EVENTS:
-          int copy_start_millis = millis();
-          //int copy_count = 0;
+          //copy_count = 0;
+          copy_start_millis = millis();
           File always_file_handle;
-          for (; always_files_list_iterator[instance].hasNext();)
+          for (; always_files_list_iterator[i].hasNext();)
           {
-            Path always_file_path = always_files_list_iterator[instance].next();
+            // Check copy operation is too late by frame time.
+            //println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i]+":get_millis_diff(copy_start_millis)="+get_millis_diff(copy_start_millis));
+            if (get_millis_diff(copy_start_millis) > FRAME_TIME)
+            {
+              //SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
+              break;
+            }
+            //copy_count ++;
+
+            Path always_file_path = always_files_list_iterator[i].next();
 
             String always_file_name = always_file_path.getFileName().toString();
-            //println("File_Operations_save_events("+instance+"):always_file_name="+always_file_name);
+            //println("File_Operations_save_events("+i+"):always_file_name="+always_file_name);
 
             // Get date time of always file.
             long always_file_date_time;
@@ -539,43 +563,34 @@ void File_Operations_save_events()
             {
               // File name error.
               // Set always_file_date_time value to skip data file copy.
-              always_file_date_time = File_Operations_save_events_start_date_time[instance] - 1;
+              always_file_date_time = File_Operations_save_events_start_date_time[i] - 1;
             }
             // Check date time of always file is older than expected date time to skip.
-            if (always_file_date_time < File_Operations_save_events_start_date_time[instance]) continue;
+            if (always_file_date_time < File_Operations_save_events_start_date_time[i]) continue;
             // Check date time of always file is new than expected date time to skip.
-            if (always_file_date_time > File_Operations_save_events_event_date_time[instance]) continue;
+            if (always_file_date_time > File_Operations_save_events_event_date_time[i]) continue;
 
             // Check file is exist and is file.
             always_file_handle = new File(always_dir_full_name+always_file_name);
             if (!always_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
+              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
               continue;
             }
 
             // Copy data file on always dir to events dir.
             if (!copy_file(
                   always_dir_full_name + always_file_name,
-                  File_Operations_save_events_dir_full_name[instance] + always_file_name,
+                  File_Operations_save_events_dir_full_name[i] + always_file_name,
                   new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES}))
             {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
-              SYSTEM_logger.severe("File_Operations_save_events():" + instance + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[instance] + always_file_name + "\n\t" + copy_file_error);
+              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[i] + always_file_name + "\n\t" + copy_file_error);
+              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":copy_file() error!" + "\n\t" + always_dir_full_name + always_file_name + "->" + "\n\t" + File_Operations_save_events_dir_full_name[i] + always_file_name + "\n\t" + copy_file_error);
             }
-            //copy_count ++;
-
-            //delay(1);
-            // Check copy operation is too late by frame time.
-            if (get_millis_diff(copy_start_millis) > FRAME_TIME)
-            {
-              //SYSTEM_logger.warning("File_Operations_save_events():copy operation take long time!:"+copy_count+","+get_millis_diff(copy_start_millis));
-              break;
-            }
-          } // End of for (; always_files_list_iterator[instance].hasNext();)
+          } // End of for (; always_files_list_iterator[i].hasNext();)
 
           // Check end of iterator.
-          if (always_files_list_iterator[instance].hasNext())
+          if (always_files_list_iterator[i].hasNext())
           {
             // Files remained. come back this switch case.
             break;
@@ -584,16 +599,16 @@ void File_Operations_save_events()
           // Close list of DirectoryStream.
           try
           {
-            always_files_list[instance].close();
+            always_files_list[i].close();
           }
           catch (IOException e) {
             // An I/O problem has occurred
-            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():"+instance+":DirectoryStream close() err!"+"\n\t"+e.toString());
-            SYSTEM_logger.severe("File_Operations_save_events():"+instance+":DirectoryStream close() err!"+"\n\t"+e.toString());
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":DirectoryStream close() err!" + "\n\t" + e.toString());
+            SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":DirectoryStream close() err!" + "\n\t" + e.toString());
           }
-          always_files_list[instance] = null;
+          always_files_list[i] = null;
 
-          File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.WAIT_WRITE_EVENTS_DONE;
+          File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.WAIT_WRITE_EVENTS_DONE;
           // Reset pause state of Disk Space free threads to save events files.
           File_Operations_free_threads_pause = false;
 
@@ -601,17 +616,17 @@ void File_Operations_save_events()
 
         case WAIT_WRITE_EVENTS_DONE:
           // Check write done of save events.
-          if (!File_Operations_save_events_write_events_done[instance]) break;
+          if (!File_Operations_save_events_write_events_done[i]) break;
 
-          File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.DONE;
+          File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.DONE;
 
           break;
 
         case DONE:
-          //println("File_Operations_save_events():"+instance+":save events done!");
-          SYSTEM_logger.info("File_Operations_save_events():"+instance+":save events done!");  
-          File_Operations_save_events_done[instance] = true;
-          File_Operations_save_events_state[instance] = File_Operations_save_events_state_enum.IDLE;
+          //println("File_Operations_save_events():"+i+":save events done!");
+          SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events done!");  
+          File_Operations_save_events_done[i] = true;
+          File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.IDLE;
 
           break;
       }
