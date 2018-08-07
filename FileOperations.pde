@@ -144,95 +144,169 @@ void File_Operations_free()
 
 void File_Operations_free_events()
 {
-  String events_dir_full_name;
+  String events_root_dir_full_name;
   if (OS_is_Windows)
   {
-    events_dir_full_name = sketchPath() + "\\events\\";
+    events_root_dir_full_name = sketchPath() + "\\events\\";
   }
   else
   {
-    events_dir_full_name = sketchPath() + "/events/";
+    events_root_dir_full_name = sketchPath() + "/events/";
   }
-  File events_dir_handle = new File(events_dir_full_name);
-  Path events_dir_full_path = Paths.get(events_dir_full_name);
-  DirectoryStream<Path> events_dirs_list;
+  File events_root_dir_handle = new File(events_root_dir_full_name);
+  Path events_root_dir_full_path = Paths.get(events_root_dir_full_name);
+  DirectoryStream<Path> events_root_dirs_list;
 
   delay(FRAME_TIME * 1 / 4);
   do
   {
     delay(1000); // 1s
 
-    if (File_Operations_free_threads_pause) continue;
+    if (File_Operations_free_threads_pause)
+    {
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Paused!");
+      continue;
+    }
 
-    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Run"+millis());
+    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Run! "+millis());
     //println("File_Operations_free_events():Run"+millis());
 
-    if (!events_dir_handle.isDirectory()) {
+    if (!events_root_dir_handle.isDirectory())
+    {
       if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events directory is not ready!");
       continue;
     }
 
-    //long free_space = events_dir_handle.getFreeSpace();
-    long free_space = events_dir_handle.getUsableSpace();
-    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():check free_space="+free_space+" at "+events_dir_full_name);
+    //long free_space = events_root_dir_handle.getFreeSpace();
+    long free_space = events_root_dir_handle.getUsableSpace();
+    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():check free_space="+free_space+" at "+events_root_dir_full_name);
     if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():FILE_OPERATIONS_FREE_LIMIT="+FILE_OPERATIONS_FREE_LIMIT);
 
-    if (free_space > FILE_OPERATIONS_FREE_LIMIT) continue;
+    // Check Free Space.
+    if (free_space > FILE_OPERATIONS_FREE_LIMIT)
+    {
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():have enough free_space="+free_space+" at "+events_root_dir_full_name);
+      continue;
+    }
 
-    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():have not enough free_space="+free_space+" at "+events_dir_full_name);
+    if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():have not enough free_space="+free_space+" at "+events_root_dir_full_name);
 
-    // Get dirs list.
+    // Get root dirs list.
     try
     {
-      events_dirs_list = Files.newDirectoryStream(events_dir_full_path);
+      events_root_dirs_list = Files.newDirectoryStream(events_root_dir_full_path);
     }
-    catch (IOException e) {
+    catch (IOException e)
+    {
       // An I/O problem has occurred
       if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
       SYSTEM_logger.severe("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
       continue;
     }
 
-    for (Path events_subdir_path:events_dirs_list)
+    for (Path events_sub_dir_path:events_root_dirs_list)
     {
-      String events_subdir_name = events_subdir_path.getFileName().toString();
-      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_subdir_name="+events_subdir_name);
+      String events_sub_dir_name = events_sub_dir_path.getFileName().toString();
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_sub_dir_name="+events_sub_dir_name);
 
-      String events_subdir_full_name;
+      String events_target_dir_full_name;
       if (OS_is_Windows)
       {
-        events_subdir_full_name = events_dir_full_name+events_subdir_name+"\\";
+        events_target_dir_full_name = events_root_dir_full_name+events_sub_dir_name+"\\";
       }
       else
       {
-        events_subdir_full_name = events_dir_full_name+events_subdir_name+"/";
+        events_target_dir_full_name = events_root_dir_full_name+events_sub_dir_name+"/";
       }
 
-      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Start delete "+events_subdir_name);
-      SYSTEM_logger.info("File_Operations_free_events():Start delete "+events_subdir_name);
-
-      File events_subdir_handle;
-      events_subdir_handle = new File(events_subdir_full_name);
-      if (!events_subdir_handle.isDirectory()) {
-        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Directory not exist or not a directory!:"+events_dir_full_name+events_subdir_name+"/");
-        SYSTEM_logger.severe("File_Operations_free_events():Directory not exist or not a directory!:"+events_dir_full_name+events_subdir_name+"/");
-        events_subdir_handle.delete();
+      File events_target_dir_handle;
+      events_target_dir_handle = new File(events_target_dir_full_name);
+      if (!events_target_dir_handle.isDirectory())
+      {
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Directory not exist or not a directory!:"+events_root_dir_full_name+events_sub_dir_name+"/");
+        SYSTEM_logger.severe("File_Operations_free_events():Directory not exist or not a directory!:"+events_root_dir_full_name+events_sub_dir_name+"/");
+        events_target_dir_handle.delete();
         delay(1);
         continue;
       }
 
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_sub_dir_name.length()="+events_sub_dir_name.length());
+      // Check sub dir have directories.
+      if (events_sub_dir_name.length() != 21)
+      {
+        Path events_sub_dir_full_path = Paths.get(events_target_dir_full_name);
+        DirectoryStream<Path> events_sub_dirs_list;
+        // Get root dirs list.
+        try
+        {
+          events_sub_dirs_list = Files.newDirectoryStream(events_sub_dir_full_path);
+        }
+        catch (IOException e)
+        {
+          // An I/O problem has occurred
+          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
+          SYSTEM_logger.severe("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
+          continue;
+        }
+
+        for (Path events_target_sub_dir_path:events_sub_dirs_list)
+        {
+          String events_target_sub_dir_name = events_target_sub_dir_path.getFileName().toString();
+          if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_target_sub_dir_name="+events_target_sub_dir_name);
+
+          String events_target_sub_dir_full_name;
+          if (OS_is_Windows)
+          {
+            events_target_sub_dir_full_name = events_target_dir_full_name+events_target_sub_dir_name+"\\";
+          }
+          else
+          {
+            events_target_sub_dir_full_name = events_target_dir_full_name+events_target_sub_dir_name+"/";
+          }
+
+          File events_target_sub_dir_handle = new File(events_target_sub_dir_full_name);
+          if (!events_target_sub_dir_handle.isDirectory())
+          {
+            if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Directory not exist or not a directory!:"+events_target_dir_full_name+events_target_sub_dir_name+"/");
+            SYSTEM_logger.severe("File_Operations_free_events():Directory not exist or not a directory!:"+events_target_dir_full_name+events_target_sub_dir_name+"/");
+            events_target_sub_dir_handle.delete();
+            delay(1);
+            continue;
+          }
+
+          events_target_dir_full_name = events_target_sub_dir_full_name;
+          events_target_dir_handle = events_target_sub_dir_handle;
+          break;
+        } // End of for (Path events_target_sub_dir_path:events_sub_dirs_list)
+        // Close list of DirectoryStream.
+        try
+        {
+          events_sub_dirs_list.close();
+        }
+        catch (IOException e) {
+          // An I/O problem has occurred
+          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_sub_dirs_list.close() err!"+"\n\t"+e.toString());
+          SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_sub_dirs_list.close() err!"+"\n\t"+e.toString());
+        }
+        events_sub_dirs_list = null;
+      } // End of if (events_sub_dir_name.length() != 21)
+
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():Start delete! "+events_target_dir_full_name);
+      SYSTEM_logger.info("File_Operations_free_events():Start delete! "+events_target_dir_full_name);
+
       // Get files list on subdir.
-      DirectoryStream<Path> events_subdir_files_list;
+      DirectoryStream<Path> events_target_dir_files_list;
       try
       {
-        events_subdir_files_list = Files.newDirectoryStream(Paths.get(events_subdir_full_name));
+        events_target_dir_files_list = Files.newDirectoryStream(Paths.get(events_target_dir_full_name));
       }
-      catch (IOException e) {
+      catch (IOException e)
+      {
         // An I/O problem has occurred
         if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
         SYSTEM_logger.severe("File_Operations_free_events():Files.newDirectoryStream err!"+"\n\t"+e.toString());
-        //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():no files on sub directory! "+events_dir_full_name+events_subdir_name+"/");
-        events_subdir_handle.delete();
+        //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():no files on sub directory! "+events_root_dir_full_name+events_sub_dir_name+"/");
+        events_target_dir_handle.delete();
         delay(1);
         continue;
       }
@@ -240,17 +314,17 @@ void File_Operations_free_events()
       int delete_start_millis = millis();
       //int delete_count = 0;
 
-      for (Path events_file_path:events_subdir_files_list)
+      for (Path events_target_file_path:events_target_dir_files_list)
       {
-        String events_file_name = events_file_path.getFileName().toString();
-        //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_file_name="+events_file_name);
-        File events_file_handle = new File(events_subdir_full_name+events_file_name);
-        if (!events_file_handle.isFile()) {
-          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():File not exist or not a file!:"+events_dir_full_name+events_subdir_name+"/"+events_file_name);
-          SYSTEM_logger.severe("File_Operations_free_events():File not exist or not a file!:"+events_dir_full_name+events_subdir_name+"/"+events_file_name);
+        String events_target_file_name = events_target_file_path.getFileName().toString();
+        //if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():events_target_file_name="+events_target_file_name);
+        File events_target_file_handle = new File(events_target_dir_full_name+events_target_file_name);
+        if (!events_target_file_handle.isFile()) {
+          if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():File not exist or not a file!:"+events_root_dir_full_name+events_sub_dir_name+"/"+events_target_file_name);
+          SYSTEM_logger.severe("File_Operations_free_events():File not exist or not a file!:"+events_root_dir_full_name+events_sub_dir_name+"/"+events_target_file_name);
           continue;
         }
-        events_file_handle.delete();
+        events_target_file_handle.delete();
         //delete_count ++;
 
         // Check delete operation is too late by frame time.
@@ -261,37 +335,37 @@ void File_Operations_free_events()
           delete_start_millis = millis();
           //delete_count = 0;
         }
-      } // End of for (Path events_file_path:events_subdir_files_list)
+      } // End of for (Path events_target_file_path:events_target_dir_files_list)
 
       // Close list of DirectoryStream.
       try
       {
-        events_subdir_files_list.close();
+        events_target_dir_files_list.close();
       }
       catch (IOException e) {
         // An I/O problem has occurred
-        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_subdir_files_list.close() err!"+"\n\t"+e.toString());
-        SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_subdir_files_list.close() err!"+"\n\t"+e.toString());
+        if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_target_dir_files_list.close() err!"+"\n\t"+e.toString());
+        SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_target_dir_files_list.close() err!"+"\n\t"+e.toString());
       }
-      events_subdir_files_list = null;
+      events_target_dir_files_list = null;
 
-      events_subdir_handle.delete();
-      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():End delete! "+events_subdir_name);
-      SYSTEM_logger.info("File_Operations_free_events():End delete! "+events_subdir_name);
+      events_target_dir_handle.delete();
+      if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_FREE_EVENTS_DBG) println("File_Operations_free_events():End delete! "+events_target_dir_full_name);
+      SYSTEM_logger.info("File_Operations_free_events():End delete! "+events_target_dir_full_name);
       break;
-    } // End of for (Path events_subdir_path:events_dirs_list)
+    } // End of for (Path events_sub_dir_path:events_root_dirs_list)
 
     // Close list of DirectoryStream.
     try
     {
-      events_dirs_list.close();
+      events_root_dirs_list.close();
     }
     catch (IOException e) {
       // An I/O problem has occurred
-      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
-      SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
+      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_EVENTS_ERR) println("File_Operations_free_events():DirectoryStream events_root_dirs_list.close() err!"+"\n\t"+e.toString());
+      SYSTEM_logger.severe("File_Operations_free_events():DirectoryStream events_root_dirs_list.close() err!"+"\n\t"+e.toString());
     }
-    events_dirs_list = null;
+    events_root_dirs_list = null;
 
   } while (true);
 }
@@ -390,8 +464,8 @@ void File_Operations_free_always()
     }
     catch (IOException e) {
       // An I/O problem has occurred
-      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
-      SYSTEM_logger.severe("File_Operations_free_always():DirectoryStream events_dirs_list.close() err!"+"\n\t"+e.toString());
+      if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_FREE_ALWAYS_ERR) println("File_Operations_free_always():DirectoryStream always_files_list.close() err!"+"\n\t"+e.toString());
+      SYSTEM_logger.severe("File_Operations_free_always():DirectoryStream always_files_list.close() err!"+"\n\t"+e.toString());
     }
     always_files_list = null;
 

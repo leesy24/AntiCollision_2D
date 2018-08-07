@@ -641,6 +641,8 @@ class ROI_Data {
           sketchPath()
           +"\\events\\"
           +nf(year(),4)+nf(month(),2)+nf(day(),2)
+          +"\\"
+          +nf(year(),4)+nf(month(),2)+nf(day(),2)
           +"_"
           +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
           +"_"
@@ -653,6 +655,8 @@ class ROI_Data {
         File_Operations_save_events_dir_full_name[instance] =
           sketchPath()
           +"/events/"
+          +nf(year(),4)+nf(month(),2)+nf(day(),2)
+          +"/"
           +nf(year(),4)+nf(month(),2)+nf(day(),2)
           +"_"
           +nf(hour(),2)+nf(minute(),2)+nf(second(),2)
