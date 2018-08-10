@@ -4,6 +4,9 @@ import java.util.*;
 //final static boolean PRINT_DBG = true; 
 final static boolean PRINT_DBG = false; 
 
+final static boolean PRINT_ERR = true; 
+//final static boolean PRINT_ERR = false; 
+
 //static color C_BG = #FFFFFF; // White
 static color C_BG = #F8F8F8; // White - 0x8
 
@@ -249,8 +252,16 @@ void draw() {
 */
 
   Version_Date_draw();
-
   Dbg_Time_logs_handle.add("Version_Date_draw()");
+
+  // Check main loop time.
+  if (Dbg_Time_logs_handle.get_start_millis_diff() > 1000)
+  {
+    if (PRINT_ERR) println("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
+    SYSTEM_logger.severe("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
+    // To restart program set frameCount to -1, this wiil call setup() of main.
+    frameCount = -1;
+  }
 } 
 
 void Notice_Messages_draw()
