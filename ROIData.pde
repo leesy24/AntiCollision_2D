@@ -989,6 +989,10 @@ class ROI_Data {
       text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt++));
     }
 
+    // Clear memory of list.
+    strings.clear();
+    strings = null;
+
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECT_INFO_DBG) println("ROI_Data:draw_object_info("+instance+"):Enter");
   }
 

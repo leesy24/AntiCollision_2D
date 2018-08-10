@@ -1098,6 +1098,10 @@ class PS_Data {
       String string = strings.get(i);
       text(string, str_x, str_y + FONT_HEIGHT * (1 + i));
     }
+
+    // Clear memory of list.
+    strings.clear();
+    strings = null;
   } // End of draw_params()
   
   // Draw points of parsed Data buffer

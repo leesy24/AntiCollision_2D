@@ -96,4 +96,8 @@ void Bubble_Info_draw()
   {
     BUBBLE_INFO_DISPLAY = false;
   }
+
+  // Clear memory of list.
+  strings.clear();
+  strings = null;
 }

@@ -289,4 +289,8 @@ void Notice_Messages_draw()
     text(str, SCREEN_width / 2 - textWidth(str) / 2, TEXT_MARGIN + FONT_HEIGHT + i * FONT_HEIGHT);
     i ++;
   }
+
+  // Clear memory of list.
+  strings.clear();
+  strings = null;
 }
