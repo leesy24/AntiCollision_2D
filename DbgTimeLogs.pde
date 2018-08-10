@@ -3,43 +3,41 @@ Dbg_Time_logs Dbg_Time_logs_handle = new Dbg_Time_logs();
 class Dbg_Time_logs {
   private ArrayList<Dbg_Time_log> time_logs = new ArrayList<Dbg_Time_log>();
   private String str;
-  private int start;
-  private int diff;
-  private int limit;
-  private int last = -1;
-  private int add_diff;
+  private int start_millis;
+  private int start_millis_diff;
+  private int limit_millis;
+  private int last_millis_diff;
+  private int add_millis_diff;
   private boolean stop;
   private boolean stop_print;
 
   Dbg_Time_logs() {}
 
-  void start(String str, int limit, boolean stop) {
+  void start(String str, int limit_millis, boolean stop) {
     this.str = str;
-    this.limit = limit;
+    this.limit_millis = limit_millis;
     this.stop = stop;
+
     this.time_logs.clear();
-    this.last = -1;
-    this.start = millis();
+    this.start_millis = millis();
+    this.last_millis_diff = 0;
     this.stop_print = false;
   }
 
-  int get_diff() {
-    return diff;
+  int get_start_millis_diff() {
+    return start_millis_diff;
   }
 
-  int get_add_diff() {
-    return add_diff;
+  int get_add_millis_diff() {
+    return add_millis_diff;
   }
 
   void add(String str) {
-    diff = get_millis_diff(start);
-    if (last == -1)
-      add_diff = 0;
-    else
-      add_diff = diff - last;
-    time_logs.add(new Dbg_Time_log(diff, add_diff, str));
-    last = diff;
-    if (diff > limit) {
+    start_millis_diff = get_millis_diff(start_millis);
+    add_millis_diff = start_millis_diff - last_millis_diff;
+    time_logs.add(new Dbg_Time_log(start_millis_diff, add_millis_diff, str));
+    last_millis_diff = start_millis_diff;
+    if (start_millis_diff > limit_millis) {
       if (!stop_print) print();
       if (stop) stop_print = true;
     }
@@ -49,18 +47,18 @@ class Dbg_Time_logs {
     println(str);
     SYSTEM_logger.warning(str);  
     for (Dbg_Time_log time_log:time_logs) {
-      println("\t"+time_log.str+":"+time_log.time+","+time_log.diff);
-      SYSTEM_logger.warning("\t"+time_log.str+":"+time_log.time+","+time_log.diff);  
+      println("\t"+time_log.str+":"+time_log.time+","+time_log.start_millis_diff);
+      SYSTEM_logger.warning("\t"+time_log.str+":"+time_log.time+","+time_log.start_millis_diff);  
     }
   }
 }
 
 class Dbg_Time_log {
-  int time, diff;
+  int time, start_millis_diff;
   String str;
-  Dbg_Time_log(int time, int diff, String str) {
+  Dbg_Time_log(int time, int start_millis_diff, String str) {
     this.time = time;
-    this.diff = diff;
+    this.start_millis_diff = start_millis_diff;
     this.str = str;
   }
 }
