@@ -62,22 +62,32 @@ void Comm_UDP_setup(int local_port)
     return;
   }
 
-  UDP_handle = new UDP(this, local_port);
   if (UDP_handle == null)
   {
-    if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_SETUP_ERR) println("Comm_UDP_setup():UDP_handle=null");
-    return;
+    UDP_handle = new UDP(this, local_port);
+    if (UDP_handle == null)
+    {
+      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_SETUP_ERR) println("Comm_UDP_setup():UDP_handle=null");
+      return;
+    }
+    //UDP_handle.log( true );
+    UDP_handle.log( false );
+    UDP_handle.setReceiveHandler("Comm_UDP_recv");
+    UDP_handle.listen( true );
+ }
+
+  if (Comm_UDP_handle != null)
+  {
+    for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+    {
+      Comm_UDP_handle.close(i);
+    }
+    Comm_UDP_handle = null;
   }
-  //UDP_handle.log( true );
-  UDP_handle.log( false );
-  UDP_handle.setReceiveHandler("Comm_UDP_recv");
-  UDP_handle.listen( true );
 
   Comm_UDP_handle = new Comm_UDP();
   if (Comm_UDP_handle == null)
   {
-    UDP_handle.close();
-    UDP_handle = null;
     if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_SETUP_ERR) println("Comm_UDP_setup():Comm_UDP_handle=null");
     return;
   }
@@ -86,15 +96,6 @@ void Comm_UDP_setup(int local_port)
 void Comm_UDP_reset()
 {
   if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RESET_DBG) println("Comm_UDP_reset():");
-  // Check UDP config changed
-  if (UDP_handle == null)
-  {
-    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RESET_DBG) println("Comm_UDP_reset():UDP_handle already reset.");
-    return;
-  }
-
-  UDP_handle.close();
-  UDP_handle = null;
 
   if (Comm_UDP_handle == null)
   {
@@ -109,11 +110,6 @@ void Comm_UDP_recv(byte[] data, String ip, int port)
   int instance;
   try {
     if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RECV_DBG || PRINT_COMM_UDP_RECV_IN_DBG) println("Comm_UDP_recv():ip=" + ip + ",port=" + port + ",data.length=" + data.length);
-    if (UDP_handle == null)
-    {
-      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RECV_ERR) println("Comm_UDP_recv():UDP_handle=null");
-      return;
-    }
     if (Comm_UDP_handle == null)
     {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RECV_ERR) println("Comm_UDP_recv():Comm_UDP_handle=null");
@@ -151,11 +147,6 @@ class Comm_UDP {
   public int open(int instance, String remote_ip, int remote_port)
   {
     if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_OPEN_DBG) println("Comm_UDP:open("+instance+"):remote_ip="+remote_ip+",remote_port="+remote_port);
-    if (UDP_handle == null)
-    {
-      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_OPEN_ERR) println("Comm_UDP:open("+instance+"):UDP_handle=null");
-      return -1;
-    }
     if (instance >= COMM_UDP_INSTANCE_MAX)
     {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_OPEN_ERR) println("Comm_UDP:open("+instance+"):instance exceed MAX.");
@@ -175,11 +166,6 @@ class Comm_UDP {
   public int close(int instance)
   {
     if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_CLOSE_DBG) println("Comm_UDP:close("+instance+"):");
-    if (UDP_handle == null)
-    {
-      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_CLOSE_ERR) println("Comm_UDP:close("+instance+"):UDP_handle=null");
-      return -1;
-    }
     if (instance >= COMM_UDP_INSTANCE_MAX)
     {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_CLOSE_ERR) println("Comm_UDP:close("+instance+"):instance exceed MAX.");
@@ -230,11 +216,6 @@ class Comm_UDP {
   public int get_instance_by_ip(String ip_search)
   {
     if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_GET_DBG) println("Comm_UDP:get_instance_by_ip():ip="+ip_search);
-    if (UDP_handle == null)
-    {
-      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_GET_ERR) println("Comm_UDP:get_instance_by_ip():UDP_handle=null");
-      return -1;
-    }
 
     for (int i = 0; i < COMM_UDP_INSTANCE_MAX; i++)
     {

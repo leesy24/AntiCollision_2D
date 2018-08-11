@@ -60,6 +60,7 @@ void Interfaces_File_setup()
     {
       Interfaces_File_handle.close(i);
     }
+    Interfaces_File_handle = null;
   }
 
   Interfaces_File_handle = new Interfaces_File();

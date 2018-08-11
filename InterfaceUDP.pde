@@ -80,6 +80,7 @@ void Interfaces_UDP_setup(int local_port)
     {
       Interfaces_UDP_handle.close(i);
     }
+    Interfaces_UDP_handle = null;
   }
 
   Comm_UDP_setup(local_port);
