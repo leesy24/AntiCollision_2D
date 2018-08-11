@@ -54,6 +54,14 @@ void Interfaces_File_setup()
   Title += ")";
 */
 
+  if (Interfaces_File_handle != null)
+  {
+    for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+    {
+      Interfaces_File_handle.close(i);
+    }
+  }
+
   Interfaces_File_handle = new Interfaces_File();
   if(Interfaces_File_handle == null)
   {

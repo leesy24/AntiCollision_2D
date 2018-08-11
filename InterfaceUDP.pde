@@ -74,6 +74,14 @@ void Interfaces_UDP_setup(int local_port)
   Title += ":" + local_port;
   Title += ")";
 
+  if (Interfaces_UDP_handle != null)
+  {
+    for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+    {
+      Interfaces_UDP_handle.close(i);
+    }
+  }
+
   Comm_UDP_setup(local_port);
 
   Interfaces_UDP_handle = new Interfaces_UDP();
