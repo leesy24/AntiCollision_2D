@@ -626,6 +626,7 @@ class Buttons_Group {
   private ArrayList<Button_Instance> buttons = new ArrayList<Button_Instance>();
   private int center_x, top_y;
   private String text;
+  private int text_left_x;
   private color stroke_c;
   private int stroke_w;
   private color fill_c_normal;
@@ -636,6 +637,8 @@ class Buttons_Group {
   Buttons_Group(String text, int center_x, int top_y, color stroke_c, int stroke_w, color fill_c_normal, color fill_c_highlight, color fill_c_text) {
     this.text = text;
     this.center_x = center_x;
+    textSize(FONT_HEIGHT);
+    this.text_left_x = int(center_x - textWidth(text) / 2.0);
     this.top_y = top_y;
     this.stroke_c = stroke_c;
     this.stroke_w = stroke_w;
@@ -648,26 +651,29 @@ class Buttons_Group {
     this.text = text;
   }
 
-  public void add_button(UI_Buttons_action_enum action, String text, int offset_center_x, int offset_top_y, int w, int h) {
-    int left_x, top_y;
-    left_x = int(this.center_x + offset_center_x - w / 2.0 );
-    top_y = this.top_y + offset_top_y;
-    this.buttons.add(new Button_Instance(action, text, left_x, top_y, w, h));
+  public void add_button(UI_Buttons_action_enum action, String text, int center_x_offset, int top_y_offset, int w, int h) {
+    this.buttons
+      .add(
+        new Button_Instance(
+          action,
+          text,
+          this.center_x + center_x_offset - w / 2,
+          this.top_y + top_y_offset,
+          w,
+          h));
   }
 
   public void draw() {
     textSize(FONT_HEIGHT);
-    //textAlign(CENTER, TOP);
-    //textAlign(CENTER, BASELINE);
-    textAlign(CENTER, CENTER);
     // Sets the color and weight used to draw lines and borders around shapes.
     stroke(stroke_c);
     strokeWeight(stroke_w);
+    textAlign(LEFT, TOP);
     for (Button_Instance button:buttons) {
       button.draw(fill_c_normal, fill_c_highlight, fill_c_text);
     }
-    textAlign(CENTER, TOP);
-    text(text, center_x, top_y);
+    //textAlign(LEFT, TOP);
+    text(text, text_left_x, top_y);
   }
 
   public UI_Buttons_action_enum get_action() {
@@ -702,6 +708,7 @@ class Button_Instance {
   private int left_x, top_y;
   private int w, h;
   private String text;
+  private int text_left_x, text_top_y;
   private boolean focused;
   private boolean pressed;
 
@@ -709,6 +716,9 @@ class Button_Instance {
     this.action = action;
     this.text = text;
     this.left_x = left_x;
+    textSize(FONT_HEIGHT);
+    this.text_left_x = left_x + int(w / 2.0 - textWidth(text) / 2.0) + 1;
+    this.text_top_y = top_y + int(h / 2.0 - FONT_HEIGHT / 2.0) - 2;
     this.top_y = top_y;
     this.w = w;
     this.h = h;
@@ -729,7 +739,7 @@ class Button_Instance {
     }
     rect(left_x, top_y, w, h);
     fill(fill_c_text);
-    text(text, left_x, top_y, w, h);
+    text(text, text_left_x, text_top_y);
   }
 
   public UI_Buttons_action_enum get_action() {
