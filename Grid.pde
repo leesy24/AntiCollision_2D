@@ -105,8 +105,9 @@ void Grid_draw_lines()
     for (Grid_Line_Data line_data:Grid_Lines_array[i])
     {
       line(line_data.x_start, line_data.y_start, line_data.x_end, line_data.y_end);
+      //println("Grid_draw_lines():"+i+":"+line_data.x_start+","+line_data.y_start+","+line_data.x_end+","+line_data.y_end);
     }
-    //Dbg_Time_logs_handle.add("Grid_draw():line["+i+"]:"+Grid_Lines_array[i].size());
+    //Dbg_Time_logs_handle.add("Grid_draw_lines():"+i+":"+Grid_Lines_array[i].size());
   }
 }
 
