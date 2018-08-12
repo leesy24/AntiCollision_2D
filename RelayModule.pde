@@ -189,14 +189,15 @@ void Relay_Module_setup()
         color off_stroke_c;
         String on_text = "ON";
         String off_text = "OFF";
-        float text_width_max;
+        float on_text_width, off_text_width, text_width_max;
 
         on_text = relay_name + (relay_name.length() == 0?"":" ") + on_text;
         off_text = relay_name + (relay_name.length() == 0?"":" ") + off_text;
 
         textSize(indicator_text_height);
-        text_width_max = textWidth(on_text);
-        text_width_max = max(text_width_max, textWidth(off_text));
+        on_text_width = textWidth(on_text);
+        off_text_width = textWidth(off_text);
+        text_width_max = max(on_text_width, off_text_width);
 
         w = int(text_width_max + indicator_text_height / 4.0 * 2.0);
         h = int(indicator_text_height + indicator_text_height / 4.0 * 2.0);
@@ -216,7 +217,8 @@ void Relay_Module_setup()
               on_fill_c, off_fill_c,
               on_stroke_c, off_stroke_c,
               indicator_text_height,
-              on_text, off_text);
+              on_text, int(indicator_scr_center_x - on_text_width / 2.0),
+              off_text, int(indicator_scr_center_x - off_text_width / 2.0));
         break;
       }
       if (region_index != Regions_handle.regions_array[instance].size())
@@ -611,14 +613,16 @@ class UI_Relay_Indicator {
   color off_stroke_c;
   int text_height;
   String on_text;
+  int on_text_x;
   String off_text;
+  int off_text_x;
 
   private boolean init = false;
 
   UI_Relay_Indicator() {
   }
 
-  void set(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color off_fill_c, color on_stroke_c, color off_stroke_c, int text_height, String on_text, String off_text) {
+  void set(int x, int y, int w, int h, int r, int stroke_w, color on_fill_c, color off_fill_c, color on_stroke_c, color off_stroke_c, int text_height, String on_text, int on_text_x, String off_text, int off_text_x) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -631,7 +635,9 @@ class UI_Relay_Indicator {
     this.off_stroke_c = off_stroke_c;
     this.text_height = text_height;
     this.on_text = on_text;
+    this.on_text_x = on_text_x;
     this.off_text = off_text;
+    this.off_text_x = off_text_x;
     init = true;
     //println("UI_Relay_Indicator():set():"+"x="+x+",y="+y+",w="+w+",h="+h);
     //println("UI_Relay_Indicator:set():off_stroke_c="+Integer.toHexString(off_stroke_c));
@@ -652,15 +658,15 @@ class UI_Relay_Indicator {
     strokeWeight(stroke_w);
     rect(x, y, w, h, r, r, r, r);
 
-    textAlign(CENTER, TOP);
+    textAlign(LEFT, TOP);
     textSize(text_height);
     if (on) {
       fill(on_stroke_c);
-      text(on_text, x, y, w, h);
+      text(on_text, on_text_x, y);
     }
     else {
       fill(off_stroke_c);
-      text(off_text, x, y, w, h);
+      text(off_text, off_text_x, y);
     }
   }
 }
