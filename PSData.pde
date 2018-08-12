@@ -1136,8 +1136,9 @@ class PS_Data {
         }
       }
     }
-    // Sets the weight used to draw lines and rect borders around shapes.
-    strokeWeight(W_PS_DATA_LINE);
+
+    // Sets the weight used to rect borders around shapes.
+    strokeWeight(1);
 
     // Check pulse width exist than color mode set to HSB.
     if (data_content[instance] != 4) {
@@ -1258,12 +1259,19 @@ class PS_Data {
               // Sets the weight used to draw line.
               strokeWeight(W_PS_DATA_LINE);
               line(point_x_prev, point_y_prev, point_x_curr, point_y_curr);
+              // Sets the weight used to rect borders around shapes.
+              strokeWeight(1);
             }
             fill(point_color_prev);
             stroke(point_color_prev);
-            // Sets the weight used to rect borders around shapes.
-            strokeWeight(1);
-            //point(point_x_prev + DRAW_OFFSET_X[instance], point_y_prev + DRAW_OFFSET_Y[instance]);
+            //for (int x = point_x_prev - point_size_prev / 2; x <= point_x_prev + point_size_prev / 2; x ++) {
+            //  line(x, point_y_prev - point_size_prev / 2, x, point_y_prev + point_size_prev / 2);
+            //}
+            //for (int x = point_x_prev - point_size_prev / 2; x <= point_x_prev + point_size_prev / 2; x ++) {
+            //  for (int y = point_y_prev - point_size_prev / 2; y <= point_y_prev + point_size_prev / 2; y ++) {
+            //    point(x, y);
+            //  }
+            //}
             rect( point_x_prev - point_size_prev / 2,
                   point_y_prev - point_size_prev / 2,
                   point_size_prev,
@@ -1277,9 +1285,14 @@ class PS_Data {
             PS_Data_draw_points_all_enabled) {
           fill(point_color_curr);
           stroke(point_color_curr);
-          // Sets the weight used to rect borders around shapes.
-          strokeWeight(1);
-          //point(point_x_curr + DRAW_OFFSET_X[instance], point_y_curr + DRAW_OFFSET_Y[instance]);
+          //for (int x = point_x_curr - point_size_curr / 2; x <= point_x_curr + point_size_curr / 2; x ++) {
+          //  line(x, point_y_curr - point_size_curr / 2, x, point_y_curr + point_size_curr / 2);
+          //}
+          //for (int x = point_x_curr - point_size_curr / 2; x <= point_x_curr + point_size_curr / 2; x ++) {
+          //  for (int y = point_y_curr - point_size_curr / 2; y <= point_y_curr + point_size_curr / 2; y ++) {
+          //    point(x, y);
+          //  }
+          //}
           rect( point_x_curr - point_size_curr / 2,
                 point_y_curr - point_size_curr / 2,
                 point_size_curr,
