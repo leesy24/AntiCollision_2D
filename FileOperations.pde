@@ -524,25 +524,21 @@ void File_Operations_save_events()
       switch (File_Operations_save_events_state[i])
       {
         case IDLE:
-          // Set pause state of Disk Space free threads to save events files.
-          File_Operations_free_threads_pause = true;
-
-          SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events start!");  
-
-          // Make save events dir.
+          // Check save events dir.
           File save_events_dir_handle;
           save_events_dir_handle = new File(File_Operations_save_events_dir_full_name[i]);
           if (!save_events_dir_handle.isDirectory())
           {
-            if (!save_events_dir_handle.mkdirs())
-            {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[i]);
-              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":mkdirs() error! " + File_Operations_save_events_dir_full_name[i]);
-              // Reset pause state of Disk Space free threads to save events files.
-              File_Operations_free_threads_pause = false;
-              break;
-            }
+            if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_SAVE_EVENTS_DBG) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events dir is not exist! " + File_Operations_save_events_dir_full_name[i]);
+            SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events dir is not exist! " + File_Operations_save_events_dir_full_name[i]);
+            // save events dir will be made by save always thread. So, just break and come here after some wait.
+            break;
           }
+
+          // Set pause state of Disk Space free threads to save events files.
+          File_Operations_free_threads_pause = true;
+
+          SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events start!");  
 
           // Get always files list of instance to copy.
           try
@@ -755,7 +751,7 @@ void File_Operations_save_always()
           {
             if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_ALWAYS_ERR) println("File_Operations_save_always()" + ":" + save_always_data.instance + ":mkdirs() error! " + save_always_data.save_events_dir_full_name);
             SYSTEM_logger.severe("File_Operations_save_always()" + ":" + save_always_data.instance + ":mkdirs() error! " + save_always_data.save_events_dir_full_name);
-            //break;
+            // mkdir will execute next queue data.
           }
         }
 
