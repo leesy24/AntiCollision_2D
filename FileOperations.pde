@@ -530,7 +530,7 @@ void File_Operations_save_events()
           if (!save_events_dir_handle.isDirectory())
           {
             if (PRINT_FILE_OPERATIONS_ALL_DBG || PRINT_FILE_OPERATIONS_SAVE_EVENTS_DBG) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events dir is not exist! " + File_Operations_save_events_dir_full_name[i]);
-            SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events dir is not exist! " + File_Operations_save_events_dir_full_name[i]);
+            //SYSTEM_logger.info("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":save events dir is not exist! " + File_Operations_save_events_dir_full_name[i]);
             // save events dir will be made by save always thread. So, just break and come here after some wait.
             break;
           }
