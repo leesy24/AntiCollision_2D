@@ -259,8 +259,8 @@ void draw() {
   {
     if (PRINT_ERR) println("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
     SYSTEM_logger.severe("main():loop take too long time! " + Dbg_Time_logs_handle.get_start_millis_diff());
-    // To restart program set frameCount to -1, this wiil call setup() of main.
-    frameCount = -1;
+    // Need to call gc() to free memory.
+    System.gc();
   }
 } 
 
