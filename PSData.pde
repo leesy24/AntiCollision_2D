@@ -341,6 +341,7 @@ class PS_Data {
   int[][] scr_y = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] pulse_width = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   color[][] pulse_width_color = new color[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
+  color[] pulse_width_color_value = new color[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1];
   String[] parse_err_str = new String[PS_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_INSTANCE_MAX];
@@ -395,6 +396,55 @@ class PS_Data {
       //time_stamp_last[i] = -1L;
       interfaces_err_started[i] = false;
     }
+
+    // Init. pulse_width_color_value
+    int color_size = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1;
+    int color_step = color_size / 6;
+    
+    int c = 0;
+   
+    // Starts as violet, becomes indigo
+    for (int r = color_step; r > 0; r--) {
+      pulse_width_color_value[c] = color(r*63/color_step + 63, 0, 255);
+      c++;
+    }
+    //println("c="+c);
+   
+    // Starts as indigo, becomes blue
+    for (int r = color_step; r > 0; r--) {
+      pulse_width_color_value[c] = color(r*63/color_step, 0, 255);
+      c++;
+    }
+    //println("c="+c);
+   
+    // Starts as blue, becomes green
+    for (int gb = 0; gb < color_step; gb++) {
+      pulse_width_color_value[c]= color(0, gb*255/color_step, (color_step - gb)*255/color_step);
+      c++;
+    }
+    //println("c="+c);
+   
+    // Starts as green, becomes yellow
+    for (int r = 0; r < color_step + color_size - color_step * 6; r++) {
+      pulse_width_color_value[c] = color(r*255/(color_step + color_size - color_step * 6), 255, 0);
+      c++;
+    }
+    //println("c="+c);
+   
+    // Stars as yellow, becomes orange
+    for (int g = color_step; g > 0; g--) {
+      pulse_width_color_value[c] = color(255, g*127/color_step + 127, 0);
+      c++;
+    }
+    //println("c="+c);
+   
+    // Starts as orange, becomes red
+    for (int g = color_step; g > 0; g--) {
+      pulse_width_color_value[c] = color(255, g*127/color_step, 0);
+      c++;
+    }
+    //println("c="+c);
+
   }
 
   // Load PS_Data_buf
@@ -889,59 +939,22 @@ class PS_Data {
         pulse_width[instance][j] = get_int32_bytes(PS_Data_buf[instance], i);
         //println("index=" + i + ",point=", j, ",pulse width=" + pulse_width);
 
-        final int point_color_H_max_const =
-          (
-            PS_DATA_PULSE_WIDTH_MAX
-            +
-            int(float(PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN) * 5.0 / 6.0)
-            -
-            PS_DATA_PULSE_WIDTH_MAX
-          )
-          %
-          (PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1);
-        final int point_color_H_min_const =
-          (
-            PS_DATA_PULSE_WIDTH_MAX
-            +
-            int(float(PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN) * 5.0 / 6.0)
-            -
-            PS_DATA_PULSE_WIDTH_MIN
-          )
-          %
-          (PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1);
-        final float point_line_color_H_offset_const = float(PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN) * 5.0 / 6.0;
-        final int point_line_color_H_modular_const = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1;
-        final int point_line_color_HSB_max_const = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN;
-
-        colorMode(HSB, point_line_color_HSB_max_const);
-
         //print("[" + j + "]=" + pulse_width[instance][j] + " ");
-        if(pulse_width[instance][j] > PS_DATA_PULSE_WIDTH_MAX)
+        if(pulse_width[instance][j] >= PS_DATA_PULSE_WIDTH_MAX)
         {
           pulse_width_color[instance][j] =
-            color(
-              point_color_H_max_const,
-              point_line_color_HSB_max_const,
-              point_line_color_HSB_max_const);
+            pulse_width_color_value[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN];
         }
-        else if(pulse_width[instance][j] < PS_DATA_PULSE_WIDTH_MIN)
+        else if(pulse_width[instance][j] <= PS_DATA_PULSE_WIDTH_MIN)
         {
           pulse_width_color[instance][j] =
-            color(
-              point_color_H_min_const,
-              point_line_color_HSB_max_const,
-              point_line_color_HSB_max_const);
+            pulse_width_color_value[0];
         }
         else
         {
           pulse_width_color[instance][j] =
-            color(
-              (PS_DATA_PULSE_WIDTH_MAX + int(point_line_color_H_offset_const - pulse_width[instance][j])) % point_line_color_H_modular_const,
-              point_line_color_HSB_max_const,
-              point_line_color_HSB_max_const);
+            pulse_width_color_value[pulse_width[instance][j] - PS_DATA_PULSE_WIDTH_MIN];
         }
-
-        colorMode(RGB, 255);
 
         i = i + 4;
       }
