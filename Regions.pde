@@ -285,9 +285,19 @@ class Regions {
           if (region_data.rect_dashed_gap > 0) {
             DashedLines_handle.line(x_prev, y_prev, x_curr, y_curr);
           }
-          else
-          {
-            line(x_prev, y_prev, x_curr, y_curr);
+          else {
+            if (x_prev == x_curr)
+              if (y_prev > y_curr)
+                rect(x_curr, y_curr, 0, y_prev - y_curr);
+              else
+                rect(x_prev, y_prev, 0, y_curr - y_prev);
+            else if (y_prev == y_curr)
+              if (x_prev > x_curr)
+                rect(x_curr, y_curr, x_prev - x_curr, 0);
+              else
+                rect(x_prev, y_prev, x_curr - x_prev, 0);
+            else
+              line(x_prev, y_prev, x_curr, y_curr);
           }
 
           // Save data for drawing line between previous and current points. 

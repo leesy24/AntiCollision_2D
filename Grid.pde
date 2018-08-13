@@ -104,7 +104,10 @@ void Grid_draw_lines()
     strokeWeight(W_GRID_LINE);
     for (Grid_Line_Data line_data:Grid_Lines_array[i])
     {
-      line(line_data.x_start, line_data.y_start, line_data.x_end, line_data.y_end);
+      if (line_data.x_start == line_data.x_end)
+        rect(line_data.x_start, line_data.y_start, 0, line_data.y_end - line_data.y_start);
+      else
+        rect(line_data.x_start, line_data.y_start, line_data.x_end - line_data.x_start, 0);
       //println("Grid_draw_lines():"+i+":"+line_data.x_start+","+line_data.y_start+","+line_data.x_end+","+line_data.y_end);
     }
     //Dbg_Time_logs_handle.add("Grid_draw_lines():"+i+":"+Grid_Lines_array[i].size());
