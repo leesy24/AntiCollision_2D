@@ -96,6 +96,12 @@ int get_points_diff(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
 
 int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
 {
+  return int(abs(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y))));;
+}
+
+/*
+int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
+{
   //int distance = abs(int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y))));
   int distance = int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y)));
   // Distance value must be absolute value. Will not use abs() for performance.
@@ -103,6 +109,7 @@ int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b
 
   return distance;
 }
+*/
 
 int get_point_rotate_x(int point_x, int point_y, float degree)
 {
