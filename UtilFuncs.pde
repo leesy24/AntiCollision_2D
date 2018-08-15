@@ -89,6 +89,11 @@ void set_str_bytes(byte[] buf, int offset, String str)
   }
 }
 
+int get_points_diff(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
+{
+  return abs(point_a_x - point_b_x) + abs(point_a_y - point_b_y);
+}
+
 int get_points_distance(int point_a_x, int point_a_y, int point_b_x, int point_b_y)
 {
   //int distance = abs(int(sqrt(sq(point_a_x - point_b_x) + sq(point_a_y - point_b_y))));

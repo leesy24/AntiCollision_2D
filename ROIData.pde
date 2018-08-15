@@ -707,34 +707,34 @@ class ROI_Data {
     //if (objects_last[instance].size() <= ROI_Data_mouse_over_object_index[instance]) return;
 
     ROI_Object_Data object;
-    int distance_min = MAX_INT, distance_min_index = MAX_INT;
+    int diff_min = MAX_INT, diff_min_index = MAX_INT;
 
     //println(instance+":x="+ROI_Data_draw_info_x[instance]+",y="+ROI_Data_draw_info_y[instance]);
     for (int i = 0; i < objects_last[instance].size(); i ++) {
-      int distance;
+      int diff;
       object = objects_last[instance].get(i);
       //println(instance+","+i+":c.x="+object.scr_center_x+",y="+object.scr_center_y+",d="+object.scr_diameter);
       if (check_scr_xy_over_object(
             ROI_Data_draw_info_x[instance],
             ROI_Data_draw_info_y[instance],
             object, ROI_OBJECT_MARKER_MARGIN)) {
-        distance =
-          get_points_distance(
+        diff =
+          get_points_diff(
             ROI_Data_draw_info_x[instance], ROI_Data_draw_info_y[instance],
             object.scr_center_x, object.scr_center_y);
-        //println(instance+","+i+":distance="+distance);
-        if (distance < distance_min) {
-          distance_min = distance;
-          distance_min_index = i;
+        //println(instance+","+i+":diff="+diff);
+        if (diff < diff_min) {
+          diff_min = diff;
+          diff_min_index = i;
         }
       }
     }
-    if (distance_min_index == MAX_INT) return;
-    //println(instance+":distance_min="+distance_min+":distance_min_index="+distance_min_index);
+    if (diff_min_index == MAX_INT) return;
+    //println(instance+":diff_min="+diff_min+":diff_min_index="+diff_min_index);
 
     //ROI_Data_draw_info_enabled[instance] = false;
 
-    object = objects_last[instance].get(distance_min_index);
+    object = objects_last[instance].get(diff_min_index);
     /*
     ROI_Object_Data object;
 
@@ -1185,8 +1185,7 @@ class ROI_Data {
         region_index_min = region_index;
         new_region_indexes.add(0, region_index_min); // Add first min region index.
       }
-      else
-      {
+      else {
         if (!new_region_indexes.contains(region_index)) {
           new_region_indexes.add(region_index);
         }
@@ -1196,7 +1195,7 @@ class ROI_Data {
         if (new_region_indexes.contains(region_index)) continue;
         new_region_indexes.add(region_index);
       }
-      //region_index_min = min(region_index_min, region_index);
+
       mi_x_min = min(mi_x_min, point.mi_x);
       mi_y_min = min(mi_y_min, point.mi_y);
       mi_x_max = max(mi_x_max, point.mi_x);
@@ -1205,7 +1204,8 @@ class ROI_Data {
       scr_y_min = min(scr_y_min, point.scr_y);
       scr_x_max = max(scr_x_max, point.scr_x);
       scr_y_max = max(scr_y_max, point.scr_y);
-    }
+    } // End of for (ROI_Point_Data point:points_group)
+
     if (mi_x_min == mi_x_max && mi_y_min == mi_y_max) {
       int rot_x, rot_y;
       rot_x = get_point_rotate_x(mi_x_min, mi_y_min, angle_step);
