@@ -97,6 +97,8 @@ static int[] PS_Data_draw_params_timer = new int[PS_INSTANCE_MAX];
 static int[] PS_Data_draw_params_x = new int[PS_INSTANCE_MAX];
 static int[] PS_Data_draw_params_y = new int[PS_INSTANCE_MAX];
 
+static color[] PS_Data_pulse_width_color_value = null;
+
 // Define old time stamp to check time stamp changed for detecting Data buffer changed or not
 //long PS_Data_old_time_stamp = -1;
 
@@ -208,6 +210,67 @@ void PS_Data_setup()
     else {
       if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
       SYSTEM_logger.severe("PS_Data_setup():PS_Interface["+i+"]="+PS_Interface[i]+" error!");
+    }
+
+    if (PS_Data_pulse_width_color_value == null) {
+      // Init. PS_Data_pulse_width_color_value
+      int color_size = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1;
+      int color_step = color_size / 6;
+      int color_count = 0;
+
+      PS_Data_pulse_width_color_value = new color[color_size];
+
+      // Starts as violet, becomes indigo
+      for (int r = color_step; r > 0; r --) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(r*63/color_step + 64, 0, 255);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      // Starts as indigo, becomes blue
+      for (int r = color_step; r > 0; r --) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(r*63/color_step, 0, 255);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      // Starts as blue, becomes green
+      for (int gb = 0; gb < color_step; gb ++) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(0, gb*255/color_step, (color_step - gb)*255/color_step);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      // Starts as green, becomes yellow
+      for (int r = 0; r < color_step + color_size - color_step * 6; r ++) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(r*255/(color_step + color_size - color_step * 6), 255, 0);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      // Stars as yellow, becomes orange
+      for (int g = color_step; g > 0; g --) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(255, g*127/color_step + 128, 0);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      // Starts as orange, becomes red
+      for (int g = color_step; g > 0; g --) {
+        PS_Data_pulse_width_color_value[color_count] =
+          color(255, g*127/color_step, 0);
+        color_count ++;
+      }
+      //println("color_count="+color_count);
+
+      if (color_count != color_size) {
+        if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_SETUP_ERR) println("PS_Data_setup()"+":color_count is not match with color_size. " + color_count + "," + color_size);
+      }
     }
   }
 }
@@ -341,7 +404,6 @@ class PS_Data {
   int[][] scr_y = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   int[][] pulse_width = new int[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
   color[][] pulse_width_color = new color[PS_INSTANCE_MAX][PS_DATA_POINTS_MAX];
-  color[] pulse_width_color_value = new color[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1];
   String[] parse_err_str = new String[PS_INSTANCE_MAX];
   int[] parse_err_cnt = new int[PS_DATA_POINTS_MAX];
   int[] load_take_time = new int[PS_INSTANCE_MAX];
@@ -396,55 +458,6 @@ class PS_Data {
       //time_stamp_last[i] = -1L;
       interfaces_err_started[i] = false;
     }
-
-    // Init. pulse_width_color_value
-    int color_size = PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN + 1;
-    int color_step = color_size / 6;
-    
-    int c = 0;
-   
-    // Starts as violet, becomes indigo
-    for (int r = color_step; r > 0; r--) {
-      pulse_width_color_value[c] = color(r*63/color_step + 63, 0, 255);
-      c++;
-    }
-    //println("c="+c);
-   
-    // Starts as indigo, becomes blue
-    for (int r = color_step; r > 0; r--) {
-      pulse_width_color_value[c] = color(r*63/color_step, 0, 255);
-      c++;
-    }
-    //println("c="+c);
-   
-    // Starts as blue, becomes green
-    for (int gb = 0; gb < color_step; gb++) {
-      pulse_width_color_value[c]= color(0, gb*255/color_step, (color_step - gb)*255/color_step);
-      c++;
-    }
-    //println("c="+c);
-   
-    // Starts as green, becomes yellow
-    for (int r = 0; r < color_step + color_size - color_step * 6; r++) {
-      pulse_width_color_value[c] = color(r*255/(color_step + color_size - color_step * 6), 255, 0);
-      c++;
-    }
-    //println("c="+c);
-   
-    // Stars as yellow, becomes orange
-    for (int g = color_step; g > 0; g--) {
-      pulse_width_color_value[c] = color(255, g*127/color_step + 127, 0);
-      c++;
-    }
-    //println("c="+c);
-   
-    // Starts as orange, becomes red
-    for (int g = color_step; g > 0; g--) {
-      pulse_width_color_value[c] = color(255, g*127/color_step, 0);
-      c++;
-    }
-    //println("c="+c);
-
   }
 
   // Load PS_Data_buf
@@ -943,17 +956,17 @@ class PS_Data {
         if(pulse_width[instance][j] >= PS_DATA_PULSE_WIDTH_MAX)
         {
           pulse_width_color[instance][j] =
-            pulse_width_color_value[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN];
+            PS_Data_pulse_width_color_value[PS_DATA_PULSE_WIDTH_MAX - PS_DATA_PULSE_WIDTH_MIN];
         }
         else if(pulse_width[instance][j] <= PS_DATA_PULSE_WIDTH_MIN)
         {
           pulse_width_color[instance][j] =
-            pulse_width_color_value[0];
+            PS_Data_pulse_width_color_value[0];
         }
         else
         {
           pulse_width_color[instance][j] =
-            pulse_width_color_value[pulse_width[instance][j] - PS_DATA_PULSE_WIDTH_MIN];
+            PS_Data_pulse_width_color_value[pulse_width[instance][j] - PS_DATA_PULSE_WIDTH_MIN];
         }
 
         i = i + 4;
