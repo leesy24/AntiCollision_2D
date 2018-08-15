@@ -588,10 +588,6 @@ class ROI_Data {
 
     //println("ROI_Data:draw_objects("+instance+")"+":detected_objects_are_same["+instance+"]="+detected_objects_are_same[instance]);
     
-    // Clear memory of detected_objects_last.
-    detected_objects_last[instance].clear();
-    detected_objects_last[instance] = null;
-
     // Save detected_objects_new.
     detected_objects_last[instance] = detected_objects_new;
 
@@ -977,10 +973,6 @@ class ROI_Data {
     {
       text(string, str_x, str_y + FONT_HEIGHT * (1 + cnt++));
     }
-
-    // Clear memory of list.
-    strings.clear();
-    strings = null;
 
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECT_INFO_DBG) println("ROI_Data:draw_object_info("+instance+"):Enter");
   }
