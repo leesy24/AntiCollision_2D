@@ -51,6 +51,8 @@ final static int PS_DATA_POINT_WEIGHT = 3;
 final static int PS_DATA_PULSE_WIDTH_MAX = 12000;
 final static int PS_DATA_PULSE_WIDTH_MIN = 4096;
 
+final static int PS_DATA_INTERFACES_ERR_COUNT_MAX = 6; // 60 seconds = 1 minute
+
 final static int PS_Interface_FILE = 0;
 final static int PS_Interface_UART = 1;
 final static int PS_Interface_UDP = 2;
@@ -514,22 +516,33 @@ class PS_Data {
             if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
             SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
           }
-          else
-          {
+          else {
             int diff_millis = get_millis_diff(interfaces_err_start_millis[instance]);
-            if (diff_millis > (10*1000)) { // Every 10 seconds.
+            if (diff_millis >= (10*1000)) { // Every 10 seconds.
               interfaces_err_count[instance] ++;
-              interfaces_err_start_millis[instance] = millis();
+              interfaces_err_start_millis[instance] += diff_millis;
+
               if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
               SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
-            }
-            //if (interfaces_err_count[instance] >= 2) { // During over 20 seconds for test.
-            if (interfaces_err_count[instance] >= 6) { // During over 1 minutes.
-              if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
-              SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error too long time!"+":"+(interfaces_err_count[instance]*10)+"s"+":"+interfaces_err_str);
-              // To restart program set frameCount to -1, this wiil call setup() of main.
-              frameCount = -1;
-            }
+
+              if (interfaces_err_count[instance] >= PS_DATA_INTERFACES_ERR_COUNT_MAX) { // During over PS_DATA_INTERFACES_ERR_COUNT_MAX seconds.
+                // Check other interfaces also reached MAX of error count.
+                int interfaces_err_count_exceeded_max = 0;
+                for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
+                  if (interfaces_err_count[i] >= PS_DATA_INTERFACES_ERR_COUNT_MAX) {
+                    interfaces_err_count_exceeded_max ++;
+                  }
+                }
+
+                // All interfaces are exceeded MAX of error count.
+                if (interfaces_err_count_exceeded_max == PS_INSTANCE_MAX) {
+                  if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":All interfaces are error too long time!");
+                  SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":All interfaces are error too long time!");
+                  // To restart program set frameCount to -1, this wiil call setup() of main.
+                  frameCount = -1;
+                }
+              }
+            } // End of if (diff_millis > (10*1000))
           }
         }
         else {
