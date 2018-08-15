@@ -707,34 +707,33 @@ class ROI_Data {
     //if (objects_last[instance].size() <= ROI_Data_mouse_over_object_index[instance]) return;
 
     ROI_Object_Data object;
-    int diff_min = MAX_INT, diff_min_index = MAX_INT;
+    int distance_min = MAX_INT, distance_min_index = MAX_INT;
 
     //println(instance+":x="+ROI_Data_draw_info_x[instance]+",y="+ROI_Data_draw_info_y[instance]);
     for (int i = 0; i < objects_last[instance].size(); i ++) {
-      int diff;
+      int distance;
       object = objects_last[instance].get(i);
       //println(instance+","+i+":c.x="+object.scr_center_x+",y="+object.scr_center_y+",d="+object.scr_diameter);
-      if (check_scr_xy_over_object(
-            ROI_Data_draw_info_x[instance],
-            ROI_Data_draw_info_y[instance],
-            object, ROI_OBJECT_MARKER_MARGIN)) {
-        diff =
-          get_points_diff(
-            ROI_Data_draw_info_x[instance], ROI_Data_draw_info_y[instance],
-            object.scr_center_x, object.scr_center_y);
-        //println(instance+","+i+":diff="+diff);
-        if (diff < diff_min) {
-          diff_min = diff;
-          diff_min_index = i;
+      distance =
+        get_points_distance(
+          ROI_Data_draw_info_x[instance],
+          ROI_Data_draw_info_y[instance],
+          object.scr_center_x,
+          object.scr_center_y);
+      if (distance <= (object.scr_diameter + ROI_OBJECT_MARKER_MARGIN * 2) / 2) {
+        //println(instance+","+i+":distance="+distance);
+        if (distance < distance_min) {
+          distance_min = distance;
+          distance_min_index = i;
         }
       }
     }
-    if (diff_min_index == MAX_INT) return;
-    //println(instance+":diff_min="+diff_min+":diff_min_index="+diff_min_index);
+    if (distance_min_index == MAX_INT) return;
+    //println(instance+":distance_min="+distance_min+":distance_min_index="+distance_min_index);
 
     //ROI_Data_draw_info_enabled[instance] = false;
 
-    object = objects_last[instance].get(diff_min_index);
+    object = objects_last[instance].get(distance_min_index);
     /*
     ROI_Object_Data object;
 
@@ -977,35 +976,15 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECT_INFO_DBG) println("ROI_Data:draw_object_info("+instance+"):Enter");
   }
 
-/*
-  int get_object_index_over_scr_xy(int instance, int x, int y, int margin) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GET_OBJECT_INDEX_OVER_SCR_XY_DBG) println("ROI_Data:get_object_index_over_scr_xy():Enter");
-
-    int i;
-
-    for (i = objects_last[instance].size() - 1; i >= 0 ; i --) {
-      ROI_Object_Data object;
-      object = objects_last[instance].get(i);
-      if (check_scr_xy_over_object(x, y, object, margin)) {
-        break;
-      }
-    }
-
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GET_OBJECT_INDEX_OVER_SCR_XY_DBG) println("ROI_Data:get_object_index_over_scr_xy():index="+i);
-
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_GET_OBJECT_INDEX_OVER_SCR_XY_DBG) println("ROI_Data:get_object_index_over_scr_xy():Exit");
-
-    return i;
-  }
-*/
-
   boolean check_scr_xy_over_objects(int instance, int x, int y, int margin) {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_scr_xy_over_objects():Enter");
 
     boolean ret = false;
 
     for (ROI_Object_Data object:objects_last[instance]) {
-      if (check_scr_xy_over_object(x, y, object, margin)) {
+      if (get_points_distance(x, y, object.scr_center_x, object.scr_center_y)
+          <=
+          (object.scr_diameter + margin * 2) / 2) {
         ret = true;
         break;
       }
@@ -1014,105 +993,6 @@ class ROI_Data {
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_scr_xy_over_objects():ret="+ret);
 
     if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECTS_DBG) println("ROI_Data:check_scr_xy_over_objects():Exit");
-
-    return ret;
-  }
-
-  private boolean check_scr_xy_over_object(int x, int y, ROI_Object_Data object, int margin) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECT_DBG) println("ROI_Data:check_scr_xy_over_object():Enter");
-
-    boolean ret = false;
-
-    if( get_points_distance(x, y, object.scr_center_x, object.scr_center_y)
-        <=
-        (object.scr_diameter + margin * 2) / 2 ) {
-      ret = true;
-    }
-    /*
-    if(sqrt(sq(object.scr_center_x - x) + sq(object.scr_center_y - y)) <= (object.scr_diameter + margin * 2) / 2 ) {
-      ret = true;
-    }
-    */
-    /*
-    if( x >= object.scr_start_x - margin
-        &&
-        x <= object.scr_end_x + margin
-        && 
-        y >= object.scr_start_y - margin
-        &&
-        y <= object.scr_end_y + margin
-      ) {
-      ret = true;
-      break;
-    }
-    */
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECT_DBG) println("ROI_Data:check_scr_xy_over_object():ret="+ret);
-
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_SCR_XY_OVER_OBJECT_DBG) println("ROI_Data:check_scr_xy_over_object():Exit");
-
-    return ret;
-  }
-
-  private boolean check_objects_mi_overlapped(ROI_Object_Data object_a, ROI_Object_Data object_b, int margin) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_OBJECTS_MI_OVERLAPPED_DBG) println("ROI_Data:check_objects_mi_overlapped():Enter");
-    boolean ret = false;
-
-    /*
-    if (check_mi_xy_over_object(object_a.mi_start_x, object_a.mi_start_y, object_b, margin)) {
-      ret = true;
-    }
-    if (check_mi_xy_over_object(object_a.mi_end_x, object_a.mi_end_y, object_b, margin)) {
-      ret = true;
-    }
-    if (check_mi_xy_over_object(object_b.mi_start_x, object_b.mi_start_y, object_a, margin)) {
-      ret = true;
-    }
-    if (check_mi_xy_over_object(object_b.mi_end_x, object_b.mi_end_y, object_a, margin)) {
-      ret = true;
-    }
-    */
-    if (get_points_distance(object_a.mi_center_x, object_a.mi_center_y, object_b.mi_center_x, object_b.mi_center_y)
-        <=
-        (object_b.mi_diameter + margin * 2) / 2 ) {
-      ret = true;
-    }
-
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_OBJECTS_MI_OVERLAPPED_DBG) println("ROI_Data:check_objects_mi_overlapped():Exit");
-
-    return ret;
-  }
-
-  private boolean check_mi_xy_over_object(int x, int y, ROI_Object_Data object, int margin) {
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_MI_XY_OVER_OBJECT_DBG) println("ROI_Data:check_mi_xy_over_object():Enter");
-
-    boolean ret = false;
-
-    if( get_points_distance(x, y, object.mi_center_x, object.mi_center_y)
-        <=
-        (object.mi_diameter + margin * 2) / 2 ) {
-      ret = true;
-    }
-    /*
-    if(sqrt(sq(object.mi_center_x - x) + sq(object.mi_center_y - y)) <= (object.mi_diameter + margin * 2) / 2 ) {
-      ret = true;
-    }
-    */
-    /*
-    if( x >= object.mi_start_x - margin
-        &&
-        x <= object.mi_end_x + margin
-        && 
-        y >= object.mi_start_y - margin
-        &&
-        y <= object.mi_end_y + margin
-      ) {
-      ret = true;
-      break;
-    }
-    */
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_MI_XY_OVER_OBJECT_DBG) println("ROI_Data:check_mi_xy_over_object():ret="+ret);
-
-    if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_CHECK_MI_XY_OVER_OBJECT_DBG) println("ROI_Data:check_mi_xy_over_object():Exit");
 
     return ret;
   }
@@ -1397,21 +1277,31 @@ class ROI_Detected_Objects {
       return false;
     }
     for (int i = 0; i < this.objects_data.size(); i ++) {
-      ROI_Detected_Object_Data this_object_data = this.objects_data.get(i);
-      ROI_Detected_Object_Data other_object_data = other_objects_data.objects_data.get(i);
-      int diff;
-      // Get diff of object_data's center x y.
-      diff = abs(this_object_data.mi_diameter - other_object_data.mi_diameter);
-      // Check diameter of object_data's.
-      if (diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
-        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":diameter diff="+(this_object_data.mi_diameter - other_object_data.mi_diameter));
+      ROI_Detected_Object_Data this_object_data =
+        this.objects_data.get(i);
+      ROI_Detected_Object_Data other_object_data =
+        other_objects_data.objects_data.get(i);
+      int object_diff;
+
+      // Get diameter diff of two object_data.
+      object_diff =
+        abs(this_object_data.mi_diameter - other_object_data.mi_diameter);
+      // Check diameter diff of two object_data.
+      if (object_diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects diameter diff="+(object_diff));
         return false;
       }
-      // Get distance diff of object_data's center x y.
-      diff = get_points_distance(this_object_data.mi_center_x, this_object_data.mi_center_y, other_object_data.mi_center_x, other_object_data.mi_center_y);
-      // Check distance diff of object_data's center x y.
-      if (diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
-        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects distance diff="+diff);
+
+      // Get distance of two object_data.
+      object_diff =
+        get_points_distance(
+          this_object_data.mi_center_x,
+          this_object_data.mi_center_y,
+          other_object_data.mi_center_x,
+          other_object_data.mi_center_y);
+      // Check distance of two object_data.
+      if (object_diff >= ROI_OBJECT_DETECT_DIAMETER_MIN) {
+        if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_IS_SAME_DBG) println("ROI_Detected_Objects:are_same()"+":i="+i+":objects distance="+object_diff);
         return false;
       }
     }
