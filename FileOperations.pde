@@ -598,10 +598,6 @@ void File_Operations_save_events()
             }
           } // End of for (String data_file_name:data_files_list)
 
-          // Clear memory of list.
-          data_files_list.clear();
-          data_files_list = null;
-
           // Set state to next.
           File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS;
 
