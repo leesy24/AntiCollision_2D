@@ -123,7 +123,6 @@ class Interfaces_File {
       return -1;
     }
 
-    //String string;
     String target_full_name = sketchPath(target_name);
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":target_name="+target_name);
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":target_full_name="+target_full_name);
@@ -133,7 +132,7 @@ class Interfaces_File {
     if (target_handle.isDirectory()) {
       String[] target_files_list = target_handle.list();
       long file_time_stamp = -1;
-      if (target_files_list != null) {
+      if (target_files_list != null && target_files_list.length > 0) {
         //println("target_files_list.length="+target_files_list.length);
         for (String target_file_name:target_files_list) {
           //println("target_file_name="+target_file_name);
@@ -148,7 +147,7 @@ class Interfaces_File {
         this.base_time_stamp[instance] = file_time_stamp - millis();
         this.file_name_list[instance] = target_files_list;
         this.file_name_index[instance] = 0;
-        this.dir_name[instance] = sketchPath(target_name);
+        this.dir_name[instance] = target_full_name;
         if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+")"+":file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
         //println("Interfaces_File:open("+instance+"):first file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
       }
@@ -157,7 +156,7 @@ class Interfaces_File {
         this.file_name_list[instance] = new String[1];
         this.file_name_list[instance][0] = target_name;
         this.file_name_index[instance] = 0;
-        this.dir_name[instance] = sketchPath(target_name);
+        this.dir_name[instance] = target_full_name;
       }
     } // End of if (target_handle.isDirectory())
     else {
