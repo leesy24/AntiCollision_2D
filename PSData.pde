@@ -1120,6 +1120,16 @@ class PS_Data {
       }
     }
 
+    // Check rect over the screen.
+    if (rect_tr == 0 || rect_br == 0) {
+      if (rect_x < 0)
+        rect_x = 0;
+    }
+    else if (rect_tl == 0 || rect_bl == 0) {
+      if (rect_x + rect_w >= SCREEN_width)
+        rect_x = SCREEN_width - rect_w - 1;
+    }
+
     // Draw rect
     fill(C_PS_DATA_RECT_FILL);
     // Sets the color and weight used to draw lines and borders around shapes.
