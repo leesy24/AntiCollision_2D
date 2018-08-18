@@ -282,6 +282,9 @@ void UI_Interfaces_update_instance(int instance)
     y += (h + TEXT_MARGIN) * 2;
     str = FILE_name[instance];
     w = int(textWidth(str) + TEXT_MARGIN*2);
+    // Check width is too big.
+    if (w > SCREEN_width / 2 - TEXT_MARGIN*2)
+      w = SCREEN_width / 2 - TEXT_MARGIN*2;
     if (UI_Interfaces_align_right[instance])
       x = UI_Interfaces_x_base[instance] - w - 1;
     else
