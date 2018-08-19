@@ -27,6 +27,8 @@ void PS_Image_draw()
 {
   for(int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
+    if (PS_Image[i] == null) continue;
+
     //println("Grid_zero_x["+i+"]="+Grid_zero_x[i]+",Grid_zero_y["+i+"]="+Grid_zero_y[i]);
     if( (
           Grid_zero_x[i] >= 0 - PS_Image[i].width / 2

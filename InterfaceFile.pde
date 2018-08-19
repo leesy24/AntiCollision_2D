@@ -67,7 +67,6 @@ void Interfaces_File_setup()
   if(Interfaces_File_handle == null)
   {
     if(PRINT_INTERFACES_FILE_SETUP_ERR) println("Interfaces_File_setup():Interfaces_File_handle=null");
-    Comm_UDP_reset();
     return;
   }
 }
@@ -179,11 +178,6 @@ class Interfaces_File {
   public int close(int instance)
   {
     if(PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_CLOSE_DBG) println("Interfaces_File:close("+instance+"):");
-    if(UDP_handle == null)
-    {
-      if(PRINT_INTERFACES_FILE_CLOSE_ERR) println("Interfaces_File:close("+instance+"):UDP_handle=null");
-      return -1;
-    }
     if(instance >= PS_INSTANCE_MAX)
     {
       if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:close("+instance+"):instance exceed MAX.");
@@ -216,9 +210,18 @@ class Interfaces_File {
 
   public boolean load(int instance)
   {
-    int err;
-
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):Enter");
+    if(instance >= PS_INSTANCE_MAX)
+    {
+      if (PRINT_INTERFACES_FILE_ALL_ERR || PRINT_INTERFACES_FILE_OPEN_ERR) println("Interfaces_File:load("+instance+"):instance exceed MAX.");
+      SYSTEM_logger.severe("Interfaces_File:load("+instance+"):instance exceed MAX.");
+      return false;
+    }
+    if(instance_opened[instance] != true)
+    {
+      if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("Interfaces_File:load("+instance+"):instance in closed.");
+      return false;
+    }
 
     if (file_time_stamp[instance] != -1
         &&

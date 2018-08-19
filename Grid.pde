@@ -76,12 +76,17 @@ void Grid_update()
     Grid_Texts_array[i].clear();
     if (ROTATE_FACTOR[i] == 315) {
       Grid_update_rotate_315(i);
-    } else if (ROTATE_FACTOR[i] == 45) {
+    }
+    else if (ROTATE_FACTOR[i] == 45) {
       Grid_update_rotate_45(i);
-    } else if (ROTATE_FACTOR[i] == 135) {
+    }
+    else if (ROTATE_FACTOR[i] == 135) {
       Grid_update_rotate_135(i);
-    } else /*if (ROTATE_FACTOR[i] == 225)*/ {
+    }
+    else if (ROTATE_FACTOR[i] == 225) {
       Grid_update_rotate_225(i);
+    }
+    else {
     }
     if (PRINT_GRID_ALL_DBG || PRINT_GRID_DRAW_DBG)
     {

@@ -116,8 +116,6 @@ void PS_Data_settings() {
     SN_serial_number[i] = 886;
     ANGLE_ADJUST[i] = 0;
   }
-
-  size(SCREEN_width, SCREEN_height);
 }
 
 void PS_Data_setup()
@@ -299,6 +297,8 @@ void PS_Data_mouse_pressed()
 
   for (i = 0; i < PS_INSTANCE_MAX; i ++)
   {
+    if (PS_Image[i] == null) continue;
+
     over[i] =
       mouse_is_over(
         Grid_zero_x[i] - PS_Image[i].width / 2,
@@ -347,6 +347,8 @@ void PS_Data_mouse_moved()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
+    if (PS_Image[i] == null) continue;
+
     if( mouse_is_over(
           Grid_zero_x[i] - PS_Image[i].width / 2,
           Grid_zero_y[i] + PS_Image_y_offset[i],
@@ -370,6 +372,8 @@ void PS_Data_mouse_dragged()
 
   for (int i = 0; i < PS_INSTANCE_MAX; i ++)
   {
+    if (PS_Image[i] == null) continue;
+
     if( mouse_is_over(
           Grid_zero_x[i] - PS_Image[i].width / 2,
           Grid_zero_y[i] + PS_Image_y_offset[i],
