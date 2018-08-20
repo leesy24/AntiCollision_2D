@@ -37,7 +37,11 @@ void Const_setup()
   {
     // You can access the fields via their column name (or index)
     String name = variable.getString("Name");
-    if (name.equals("SYSTEM_PASSWORD"))
+    if (name.equals("VERSION_DATE_VERSION_STR"))
+      VERSION_DATE_VERSION_STR_CONST = variable.getString("Value");
+    else if (name.equals("VERSION_DATE_DATE_STR"))
+      VERSION_DATE_DATE_STR_CONST = variable.getString("Value");
+    else if (name.equals("SYSTEM_PASSWORD"))
       SYSTEM_PASSWORD = variable.getString("Value");
     else if(name.equals("SYSTEM_UI_TIMEOUT"))
       SYSTEM_UI_TIMEOUT = variable.getInt("Value");
@@ -176,6 +180,16 @@ void Const_create()
   table.addColumn("Name");
   table.addColumn("Value");
   table.addColumn("Comment");
+
+  variable = table.addRow();
+  variable.setString("Name", "VERSION_DATE_VERSION_STR");
+  variable.setString("Value", VERSION_DATE_VERSION_STR);
+  variable.setString("Comment", "Application version number");
+
+  variable = table.addRow();
+  variable.setString("Name", "VERSION_DATE_DATE_STR");
+  variable.setString("Value", VERSION_DATE_DATE_STR);
+  variable.setString("Comment", "Application release date");
 
   variable = table.addRow();
   variable.setString("Name", "SYSTEM_PASSWORD");

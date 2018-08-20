@@ -4,6 +4,10 @@ static color C_VERSION_DATE_TEXT = 0xFF000000; // White
 final static String VERSION_DATE_VERSION_STR = "1.00.14";
 final static String VERSION_DATE_DATE_STR = "2018-08-16";
 
+// Follow strings will be set via Const.pde
+static String VERSION_DATE_VERSION_STR_CONST = "Unknown";
+static String VERSION_DATE_DATE_STR_CONST = "Unknown";
+
 static String VERSION_DATE_VERSION_STR_live;
 static int VERSION_DATE_VERSION_x;
 static int VERSION_DATE_DATE_x;
@@ -18,6 +22,13 @@ void Version_Date_setup()
   VERSION_DATE_VERSION_STR_live = "Ver. " + VERSION_DATE_VERSION_STR;
   VERSION_DATE_VERSION_x = int(SCREEN_width - TEXT_MARGIN - textWidth(VERSION_DATE_VERSION_STR_live));
   VERSION_DATE_DATE_x = int(SCREEN_width - TEXT_MARGIN - textWidth(VERSION_DATE_DATE_STR));
+
+  if (!VERSION_DATE_VERSION_STR.equals(VERSION_DATE_VERSION_STR_CONST)
+      ||
+      !VERSION_DATE_DATE_STR.equals(VERSION_DATE_DATE_STR_CONST))
+  {
+    Const_create();
+  }
 }
 
 void Version_Date_draw()
