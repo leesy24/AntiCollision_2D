@@ -99,7 +99,7 @@ void Comm_UDP_reset()
 
   if (Comm_UDP_handle == null)
   {
-    if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RESET_ERR) println("Comm_UDP_reset():Comm_UDP_handle already reset.");
+    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RESET_DBG) println("Comm_UDP_reset():Comm_UDP_handle already reset.");
     return;
   }
   Comm_UDP_handle = null;
