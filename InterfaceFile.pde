@@ -89,8 +89,10 @@ class Interfaces_File {
   String[][] file_name_list = new String[PS_INSTANCE_MAX][];
   int[] file_name_index = new int[PS_INSTANCE_MAX];
   String[] dir_name = new String[PS_INSTANCE_MAX];
+  String[] load_file_name = new String[PS_INSTANCE_MAX];
   long[] file_time_stamp = new long[PS_INSTANCE_MAX];
   long[] base_time_stamp = new long[PS_INSTANCE_MAX];
+  int[] files_time_long = new int[PS_INSTANCE_MAX];
   boolean[] reached_eofl = new boolean[PS_INSTANCE_MAX];
   int[] eofl_reset_count = new int[PS_INSTANCE_MAX];
 
@@ -130,28 +132,47 @@ class Interfaces_File {
 
     if (target_handle.isDirectory()) {
       String[] target_files_list = target_handle.list();
-      long file_time_stamp = -1;
       if (target_files_list != null && target_files_list.length > 0) {
+        Arrays.sort(target_files_list);
         //println("target_files_list.length="+target_files_list.length);
+        long file_time_stamp_max = 0xffffffffffffffffL; // min of long
+        long file_time_stamp_min = 0x7fffffffffffffffL; // max of long
         for (String target_file_name:target_files_list) {
           //println("target_file_name="+target_file_name);
           try {
-            file_time_stamp = Long.parseLong(target_file_name.substring(2, target_file_name.length() - 4));
-            break;
+            long file_time_stamp = Long.parseLong(target_file_name.substring(2, target_file_name.length() - 4));
+            if (file_time_stamp > file_time_stamp_max) {
+              file_time_stamp_max = file_time_stamp;
+            }
+            if (file_time_stamp < file_time_stamp_min) {
+              file_time_stamp_min = file_time_stamp;
+            }
           }
           catch (NumberFormatException e) {
           }
         }
-        this.file_time_stamp[instance] = file_time_stamp;
-        this.base_time_stamp[instance] = file_time_stamp - millis();
-        this.file_name_list[instance] = target_files_list;
-        this.file_name_index[instance] = 0;
-        this.dir_name[instance] = target_full_name;
-        if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+")"+":file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
-        //println("Interfaces_File:open("+instance+"):first file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
+        if (file_time_stamp_min != 0x7fffffffffffffffL) {
+          this.file_time_stamp[instance] = file_time_stamp_min;
+          this.files_time_long[instance] = int(file_time_stamp_max - file_time_stamp_min);
+          this.base_time_stamp[instance] = file_time_stamp_min - millis();
+          this.file_name_list[instance] = target_files_list;
+          this.file_name_index[instance] = 0;
+          this.dir_name[instance] = target_full_name;
+          if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG) println("Interfaces_File:open("+instance+")"+":file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
+          //println("Interfaces_File:open("+instance+"):first file_time_stamp="+this.file_time_stamp[instance]+",base_time_stamp="+this.base_time_stamp[instance]);
+        }
+        else {
+          this.file_time_stamp[instance] = -1;
+          this.files_time_long[instance] = -1;
+          this.file_name_list[instance] = new String[1];
+          this.file_name_list[instance][0] = target_name;
+          this.file_name_index[instance] = 0;
+          this.dir_name[instance] = target_full_name;
+        }
       }
       else {
         this.file_time_stamp[instance] = -1;
+        this.files_time_long[instance] = -1;
         this.file_name_list[instance] = new String[1];
         this.file_name_list[instance][0] = target_name;
         this.file_name_index[instance] = 0;
@@ -160,11 +181,13 @@ class Interfaces_File {
     } // End of if (target_handle.isDirectory())
     else {
       this.file_time_stamp[instance] = -1;
+      this.files_time_long[instance] = -1;
       this.file_name_list[instance] = new String[1];
       this.file_name_list[instance][0] = target_name;
       this.file_name_index[instance] = 0;
       this.dir_name[instance] = sketchPath();
     }
+    this.load_file_name[instance] = "";
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":dir_name["+instance+"]="+dir_name[instance]);
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_OPEN_DBG || PRINT_INTERFACES_FILE_NAME_DBG) println("Interfaces_File:open("+instance+")"+":file_name_list["+instance+"][0]="+this.file_name_list[instance][0]);
     this.eofl_reset_count[instance] = -1;
@@ -204,8 +227,14 @@ class Interfaces_File {
 
   public String get_file_name(int instance)
   {
-    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_GET_DBG) println("Interfaces_File:get_file_name("+instance+"):file_name_list="+file_name_list[instance][file_name_index[instance]]);
-    return file_name_list[instance][file_name_index[instance]];
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_GET_DBG) println("Interfaces_File:get_file_name("+instance+"):Enter");
+    return load_file_name[instance];
+  }
+
+  public int get_files_time_long(int instance)
+  {
+    if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_GET_DBG) println("Interfaces_File:get_files_time_long("+instance+"):Enter");
+    return files_time_long[instance];
   }
 
   public boolean load(int instance)
@@ -260,6 +289,7 @@ class Interfaces_File {
       SYSTEM_logger.severe("Interfaces_File:load("+instance+")"+":"+str_err_last[instance]);
       return false;
     }
+    load_file_name[instance] = file_name_list[instance][file_name_index[instance]];
     if (PRINT_INTERFACES_FILE_ALL_DBG || PRINT_INTERFACES_FILE_LOAD_DBG) println("buf.length = " + PS_Data_buf[instance].length);
     // Check binary buf length is valid.
     // Must larger than Function code(4B) + Length(4B) + Number of parameters(4B) + Number of points(4B) + CRC(4B).

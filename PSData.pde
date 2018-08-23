@@ -182,6 +182,7 @@ void PS_Data_setup()
       Interfaces_File_setup();
       Interfaces_File_handle.open(i, FILE_name[i]);
       PS_Data_handle.file_name[i] = FILE_name[i];
+      PS_Data_handle.files_time_long[i] = Interfaces_File_handle.get_files_time_long(i);
     }
     else if(PS_Interface[i] == PS_Interface_UART) {
       Interfaces_UART_setup();
@@ -418,6 +419,7 @@ class PS_Data {
   int[] load_done_interval_count = new int[PS_INSTANCE_MAX];
   int[] load_done_interval_millis_accu = new int[PS_INSTANCE_MAX];
   String[] file_name = new String[PS_INSTANCE_MAX];
+  int[] files_time_long = new int[PS_INSTANCE_MAX];
   String[] remote_ip = new String[PS_INSTANCE_MAX];
   int[] remote_port = new int[PS_INSTANCE_MAX];
   int[] serial_number = new int[PS_INSTANCE_MAX];
@@ -455,6 +457,7 @@ class PS_Data {
       load_done_interval_count[i] = 0;
       load_done_interval_millis_accu[i] = 0;
       file_name[i] = null;
+      files_time_long[i] = -1;
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
@@ -488,6 +491,7 @@ class PS_Data {
       }
       // No mean in FILE interface.
       load_take_time[instance] = -1;
+      file_name[instance] = Interfaces_File_handle.get_file_name(instance);
     }
     else if (PS_Interface[instance] == PS_Interface_UART) {
       if (Interfaces_UART_load() != true) {
@@ -1023,10 +1027,12 @@ class PS_Data {
     ArrayList<String> strings = new ArrayList<String>();
 
     strings.add("Interface:" + PS_Interface_str[PS_Interface[instance]]);
+    if (files_time_long[instance] != -1)
+      strings.add("Time long:" + files_time_long[instance]/1000. + "s");
     if (file_name[instance] != null)
-      strings.add("File name:" + file_name[instance]);;
+      strings.add("File name:" + file_name[instance]);
     if (serial_number[instance] != MIN_INT)
-      strings.add("Serial Number:" + serial_number[instance]);;
+      strings.add("Serial Number:" + serial_number[instance]);
     if (remote_ip[instance] != null)
       strings.add("IP:" + remote_ip[instance]);
     if (remote_port[instance] != MIN_INT)
@@ -1159,6 +1165,7 @@ class PS_Data {
     int distance;
     int mi_x, mi_y;
     int point_x_curr, point_y_curr;
+    int pulse_width;
     int point_size_curr = PS_DATA_POINT_WEIGHT; // Set weight of point rect
     color point_color_curr = C_PS_DATA_POINT;
     boolean point_is_contains_curr;
@@ -1212,6 +1219,7 @@ class PS_Data {
       mi_y = this.mi_y[instance][j];
       point_x_curr = this.scr_x[instance][j];
       point_y_curr = this.scr_y[instance][j];
+      pulse_width = this.pulse_width[instance][j];
 
       if (point_x_curr == MIN_INT && point_y_curr == MIN_INT) {
         //if (PRINT_PS_DATA_DRAW_DBG) println("point=", j, ",distance=" + "No echo");
@@ -1229,11 +1237,16 @@ class PS_Data {
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_index)+":x="+mi_x+",y="+mi_y);
         }
         */
-        ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
-        if (region_indexes.size() > 0) {
-          ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
-          point_is_contains_curr = true;
-          if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_indexes.get(0))+":x="+mi_x+",y="+mi_y);
+        if (pulse_width >= PS_DATA_PULSE_WIDTH_MIN) {
+          ArrayList<Integer> region_indexes = Regions_handle.get_region_indexes_contains_point(instance, mi_x, mi_y);
+          if (region_indexes.size() > 0) {
+            ROI_Data_handle.add_point(instance, region_indexes, mi_x, mi_y, point_x_curr, point_y_curr);
+            point_is_contains_curr = true;
+            if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_DRAW_DBG) println("PS_Data:draw_points("+instance+"):"+Regions_handle.get_region_name(instance, region_indexes.get(0))+":x="+mi_x+",y="+mi_y);
+          }
+          else {
+            point_is_contains_curr = false;
+          }
         }
         else {
           point_is_contains_curr = false;
@@ -1274,7 +1287,7 @@ class PS_Data {
                 &&
                 (point_y_curr > mouse_over_y_min && point_y_curr < mouse_over_y_max)
               ) {
-              //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (mi_x/10000.0) + "," + (mi_y/10000.0) + ")" + ",pulse width=" + pulse_width[instance][j]);
+              //println("point=" + j + ",distance=" + (float(distance)/10000.0) + "m(" + (mi_x/10000.0) + "," + (mi_y/10000.0) + ")" + ",pulse width=" + pulse_width);
               BUBBLE_INFO_AVAILABLE = true;
               BUBBLE_INFO_POINT = j;
               BUBBLE_INFO_DISTANCE = float(distance/10)/1000.0;
@@ -1283,7 +1296,7 @@ class PS_Data {
               BUBBLE_INFO_BOX_X = point_x_curr;
               BUBBLE_INFO_BOX_Y = point_y_curr;
               BUBBLE_INFO_ANGLE = float(int(point_angle_degree[instance][j]*100.0))/100.0;
-              BUBBLE_INFO_PULSE_WIDTH = pulse_width[instance][j];
+              BUBBLE_INFO_PULSE_WIDTH = pulse_width;
               point_size_curr = BUBBLE_INFO_POINT_WH;
             }
             else {
