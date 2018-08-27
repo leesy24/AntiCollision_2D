@@ -745,7 +745,8 @@ class PS_Data {
         //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
-        if ( time_stamp_diff < 0 && time_stamp_diff > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
+        //SYSTEM_logger.info("PS_Data:parse("+instance+"):time_stamp_new=" + time_stamp_new + ",time_stamp_diff=" + time_stamp_diff);
+        if ( time_stamp_diff < 0 && abs(time_stamp_diff) > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
           SYSTEM_logger.severe("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
           // time_stamp is big different. PS rebooted!
