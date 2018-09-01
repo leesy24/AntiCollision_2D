@@ -487,6 +487,20 @@ void File_Operations_save_events()
     always_dir_full_name = sketchPath() + "/always/";
   }
 
+  ArrayList<String>[] data_files_list = new ArrayList[PS_INSTANCE_MAX];
+
+  // Make lists of config files on data dir to events dir for instance.
+  for (int i = 0; i < PS_INSTANCE_MAX; i ++)
+  {
+    data_files_list[i] = new ArrayList<String>();
+    // Set files on data dir to copy.
+    data_files_list[i].add(CONST_FILE_NAME + CONST_FILE_EXT);
+    data_files_list[i].add(CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT);
+    data_files_list[i].add(REGIONS_FILE_NAME + "_" + i + REGIONS_FILE_EXT);
+    data_files_list[i].add(RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT);
+    data_files_list[i].add(BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT);
+  }
+
   Path always_dir_full_path = Paths.get(always_dir_full_name);
   DirectoryStream<Path>[] always_files_list = new DirectoryStream[PS_INSTANCE_MAX];
   Iterator<Path>[] always_files_list_iterator = new Iterator[PS_INSTANCE_MAX];
@@ -557,29 +571,11 @@ void File_Operations_save_events()
           // Get list iterator.
           always_files_list_iterator[i] = always_files_list[i].iterator();
 
-          // Copy config files on data dir to events dir.
-          ArrayList<String> data_files_list = new ArrayList<String>();
-
-          // Set files on data dir to copy.
-          data_files_list.add(CONST_FILE_NAME + CONST_FILE_EXT);
-          data_files_list.add(CONFIG_FILE_NAME + "_" + i + CONFIG_FILE_EXT);
-          data_files_list.add(REGIONS_FILE_NAME + "_" + i + REGIONS_FILE_EXT);
-          data_files_list.add(RELAY_MODULE_RELAYS_FILE_NAME + RELAY_MODULE_RELAYS_FILE_EXT);
-          data_files_list.add(BG_IMAGE_FILE_NAME + BG_IMAGE_FILE_EXT);
-
           //copy_count = 0;
           copy_start_millis = millis();
           // Loop for files.          
-          for (String data_file_name:data_files_list)
+          for (String data_file_name:data_files_list[i])
           {
-            // Check file is exist and is file.
-            File data_file_handle;
-            data_file_handle = new File(data_dir_full_name + data_file_name);
-            if (!data_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
-              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+data_dir_full_name + data_file_name);
-              continue;
-            }
             // Copy file to events dir.
             if (!copy_file(
                   data_dir_full_name + data_file_name,
@@ -596,7 +592,7 @@ void File_Operations_save_events()
               delay(FRAME_TIME);
               copy_start_millis = millis();
             }
-          } // End of for (String data_file_name:data_files_list)
+          } // End of for (String data_file_name:data_files_list[i])
 
           // Set state to next.
           File_Operations_save_events_state[i] = File_Operations_save_events_state_enum.COPY_ALWAYS_TO_EVENTS;
@@ -606,7 +602,6 @@ void File_Operations_save_events()
         case COPY_ALWAYS_TO_EVENTS:
           //copy_count = 0;
           copy_start_millis = millis();
-          File always_file_handle;
           for (; always_files_list_iterator[i].hasNext();)
           {
             // Check copy operation is too late by frame time.
@@ -639,14 +634,6 @@ void File_Operations_save_events()
             if (always_file_date_time < File_Operations_save_events_start_date_time[i]) continue;
             // Check date time of always file is new than expected date time to skip.
             if (always_file_date_time > File_Operations_save_events_event_date_time[i]) continue;
-
-            // Check file is exist and is file.
-            always_file_handle = new File(always_dir_full_name+always_file_name);
-            if (!always_file_handle.isFile()) {
-              if (PRINT_FILE_OPERATIONS_ALL_ERR || PRINT_FILE_OPERATIONS_SAVE_EVENTS_ERR) println("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
-              SYSTEM_logger.severe("File_Operations_save_events():" + i + ":" + File_Operations_save_events_state[i] + ":File not exist or not a file!:"+always_dir_full_name+always_file_name);
-              continue;
-            }
 
             // Copy data file on always dir to events dir.
             if (!copy_file(
