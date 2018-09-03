@@ -482,6 +482,7 @@ class PS_Data {
         if (interfaces_err_str != null) {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_DBG || PRINT_PS_DATA_LOAD_DBG) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          Regions_handle.disable_regions_has_object(instance);
         }
         else if (parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
@@ -489,6 +490,7 @@ class PS_Data {
         }
         return false;
       }
+      Regions_handle.enable_regions_has_object(instance);
       // No mean in FILE interface.
       load_take_time[instance] = -1;
       file_name[instance] = Interfaces_File_handle.get_file_name(instance);
@@ -500,6 +502,7 @@ class PS_Data {
           draw_error(instance, interfaces_err_str);
           if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
           SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+          Regions_handle.disable_regions_has_object(instance);
         }
         else if (parse_err_str[instance] != null) {
           draw_error(instance, parse_err_str[instance]);
@@ -508,6 +511,7 @@ class PS_Data {
         }
         return false;
       }
+      Regions_handle.enable_regions_has_object(instance);
       load_take_time[instance] = Interfaces_UART_get_take_time();
     }
     else if ( PS_Interface[instance] == PS_Interface_UDP
@@ -552,10 +556,10 @@ class PS_Data {
                   // To restart program set frameCount to -1, this wiil call setup() of main.
                   frameCount = -1;
                 }
-              }
+              } // End of if (interfaces_err_count[instance] >= PS_DATA_INTERFACES_ERR_COUNT_MAX)
             } // End of if (diff_millis > (10*1000))
-          }
-        }
+          } // End of else of if (!interfaces_err_started[instance])
+        } // End of if (interfaces_err_str != null)
         else {
           interfaces_err_started[instance] = false;
           if (parse_err_str[instance] != null) {
@@ -563,13 +567,13 @@ class PS_Data {
             if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
             SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":parse() error!:" + parse_err_str[instance]);
           }
-        }
+        } // End of else of if (interfaces_err_str != null)
         return false;
-      }
+      } // End of if (Interfaces_UDP_handle.load(instance) != true)
       Regions_handle.enable_regions_has_object(instance);
       interfaces_err_started[instance] = false;
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
-    }
+    } // End of else if ( PS_Interface[instance] == PS_Interface_UDP || PS_Interface[instance] == PS_Interface_SN)
     else if (PS_Interface[instance] == PS_Interface_None) {
       // No mean in None interface.
       load_take_time[instance] = -1;
