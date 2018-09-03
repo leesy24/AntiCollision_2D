@@ -523,6 +523,7 @@ class PS_Data {
             interfaces_err_started[instance] = true;
             if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_LOAD_ERR) println("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
             SYSTEM_logger.severe("PS_Data:load("+instance+"):"+PS_Interface_str[PS_Interface[instance]]+":error!:" + interfaces_err_str);
+            Regions_handle.disable_regions_has_object(instance);
           }
           else {
             int diff_millis = get_millis_diff(interfaces_err_start_millis[instance]);
@@ -537,7 +538,9 @@ class PS_Data {
                 // Check other interfaces also reached MAX of error count.
                 int interfaces_err_count_exceeded_max = 0;
                 for (int i = 0; i < PS_INSTANCE_MAX; i ++) {
-                  if (interfaces_err_count[i] >= PS_DATA_INTERFACES_ERR_COUNT_MAX) {
+                  if (interfaces_err_started[instance]
+                      &&
+                      interfaces_err_count[i] >= PS_DATA_INTERFACES_ERR_COUNT_MAX) {
                     interfaces_err_count_exceeded_max ++;
                   }
                 }
@@ -563,6 +566,7 @@ class PS_Data {
         }
         return false;
       }
+      Regions_handle.enable_regions_has_object(instance);
       interfaces_err_started[instance] = false;
       load_take_time[instance] = Interfaces_UDP_handle.get_take_time(instance);
     }

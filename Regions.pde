@@ -51,12 +51,14 @@ class Regions {
   ArrayList<Region_Data>[] regions_array = new ArrayList[PS_INSTANCE_MAX];
   ArrayList<Region_CSV>[] regions_csv_array = new ArrayList[PS_INSTANCE_MAX];
   int[] regions_priority_max = new int[PS_INSTANCE_MAX];
+  boolean[] regions_has_object_enabled = new boolean[PS_INSTANCE_MAX];
 
   Regions() {
     for (int instance = 0; instance < PS_INSTANCE_MAX; instance ++) {
       regions_array[instance] = new ArrayList<Region_Data>();
       regions_csv_array[instance] = new ArrayList<Region_CSV>();
       regions_priority_max[instance] = MIN_INT;
+      regions_has_object_enabled[instance] = false;
 
       String file_full_name;
       Table table;
@@ -458,6 +460,14 @@ class Regions {
     return regions_array[instance].get(region_index).marker_fill_color;
   }
 
+  void enable_regions_has_object(int instance) {
+    regions_has_object_enabled[instance] = true;
+  }
+
+  void disable_regions_has_object(int instance) {
+    regions_has_object_enabled[instance] = false;
+  }
+
   void reset_regions_has_object(int instance) {
     for (Region_Data region_data:regions_array[instance]) {
       region_data.has_object = false;
@@ -469,6 +479,9 @@ class Regions {
   }
 
   boolean get_region_has_object(int instance, int region_index) {
+    if (!regions_has_object_enabled[instance]) {
+      return false;
+    }
     return regions_array[instance].get(region_index).has_object;
   }
 

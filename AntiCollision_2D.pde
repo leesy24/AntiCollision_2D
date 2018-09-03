@@ -205,6 +205,7 @@ void draw() {
       }
     }
     else {
+      // PS_Data_handle load is not ready. Nothing to do.
       Dbg_Time_logs_handle.add("PS_Data_handle.load("+i+"):false");
     }
     PS_Data_handle.draw_points(i);
