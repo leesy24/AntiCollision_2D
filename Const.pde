@@ -41,6 +41,8 @@ void Const_setup()
       VERSION_DATE_VERSION_STR_CONST = variable.getString("Value");
     else if (name.equals("VERSION_DATE_DATE_STR"))
       VERSION_DATE_DATE_STR_CONST = variable.getString("Value");
+    else if (name.equals("MACHINE_NAME"))
+      MACHINE_NAME = variable.getString("Value");
     else if (name.equals("SYSTEM_PASSWORD"))
       SYSTEM_PASSWORD = variable.getString("Value");
     else if(name.equals("SYSTEM_UI_TIMEOUT"))
@@ -190,6 +192,11 @@ void Const_create()
   variable.setString("Name", "VERSION_DATE_DATE_STR");
   variable.setString("Value", VERSION_DATE_DATE_STR);
   variable.setString("Comment", "Application release date");
+
+  variable = table.addRow();
+  variable.setString("Name", "MACHINE_NAME");
+  variable.setString("Value", MACHINE_NAME);
+  variable.setString("Comment", "Machine name. It will display at the top center of screen.");
 
   variable = table.addRow();
   variable.setString("Name", "SYSTEM_PASSWORD");
