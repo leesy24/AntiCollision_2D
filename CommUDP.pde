@@ -88,6 +88,9 @@ void Comm_UDP_setup(int local_port)
   Comm_UDP_handle = new Comm_UDP();
   if (Comm_UDP_handle == null)
   {
+    UDP_handle.listen( false );
+    UDP_handle.close();
+    UDP_handle = null;
     if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_SETUP_ERR) println("Comm_UDP_setup():Comm_UDP_handle=null");
     return;
   }
@@ -96,6 +99,17 @@ void Comm_UDP_setup(int local_port)
 void Comm_UDP_reset()
 {
   if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RESET_DBG) println("Comm_UDP_reset():");
+
+  // Check UDP config changed
+  if (UDP_handle == null)
+  {
+    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RESET_DBG) println("Comm_UDP_reset():UDP_handle already reset.");
+    return;
+  }
+
+  UDP_handle.listen( false );
+  UDP_handle.close();
+  UDP_handle = null;
 
   if (Comm_UDP_handle == null)
   {
