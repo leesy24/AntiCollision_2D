@@ -427,6 +427,7 @@ class PS_Data {
   String[] remote_ip = new String[PS_INSTANCE_MAX];
   int[] remote_port = new int[PS_INSTANCE_MAX];
   int[] serial_number = new int[PS_INSTANCE_MAX];
+  boolean[] time_stamp_first = new boolean[PS_INSTANCE_MAX];
   boolean[] time_stamp_reseted = new boolean[PS_INSTANCE_MAX];
   boolean[] interfaces_err_started = new boolean[PS_INSTANCE_MAX];
   int[] interfaces_err_start_millis = new int[PS_INSTANCE_MAX];
@@ -465,6 +466,7 @@ class PS_Data {
       remote_ip[i] = null;
       remote_port[i] = MIN_INT;
       serial_number[i] = MIN_INT;
+      time_stamp_first[i] = true;
       time_stamp_reseted[i] = false;
       // Test time_stamp wrap-around.
       //time_stamp_offset[i] = -1;
@@ -750,19 +752,24 @@ class PS_Data {
       }
       else {
         int time_stamp_new;
-        int time_stamp_diff;
         //long time_stamp_new;
         // Get time stamp.
         // : time stamp of the first measured point in the scan, given in milliseconds since the last SCAN command.
         //time_stamp[instance] = get_int32_bytes(PS_Data_buf[instance], i);
         time_stamp_new = get_int32_bytes(PS_Data_buf[instance], i);
-        time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
-        //SYSTEM_logger.info("PS_Data:parse("+instance+"):time_stamp_new=" + time_stamp_new + ",time_stamp_diff=" + time_stamp_diff);
-        if ( time_stamp_diff < 0 && abs(time_stamp_diff) > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
-          if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
-          SYSTEM_logger.severe("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
-          // time_stamp is big different. PS rebooted!
-          time_stamp_reseted[instance] = true;
+        if (time_stamp_first[instance] == true) {
+          time_stamp_first[instance] = false;
+        }
+        else {
+          int time_stamp_diff;
+          time_stamp_diff = get_int_diff(time_stamp_new, time_stamp[instance]);
+          //SYSTEM_logger.info("PS_Data:parse("+instance+"):time_stamp_new=" + time_stamp_new + ",time_stamp_diff=" + time_stamp_diff);
+          if (time_stamp_diff < 0 && abs(time_stamp_diff) > UDP_TIMEOUT_VAL * UDP_TIMEOUT_RETRY) {
+            if (PRINT_PS_DATA_ALL_ERR || PRINT_PS_DATA_PARSE_ERR) println("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+            SYSTEM_logger.severe("PS_Data:parse("+instance+"):time_stamp is big different. PS rebooted! " + time_stamp_new + "," + time_stamp[instance]);
+            // time_stamp is big different. PS rebooted!
+            time_stamp_reseted[instance] = true;
+          }
         }
         time_stamp[instance] = time_stamp_new;
       }
