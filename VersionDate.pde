@@ -1,3 +1,6 @@
+import java.util.*;
+import java.text.*;
+
 //static color C_VERSION_DATE_TEXT = 0xFFFFFFFF; // Black
 static color C_VERSION_DATE_TEXT = 0xFF000000; // White
 
@@ -11,6 +14,7 @@ static String VERSION_DATE_DATE_STR_CONST = "Unknown";
 static String VERSION_DATE_VERSION_STR_live;
 static int VERSION_DATE_VERSION_x;
 static int VERSION_DATE_DATE_x;
+static SimpleDateFormat VERSION_DATE_FORMAT_now = new SimpleDateFormat ("MM-dd HH:mm:ss");
 
 void Version_Date_setup()
 {
@@ -40,9 +44,14 @@ void Version_Date_draw()
   textAlign(LEFT, TOP);
 
   text(
-  	TITLE_COMPANY,
-  	TEXT_MARGIN,
-  	TEXT_MARGIN);
+    TITLE_COMPANY,
+    TEXT_MARGIN,
+    TEXT_MARGIN);
+  text(
+    VERSION_DATE_FORMAT_now.format(new Date()),
+    TEXT_MARGIN,
+    TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN);
+
   text(
   	VERSION_DATE_VERSION_STR_live,
   	VERSION_DATE_VERSION_x,
@@ -51,5 +60,4 @@ void Version_Date_draw()
   	VERSION_DATE_DATE_STR,
   	VERSION_DATE_DATE_x,
   	TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN);
-
 }
