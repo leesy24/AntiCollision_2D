@@ -119,20 +119,20 @@ void Comm_UDP_reset()
   Comm_UDP_handle = null;
 }
 
-void Comm_UDP_recv(byte[] data, String ip, int port)
+void Comm_UDP_recv(byte[] data, String remote_ip, int remote_port)
 {
   int instance;
   try {
-    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RECV_DBG || PRINT_COMM_UDP_RECV_IN_DBG) println("Comm_UDP_recv():ip=" + ip + ",port=" + port + ",data.length=" + data.length);
+    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RECV_DBG || PRINT_COMM_UDP_RECV_IN_DBG) println("Comm_UDP_recv():remote_ip=" + remote_ip + ",remote_port=" + remote_port + ",data.length=" + data.length);
     if (Comm_UDP_handle == null)
     {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RECV_ERR) println("Comm_UDP_recv():Comm_UDP_handle=null");
       return;
     }
-    instance = Comm_UDP_handle.get_instance_by_ip(ip);
+    instance = Comm_UDP_handle.get_instance_by_remote_ip(remote_ip);
     if (instance == -1)
     {
-      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RECV_ERR) println("Comm_UDP_recv():can't get instance for ip=" + ip);
+      if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_RECV_ERR) println("Comm_UDP_recv():can't get instance for remote_ip=" + remote_ip);
       return;
     }
     if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_RECV_DBG) println("Comm_UDP_recv():found instance=" + instance);
@@ -144,16 +144,16 @@ void Comm_UDP_recv(byte[] data, String ip, int port)
 
 class Comm_UDP {
   boolean[] instance_opened = new boolean[COMM_UDP_INSTANCE_MAX];
-  String[] ip = new String[COMM_UDP_INSTANCE_MAX];
-  int[] port = new int[COMM_UDP_INSTANCE_MAX];
+  String[] remote_ip = new String[COMM_UDP_INSTANCE_MAX];
+  int[] remote_port = new int[COMM_UDP_INSTANCE_MAX];
 
   Comm_UDP()
   {
     // Init. handle_opened arrary.
     for (int i = 0; i < COMM_UDP_INSTANCE_MAX; i++)
     {
-      ip[i] = null;
-      port[i] = -1;
+      remote_ip[i] = null;
+      remote_port[i] = -1;
       instance_opened[i] = false;
     }
   }
@@ -171,8 +171,8 @@ class Comm_UDP {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_OPEN_ERR) println("Comm_UDP:open("+instance+"):instance already opended.");
       return -1;
     }
-    ip[instance] = remote_ip;
-    port[instance] = remote_port;
+    this.remote_ip[instance] = remote_ip;
+    this.remote_port[instance] = remote_port;
     instance_opened[instance] = true;
     return 0;
   }
@@ -190,8 +190,8 @@ class Comm_UDP {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_CLOSE_ERR) println("Comm_UDP:close("+instance+"):instance already closed.");
       return -1;
     }
-    ip[instance] = null;
-    port[instance] = -1;
+    remote_ip[instance] = null;
+    remote_port[instance] = -1;
     instance_opened[instance] = false;
     return 0;
   }
@@ -216,9 +216,9 @@ class Comm_UDP {
       return -1;
     }
 
-    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_SEND_DBG) println("Comm_UDP:send("+instance+"):ip="+ip[instance]+",port="+port[instance]);
+    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_SEND_DBG) println("Comm_UDP:send("+instance+"):remote_ip="+remote_ip[instance]+",remote_port="+remote_port[instance]);
 
-    if (UDP_handle.send(buf, ip[instance], port[instance]) != true)
+    if (UDP_handle.send(buf, remote_ip[instance], remote_port[instance]) != true)
     {
       if (PRINT_COMM_UDP_ALL_ERR || PRINT_COMM_UDP_SEND_ERR) println("Comm_UDP:send("+instance+"):UDP_handle.send() return false!");
       return -1;
@@ -227,13 +227,13 @@ class Comm_UDP {
     return 0;
   }
 
-  public int get_instance_by_ip(String ip_search)
+  public int get_instance_by_remote_ip(String remote_ip_search)
   {
-    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_GET_DBG) println("Comm_UDP:get_instance_by_ip():ip="+ip_search);
+    if (PRINT_COMM_UDP_ALL_DBG || PRINT_COMM_UDP_GET_DBG) println("Comm_UDP:get_instance_by_remote_ip():remote_ip="+remote_ip_search);
 
     for (int i = 0; i < COMM_UDP_INSTANCE_MAX; i++)
     {
-      if (ip_search.equals(ip[i]))
+      if (remote_ip_search.equals(remote_ip[i]))
       {
         return i;
       }
