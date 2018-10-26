@@ -60,7 +60,7 @@ static boolean UDP_get_take_time_enable = true;
 
 static Interfaces_UDP Interfaces_UDP_handle = null;
 
-void Interfaces_UDP_setup(int local_port)
+void Interfaces_UDP_setup()
 {
   if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_SETUP_DBG) println("Interfaces_UDP_setup():");
 
@@ -71,8 +71,8 @@ void Interfaces_UDP_setup(int local_port)
   }
 
   //Title += "(" + UDP_remote_ip + ":" + UDP_remote_port;
-  Title += ":" + local_port;
-  Title += ")";
+  //Title += ":" + local_port;
+  //Title += ")";
 
   if (Interfaces_UDP_handle != null)
   {
@@ -83,7 +83,7 @@ void Interfaces_UDP_setup(int local_port)
     Interfaces_UDP_handle = null;
   }
 
-  Comm_UDP_setup(local_port);
+  Comm_UDP_setup();
 
   Interfaces_UDP_handle = new Interfaces_UDP();
   if (Interfaces_UDP_handle == null)
@@ -92,7 +92,6 @@ void Interfaces_UDP_setup(int local_port)
     Comm_UDP_reset();
     return;
   }
-  Interfaces_UDP_handle.local_port = local_port;
 }
 
 void Interfaces_UDP_reset()
@@ -129,8 +128,6 @@ class Interfaces_UDP {
   final static int PS_CMD_STATE_RECEIVED = 2;
   final static int PS_CMD_STATE_ERROR = 3;
 
-  int local_port;
-
   int[] PS_CMD_state = new int[PS_INSTANCE_MAX];
 
   boolean[] PS_CMD_SCAN_DONE = new boolean[PS_INSTANCE_MAX];
@@ -148,8 +145,9 @@ class Interfaces_UDP {
 
   String[] str_err_last = new String[PS_INSTANCE_MAX];
 
-  String[] ip = new String[PS_INSTANCE_MAX];
-  int[] port = new int[PS_INSTANCE_MAX];
+  String[] remote_ip = new String[PS_INSTANCE_MAX];
+  int[] remote_port = new int[PS_INSTANCE_MAX];
+  int[] local_port = new int[PS_INSTANCE_MAX];
 
   boolean[] instance_opened = new boolean[PS_INSTANCE_MAX];
 
@@ -174,14 +172,15 @@ class Interfaces_UDP {
 
       str_err_last[i] = null;
 
-      ip[i] = null;
-      port[i] = -1;
+      remote_ip[i] = null;
+      remote_port[i] = -1;
+      local_port[i] = -1;
 
       instance_opened[i] = false;
     }
   }
 
-  public int open(int instance, String remote_ip, int remote_port)
+  public int open(int instance, String remote_ip, int remote_port, int local_port)
   {
     if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_OPEN_DBG) println("Interfaces_UDP:open("+instance+"):remote_ip="+remote_ip+",remote_port="+remote_port);
     if (Comm_UDP_handle == null)
@@ -200,10 +199,11 @@ class Interfaces_UDP {
       return -1;
     }
 
+    Comm_UDP_open(instance, local_port);
     Comm_UDP_handle.open(instance, remote_ip, remote_port);
 
-    ip[instance] = remote_ip;
-    port[instance] = remote_port;
+    this.remote_ip[instance] = remote_ip;
+    this.remote_port[instance] = remote_port;
     PS_CMD_SCAN_DONE[instance] = true;
     //PS_CMD_SCAN_DONE[instance] = false;
 
@@ -231,9 +231,10 @@ class Interfaces_UDP {
     }
 
     Comm_UDP_handle.close(instance);
+    Comm_UDP_close(instance);
 
-    ip[instance] = null;
-    port[instance] = -1;
+    remote_ip[instance] = null;
+    remote_port[instance] = -1;
     instance_opened[instance] = false;
     return 0;
   }
@@ -252,14 +253,14 @@ class Interfaces_UDP {
 
   public String get_remote_ip(int instance)
   {
-    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_ip("+instance+"):ip="+ip[instance]);
-    return ip[instance];
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_ip("+instance+"):remote_ip="+remote_ip[instance]);
+    return remote_ip[instance];
   }
 
   public int get_remote_port(int instance)
   {
-    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_port("+instance+"):port="+port[instance]);
-    return port[instance];
+    if (PRINT_INTERFACES_UDP_ALL_DBG || PRINT_INTERFACES_UDP_GET_DBG) println("Interfaces_UDP:get_remote_port("+instance+"):remote_port="+remote_port[instance]);
+    return remote_port[instance];
   }
 
   public boolean load(int instance)

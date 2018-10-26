@@ -191,8 +191,8 @@ void PS_Data_setup()
       Interfaces_UART_setup();
     }
     else if(PS_Interface[i] == PS_Interface_UDP) {
-      Interfaces_UDP_setup(UDP_local_port[i]);
-      Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i]);
+      Interfaces_UDP_setup();
+      Interfaces_UDP_handle.open(i, UDP_remote_ip[i], UDP_remote_port[i], UDP_local_port[i]);
       Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIMEOUT_VAL, UDP_TIMEOUT_RETRY);
       PS_Data_handle.remote_ip[i] = UDP_remote_ip[i];
       PS_Data_handle.remote_port[i] = UDP_remote_port[i];
@@ -201,8 +201,8 @@ void PS_Data_setup()
       String remote_ip = "10.0."+(SN_serial_number[i]/100)+"."+(SN_serial_number[i]%100);
       int remote_port = 1024;
 
-      Interfaces_UDP_setup(PS_Interface_SN_LOCAL_PORT);
-      Interfaces_UDP_handle.open(i, remote_ip, remote_port);
+      Interfaces_UDP_setup();
+      Interfaces_UDP_handle.open(i, remote_ip, remote_port, PS_Interface_SN_LOCAL_PORT);
       Interfaces_UDP_handle.set_comm_timeout(i, UDP_TIMEOUT_VAL, UDP_TIMEOUT_RETRY);
       PS_Data_handle.serial_number[i] = SN_serial_number[i];
       PS_Data_handle.remote_ip[i] = remote_ip;
