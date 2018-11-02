@@ -572,7 +572,7 @@ class ROI_Data {
       return;
     }
 
-    boolean no_mark = false;
+    boolean no_marker = false;
 
     // Check no mark region has too big object.
     for (ROI_Object_Data object:objects_last[instance]) {
@@ -605,13 +605,13 @@ class ROI_Data {
 
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG) println("ROI_Data:draw_objects("+instance+"):"+"object.mi_diameter="+object.mi_diameter);
         // No mark for all object when no mark region has big object.
-        no_mark = true;
+        no_marker = true;
         break;
       }
     }
-    //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":no_mark="+no_mark);
+    //SYSTEM_logger.info("ROI_Data:draw_objects("+instance+")"+":no_marker="+no_marker);
 
-    ROI_Detected_Objects detected_objects_new = new ROI_Detected_Objects();
+    ROI_Detected_Objects detected_objects_new = new ROI_Detected_Objects(no_marker);
     Regions_handle.reset_regions_has_object(instance);
     // Start from object that detected on low priority region.
     for (int priority = Regions_handle.regions_priority_max[instance]; priority >= 0; priority --) {
@@ -683,8 +683,8 @@ class ROI_Data {
         }
         if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_DRAW_OBJECTS_DBG || PRINT_ROI_OBJECTS_GHOST_ISSUE_DBG) println("ROI_Data:draw_objects("+instance+")"+":"+i+":mi c_x="+object.mi_center_x+",c_x="+object.mi_center_y+",dia="+object.mi_diameter);
 
-        if (no_mark) {
-          // No mark for all object when no mark region has big object.
+        if (no_marker) {
+          // No marker for all object when no mark region has big object.
           continue;
         }
 
@@ -750,7 +750,15 @@ class ROI_Data {
       return;
     }
 
-    if (!detected_objects_last[instance].have_detected_objects && !File_Operations_save_events_started[instance]) return;
+    if (
+        (
+          !detected_objects_last[instance].have_detected_objects
+          ||
+          detected_objects_last[instance].is_no_marker
+        )
+        &&
+        !File_Operations_save_events_started[instance])
+      return;
 
     // Check save events started.
     if (!File_Operations_save_events_started[instance]) {
@@ -758,9 +766,16 @@ class ROI_Data {
       SYSTEM_logger.info("ROI_Data:save_events("+instance+"):save events start!");  
       if (PRINT_ROI_DATA_ALL_DBG || PRINT_ROI_DATA_SAVE_EVENT_DBG) println("ROI_Data:save_events("+instance+"):detected_objects_last["+instance+"].have_detected_objects="+detected_objects_last[instance].have_detected_objects);
       // Save events not started.
-      File_Operations_save_events_event_date_time[instance] = new Date().getTime();
-      File_Operations_save_events_start_date_time[instance] = File_Operations_save_events_event_date_time[instance] - PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
-      File_Operations_save_events_end_date_time[instance] = File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+      File_Operations_save_events_event_date_time[instance] =
+        new Date().getTime();
+      File_Operations_save_events_start_date_time[instance] =
+        File_Operations_save_events_event_date_time[instance]
+        -
+        PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+      File_Operations_save_events_end_date_time[instance] =
+        File_Operations_save_events_event_date_time[instance]
+        +
+        PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       if (OS_is_Windows)
       {
         File_Operations_save_events_dir_full_name[instance] =
@@ -806,10 +821,17 @@ class ROI_Data {
       long date_time_curr = new Date().getTime();
 
       // Check advanced end date time will reached to limit.
-      if (date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
-          <=
-          File_Operations_save_events_event_date_time[instance] + PS_DATA_SAVE_EVENTS_DURATION_LIMIT) {
-        File_Operations_save_events_end_date_time[instance] = date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
+      if (
+            date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT
+            <=
+            (
+              File_Operations_save_events_event_date_time[instance]
+              +
+              PS_DATA_SAVE_EVENTS_DURATION_LIMIT
+            )
+          ) {
+        File_Operations_save_events_end_date_time[instance] =
+          date_time_curr + PS_DATA_SAVE_EVENTS_DURATION_DEFAULT;
       }
     }
 
@@ -839,7 +861,9 @@ class ROI_Data {
 
     if (!ROI_Data_draw_info_enabled[instance]) return;
 
-    if (get_millis_diff(ROI_Data_draw_info_timer[instance]) >= SYSTEM_UI_TIMEOUT * 1000)
+    if (get_millis_diff(ROI_Data_draw_info_timer[instance])
+        >=
+        SYSTEM_UI_TIMEOUT * 1000)
     {
       ROI_Data_draw_info_enabled[instance] = false;
     }
@@ -1389,18 +1413,6 @@ class ROI_Object_Data {
 
 }
 
-class ROI_Detected_Object_Data {
-  public int mi_center_x, mi_center_y;
-  public int mi_diameter;
-  
-  ROI_Detected_Object_Data(int mi_center_x, int mi_center_y, int mi_diameter) {
-    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Object_Data:ROI_Detected_Object_Data()"+":Enter");
-    this.mi_center_x = mi_center_x;
-    this.mi_center_y = mi_center_y;
-    this.mi_diameter = mi_diameter;
-  }
-}
-
 //final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_DBG = true;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_DBG = false;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_ALL_ERR = true;
@@ -1416,14 +1428,35 @@ final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_DBG = false;
 //final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_ERR = true;
 final static boolean PRINT_ROI_DETECTED_OBJECTS_ARE_SAME_ERR = false;
 
+class ROI_Detected_Object_Data {
+  public int mi_center_x, mi_center_y;
+  public int mi_diameter;
+  
+  ROI_Detected_Object_Data(int mi_center_x, int mi_center_y, int mi_diameter) {
+    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Object_Data:ROI_Detected_Object_Data()"+":Enter");
+    this.mi_center_x = mi_center_x;
+    this.mi_center_y = mi_center_y;
+    this.mi_diameter = mi_diameter;
+  }
+}
+
 class ROI_Detected_Objects {
   public ArrayList<ROI_Detected_Object_Data> objects_data = new ArrayList<ROI_Detected_Object_Data>();
   public boolean have_detected_objects;
   public int objects_count;
+  public boolean is_no_marker;
   
   ROI_Detected_Objects() {
     if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Objects:ROI_Detected_Objects()"+":Enter");
     have_detected_objects = false;
+    is_no_marker = false;
+    objects_count = 0;
+  }
+
+  ROI_Detected_Objects(boolean no_marker) {
+    if (PRINT_ROI_DETECTED_OBJECTS_ALL_DBG || PRINT_ROI_DETECTED_OBJECTS_CONSTRUCTOR_DBG) println("ROI_Detected_Objects:ROI_Detected_Objects()"+":no_marker="+no_marker+":Enter");
+    have_detected_objects = false;
+    is_no_marker = no_marker;
     objects_count = 0;
   }
 
