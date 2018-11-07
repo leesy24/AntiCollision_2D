@@ -14,7 +14,10 @@ static String VERSION_DATE_DATE_STR_CONST = "Unknown";
 static String VERSION_DATE_VERSION_STR_live;
 static int VERSION_DATE_VERSION_x;
 static int VERSION_DATE_DATE_x;
-static SimpleDateFormat VERSION_DATE_FORMAT_now = new SimpleDateFormat ("MM-dd HH:mm:ss");
+static SimpleDateFormat CURRENT_DATE_TIME_FORMAT = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+static int CURRENT_DATE_TIME_seconds;
+static String CURRENT_DATE_TIME_STR_live;
+static int CURRENT_DATE_TIME_x;
 
 void Version_Date_setup()
 {
@@ -26,6 +29,12 @@ void Version_Date_setup()
   VERSION_DATE_VERSION_STR_live = "Ver. " + VERSION_DATE_VERSION_STR;
   VERSION_DATE_VERSION_x = int(SCREEN_width - TEXT_MARGIN - textWidth(VERSION_DATE_VERSION_STR_live));
   VERSION_DATE_DATE_x = int(SCREEN_width - TEXT_MARGIN - textWidth(VERSION_DATE_DATE_STR));
+
+  Date now;
+  now = new Date();
+  CURRENT_DATE_TIME_seconds = now.getSeconds();
+  CURRENT_DATE_TIME_STR_live = CURRENT_DATE_TIME_FORMAT.format(now);
+  CURRENT_DATE_TIME_x = int(SCREEN_width - TEXT_MARGIN - textWidth(CURRENT_DATE_TIME_STR_live));
 
   if (!VERSION_DATE_VERSION_STR.equals(VERSION_DATE_VERSION_STR_CONST)
       ||
@@ -48,7 +57,7 @@ void Version_Date_draw()
     TEXT_MARGIN,
     TEXT_MARGIN);
   text(
-    VERSION_DATE_FORMAT_now.format(new Date()),
+    UP_DATE_TIME_STR,
     TEXT_MARGIN,
     TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN);
 
@@ -60,4 +69,15 @@ void Version_Date_draw()
   	VERSION_DATE_DATE_STR,
   	VERSION_DATE_DATE_x,
   	TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN);
+
+  Date now = new Date();
+  if (CURRENT_DATE_TIME_seconds != now.getSeconds())
+  {
+    CURRENT_DATE_TIME_seconds = now.getSeconds();
+    CURRENT_DATE_TIME_STR_live = CURRENT_DATE_TIME_FORMAT.format(now);
+  }
+  text(
+    CURRENT_DATE_TIME_STR_live,
+    CURRENT_DATE_TIME_x,
+    SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN));
 }

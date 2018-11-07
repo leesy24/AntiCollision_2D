@@ -32,6 +32,8 @@ static boolean OS_is_Linux = false;
 static boolean OS_is_Windows = false;
 static boolean OS_is_Others = false;
 
+static String UP_DATE_TIME_STR;
+
 // The settings() function is new with Processing 3.0. It's not needed in most sketches.
 // It's only useful when it's absolutely necessary to define the parameters to size() with a variable. 
 void settings() {
@@ -49,6 +51,9 @@ void settings() {
   {
     OS_is_Others = true;
   }
+
+  SimpleDateFormat UP_DATE_TIME_format = new SimpleDateFormat ("yy-MM-dd HH:mm:ss");
+  UP_DATE_TIME_STR = UP_DATE_TIME_format.format(new Date());
 
   set_logger();
   Screen_settings();
