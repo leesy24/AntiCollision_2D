@@ -56,10 +56,11 @@ void Version_Date_draw()
     TITLE_COMPANY,
     TEXT_MARGIN,
     TEXT_MARGIN);
+
   text(
     UP_DATE_TIME_STR,
     TEXT_MARGIN,
-    TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN);
+    SCREEN_height - (TEXT_MARGIN + FONT_HEIGHT + TEXT_MARGIN));
 
   text(
   	VERSION_DATE_VERSION_STR_live,
