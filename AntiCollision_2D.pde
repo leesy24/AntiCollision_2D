@@ -124,6 +124,7 @@ void setup() {
   UI_System_Config_setup();
   UI_Regions_Config_setup();
   File_Operations_setup();
+  Notice_Messages_update();
   Version_Date_setup();
 
   // Set window title
@@ -272,43 +273,66 @@ void draw() {
   }
 } 
 
-void Notice_Messages_draw()
+ArrayList<String> Notice_Messages_strings = new ArrayList<String>();
+static boolean Notice_Messages_gray_enabled = false;
+
+void Notice_Messages_update()
 {
-  ArrayList<String> strings = new ArrayList<String>();
+  Notice_Messages_strings.clear();
 
   if (!MACHINE_NAME.equals(""))
   {
-    strings.add(MACHINE_NAME);
+    Notice_Messages_strings.add(MACHINE_NAME);
   }
 
   if (SYSTEM_PASSWORD_disabled)
   {
-    strings.add("System password disabled!");
+    Notice_Messages_strings.add("System password disabled!");
   }
 
   if (!PS_Data_save_enabled)
   {
-    strings.add("PS data saving disabled!");
+    Notice_Messages_strings.add("PS data saving disabled!");
   }
   
   if (Bubble_Info_enabled)
   {
-    strings.add("Bubble Info enabled!");
+    Notice_Messages_strings.add("Bubble Info enabled!");
   }
 
   if (PS_Data_draw_points_with_line)
   {
-    strings.add("Draw line of points enabled!");
+    Notice_Messages_strings.add("Draw line of points enabled!");
   }
 
-  float gray = (millis()/10)%255;
+  if (Notice_Messages_gray_enabled)
+  {
+    Notice_Messages_strings.add("gray=na");
+  }
+}
+
+void Notice_Messages_draw()
+{
+  float gray = (millis()/10)%256;
+  //float gray = 64 + (millis()/15)%(256 - 64);
+  //float gray = 128 + (millis()/20)%(256 - 128);
+  //gray = 64;
+  //gray = 255;
+
+  if (Notice_Messages_gray_enabled)
+  {
+    if (Notice_Messages_strings.size() > 0)
+      Notice_Messages_strings.remove(Notice_Messages_strings.size() - 1);
+    Notice_Messages_strings.add("gray=" + gray);
+  }
+
   // Sets the color used to draw lines and borders around shapes.
   fill(gray);
   stroke(gray);
   textSize(FONT_HEIGHT);
   textAlign(LEFT, TOP);
   int i = 0;
-  for (String str:strings)
+  for (String str:Notice_Messages_strings)
   {
     text(str, SCREEN_width / 2 - textWidth(str) / 2, i * FONT_HEIGHT);
     i ++;

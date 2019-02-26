@@ -43,18 +43,23 @@ void keyPressed()
   {
     if(keyCode == KeyEvent.VK_F10)
     {
+      Notice_Messages_gray_enabled = !Notice_Messages_gray_enabled;
+      Notice_Messages_update();
     }
     else if(keyCode == KeyEvent.VK_F9)
     {
       PS_Data_save_enabled = !PS_Data_save_enabled;
+      Notice_Messages_update();
     }
     else if(keyCode == KeyEvent.VK_F8)
     {
       Bubble_Info_enabled = !Bubble_Info_enabled;
+      Notice_Messages_update();
     }
     else if(keyCode == KeyEvent.VK_F7)
     {
       PS_Data_draw_points_with_line = !PS_Data_draw_points_with_line;
+      Notice_Messages_update();
     }
     else if(keyCode == KeyEvent.VK_F6)
     {

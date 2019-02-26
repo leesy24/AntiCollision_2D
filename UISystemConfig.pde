@@ -1242,6 +1242,7 @@ void UI_System_Config_input_update()
       case SYSTEM_PASSWORD:
         if (str.length() == 0) {
           SYSTEM_PASSWORD_disabled = true;
+          Notice_Messages_update();
           break;
         }
         SYSTEM_PASSWORD_disabled = false;
