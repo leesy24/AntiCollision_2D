@@ -1,0 +1,23 @@
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+//final static boolean PRINT_PS_ALWAYS_DATA_ALL_DBG = true;
+final static boolean PRINT_PS_ALWAYS_DATA_ALL_DBG = false;
+final static boolean PRINT_PS_ALWAYS_DATA_ALL_ERR = true;
+//final static boolean PRINT_PS_ALWAYS_DATA_ALL_ERR = false;
+
+static class PS_always_data {
+  private int instance;
+  private byte[] data_buf;
+  private long date_time;
+  private String save_events_dir_full_name;
+
+  PS_always_data(int instance, byte[] data_buf, long date_time, String save_events_dir_full_name) {
+    this.instance = instance;
+    this.data_buf = compress(data_buf);
+    this.date_time = date_time;
+    this.save_events_dir_full_name = save_events_dir_full_name;
+  }
+}
+
+static ConcurrentLinkedQueue<PS_always_data> PS_always_data_queue = new ConcurrentLinkedQueue<PS_always_data>();
+
