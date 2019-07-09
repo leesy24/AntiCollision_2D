@@ -77,7 +77,8 @@ void File_Operations_setup()
   String always_dir_full_name;
   if (OS_is_Windows)
   {
-    always_dir_full_name = sketchPath() + "\\always\\";
+    always_dir_full_name = "r:\\always\\";
+    //always_dir_full_name = sketchPath() + "\\always\\";
   }
   else
   {
@@ -375,7 +376,8 @@ void File_Operations_free_always()
   String always_dir_full_name;
   if (OS_is_Windows)
   {
-    always_dir_full_name = sketchPath() + "\\always\\";
+    always_dir_full_name = "r:\\always\\";
+    //always_dir_full_name = sketchPath() + "\\always\\";
   }
   else
   {
@@ -479,7 +481,8 @@ void File_Operations_save_events()
   if (OS_is_Windows)
   {
     data_dir_full_name = sketchPath() + "\\data\\";
-    always_dir_full_name = sketchPath() + "\\always\\";
+    always_dir_full_name = "r:\\always\\";
+    //always_dir_full_name = sketchPath() + "\\always\\";
   }
   else
   {
@@ -697,7 +700,8 @@ void File_Operations_save_always()
   String always_dir_full_name;
   if (OS_is_Windows)
   {
-    always_dir_full_name = sketchPath() + "\\always\\";
+    always_dir_full_name = "r:\\always\\";
+    //always_dir_full_name = sketchPath() + "\\always\\";
   }
   else
   {
